@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:internship_sample/presentation/onboarding_screen/onboarding_screen.dart';
+import 'package:internship_sample/presentation/onboarding/onboarding_screen.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -36,10 +36,10 @@ class _SplashScreenState extends State<SplashScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Image(
-                    image: AssetImage("lib/core/assets/images/logos/app_logo.png"),
+                    image:
+                        AssetImage("lib/core/assets/images/logos/app_logo.png"),
                     height: 100,
                   ),
-                  
                   CustomTextWidget(
                     text: "CASHEW",
                     fontFamily: 'LibreCaslonText',
@@ -65,6 +65,9 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> gotoOnboardScreenAfterDelay(int delayInSeconds) async {
     await Future.delayed(Duration(seconds: delayInSeconds));
     Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => OnboardingScreen()));
+      MaterialPageRoute(
+        builder: (context) => OnboardingScreen(),
+      ),
+    );
   }
 }

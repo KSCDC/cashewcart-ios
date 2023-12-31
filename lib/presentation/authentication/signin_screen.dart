@@ -6,6 +6,7 @@ import 'package:internship_sample/presentation/authentication/widgets/alternativ
 import 'package:internship_sample/presentation/authentication/widgets/authentication_page_title.dart';
 import 'package:internship_sample/presentation/authentication/widgets/custom_icon_text_field.dart';
 import 'package:internship_sample/presentation/authentication/widgets/custom_password_text_field.dart';
+import 'package:internship_sample/presentation/main_page/main_page_screen.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 
 class SignInScreen extends StatelessWidget {
@@ -76,6 +77,11 @@ class SignInScreen extends StatelessWidget {
                           padding: EdgeInsets.all(20),
                         );
                         ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                            builder: (context) => MainPageScreen(),
+                          ),
+                        );
                       } else {
                         const snackBar = SnackBar(
                           content: Text('Username and password doesnot match!'),

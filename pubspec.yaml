@@ -29,9 +29,11 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   cupertino_icons: ^1.0.2
+  debouncer_widget: ^1.0.0
   flutter:
     sdk: flutter
   flutter_svg: ^2.0.9
+  persistent_bottom_nav_bar: ^5.0.2
   smooth_page_indicator: ^1.1.0
 
 dev_dependencies:
@@ -57,6 +59,14 @@ flutter:
     - lib/core/assets/images/logos/google_logo.svg
     - lib/core/assets/images/logos/apple_logo.svg
     - lib/core/assets/images/logos/facebook_logo.svg
+    - lib/core/assets/images/get_started_bg_image.png
+    - lib/core/assets/images/avatar.jpeg
+    - lib/core/assets/images/circle_avatar_images/beauty.jpg
+    - lib/core/assets/images/circle_avatar_images/fashion.jpg
+    - lib/core/assets/images/circle_avatar_images/kids.jpg
+    - lib/core/assets/images/circle_avatar_images/mens.jpg
+    - lib/core/assets/images/circle_avatar_images/womens.jpg
+    - lib/core/assets/images/other/offer_image1.jpg
 
   # An image asset can refer to one or more resolution-specific "variants",
   # https://flutter.dev/assets-and-images/#resolution-aware

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:internship_sample/presentation/authentication/signin_screen.dart';
-import 'package:internship_sample/presentation/onboarding_screen/widgets/onboarding_tile.dart';
+import 'package:internship_sample/presentation/get_started/get_started_screen.dart';
+import 'package:internship_sample/presentation/onboarding/widgets/onboarding_tile.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -133,7 +134,7 @@ class OnboardingScreen extends StatelessWidget {
                   print("current page no : ${controller.page}");
                   if (controller.page == 2) {
                     Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (context) => SignInScreen()));
+                        builder: (context) => GetStartedScreen()));
                   } else {
                     await controller.nextPage(
                       duration: Duration(milliseconds: 500),

@@ -47,17 +47,8 @@ class CustomIconTextField extends StatelessWidget {
             ),
           ),
         ),
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        // validator: (value) {
-        //   // print("valid mail ${validMail.hasMatch(emailController.text)}");
-        //   if (!validMail.hasMatch(controller.text) &&
-        //       activateErrorText &&
-        //       hintText == "EMAIL") {
-        //     return "Enter a valid Email address!";
-        //   } else if ((value == null || value.length < 3) && activateErrorText) {
-        //     return errorText;
-        //   }
-        // },
+        
+        
       ),
     );
   }
