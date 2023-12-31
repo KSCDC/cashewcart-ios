@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:internship_sample/core/colors.dart';
 
 class CustomTextWidget extends StatelessWidget {
   const CustomTextWidget({
@@ -8,7 +9,8 @@ class CustomTextWidget extends StatelessWidget {
     this.fontSize = 14,
     this.fontColor = Colors.black,
     this.fontweight = FontWeight.normal,
-    this.textAlign = TextAlign.start
+    this.textAlign = TextAlign.start,
+    this.underline = false,
   });
 
   final String text;
@@ -17,6 +19,7 @@ class CustomTextWidget extends StatelessWidget {
   final Color fontColor;
   final FontWeight fontweight;
   final TextAlign textAlign;
+  final bool underline;
   @override
   Widget build(BuildContext context) {
     return Text(
@@ -26,8 +29,10 @@ class CustomTextWidget extends StatelessWidget {
         fontSize: fontSize,
         color: fontColor,
         fontWeight: fontweight,
-        
+        decoration: underline ? TextDecoration.underline : TextDecoration.none,
+        decorationColor: kMainThemeColor,
       ),
+      overflow: TextOverflow.visible,
       textAlign: textAlign,
     );
   }

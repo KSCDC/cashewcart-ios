@@ -36,7 +36,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Image(
-                    image: AssetImage("lib/core/assets/images/logo.png"),
+                    image: AssetImage("lib/core/assets/images/logos/app_logo.png"),
                     height: 100,
                   ),
                   
