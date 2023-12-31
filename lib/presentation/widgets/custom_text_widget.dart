@@ -30,6 +30,7 @@ class CustomTextWidget extends StatelessWidget {
         color: fontColor,
         fontWeight: fontweight,
         decoration: underline ? TextDecoration.underline : TextDecoration.none,
+        
         decorationColor: kMainThemeColor,
       ),
       overflow: TextOverflow.visible,

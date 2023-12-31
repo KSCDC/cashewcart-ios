@@ -14,6 +14,7 @@ class BottomNavigationWidget extends StatelessWidget {
         valueListenable: bottomNavbarIndexNotifier,
         builder: (BuildContext context, int newIndex, _) {
           return Container(
+            color: Colors.white,
             height: 70,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -24,18 +25,14 @@ class BottomNavigationWidget extends StatelessWidget {
                     icon: Icon(Icons.home),
                     label: "Home",
                     index: 0,
-                    color: bottomNavbarIndexNotifier.value == 0
-                        ? Color(0xffEB3030)
-                        : Colors.black,
+                    color: bottomNavbarIndexNotifier.value == 0 ? Color(0xffEB3030) : Colors.black,
                   ),
                   Spacer(),
                   CustomBottomNavbarItem(
                     icon: Icon(Icons.favorite_border),
                     label: "Wishlist",
                     index: 1,
-                    color: bottomNavbarIndexNotifier.value == 1
-                        ? Color(0xffEB3030)
-                        : Colors.black,
+                    color: bottomNavbarIndexNotifier.value == 1 ? Color(0xffEB3030) : Colors.black,
                   ),
                   Spacer(
                     flex: 2,
@@ -44,18 +41,14 @@ class BottomNavigationWidget extends StatelessWidget {
                     icon: Icon(Icons.search),
                     label: "Search",
                     index: 3,
-                    color: bottomNavbarIndexNotifier.value == 3
-                        ? Color(0xffEB3030)
-                        : Colors.black,
+                    color: bottomNavbarIndexNotifier.value == 3 ? Color(0xffEB3030) : Colors.black,
                   ),
                   Spacer(),
                   CustomBottomNavbarItem(
                     icon: Icon(Icons.settings),
                     label: "Setting",
                     index: 4,
-                    color: bottomNavbarIndexNotifier.value == 4
-                        ? Color(0xffEB3030)
-                        : Colors.black,
+                    color: bottomNavbarIndexNotifier.value == 4 ? Color(0xffEB3030) : Colors.black,
                   ),
                 ],
               ),
