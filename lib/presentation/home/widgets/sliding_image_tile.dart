@@ -7,14 +7,17 @@ class SlidingImageTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: 200,
+      height: 50,
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Color(0xFFFD6E87)),
       padding: EdgeInsets.all(5),
       child: Stack(children: [
-        FittedBox(
-          child: Image.asset(
-            "lib/core/assets/images/other/offer_image1.jpg",
-          ),
-          fit: BoxFit.fill,
-        ),
+        // FittedBox(
+        //   child: Image.asset(
+        //     "lib/core/assets/images/other/offer_image1.jpg",
+        //   ),
+        //   fit: BoxFit.fill,
+        // ),
         Padding(
           padding: const EdgeInsets.all(10),
           child: Column(

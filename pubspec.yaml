@@ -80,6 +80,11 @@ flutter:
     - lib/core/assets/images/product_images/home/new_arrivals.jpg
     - lib/core/assets/images/product_images/home/sponserd.jpg
 
+    - lib/core/assets/images/product_images/wishlist/black_winter.jpg
+    - lib/core/assets/images/product_images/wishlist/black_dress.jpg
+    - lib/core/assets/images/product_images/wishlist/mens_starry.jpg
+    - lib/core/assets/images/product_images/wishlist/pink.jpg
+
   # An image asset can refer to one or more resolution-specific "variants",
   # https://flutter.dev/assets-and-images/#resolution-aware
   # For details regarding adding assets from package dependencies, see

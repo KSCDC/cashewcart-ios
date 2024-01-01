@@ -8,6 +8,7 @@ class FlatAndHeelsTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      color: Colors.green,
       height: 250,
       padding: EdgeInsets.all(5),
       child: Padding(

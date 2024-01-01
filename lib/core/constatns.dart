@@ -118,3 +118,62 @@ const List homeScreenProductsList2 = [
     'offerPercentage': "70%Off",
   },
 ];
+
+const List wishlistScreenProductsList = [
+  {
+    'imagePath': "lib/core/assets/images/product_images/wishlist/black_winter.jpg",
+    'heading': "Black Winter...",
+    'description': "Autumn And Winter Casual cotton-padded jacket...",
+    'price': "650",
+    'rating': "6890"
+  },
+  {
+    'imagePath': "lib/core/assets/images/product_images/wishlist/mens_starry.jpg",
+    'heading': "Mens Starry",
+    'description': "Mens Starry Sky Printed Shirt 100% Cotton Fabric",
+    'price': "650",
+    'rating': "6890"
+  },
+  {
+    'imagePath': "lib/core/assets/images/product_images/wishlist/black_dress.jpg",
+    'heading': "Black Dress",
+    'description': "Solid Black Dress for Women, Sexy Chain Shorts Ladi...",
+    'price': "650",
+    'rating': "6890"
+  },
+  {
+    'imagePath': "lib/core/assets/images/product_images/wishlist/pink.jpg",
+    'heading': "Pink Embroide...",
+    'description': "EARTHEN Rose Pink Embroidered Tiered Max...",
+    'price': "650",
+    'rating': "6890"
+  },
+  {
+    'imagePath': "lib/core/assets/images/product_images/wishlist/black_winter.jpg",
+    'heading': "Black Winter...",
+    'description': "Autumn And Winter Casual cotton-padded jacket...",
+    'price': "650",
+    'rating': "6890"
+  },
+  {
+    'imagePath': "lib/core/assets/images/product_images/wishlist/mens_starry.jpg",
+    'heading': "Mens Starry",
+    'description': "Mens Starry Sky Printed Shirt 100% Cotton Fabric",
+    'price': "650",
+    'rating': "6890"
+  },
+  {
+    'imagePath': "lib/core/assets/images/product_images/wishlist/black_dress.jpg",
+    'heading': "Black Dress",
+    'description': "Solid Black Dress for Women, Sexy Chain Shorts Ladi...",
+    'price': "650",
+    'rating': "6890"
+  },
+  {
+    'imagePath': "lib/core/assets/images/product_images/wishlist/pink.jpg",
+    'heading': "Pink Embroide...",
+    'description': "EARTHEN Rose Pink Embroidered Tiered Max...",
+    'price': "650",
+    'rating': "6890"
+  },
+];
