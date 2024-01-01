@@ -88,60 +88,26 @@ class ProductsListItemTile extends StatelessWidget {
                         )
                       ],
                     ),
+                    
                     Row(
                       children: [
-                        Container(
-                          height: 16,
-                          width: 16,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage("lib/core/assets/images/product_images/home/star.jpg"),
-                              fit: BoxFit.fill,
-                            ),
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(4),
-                            ),
-                          ),
-                        ),
-                        Container(
-                          height: 16,
-                          width: 16,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage("lib/core/assets/images/product_images/home/star.jpg"),
-                              fit: BoxFit.fill,
-                            ),
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(4),
+                        for (int i = 0; i < 4; i++)
+                          Padding(
+                            padding: const EdgeInsets.all(2),
+                            child: Container(
+                              height: 16,
+                              width: 16,
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: AssetImage("lib/core/assets/images/product_images/home/star.jpg"),
+                                  fit: BoxFit.fill,
+                                ),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(4),
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                        Container(
-                          height: 16,
-                          width: 16,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage("lib/core/assets/images/product_images/home/star.jpg"),
-                              fit: BoxFit.fill,
-                            ),
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(4),
-                            ),
-                          ),
-                        ),
-                        Container(
-                          height: 16,
-                          width: 16,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage("lib/core/assets/images/product_images/home/star.jpg"),
-                              fit: BoxFit.fill,
-                            ),
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(4),
-                            ),
-                          ),
-                        ),
                       ],
                     )
                   ],
