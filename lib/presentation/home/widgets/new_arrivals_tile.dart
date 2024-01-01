@@ -7,17 +7,29 @@ class NewArrivalsTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
     return Container(
       padding: EdgeInsets.all(5),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(
+          Radius.circular(8),
+        ),
+      ),
       child: Column(
+        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          FittedBox(
-            child: Image.asset(
-              "lib/core/assets/images/product_images/home/new_arrivals.jpg",
+          Container(
+            width: screenSize.width * 0.95,
+            height: screenSize.width * 0.6,
+            // color: Colors.black,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("lib/core/assets/images/product_images/home/new_arrivals.jpg"),
+                fit: BoxFit.fitWidth,
+              ),
             ),
-            fit: BoxFit.fill,
           ),
-          SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

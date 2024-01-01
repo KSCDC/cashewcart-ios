@@ -5,6 +5,6 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text("Settings");
+    return Center(child: Text("Settings Screen not provided"));
   }
 }
