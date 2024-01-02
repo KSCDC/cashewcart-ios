@@ -2,12 +2,20 @@ import 'package:flutter/material.dart';
 
 const Widget kWidth = SizedBox(width: 10);
 const Widget kHeight = SizedBox(height: 10);
+const Widget kProfileScreenGap = SizedBox(height: 20);
 
 enum LoginWith {
   google,
   apple,
   facebook,
 }
+
+const List<String> statesList = [
+  "N1 2LL",
+  "state2",
+  "state3",
+  "state4",
+];
 
 const List avatarImage = [
   {

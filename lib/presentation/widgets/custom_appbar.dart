@@ -6,7 +6,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar({
     super.key,
     this.title = "",
-    this.actionWidget = const SizedBox(),
+    this.actionWidget = const SizedBox(width: 20),
   });
   final String title;
   final Widget actionWidget;
@@ -14,13 +14,17 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
         leading: IconButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
           icon: Icon(Icons.arrow_back_ios_new),
         ),
-        title: CustomTextWidget(
-          text: title,
-          fontSize: 18,
-          fontweight: FontWeight.w600,
+        title: Center(
+          child: CustomTextWidget(
+            text: title,
+            fontSize: 18,
+            fontweight: FontWeight.w600,
+          ),
         ),
         actions: [
           Padding(

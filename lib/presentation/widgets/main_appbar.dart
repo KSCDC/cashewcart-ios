@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:internship_sample/core/colors.dart';
+import 'package:internship_sample/presentation/profile/profile_screen.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 
 class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -35,7 +36,12 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: GestureDetector(
-            child: CircleAvatar(  
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => ProfileScreen(),
+              ),
+            ),
+            child: CircleAvatar(
               child: Image.asset("lib/core/assets/images/avatar.jpeg"),
             ),
           ),
