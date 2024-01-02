@@ -22,7 +22,7 @@ class BottomNavigationWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   CustomBottomNavbarItem(
-                    icon: Icon(Icons.home),
+                    icon: Icon(Icons.house_outlined),
                     label: "Home",
                     index: 0,
                     color: bottomNavbarIndexNotifier.value == 0 ? Color(0xffEB3030) : Colors.black,
@@ -45,7 +45,7 @@ class BottomNavigationWidget extends StatelessWidget {
                   ),
                   Spacer(),
                   CustomBottomNavbarItem(
-                    icon: Icon(Icons.settings),
+                    icon: Icon(Icons.settings_outlined),
                     label: "Setting",
                     index: 4,
                     color: bottomNavbarIndexNotifier.value == 4 ? Color(0xffEB3030) : Colors.black,

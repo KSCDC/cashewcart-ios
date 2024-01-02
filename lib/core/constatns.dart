@@ -1,4 +1,7 @@
-const double kheight = 10;
+import 'package:flutter/material.dart';
+
+const Widget kWidth = SizedBox(width: 10);
+const Widget kHeight = SizedBox(height: 10);
 
 enum LoginWith {
   google,

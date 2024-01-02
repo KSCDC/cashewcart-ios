@@ -32,7 +32,7 @@ class WishlistScreen extends StatelessWidget {
                     heading: wishlistScreenProductsList[index]['heading'],
                     description: wishlistScreenProductsList[index]['description'],
                     price: wishlistScreenProductsList[index]['price'],
-                    rating: wishlistScreenProductsList[index]['rating'],
+                    numberOfRatings: wishlistScreenProductsList[index]['rating'],
                   );
                 }),
               )

@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/presentation/widgets/custom_search_filtering_button.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
+import 'package:internship_sample/presentation/widgets/search_filter_bar.dart';
 
 class SearchSectionTile extends StatelessWidget {
   SearchSectionTile({
@@ -64,28 +65,9 @@ class SearchSectionTile extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              CustomTextWidget(
-                text: heading,
-                fontSize: 18,
-                fontweight: FontWeight.w600,
-              ),
-              const Row(
-                children: [
-                  CustomSearchFilteringButton(
-                    label: "Sort",
-                    icon: Icons.swap_vert,
-                  ),
-                  CustomSearchFilteringButton(
-                    label: "Filter",
-                    icon: Icons.filter_alt,
-                  ),
-                ],
-              )
-            ],
-          ),
+          SearchFilterBar(
+            heading: heading,
+          )
         ],
       ),
     );

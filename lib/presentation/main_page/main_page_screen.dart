@@ -23,7 +23,6 @@ class MainPageScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xffFDFDFD),
-      
       body: SafeArea(
         child: ValueListenableBuilder(
             valueListenable: bottomNavbarIndexNotifier,
@@ -40,17 +39,12 @@ class MainPageScreen extends StatelessWidget {
               onPressed: () {
                 bottomNavbarIndexNotifier.value = 2;
               },
-              backgroundColor: bottomNavbarIndexNotifier.value == 2
-                  ? Color(0xffEB3030)
-                  : Colors.white,
-              foregroundColor: bottomNavbarIndexNotifier.value == 2
-                  ? Colors.white
-                  : Colors.black,
-              child: Icon(Icons.shopping_cart),
+              backgroundColor: bottomNavbarIndexNotifier.value == 2 ? Color(0xffEB3030) : Colors.white,
+              foregroundColor: bottomNavbarIndexNotifier.value == 2 ? Colors.white : Colors.black,
+              child: Icon(Icons.shopping_cart_outlined),
             );
           }),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }
-

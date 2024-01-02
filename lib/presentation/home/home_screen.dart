@@ -91,7 +91,7 @@ class HomeScreen extends StatelessWidget {
                       price: homeScreenProductsList1[index]['offerPrice'],
                       originalPrice: homeScreenProductsList1[index]['originalPrice'],
                       offerPercentage: homeScreenProductsList1[index]['offerPercentage'],
-                      rating: homeScreenProductsList1[index]['rating'],
+                      numberOfRatings: homeScreenProductsList1[index]['rating'],
                     );
                   },
                   itemCount: homeScreenProductsList1.length,

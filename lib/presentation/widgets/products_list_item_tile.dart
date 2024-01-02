@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:internship_sample/core/colors.dart';
+import 'package:internship_sample/presentation/widgets/custom_star_rating_tile.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 
 class ProductsListItemTile extends StatelessWidget {
@@ -11,7 +12,7 @@ class ProductsListItemTile extends StatelessWidget {
     required this.price,
     this.originalPrice = "",
     this.offerPercentage = "",
-    this.rating = "",
+    this.numberOfRatings = "",
   });
   final String imagePath;
   final String heading;
@@ -19,7 +20,7 @@ class ProductsListItemTile extends StatelessWidget {
   final String price;
   final String originalPrice;
   final String offerPercentage;
-  final String rating;
+  final String numberOfRatings;
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
@@ -88,28 +89,10 @@ class ProductsListItemTile extends StatelessWidget {
                         )
                       ],
                     ),
-                    
-                    Row(
-                      children: [
-                        for (int i = 0; i < 4; i++)
-                          Padding(
-                            padding: const EdgeInsets.all(2),
-                            child: Container(
-                              height: 16,
-                              width: 16,
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  image: AssetImage("lib/core/assets/images/product_images/home/star.jpg"),
-                                  fit: BoxFit.fill,
-                                ),
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(4),
-                                ),
-                              ),
-                            ),
-                          ),
-                      ],
-                    )
+                    CustomStarRatingTile(
+                      numberOfRatings: numberOfRatings,
+                      iconAndTextSize: 10,
+                    ),
                   ],
                 ),
               ),
