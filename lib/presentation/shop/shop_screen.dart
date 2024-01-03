@@ -1,16 +1,21 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:internship_sample/core/constatns.dart';
-import 'package:internship_sample/presentation/kart/widgets/custom_styled_cart_button.dart';
-import 'package:internship_sample/presentation/kart/widgets/custom_text_icon_button.dart';
-import 'package:internship_sample/presentation/kart/widgets/kart_product_details_tile.dart';
+import 'package:internship_sample/presentation/checkout/checkout_screen.dart';
+import 'package:internship_sample/presentation/kart/cart_screen.dart';
+import 'package:internship_sample/presentation/place_order/place_order_screen.dart';
+import 'package:internship_sample/presentation/shop/widgets/custom_styled_shop_page_button.dart';
+import 'package:internship_sample/presentation/shop/widgets/custom_text_icon_button.dart';
+import 'package:internship_sample/presentation/shop/widgets/shop_product_details_tile.dart';
 import 'package:internship_sample/presentation/widgets/custom_appbar.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 import 'package:internship_sample/presentation/widgets/products_list_item_tile.dart';
 import 'package:internship_sample/presentation/widgets/search_filter_bar.dart';
 import 'package:internship_sample/presentation/widgets/sliding_product_tile.dart';
 
-class KartScreen extends StatelessWidget {
-  const KartScreen({super.key});
+class ShopScreen extends StatelessWidget {
+  const ShopScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -34,27 +39,41 @@ class KartScreen extends StatelessWidget {
               imagePath: "lib/core/assets/images/product_images/kart/shoe1.jpg",
               count: 5,
             ),
-            KartProductDetailsTile(),
-            const Padding(
+            ShopProductDetailsTile(),
+            Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
                 children: [
-                  CustomStyledCartButton(
-                    gradientColors: [
-                      Color(0xFF3F92FF),
-                      Color(0xFF0B3689),
-                    ],
-                    icon: Icons.shopping_cart_outlined,
-                    label: "Go to cart",
+                  GestureDetector(
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => CartScreen(),
+                      ),
+                    ),
+                    child: CustomStyledShopPageButton(
+                      gradientColors: [
+                        Color(0xFF3F92FF),
+                        Color(0xFF0B3689),
+                      ],
+                      icon: Icons.shopping_cart_outlined,
+                      label: "Go to cart",
+                    ),
                   ),
                   kWidth,
-                  CustomStyledCartButton(
-                    gradientColors: [
-                      Color(0xFF71F9A9),
-                      Color(0xFF31B769),
-                    ],
-                    icon: Icons.touch_app_outlined,
-                    label: "Buy Now",
+                  GestureDetector(
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => PlaceOrderScreen(),
+                      ),
+                    ),
+                    child: CustomStyledShopPageButton(
+                      gradientColors: [
+                        Color(0xFF71F9A9),
+                        Color(0xFF31B769),
+                      ],
+                      icon: Icons.touch_app_outlined,
+                      label: "Buy Now",
+                    ),
                   ),
                 ],
               ),

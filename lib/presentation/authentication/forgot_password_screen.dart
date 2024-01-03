@@ -3,6 +3,7 @@ import 'package:internship_sample/core/colors.dart';
 
 import 'package:internship_sample/presentation/authentication/widgets/authentication_page_title.dart';
 import 'package:internship_sample/presentation/authentication/widgets/custom_icon_text_field.dart';
+import 'package:internship_sample/presentation/widgets/custom_elevated_button.dart';
 
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 
@@ -47,8 +48,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                     SizedBox(
                       width: screenSize.width * 0.7,
                       child: const CustomTextWidget(
-                        text:
-                            "We will send you a message to set or reset your new password ",
+                        text: "We will send you a message to set or reset your new password ",
                         fontSize: 12,
                         fontColor: kAuthentificationPageTextColor,
                         fontweight: FontWeight.w400,
@@ -60,13 +60,8 @@ class ForgotPasswordScreen extends StatelessWidget {
                 SizedBox(
                   height: 55,
                   width: double.infinity,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: kMainThemeColor,
-                        shape: const RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(4)))),
-                    onPressed: () {
+                  child: GestureDetector(
+                    onTap: () {
                       final _email = usernameOrEmailController.text;
 
                       SnackBar snackBar = SnackBar(
@@ -77,11 +72,8 @@ class ForgotPasswordScreen extends StatelessWidget {
                       );
                       ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     },
-                    child: const CustomTextWidget(
-                      text: "Submit",
-                      fontSize: 20,
-                      fontColor: kButtonTextColor,
-                      fontweight: FontWeight.w600,
+                    child: CustomElevatedButton(
+                      label: "Submit",
                     ),
                   ),
                 ),

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:internship_sample/core/constatns.dart';
-import 'package:internship_sample/presentation/kart/widgets/custom_text_icon_button.dart';
-import 'package:internship_sample/presentation/kart/widgets/size_selector_widget.dart';
+import 'package:internship_sample/presentation/shop/widgets/custom_text_icon_button.dart';
+import 'package:internship_sample/presentation/shop/widgets/size_selector_widget.dart';
 import 'package:internship_sample/presentation/widgets/custom_star_rating_tile.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 
 ValueNotifier<int> sizeSelectNotifier = ValueNotifier(0);
 
-class KartProductDetailsTile extends StatelessWidget {
-  KartProductDetailsTile({super.key});
+class ShopProductDetailsTile extends StatelessWidget {
+  ShopProductDetailsTile({super.key});
   ValueNotifier<bool> readMoreClickNotifier = ValueNotifier(false);
 
   @override
@@ -112,7 +112,7 @@ class KartProductDetailsTile extends StatelessWidget {
             fontSize: 15,
             fontweight: FontWeight.w500,
           ),
-          
+
           ValueListenableBuilder(
             valueListenable: readMoreClickNotifier,
             builder: (context, value, _) {

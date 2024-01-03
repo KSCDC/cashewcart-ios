@@ -56,9 +56,16 @@ flutter:
     - lib/core/assets/images/onboard_choose_products.png
     - lib/core/assets/images/onboard_make_payment.png
     - lib/core/assets/images/onboard_get_your_order.png
+
     - lib/core/assets/images/logos/google_logo.svg
     - lib/core/assets/images/logos/apple_logo.svg
     - lib/core/assets/images/logos/facebook_logo.svg
+    - lib/core/assets/images/logos/visa_logo.svg
+    - lib/core/assets/images/logos/paypal_logo.svg
+    - lib/core/assets/images/logos/maestro_logo.svg
+    - lib/core/assets/images/logos/apple_pay_logo.svg
+    - lib/core/assets/images/other/payment_success.svg
+
     - lib/core/assets/images/get_started_bg_image.png
     - lib/core/assets/images/avatar.jpeg
     - lib/core/assets/images/circle_avatar_images/beauty.jpg

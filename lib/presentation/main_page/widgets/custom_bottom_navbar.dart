@@ -60,24 +60,3 @@ class BottomNavigationWidget extends StatelessWidget {
 
 
 
-// BottomNavigationBar(
-//             currentIndex: bottomNavbarIndexNotifier.value,
-//             onTap: (index) {
-//               bottomNavbarIndexNotifier.value = index;
-//             },
-//             type: BottomNavigationBarType.fixed,
-//             backgroundColor: Colors.white,
-//             selectedItemColor: Color(0xffEB3030),
-//             unselectedItemColor: Colors.black54,
-//             items: const [
-//               BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-//               BottomNavigationBarItem(
-//                   icon: Icon(Icons.favorite_border), label: "Wishlist"),
-//               BottomNavigationBarItem(
-//                   icon: Icon(Icons.shopping_cart_outlined), label: "Kart"),
-//               BottomNavigationBarItem(
-//                   icon: Icon(Icons.search), label: "Search"),
-//               BottomNavigationBarItem(
-//                   icon: Icon(Icons.settings), label: "Setting"),
-//             ],
-//           );

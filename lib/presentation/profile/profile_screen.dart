@@ -3,6 +3,7 @@ import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/core/constatns.dart';
 import 'package:internship_sample/presentation/profile/widgets/profile_editing_textfield.dart';
 import 'package:internship_sample/presentation/widgets/custom_appbar.dart';
+import 'package:internship_sample/presentation/widgets/custom_elevated_button.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -34,6 +35,7 @@ class ProfileScreen extends StatelessWidget {
     _ifscCodeController.text = "SBIN00428";
 
     return Scaffold(
+      backgroundColor: appBackgroundColor,
       appBar: CustomAppBar(
         title: "Profile",
       ),
@@ -193,23 +195,7 @@ class ProfileScreen extends StatelessWidget {
               SizedBox(
                 height: 55,
                 width: double.infinity,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: kMainThemeColor,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(4),
-                      ),
-                    ),
-                  ),
-                  onPressed: () {},
-                  child: const CustomTextWidget(
-                    text: "Save",
-                    fontSize: 20,
-                    fontColor: kButtonTextColor,
-                    fontweight: FontWeight.w600,
-                  ),
-                ),
+                child: CustomElevatedButton(label: "Save"),
               ),
               SizedBox(height: 50),
             ],

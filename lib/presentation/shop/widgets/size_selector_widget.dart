@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:internship_sample/presentation/kart/widgets/kart_product_details_tile.dart';
+import 'package:internship_sample/presentation/shop/widgets/shop_product_details_tile.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 
 class SizeSelectorWidget extends StatelessWidget {

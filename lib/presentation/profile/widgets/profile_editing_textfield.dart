@@ -29,6 +29,7 @@ class ProfileEditingTextField extends StatelessWidget {
           style: const TextStyle(color: Colors.black),
           textCapitalization: TextCapitalization.sentences,
           decoration: InputDecoration(
+            fillColor: Colors.white,
             enabledBorder: const OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(10)),
               borderSide: BorderSide(

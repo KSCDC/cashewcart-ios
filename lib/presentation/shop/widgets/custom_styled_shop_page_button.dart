@@ -3,8 +3,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 
-class CustomStyledCartButton extends StatelessWidget {
-  const CustomStyledCartButton({
+class CustomStyledShopPageButton extends StatelessWidget {
+  const CustomStyledShopPageButton({
     super.key,
     required this.gradientColors,
     required this.icon,
@@ -22,7 +22,7 @@ class CustomStyledCartButton extends StatelessWidget {
           padding: const EdgeInsets.all(5),
           child: Container(
             height: 40,
-            // width: 130,
+            width: 130,
             decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
@@ -35,25 +35,17 @@ class CustomStyledCartButton extends StatelessWidget {
                   topRight: Radius.circular(4),
                   bottomRight: Radius.circular(4),
                 )),
-            child: TextButton(
-              onPressed: () {},
-              style: TextButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(6),
-                ),
-              ),
-              child: Container(
-                padding: EdgeInsets.only(left: 45, right: 10),
-                child: Row(
-                  children: [
-                    CustomTextWidget(
-                      text: label,
-                      fontSize: 14,
-                      fontColor: Colors.white,
-                      fontweight: FontWeight.w600,
-                    ),
-                  ],
-                ),
+            child: Container(
+              padding: EdgeInsets.only(left: 45, right: 10),
+              child: Row(
+                children: [
+                  CustomTextWidget(
+                    text: label,
+                    fontSize: 14,
+                    fontColor: Colors.white,
+                    fontweight: FontWeight.w600,
+                  ),
+                ],
               ),
             ),
           ),

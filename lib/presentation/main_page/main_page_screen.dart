@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/presentation/home/home_screen.dart';
-import 'package:internship_sample/presentation/kart/kart_screen.dart';
+import 'package:internship_sample/presentation/shop/shop_screen.dart';
 import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
 import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar_item.dart';
 import 'package:internship_sample/presentation/search/search_screen.dart';
@@ -14,7 +15,7 @@ class MainPageScreen extends StatelessWidget {
   final pages = [
     HomeScreen(),
     WishlistScreen(),
-    KartScreen(),
+    ShopScreen(),
     SearchScreen(),
     SettingsScreen(),
   ];
@@ -22,7 +23,7 @@ class MainPageScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffFDFDFD),
+      backgroundColor: appBackgroundColor,
       body: SafeArea(
         child: ValueListenableBuilder(
             valueListenable: bottomNavbarIndexNotifier,

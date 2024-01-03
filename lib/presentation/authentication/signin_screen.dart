@@ -7,6 +7,7 @@ import 'package:internship_sample/presentation/authentication/widgets/authentica
 import 'package:internship_sample/presentation/authentication/widgets/custom_icon_text_field.dart';
 import 'package:internship_sample/presentation/authentication/widgets/custom_password_text_field.dart';
 import 'package:internship_sample/presentation/main_page/main_page_screen.dart';
+import 'package:internship_sample/presentation/widgets/custom_elevated_button.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 
 class SignInScreen extends StatelessWidget {
@@ -45,8 +46,7 @@ class SignInScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     GestureDetector(
-                      onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => ForgotPasswordScreen())),
+                      onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => ForgotPasswordScreen())),
                       child: const CustomTextWidget(
                         text: "Forgot Password?",
                         fontSize: 12,
@@ -60,13 +60,8 @@ class SignInScreen extends StatelessWidget {
                 SizedBox(
                   height: 55,
                   width: double.infinity,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: kMainThemeColor,
-                        shape: const RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(4)))),
-                    onPressed: () {
+                  child: GestureDetector(
+                    onTap: () {
                       final _email = usernameOrEmailController.text;
                       final _password = passwordController.text;
                       if (_email == "ajs" && _password == "1234") {
@@ -92,11 +87,8 @@ class SignInScreen extends StatelessWidget {
                         ScaffoldMessenger.of(context).showSnackBar(snackBar);
                       }
                     },
-                    child: const CustomTextWidget(
-                      text: "Login",
-                      fontSize: 20,
-                      fontColor: kButtonTextColor,
-                      fontweight: FontWeight.w600,
+                    child: CustomElevatedButton(
+                      label: "Login",
                     ),
                   ),
                 ),

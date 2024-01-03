@@ -5,6 +5,7 @@ import 'package:internship_sample/presentation/authentication/widgets/alternativ
 import 'package:internship_sample/presentation/authentication/widgets/authentication_page_title.dart';
 import 'package:internship_sample/presentation/authentication/widgets/custom_icon_text_field.dart';
 import 'package:internship_sample/presentation/authentication/widgets/custom_password_text_field.dart';
+import 'package:internship_sample/presentation/widgets/custom_elevated_button.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 
 class SignUpScreen extends StatelessWidget {
@@ -76,41 +77,32 @@ class SignUpScreen extends StatelessWidget {
                 SizedBox(
                   height: 55,
                   width: double.infinity,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: kMainThemeColor,
-                        shape: const RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(4)))),
-                    onPressed: () {
-                      final _email = usernameOrEmailController.text;
-                      final _password = passwordController.text;
-                      final _confirmPassword = confirmPasswordController.text;
-                      if (_password != _confirmPassword) {
-                        const snackBar = SnackBar(
-                          content: Text("Passwords doesn't match!"),
-                          behavior: SnackBarBehavior.floating,
-                          margin: EdgeInsets.all(10),
-                          padding: EdgeInsets.all(20),
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                      } else {
-                        const snackBar = SnackBar(
-                          content: Text('Account created successfully'),
-                          behavior: SnackBarBehavior.floating,
-                          margin: EdgeInsets.all(10),
-                          padding: EdgeInsets.all(20),
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                      }
-                    },
-                    child: const CustomTextWidget(
-                      text: "Create Account",
-                      fontSize: 20,
-                      fontColor: kButtonTextColor,
-                      fontweight: FontWeight.w600,
-                    ),
-                  ),
+                  child: GestureDetector(
+                      onTap: () {
+                        final _email = usernameOrEmailController.text;
+                        final _password = passwordController.text;
+                        final _confirmPassword = confirmPasswordController.text;
+                        if (_password != _confirmPassword) {
+                          const snackBar = SnackBar(
+                            content: Text("Passwords doesn't match!"),
+                            behavior: SnackBarBehavior.floating,
+                            margin: EdgeInsets.all(10),
+                            padding: EdgeInsets.all(20),
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        } else {
+                          const snackBar = SnackBar(
+                            content: Text('Account created successfully'),
+                            behavior: SnackBarBehavior.floating,
+                            margin: EdgeInsets.all(10),
+                            padding: EdgeInsets.all(20),
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        }
+                      },
+                      child: CustomElevatedButton(
+                        label: "Create Account",
+                      )),
                 ),
                 const AlternativeSigninOptionsWidget(),
                 Row(
