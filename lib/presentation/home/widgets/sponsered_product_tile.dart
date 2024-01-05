@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:internship_sample/core/colors.dart';
+import 'package:internship_sample/core/constatns.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 
 class SponseredProductTile extends StatelessWidget {
-  const SponseredProductTile({super.key});
+  const SponseredProductTile({
+    super.key,
+    required this.imagePath,
+  });
+  final String imagePath;
 
   @override
   Widget build(BuildContext context) {
@@ -25,19 +30,68 @@ class SponseredProductTile extends StatelessWidget {
             fontweight: FontWeight.w500,
           ),
           SizedBox(height: 10),
-          Container(
-            width: screenSize.width * 0.95,
-            height: screenSize.width * 0.8,
-            // color: Colors.black,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage("lib/core/assets/images/product_images/home/sponserd.jpg"),
-                fit: BoxFit.fill,
+          Stack(
+            children: [
+              Container(
+                width: screenSize.width * 0.95,
+                height: screenSize.width * 0.8,
+                // color: Colors.black,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage(imagePath),
+                    fit: BoxFit.fill,
+                  ),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                ),
               ),
-              borderRadius: BorderRadius.all(
-                Radius.circular(10),
+              Column(
+                children: [
+                  kHeight,
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Divider(
+                          color: Colors.white,
+                          thickness: 2,
+                          indent: 90,
+                          endIndent: 5,
+                        ),
+                      ),
+                      CustomTextWidget(
+                        text: "UP TO",
+                        fontSize: 22,
+                        fontColor: Colors.white,
+                        fontweight: FontWeight.w600,
+                        height: 1,
+                      ),
+                      Expanded(
+                        child: Divider(
+                          color: Colors.white,
+                          thickness: 2,
+                          indent: 5,
+                          endIndent: 90,
+                        ),
+                      ),
+                    ],
+                  ),
+                  CustomTextWidget(
+                    text: "50% OFF",
+                    fontSize: 40,
+                    fontColor: Colors.white,
+                    fontweight: FontWeight.w600,
+                    height: 1,
+                  ),
+                  Divider(
+                    color: Colors.white,
+                    thickness: 2,
+                    indent: 150,
+                    endIndent: 150,
+                  ),
+                ],
               ),
-            ),
+            ],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -56,47 +110,5 @@ class SponseredProductTile extends StatelessWidget {
         ],
       ),
     );
-
-    //
-    // Container(
-    //   padding: EdgeInsets.all(5),
-    //   child: Column(
-    //     crossAxisAlignment: CrossAxisAlignment.start,
-    //     children: [
-    //       CustomTextWidget(
-    //         text: "Sponserd",
-    //         fontSize: 20,
-    //         fontweight: FontWeight.w500,
-    //       ),
-    //       Container(
-    //         clipBehavior: Clip.hardEdge,
-    //         decoration: BoxDecoration(
-    //           borderRadius: BorderRadius.circular(10),
-    //         ),
-    //         child: FittedBox(
-    //           child: Image.asset(
-    //             "lib/core/assets/images/product_images/home/sponserd.jpg",
-    //           ),
-    //           fit: BoxFit.fill,
-    //         ),
-    //       ),
-    //       SizedBox(height: 10),
-    //       Row(
-    //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //         children: [
-    //           CustomTextWidget(
-    //             text: "up to 50% Off",
-    //             fontSize: 16,
-    //             fontweight: FontWeight.w700,
-    //           ),
-    //           IconButton(
-    //             onPressed: () {},
-    //             icon: Icon(Icons.arrow_forward_ios),
-    //           )
-    //         ],
-    //       )
-    //     ],
-    //   ),
-    // );
   }
 }

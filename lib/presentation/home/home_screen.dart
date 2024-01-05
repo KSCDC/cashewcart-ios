@@ -6,6 +6,7 @@ import 'package:internship_sample/presentation/home/widgets/new_arrivals_tile.da
 import 'package:internship_sample/presentation/home/widgets/sliding_image_tile.dart';
 import 'package:internship_sample/presentation/home/widgets/sponsered_product_tile.dart';
 import 'package:internship_sample/presentation/home/widgets/view_offer_tile.dart';
+import 'package:internship_sample/presentation/shop/shop_screen.dart';
 import 'package:internship_sample/presentation/widgets/products_list_item_tile.dart';
 import 'package:internship_sample/presentation/widgets/search_section_tile.dart';
 import 'package:internship_sample/presentation/widgets/custom_search_filtering_button.dart';
@@ -45,7 +46,7 @@ class HomeScreen extends StatelessWidget {
                 width: screenSize.width * 0.9,
                 child: PageView(
                   controller: controller,
-                  children: [
+                  children: const [
                     SlidingImageTile(),
                     SlidingImageTile(),
                     SlidingImageTile(),
@@ -83,18 +84,30 @@ class HomeScreen extends StatelessWidget {
                 color: Colors.white,
                 child: ListView.builder(
                   itemBuilder: (context, index) {
-                    print("values ${homeScreenProductsList1[index]['imagePath']}");
-                    return ProductsListItemTile(
-                      imagePath: homeScreenProductsList1[index]['imagePath'],
-                      heading: homeScreenProductsList1[index]['heading'],
-                      description: homeScreenProductsList1[index]['description'],
-                      price: homeScreenProductsList1[index]['offerPrice'],
-                      originalPrice: homeScreenProductsList1[index]['originalPrice'],
-                      offerPercentage: homeScreenProductsList1[index]['offerPercentage'],
-                      numberOfRatings: homeScreenProductsList1[index]['rating'],
+                    return GestureDetector(
+                      onTap: () {
+                        print("image list ${productDetailsList1[index]['imagePath']}");
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => ShopScreen(
+                              imageList: productDetailsList1[index]['imagePath'],
+                              productName: productDetailsList1[index]['name'],
+                            ),
+                          ),
+                        );
+                      },
+                      child: ProductsListItemTile(
+                        imageList: productDetailsList1[index]['imagePath'],
+                        heading: productDetailsList1[index]['name'],
+                        description: productDetailsList1[index]['description'],
+                        price: productDetailsList1[index]['offerPrice'],
+                        originalPrice: productDetailsList1[index]['originalPrice'],
+                        offerPercentage: productDetailsList1[index]['offerPercentage'],
+                        numberOfRatings: productDetailsList1[index]['rating'],
+                      ),
                     );
                   },
-                  itemCount: homeScreenProductsList1.length,
+                  itemCount: productDetailsList1.length,
                   scrollDirection: Axis.horizontal,
                 ),
               ),
@@ -107,10 +120,10 @@ class HomeScreen extends StatelessWidget {
                     SizedBox(width: 20),
                     Container(
                       width: 180,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                      child: const Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          CustomTextWidget(text: "Special Offers"),
+                          CustomTextWidget(text: "Special Offers 😱"),
                           CustomTextWidget(
                             text: "We make sure you get the offer you need at best prices",
                             fontSize: 12,
@@ -122,8 +135,8 @@ class HomeScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              FlatAndHeelsTile(),
-              ViewOfferTile(
+              const FlatAndHeelsTile(),
+              const ViewOfferTile(
                 color: Color(0xFFFD6E87),
                 mainLabel: "Trending Products",
                 icon: Icons.calendar_month,
@@ -134,23 +147,40 @@ class HomeScreen extends StatelessWidget {
                 color: Colors.white,
                 child: ListView.builder(
                   itemBuilder: (context, index) {
-                    print("values ${homeScreenProductsList1[index]['imagePath']}");
-                    return ProductsListItemTile(
-                      imagePath: homeScreenProductsList2[index]['imagePath'],
-                      heading: homeScreenProductsList2[index]['heading'],
-                      price: homeScreenProductsList2[index]['offerPrice'],
-                      originalPrice: homeScreenProductsList2[index]['originalPrice'],
-                      offerPercentage: homeScreenProductsList2[index]['offerPercentage'],
+                    print("Image list in kart ${productDetailsList2[index]['imagePath']}");
+                    return GestureDetector(
+                      onTap: () {
+                        print("image list ${productDetailsList1[index]['imagePath']}");
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => ShopScreen(
+                              imageList: productDetailsList1[index]['imagePath'],
+                              productName: productDetailsList1[index]['name'],
+                            ),
+                          ),
+                        );
+                      },
+                      child: ProductsListItemTile(
+                        imageList: productDetailsList2[index]['imagePath'],
+                        heading: productDetailsList2[index]['name'],
+                        description: productDetailsList2[index]['description'],
+                        price: productDetailsList2[index]['offerPrice'],
+                        originalPrice: productDetailsList2[index]['originalPrice'],
+                        offerPercentage: productDetailsList2[index]['offerPercentage'],
+                        numberOfRatings: productDetailsList2[index]['rating'],
+                      ),
                     );
                   },
-                  itemCount: homeScreenProductsList2.length,
+                  itemCount: productDetailsList2.length,
                   scrollDirection: Axis.horizontal,
                 ),
               ),
-              SizedBox(height: 10),
-              NewArrivalsTile(),
-              SizedBox(height: 15),
-              SponseredProductTile(),
+              const SizedBox(height: 10),
+              const NewArrivalsTile(),
+              const SizedBox(height: 15),
+              SponseredProductTile(
+                imagePath: "${productDetailsList1[5]['imagePath'][0]}",
+              ),
             ],
           ),
         ),

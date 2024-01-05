@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/core/constatns.dart';
 import 'package:internship_sample/presentation/checkout/checkout_screen.dart';
-import 'package:internship_sample/presentation/kart/widgets/cart_product_list_tile.dart';
+import 'package:internship_sample/presentation/cart/widgets/cart_product_list_tile.dart';
 import 'package:internship_sample/presentation/place_order/place_order_dropdown.dart';
 import 'package:internship_sample/presentation/widgets/custom_appbar.dart';
 import 'package:internship_sample/presentation/widgets/custom_elevated_button.dart';

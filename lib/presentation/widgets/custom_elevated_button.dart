@@ -14,7 +14,7 @@ class CustomElevatedButton extends StatelessWidget {
     return Container(
       height: 55,
       width: double.infinity,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: kMainThemeColor,
         borderRadius: BorderRadius.all(
           Radius.circular(4),

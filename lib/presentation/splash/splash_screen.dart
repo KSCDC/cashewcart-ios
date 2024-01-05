@@ -32,22 +32,10 @@ class _SplashScreenState extends State<SplashScreen> {
           children: [
             Padding(
               padding: EdgeInsets.all(20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Image(
-                    image:
-                        AssetImage("lib/core/assets/images/logos/app_logo.png"),
-                    height: 100,
-                  ),
-                  CustomTextWidget(
-                    text: "CASHEW",
-                    fontFamily: 'LibreCaslonText',
-                    fontSize: 40,
-                    fontColor: Color(0xff7A2433),
-                    fontweight: FontWeight.bold,
-                  )
-                ],
+              child: Image(
+                image:
+                    AssetImage("lib/core/assets/images/logos/app_logo.png"),
+                height: 100,
               ),
             )
           ],

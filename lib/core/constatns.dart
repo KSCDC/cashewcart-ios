@@ -19,51 +19,49 @@ const List<String> statesList = [
 
 const List avatarImage = [
   {
-    'label': "Beauty",
-    'imagePath': "lib/core/assets/images/circle_avatar_images/beauty.jpg",
+    'label': "Squash",
+    'imagePath': "lib/core/assets/images/product_images/Cashew Apple Squash/Cashew apple squash.jpg",
   },
   {
-    'label': "Fasion",
-    'imagePath': "lib/core/assets/images/circle_avatar_images/fashion.jpg",
+    'label': "Jam",
+    'imagePath': "lib/core/assets/images/product_images/Cashew Pine Jam/Cashew pine jam.jpg",
   },
   {
-    'label': "Beauty",
-    'imagePath': "lib/core/assets/images/circle_avatar_images/kids.jpg",
+    'label': "Soda",
+    'imagePath': "lib/core/assets/images/product_images/Cashew Soda/Cashew soda.jpg",
   },
   {
-    'label': "Fasion",
-    'imagePath': "lib/core/assets/images/circle_avatar_images/mens.jpg",
+    'label': "Squash",
+    'imagePath': "lib/core/assets/images/product_images/Cashew Apple Squash/Cashew apple squash.jpg",
   },
   {
-    'label': "Beauty",
-    'imagePath': "lib/core/assets/images/circle_avatar_images/womens.jpg",
+    'label': "Jam",
+    'imagePath': "lib/core/assets/images/product_images/Cashew Pine Jam/Cashew pine jam.jpg",
   },
   {
-    'label': "Beauty",
-    'imagePath': "lib/core/assets/images/circle_avatar_images/beauty.jpg",
+    'label': "Soda",
+    'imagePath': "lib/core/assets/images/product_images/Cashew Soda/Cashew soda.jpg",
   },
   {
-    'label': "Fasion",
-    'imagePath': "lib/core/assets/images/circle_avatar_images/fashion.jpg",
+    'label': "Squash",
+    'imagePath': "lib/core/assets/images/product_images/Cashew Apple Squash/Cashew apple squash.jpg",
   },
   {
-    'label': "Beauty",
-    'imagePath': "lib/core/assets/images/circle_avatar_images/kids.jpg",
+    'label': "Jam",
+    'imagePath': "lib/core/assets/images/product_images/Cashew Pine Jam/Cashew pine jam.jpg",
   },
   {
-    'label': "Fasion",
-    'imagePath': "lib/core/assets/images/circle_avatar_images/mens.jpg",
-  },
-  {
-    'label': "Beauty",
-    'imagePath': "lib/core/assets/images/circle_avatar_images/womens.jpg",
+    'label': "Soda",
+    'imagePath': "lib/core/assets/images/product_images/Cashew Soda/Cashew soda.jpg",
   },
 ];
 
-const List homeScreenProductsList1 = [
+const List productDetailsList1 = [
   {
-    'imagePath': "lib/core/assets/images/product_images/home/kurtha.jpg",
-    'heading': "Women Printed Kurta",
+    'imagePath': [
+      "lib/core/assets/images/product_images/Cashew Apple Squash/Cashew apple squash.jpg",
+    ],
+    'name': "Cashew apple squash",
     'description': "Neque porro quisquam est qui dolorem ipsum quia",
     'offerPrice': "1500",
     'originalPrice': "2499",
@@ -71,17 +69,10 @@ const List homeScreenProductsList1 = [
     'rating': "56890",
   },
   {
-    'imagePath': "lib/core/assets/images/product_images/home/shoe.jpg",
-    'heading': "HRX by Hrithik Roshan",
-    'description': "Neque porro quisquam est qui dolorem ipsum quia",
-    'offerPrice': "2499",
-    'originalPrice': "4999",
-    'offerPercentage': "50%Off",
-    'rating': "344567",
-  },
-  {
-    'imagePath': "lib/core/assets/images/product_images/home/kurtha.jpg",
-    'heading': "Women Printed Kurta",
+    'imagePath': [
+      "lib/core/assets/images/product_images/Cashew Pine Jam/Cashew pine jam.jpg",
+    ],
+    'name': "Cashew pine jam",
     'description': "Neque porro quisquam est qui dolorem ipsum quia",
     'offerPrice': "1500",
     'originalPrice': "2499",
@@ -89,102 +80,168 @@ const List homeScreenProductsList1 = [
     'rating': "56890",
   },
   {
-    'imagePath': "lib/core/assets/images/product_images/home/shoe.jpg",
-    'heading': "HRX by Hrithik Roshan",
+    'imagePath': [
+      "lib/core/assets/images/product_images/Cashew Powder/Cashew Powder 1.jpg",
+      "lib/core/assets/images/product_images/Cashew Powder/Cashew Powder 2.jpg",
+      "lib/core/assets/images/product_images/Cashew Powder/Cashew Powder 3.jpg",
+      "lib/core/assets/images/product_images/Cashew Powder/Cashew Powder 4.jpg",
+    ],
+    'name': "Cashew Powdre",
     'description': "Neque porro quisquam est qui dolorem ipsum quia",
-    'offerPrice': "2499",
-    'originalPrice': "4999",
-    'offerPercentage': "50%Off",
-    'rating': "344567",
+    'offerPrice': "1500",
+    'originalPrice': "2499",
+    'offerPercentage': "40%Off",
+    'rating': "56890",
+  },
+  {
+    'imagePath': [
+      "lib/core/assets/images/product_images/Cashew Soda/Cashew soda.jpg",
+    ],
+    'name': "Cashew soda",
+    'description': "Neque porro quisquam est qui dolorem ipsum quia",
+    'offerPrice': "1500",
+    'originalPrice': "2499",
+    'offerPercentage': "40%Off",
+    'rating': "56890",
+  },
+  {
+    'imagePath': [
+      "lib/core/assets/images/product_images/Cashew Soup/Cashew Soup-mix .jpg",
+      "lib/core/assets/images/product_images/Cashew Soup/Cashew Soup.jpg",
+    ],
+    'name': "Cashew Soup",
+    'description': "Neque porro quisquam est qui dolorem ipsum quia",
+    'offerPrice': "1500",
+    'originalPrice': "2499",
+    'offerPercentage': "40%Off",
+    'rating': "56890",
+  },
+  {
+    'imagePath': [
+      "lib/core/assets/images/product_images/Cashew Vanilla MilkShake/Cashew Vanilla Milk Shake Powder.jpg",
+    ],
+    'name': "Cashew Vanilla Milk Shake Powder",
+    'description': "Neque porro quisquam est qui dolorem ipsum quia",
+    'offerPrice': "1500",
+    'originalPrice': "2499",
+    'offerPercentage': "40%Off",
+    'rating': "56890",
+  },
+  {
+    'imagePath': [
+      "lib/core/assets/images/product_images/Cashew Vita/Cashew Vita.jpg",
+    ],
+    'name': "Cashew Vita",
+    'description': "Neque porro quisquam est qui dolorem ipsum quia",
+    'offerPrice': "1500",
+    'originalPrice': "2499",
+    'offerPercentage': "40%Off",
+    'rating': "56890",
+  },
+  {
+    'imagePath': [
+      "lib/core/assets/images/product_images/Cashew Vita Cardamom flavoured/Cashew vita cardamom flavoured.jpg",
+    ],
+    'name': "Cashew vita cardamom flavoured",
+    'description': "Neque porro quisquam est qui dolorem ipsum quia",
+    'offerPrice': "1500",
+    'originalPrice': "2499",
+    'offerPercentage': "40%Off",
+    'rating': "56890",
+  },
+  {
+    'imagePath': [
+      "lib/core/assets/images/product_images/Cashew Vita Chocolate Flavoured/Cashew Vita Chocolate Flavoured 1.jpg",
+      "lib/core/assets/images/product_images/Cashew Vita Chocolate Flavoured/Cashew vita chocolate flavoured.jpg",
+    ],
+    'name': "Cashew Vita Chocolate Flavoured",
+    'description': "Neque porro quisquam est qui dolorem ipsum quia",
+    'offerPrice': "1500",
+    'originalPrice': "2499",
+    'offerPercentage': "40%Off",
+    'rating': "56890",
+  },
+  {
+    'imagePath': [
+      "lib/core/assets/images/product_images/Cashew Vita Pistachio flavoured/Cashew vita Pistachio flavoured.jpg",
+    ],
+    'name': "Cashew Vita Pistachio flavoured",
+    'description': "Neque porro quisquam est qui dolorem ipsum quia",
+    'offerPrice': "1500",
+    'originalPrice': "2499",
+    'offerPercentage': "40%Off",
+    'rating': "56890",
+  },
+  {
+    'imagePath': [
+      "lib/core/assets/images/product_images/Chilli Garlic/Chilly Garlic.jpg",
+    ],
+    'name': "Chilly Garlic.",
+    'description': "Neque porro quisquam est qui dolorem ipsum quia",
+    'offerPrice': "1500",
+    'originalPrice': "2499",
+    'offerPercentage': "40%Off",
+    'rating': "56890",
   },
 ];
 
-const List homeScreenProductsList2 = [
+const List productDetailsList2 = [
   {
-    'imagePath': "lib/core/assets/images/product_images/home/watch.jpg",
-    'heading': "IWC Schaffhausen 2021 Pilot's Watch 'SIHH 2019' 44mm",
-    'offerPrice': "650",
-    'originalPrice': "1599",
-    'offerPercentage': "60%Off",
+    'imagePath': [
+      "lib/core/assets/images/product_images/Plain Cashew/Plain cashew (B).png",
+      "lib/core/assets/images/product_images/Plain Cashew/Plain Cashew (F).png",
+    ],
+    'name': "Plain cashew ",
+    'description': "Neque porro quisquam est qui dolorem ipsum quia",
+    'offerPrice': "1500",
+    'originalPrice': "2499",
+    'offerPercentage': "40%Off",
+    'rating': "56890",
   },
   {
-    'imagePath': "lib/core/assets/images/product_images/home/sneakers.jpg",
-    'heading': "Labbin White Sneakers For Men and Female",
-    'offerPrice': "650",
-    'originalPrice': "1250",
-    'offerPercentage': "70%Off",
+    'imagePath': [
+      "lib/core/assets/images/product_images/Chilly Coated/Red Chilly Coated Cashew.jpg",
+    ],
+    'name': "Red Chilly Coated Cashew",
+    'description': "Neque porro quisquam est qui dolorem ipsum quia",
+    'offerPrice': "1500",
+    'originalPrice': "2499",
+    'offerPercentage': "40%Off",
+    'rating': "56890",
   },
   {
-    'imagePath': "lib/core/assets/images/product_images/home/watch.jpg",
-    'heading': "IWC Schaffhausen 2021 Pilot's Watch 'SIHH 2019' 44mm",
-    'offerPrice': "650",
-    'originalPrice': "1599",
-    'offerPercentage': "60%Off",
+    'imagePath': [
+      "lib/core/assets/images/product_images/Honey Coated/Honey Coated Cashew.jpg",
+    ],
+    'name': "Honey Coated Cashew",
+    'description': "Neque porro quisquam est qui dolorem ipsum quia",
+    'offerPrice': "1500",
+    'originalPrice': "2499",
+    'offerPercentage': "40%Off",
+    'rating': "56890",
   },
   {
-    'imagePath': "lib/core/assets/images/product_images/home/sneakers.jpg",
-    'heading': "Labbin White Sneakers For Men and Female",
-    'offerPrice': "650",
-    'originalPrice': "1250",
-    'offerPercentage': "70%Off",
+    'imagePath': [
+      "lib/core/assets/images/product_images/Roasted and Salted Cashew/Roasted and salted Cashew.png",
+    ],
+    'name': "Roasted and salted Cashew",
+    'description': "Neque porro quisquam est qui dolorem ipsum quia",
+    'offerPrice': "1500",
+    'originalPrice': "2499",
+    'offerPercentage': "40%Off",
+    'rating': "56890",
+  },
+  {
+    'imagePath': [
+      "lib/core/assets/images/product_images/Salt and Pepper/Salt and Pepper.jpg",
+    ],
+    'name': "Salt and Pepper",
+    'description': "Neque porro quisquam est qui dolorem ipsum quia",
+    'offerPrice': "1500",
+    'originalPrice': "2499",
+    'offerPercentage': "40%Off",
+    'rating': "56890",
   },
 ];
 
-const List wishlistScreenProductsList = [
-  {
-    'imagePath': "lib/core/assets/images/product_images/wishlist/black_winter.jpg",
-    'heading': "Black Winter...",
-    'description': "Autumn And Winter Casual cotton-padded jacket...",
-    'price': "650",
-    'rating': "6890"
-  },
-  {
-    'imagePath': "lib/core/assets/images/product_images/wishlist/mens_starry.jpg",
-    'heading': "Mens Starry",
-    'description': "Mens Starry Sky Printed Shirt 100% Cotton Fabric",
-    'price': "650",
-    'rating': "6890"
-  },
-  {
-    'imagePath': "lib/core/assets/images/product_images/wishlist/black_dress.jpg",
-    'heading': "Black Dress",
-    'description': "Solid Black Dress for Women, Sexy Chain Shorts Ladi...",
-    'price': "650",
-    'rating': "6890"
-  },
-  {
-    'imagePath': "lib/core/assets/images/product_images/wishlist/pink.jpg",
-    'heading': "Pink Embroide...",
-    'description': "EARTHEN Rose Pink Embroidered Tiered Max...",
-    'price': "650",
-    'rating': "6890"
-  },
-  {
-    'imagePath': "lib/core/assets/images/product_images/wishlist/black_winter.jpg",
-    'heading': "Black Winter...",
-    'description': "Autumn And Winter Casual cotton-padded jacket...",
-    'price': "650",
-    'rating': "6890"
-  },
-  {
-    'imagePath': "lib/core/assets/images/product_images/wishlist/mens_starry.jpg",
-    'heading': "Mens Starry",
-    'description': "Mens Starry Sky Printed Shirt 100% Cotton Fabric",
-    'price': "650",
-    'rating': "6890"
-  },
-  {
-    'imagePath': "lib/core/assets/images/product_images/wishlist/black_dress.jpg",
-    'heading': "Black Dress",
-    'description': "Solid Black Dress for Women, Sexy Chain Shorts Ladi...",
-    'price': "650",
-    'rating': "6890"
-  },
-  {
-    'imagePath': "lib/core/assets/images/product_images/wishlist/pink.jpg",
-    'heading': "Pink Embroide...",
-    'description': "EARTHEN Rose Pink Embroidered Tiered Max...",
-    'price': "650",
-    'rating': "6890"
-  },
-];
+List fullProductsList = [productDetailsList1 + productDetailsList2];

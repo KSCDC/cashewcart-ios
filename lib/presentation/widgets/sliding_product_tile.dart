@@ -8,50 +8,46 @@ class SlidingProductTile extends StatelessWidget {
     required this.count,
   });
   final controller = PageController();
-  final String imagePath;
+  final List<String> imagePath;
   final int count;
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
-    return Container(
-      // width: screenSize.width * 0.89,
-      // height: screenSize.width * 0.8,
-      child: Column(
-        children: [
-          Container(
-            width: screenSize.width * 0.95,
-            height: screenSize.width * 0.75,
-            child: PageView(
-              controller: controller,
-              children: [
-                for (int i = 0; i < count; i++)
-                  SlideItem(
-                    imagePath: imagePath,
-                  ),
-              ],
-            ),
-          ),
-          SizedBox(height: 10),
-          SmoothPageIndicator(
+    return Column(
+      children: [
+        Container(
+          width: screenSize.width * 0.95,
+          height: screenSize.width * 0.75,
+          child: PageView(
             controller: controller,
-            count: count,
-            effect: const WormEffect(
-              dotColor: Color(0xFFDEDBDB),
-              activeDotColor: Color(0xFFFFA3B3),
-              dotHeight: 10,
-              dotWidth: 10,
-              spacing: 15,
-            ),
-            onDotClicked: (index) {
-              controller.animateToPage(
-                index,
-                duration: const Duration(milliseconds: 500),
-                curve: Curves.easeIn,
-              );
-            },
+            children: [
+              for (int i = 0; i < count; i++)
+                SlideItem(
+                  imagePath: imagePath[i],
+                ),
+            ],
           ),
-        ],
-      ),
+        ),
+        SizedBox(height: 10),
+        SmoothPageIndicator(
+          controller: controller,
+          count: count,
+          effect: const WormEffect(
+            dotColor: Color(0xFFDEDBDB),
+            activeDotColor: Color(0xFFFFA3B3),
+            dotHeight: 10,
+            dotWidth: 10,
+            spacing: 15,
+          ),
+          onDotClicked: (index) {
+            controller.animateToPage(
+              index,
+              duration: const Duration(milliseconds: 500),
+              curve: Curves.easeIn,
+            );
+          },
+        ),
+      ],
     );
   }
 }
@@ -74,7 +70,7 @@ class SlideItem extends StatelessWidget {
         decoration: BoxDecoration(
           image: DecorationImage(
             image: AssetImage(imagePath),
-            fit: BoxFit.fill,
+            fit: BoxFit.fitHeight,
           ),
           borderRadius: BorderRadius.all(
             Radius.circular(10),

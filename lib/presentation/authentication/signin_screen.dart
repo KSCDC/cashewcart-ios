@@ -64,28 +64,12 @@ class SignInScreen extends StatelessWidget {
                     onTap: () {
                       final _email = usernameOrEmailController.text;
                       final _password = passwordController.text;
-                      if (_email == "ajs" && _password == "1234") {
-                        const snackBar = SnackBar(
-                          content: Text('Login success'),
-                          behavior: SnackBarBehavior.floating,
-                          margin: EdgeInsets.all(10),
-                          padding: EdgeInsets.all(20),
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(
-                            builder: (context) => MainPageScreen(),
-                          ),
-                        );
-                      } else {
-                        const snackBar = SnackBar(
-                          content: Text('Username and password doesnot match!'),
-                          behavior: SnackBarBehavior.floating,
-                          margin: EdgeInsets.all(10),
-                          padding: EdgeInsets.all(20),
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                      }
+
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (context) => MainPageScreen(),
+                        ),
+                      );
                     },
                     child: CustomElevatedButton(
                       label: "Login",

@@ -11,6 +11,7 @@ class CustomTextWidget extends StatelessWidget {
     this.fontweight = FontWeight.normal,
     this.textAlign = TextAlign.start,
     this.underline = false,
+    this.height = 1.5,
   });
 
   final String text;
@@ -20,6 +21,7 @@ class CustomTextWidget extends StatelessWidget {
   final FontWeight fontweight;
   final TextAlign textAlign;
   final bool underline;
+  final double height;
   @override
   Widget build(BuildContext context) {
     return Text(
@@ -30,8 +32,8 @@ class CustomTextWidget extends StatelessWidget {
         color: fontColor,
         fontWeight: fontweight,
         decoration: underline ? TextDecoration.underline : TextDecoration.none,
-        
         decorationColor: kMainThemeColor,
+        height: height,
       ),
       overflow: TextOverflow.visible,
       textAlign: textAlign,

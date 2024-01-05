@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 
 class SlidingImageTile extends StatelessWidget {
-  const SlidingImageTile({super.key});
+  const SlidingImageTile({
+    super.key,
+    // required this.imagePath,
+  });
 
+  // final String imagePath;
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;

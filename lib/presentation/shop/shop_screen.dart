@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:internship_sample/core/constatns.dart';
 import 'package:internship_sample/presentation/checkout/checkout_screen.dart';
-import 'package:internship_sample/presentation/kart/cart_screen.dart';
+import 'package:internship_sample/presentation/cart/cart_screen.dart';
 import 'package:internship_sample/presentation/place_order/place_order_screen.dart';
 import 'package:internship_sample/presentation/shop/widgets/custom_styled_shop_page_button.dart';
 import 'package:internship_sample/presentation/shop/widgets/custom_text_icon_button.dart';
@@ -15,7 +15,14 @@ import 'package:internship_sample/presentation/widgets/search_filter_bar.dart';
 import 'package:internship_sample/presentation/widgets/sliding_product_tile.dart';
 
 class ShopScreen extends StatelessWidget {
-  const ShopScreen({super.key});
+  const ShopScreen({
+    super.key,
+    required this.imageList,
+    required this.productName,
+  });
+
+  final List<String> imageList;
+  final String productName;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +30,7 @@ class ShopScreen extends StatelessWidget {
     return Scaffold(
       appBar: CustomAppBar(
         actionWidget: GestureDetector(
-          child: CircleAvatar(
+          child: const CircleAvatar(
             backgroundColor: Color(0xFFF2F2F2),
             child: Icon(
               Icons.shopping_cart_outlined,
@@ -36,10 +43,12 @@ class ShopScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SlidingProductTile(
-              imagePath: "lib/core/assets/images/product_images/kart/shoe1.jpg",
-              count: 5,
+              imagePath: imageList,
+              count: imageList.length,
             ),
-            ShopProductDetailsTile(),
+            ShopProductDetailsTile(
+              productName: productName,
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
@@ -50,7 +59,7 @@ class ShopScreen extends StatelessWidget {
                         builder: (context) => CartScreen(),
                       ),
                     ),
-                    child: CustomStyledShopPageButton(
+                    child: const CustomStyledShopPageButton(
                       gradientColors: [
                         Color(0xFF3F92FF),
                         Color(0xFF0B3689),
@@ -66,7 +75,7 @@ class ShopScreen extends StatelessWidget {
                         builder: (context) => PlaceOrderScreen(),
                       ),
                     ),
-                    child: CustomStyledShopPageButton(
+                    child: const CustomStyledShopPageButton(
                       gradientColors: [
                         Color(0xFF71F9A9),
                         Color(0xFF31B769),
@@ -81,8 +90,8 @@ class ShopScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(16),
               child: Container(
-                padding: EdgeInsets.all(5),
-                decoration: BoxDecoration(
+                padding: const EdgeInsets.all(5),
+                decoration: const BoxDecoration(
                   color: Color(0xFFFFCCD5),
                   borderRadius: BorderRadius.all(
                     Radius.circular(8),
@@ -118,7 +127,7 @@ class ShopScreen extends StatelessWidget {
               children: [
                 Container(
                   width: screenSize.width * 0.48,
-                  child: CustomTextIconButton(
+                  child: const CustomTextIconButton(
                     icon: Icons.remove_red_eye_outlined,
                     label: "Nearest Store",
                     textAndIconColor: Colors.black,
@@ -127,7 +136,7 @@ class ShopScreen extends StatelessWidget {
                 ),
                 Container(
                   width: screenSize.width * 0.48,
-                  child: CustomTextIconButton(
+                  child: const CustomTextIconButton(
                     icon: Icons.difference_outlined,
                     label: "Add to compare",
                     textAndIconColor: Colors.black,
@@ -137,7 +146,7 @@ class ShopScreen extends StatelessWidget {
               ],
             ),
             kHeight,
-            Padding(
+            const Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: CustomTextWidget(
                 text: "Similar To",
@@ -156,18 +165,17 @@ class ShopScreen extends StatelessWidget {
               color: Colors.white,
               child: ListView.builder(
                 itemBuilder: (context, index) {
-                  print("values ${homeScreenProductsList1[index]['imagePath']}");
                   return ProductsListItemTile(
-                    imagePath: homeScreenProductsList1[index]['imagePath'],
-                    heading: homeScreenProductsList1[index]['heading'],
-                    description: homeScreenProductsList1[index]['description'],
-                    price: homeScreenProductsList1[index]['offerPrice'],
-                    originalPrice: homeScreenProductsList1[index]['originalPrice'],
-                    offerPercentage: homeScreenProductsList1[index]['offerPercentage'],
-                    numberOfRatings: homeScreenProductsList1[index]['rating'],
+                    imageList: productDetailsList1[index]['imagePath'],
+                    heading: productDetailsList1[index]['name'],
+                    description: productDetailsList1[index]['description'],
+                    price: productDetailsList1[index]['offerPrice'],
+                    originalPrice: productDetailsList1[index]['originalPrice'],
+                    offerPercentage: productDetailsList1[index]['offerPercentage'],
+                    numberOfRatings: productDetailsList1[index]['rating'],
                   );
                 },
-                itemCount: homeScreenProductsList1.length,
+                itemCount: productDetailsList1.length,
                 scrollDirection: Axis.horizontal,
               ),
             ),

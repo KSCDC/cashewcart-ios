@@ -8,9 +8,14 @@ import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 ValueNotifier<int> sizeSelectNotifier = ValueNotifier(0);
 
 class ShopProductDetailsTile extends StatelessWidget {
-  ShopProductDetailsTile({super.key});
+  ShopProductDetailsTile({
+    super.key,
+    required this.productName,
+  });
   ValueNotifier<bool> readMoreClickNotifier = ValueNotifier(false);
-
+  final String productName;
+// final String shortDescription;
+// final String detailedDescription;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -32,32 +37,52 @@ class ShopProductDetailsTile extends StatelessWidget {
                     SizeSelectorWidget(
                       index: 0,
                       label: "6 UK",
-                      fontColor: sizeSelectNotifier.value == 0 ? Colors.white : Color(0xFFFA7189),
-                      backgroundColor: sizeSelectNotifier.value == 0 ? Color(0xFFFA7189) : Colors.white,
+                      fontColor: sizeSelectNotifier.value == 0
+                          ? Colors.white
+                          : Color(0xFFFA7189),
+                      backgroundColor: sizeSelectNotifier.value == 0
+                          ? Color(0xFFFA7189)
+                          : Colors.white,
                     ),
                     SizeSelectorWidget(
                       index: 1,
                       label: "7 UK",
-                      fontColor: sizeSelectNotifier.value == 1 ? Colors.white : Color(0xFFFA7189),
-                      backgroundColor: sizeSelectNotifier.value == 1 ? Color(0xFFFA7189) : Colors.white,
+                      fontColor: sizeSelectNotifier.value == 1
+                          ? Colors.white
+                          : Color(0xFFFA7189),
+                      backgroundColor: sizeSelectNotifier.value == 1
+                          ? Color(0xFFFA7189)
+                          : Colors.white,
                     ),
                     SizeSelectorWidget(
                       index: 2,
                       label: "8 UK",
-                      fontColor: sizeSelectNotifier.value == 2 ? Colors.white : Color(0xFFFA7189),
-                      backgroundColor: sizeSelectNotifier.value == 2 ? Color(0xFFFA7189) : Colors.white,
+                      fontColor: sizeSelectNotifier.value == 2
+                          ? Colors.white
+                          : Color(0xFFFA7189),
+                      backgroundColor: sizeSelectNotifier.value == 2
+                          ? Color(0xFFFA7189)
+                          : Colors.white,
                     ),
                     SizeSelectorWidget(
                       index: 3,
                       label: "9 UK",
-                      fontColor: sizeSelectNotifier.value == 3 ? Colors.white : Color(0xFFFA7189),
-                      backgroundColor: sizeSelectNotifier.value == 3 ? Color(0xFFFA7189) : Colors.white,
+                      fontColor: sizeSelectNotifier.value == 3
+                          ? Colors.white
+                          : Color(0xFFFA7189),
+                      backgroundColor: sizeSelectNotifier.value == 3
+                          ? Color(0xFFFA7189)
+                          : Colors.white,
                     ),
                     SizeSelectorWidget(
                       index: 4,
                       label: "10 UK",
-                      fontColor: sizeSelectNotifier.value == 4 ? Colors.white : Color(0xFFFA7189),
-                      backgroundColor: sizeSelectNotifier.value == 4 ? Color(0xFFFA7189) : Colors.white,
+                      fontColor: sizeSelectNotifier.value == 4
+                          ? Colors.white
+                          : Color(0xFFFA7189),
+                      backgroundColor: sizeSelectNotifier.value == 4
+                          ? Color(0xFFFA7189)
+                          : Colors.white,
                     ),
                   ],
                 );
@@ -134,7 +159,8 @@ class ShopProductDetailsTile extends StatelessWidget {
                         ),
                       ),
                       onTap: () {
-                        readMoreClickNotifier.value = !(readMoreClickNotifier.value);
+                        readMoreClickNotifier.value =
+                            !(readMoreClickNotifier.value);
                       },
                     ),
                   ),

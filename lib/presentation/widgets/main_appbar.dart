@@ -22,14 +22,6 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
               "lib/core/assets/images/logos/app_logo.png",
             ),
           ),
-          SizedBox(width: 9),
-          CustomTextWidget(
-            text: "Stylish",
-            fontFamily: "LibreCaslonText",
-            fontSize: 18,
-            fontColor: kMainAppBarTextColor,
-            fontweight: FontWeight.w700,
-          )
         ],
       ),
       actions: [

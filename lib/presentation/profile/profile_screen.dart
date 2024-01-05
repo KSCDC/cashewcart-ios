@@ -49,7 +49,7 @@ class ProfileScreen extends StatelessWidget {
                 child: Container(
                   child: Stack(
                     children: [
-                      Padding(
+                      const Padding(
                         padding: const EdgeInsets.only(right: 10),
                         child: CircleAvatar(
                           radius: 50,
@@ -61,7 +61,7 @@ class ProfileScreen extends StatelessWidget {
                         bottom: 0,
                         child: GestureDetector(
                           onTap: () {},
-                          child: CircleAvatar(
+                          child:const CircleAvatar(
                             radius: 16,
                             backgroundColor: Colors.white,
                             child: CircleAvatar(
@@ -97,7 +97,7 @@ class ProfileScreen extends StatelessWidget {
                 obscureText: true,
               ),
               kHeight,
-              Row(
+              const Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   CustomTextWidget(
@@ -132,7 +132,7 @@ class ProfileScreen extends StatelessWidget {
                 controller: _cityController,
               ),
               kProfileScreenGap,
-              CustomTextWidget(
+              const CustomTextWidget(
                 text: "States",
                 fontweight: FontWeight.w400,
               ),
@@ -146,15 +146,15 @@ class ProfileScreen extends StatelessWidget {
                 }).toList(),
                 onChanged: (newValue) {},
                 value: "N1 2LL",
-                decoration: InputDecoration(
-                  enabledBorder: const OutlineInputBorder(
+                decoration:const InputDecoration(
+                  enabledBorder:  OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(10)),
                     borderSide: BorderSide(
                       color: Color(0xffA8A8A9),
                       width: 1,
                     ),
                   ),
-                  focusedBorder: const OutlineInputBorder(
+                  focusedBorder:  OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(10)),
                     borderSide: BorderSide(
                       width: 1,
@@ -175,7 +175,7 @@ class ProfileScreen extends StatelessWidget {
 
               //Bank account details section
 
-              ProfileScreenSubHeading(text: "Bank Account Details"),
+             const ProfileScreenSubHeading(text: "Bank Account Details"),
               kProfileScreenGap,
               ProfileEditingTextField(
                 hintText: "Bank Account Number",
@@ -192,12 +192,12 @@ class ProfileScreen extends StatelessWidget {
                 controller: _cityController,
               ),
               kProfileScreenGap,
-              SizedBox(
+             const SizedBox(
                 height: 55,
                 width: double.infinity,
                 child: CustomElevatedButton(label: "Save"),
               ),
-              SizedBox(height: 50),
+              const SizedBox(height: 50),
             ],
           ),
         ),

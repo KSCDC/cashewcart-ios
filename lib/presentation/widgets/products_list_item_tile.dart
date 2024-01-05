@@ -6,7 +6,7 @@ import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 class ProductsListItemTile extends StatelessWidget {
   const ProductsListItemTile({
     super.key,
-    required this.imagePath,
+    required this.imageList,
     required this.heading,
     this.description = "",
     required this.price,
@@ -14,7 +14,7 @@ class ProductsListItemTile extends StatelessWidget {
     this.offerPercentage = "",
     this.numberOfRatings = "",
   });
-  final String imagePath;
+  final List<String> imageList;
   final String heading;
   final String description;
   final String price;
@@ -36,8 +36,8 @@ class ProductsListItemTile extends StatelessWidget {
                 width: screenSize.width * 0.4,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage(imagePath),
-                    fit: BoxFit.fill,
+                    image: AssetImage(imageList[0]),
+                    fit: BoxFit.fitHeight,
                   ),
                   borderRadius: BorderRadius.all(
                     Radius.circular(4),

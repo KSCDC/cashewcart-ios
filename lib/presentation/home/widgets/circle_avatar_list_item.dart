@@ -19,7 +19,7 @@ class CircleAvatarListItem extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 28,
-              child: Image.asset(imagePath),
+              backgroundImage: AssetImage(imagePath),
             ),
             CustomTextWidget(
               text: label,

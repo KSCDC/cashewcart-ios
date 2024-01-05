@@ -28,7 +28,7 @@ class OnboardingScreen extends StatelessWidget {
                         fontSize: 18,
                         fontweight: FontWeight.w600,
                       ),
-                      CustomTextWidget(
+                      const CustomTextWidget(
                         text: "/3",
                         fontSize: 18,
                         fontColor: Color(0xffA0A0A1),
@@ -110,7 +110,7 @@ class OnboardingScreen extends StatelessWidget {
                                 fontweight: FontWeight.w600,
                               ),
                             )
-                          : SizedBox();
+                          : const SizedBox();
                     }),
               ),
               SmoothPageIndicator(
@@ -134,13 +134,13 @@ class OnboardingScreen extends StatelessWidget {
                   print("current page no : ${controller.page}");
                   if (controller.page == 2) {
                     Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (context) => GetStartedScreen()));
+                        builder: (context) =>const GetStartedScreen()));
                   } else {
                     await controller.nextPage(
-                      duration: Duration(milliseconds: 500),
+                      duration:const  Duration(milliseconds: 500),
                       curve: Curves.easeIn,
                     );
-                    // print("current page no : ${controller.page}");
+                    
                     pageNumberNotifier.value = controller.page!.toInt() + 1;
                   }
                 },
