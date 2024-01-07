@@ -14,8 +14,7 @@ class ShopProductDetailsTile extends StatelessWidget {
   });
   ValueNotifier<bool> readMoreClickNotifier = ValueNotifier(false);
   final String productName;
-// final String shortDescription;
-// final String detailedDescription;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -23,77 +22,79 @@ class ShopProductDetailsTile extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CustomTextWidget(
-            text: "Size: 7UK",
-            fontweight: FontWeight.w600,
-          ),
+          ValueListenableBuilder(
+              valueListenable: sizeSelectNotifier,
+              builder: (context, value, _) {
+                return Row(
+                  children: [
+                    CustomTextWidget(
+                      text: "Net weight: ",
+                      fontweight: FontWeight.w600,
+                    ),
+                    if (value == 0)
+                      CustomTextWidget(
+                        text: "65 GM",
+                        fontweight: FontWeight.w600,
+                      ),
+                    if (value == 1)
+                      CustomTextWidget(
+                        text: "100 GM",
+                        fontweight: FontWeight.w600,
+                      ),
+                    if (value == 2)
+                      CustomTextWidget(
+                        text: "250 GM",
+                        fontweight: FontWeight.w600,
+                      ),
+                    if (value == 3)
+                      CustomTextWidget(
+                        text: "500 GM",
+                        fontweight: FontWeight.w600,
+                      ),
+                  ],
+                );
+              }),
           SizedBox(height: 10),
           ValueListenableBuilder(
               valueListenable: sizeSelectNotifier,
-              builder: (BuildContext, int, _) {
+              builder: (context, value, _) {
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     SizeSelectorWidget(
                       index: 0,
-                      label: "6 UK",
-                      fontColor: sizeSelectNotifier.value == 0
-                          ? Colors.white
-                          : Color(0xFFFA7189),
-                      backgroundColor: sizeSelectNotifier.value == 0
-                          ? Color(0xFFFA7189)
-                          : Colors.white,
+                      label: "65 GM",
+                      fontColor: sizeSelectNotifier.value == 0 ? Colors.white : Color(0xFFFA7189),
+                      backgroundColor: sizeSelectNotifier.value == 0 ? Color(0xFFFA7189) : Colors.white,
                     ),
                     SizeSelectorWidget(
                       index: 1,
-                      label: "7 UK",
-                      fontColor: sizeSelectNotifier.value == 1
-                          ? Colors.white
-                          : Color(0xFFFA7189),
-                      backgroundColor: sizeSelectNotifier.value == 1
-                          ? Color(0xFFFA7189)
-                          : Colors.white,
+                      label: "100 GM",
+                      fontColor: sizeSelectNotifier.value == 1 ? Colors.white : Color(0xFFFA7189),
+                      backgroundColor: sizeSelectNotifier.value == 1 ? Color(0xFFFA7189) : Colors.white,
                     ),
                     SizeSelectorWidget(
                       index: 2,
-                      label: "8 UK",
-                      fontColor: sizeSelectNotifier.value == 2
-                          ? Colors.white
-                          : Color(0xFFFA7189),
-                      backgroundColor: sizeSelectNotifier.value == 2
-                          ? Color(0xFFFA7189)
-                          : Colors.white,
+                      label: "250 GM",
+                      fontColor: sizeSelectNotifier.value == 2 ? Colors.white : Color(0xFFFA7189),
+                      backgroundColor: sizeSelectNotifier.value == 2 ? Color(0xFFFA7189) : Colors.white,
                     ),
                     SizeSelectorWidget(
                       index: 3,
-                      label: "9 UK",
-                      fontColor: sizeSelectNotifier.value == 3
-                          ? Colors.white
-                          : Color(0xFFFA7189),
-                      backgroundColor: sizeSelectNotifier.value == 3
-                          ? Color(0xFFFA7189)
-                          : Colors.white,
-                    ),
-                    SizeSelectorWidget(
-                      index: 4,
-                      label: "10 UK",
-                      fontColor: sizeSelectNotifier.value == 4
-                          ? Colors.white
-                          : Color(0xFFFA7189),
-                      backgroundColor: sizeSelectNotifier.value == 4
-                          ? Color(0xFFFA7189)
-                          : Colors.white,
+                      label: "500 GM",
+                      fontColor: sizeSelectNotifier.value == 3 ? Colors.white : Color(0xFFFA7189),
+                      backgroundColor: sizeSelectNotifier.value == 3 ? Color(0xFFFA7189) : Colors.white,
                     ),
                   ],
                 );
               }),
           SizedBox(height: 10),
           CustomTextWidget(
-            text: "Nike Sneakers",
+            text: productName,
             fontSize: 20,
             fontweight: FontWeight.w600,
           ),
-          CustomTextWidget(
+          const CustomTextWidget(
             text: "Vision Alta Men’s Shoes Size (All Colours)",
             fontSize: 14,
             fontweight: FontWeight.w400,
@@ -103,7 +104,7 @@ class ShopProductDetailsTile extends StatelessWidget {
             numberOfRatings: "56,890",
             iconAndTextSize: 18,
           ),
-          Row(
+          const Row(
             children: [
               Text(
                 "2,999",
@@ -144,7 +145,7 @@ class ShopProductDetailsTile extends StatelessWidget {
               return Wrap(
                 children: [
                   Text(
-                    '''Perhaps the most iconic sneaker of all-time, this original "Chicago"? colorway is the cornerstone to any sneaker collection. Made famous in 1985 by Michael Jordan, the shoe has stood the test of time, becoming the most famous colorway of the Air Jordan 1. This 2015 release saw the Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ''',
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
                     maxLines: readMoreClickNotifier.value ? 10 : 5,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -159,8 +160,7 @@ class ShopProductDetailsTile extends StatelessWidget {
                         ),
                       ),
                       onTap: () {
-                        readMoreClickNotifier.value =
-                            !(readMoreClickNotifier.value);
+                        readMoreClickNotifier.value = !(readMoreClickNotifier.value);
                       },
                     ),
                   ),
@@ -168,7 +168,7 @@ class ShopProductDetailsTile extends StatelessWidget {
               );
             },
           ),
-          Row(
+          const Row(
             children: [
               CustomTextIconButton(
                 icon: Icons.location_on_outlined,
