@@ -4,7 +4,6 @@ import 'package:internship_sample/core/constatns.dart';
 import 'package:internship_sample/presentation/cart/widgets/cart_product_list_tile.dart';
 import 'package:internship_sample/presentation/widgets/custom_appbar.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
-import 'package:internship_sample/presentation/widgets/products_list_item_tile.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
@@ -84,7 +83,7 @@ class CartScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: const Padding(
-                      padding:  EdgeInsets.all(10),
+                      padding: EdgeInsets.all(10),
                       child: Icon(
                         Icons.add_circle_outline,
                       ),
@@ -99,7 +98,6 @@ class CartScreen extends StatelessWidget {
               ),
               kHeight,
               Container(
-                color: Colors.white,
                 child: ListView.builder(
                   itemBuilder: (context, index) {
                     print("values ${productDetailsList1[index]['imagePath']}");

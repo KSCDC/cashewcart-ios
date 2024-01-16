@@ -14,11 +14,11 @@ class CircleAvatarListItem extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: SizedBox(
-        height: 71,
+        height: 90,
         child: Column(
           children: [
             CircleAvatar(
-              radius: 28,
+              radius: 30,
               backgroundImage: AssetImage(imagePath),
             ),
             CustomTextWidget(

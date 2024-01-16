@@ -9,8 +9,13 @@ import 'package:internship_sample/presentation/widgets/custom_elevated_button.da
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 
 class CheckoutScreen extends StatelessWidget {
-  const CheckoutScreen({super.key});
-
+  const CheckoutScreen({
+    super.key,
+    required this.price,
+    required this.shippingCost,
+  });
+  final int price;
+  final int shippingCost;
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
@@ -25,7 +30,7 @@ class CheckoutScreen extends StatelessWidget {
             children: [
               CheckoutScreenPriceDisplayRow(
                 lable: "Order",
-                price: "7,000",
+                price: price.toString(),
                 color: Color(0xFFA8A8A9),
               ),
               kHeight,
@@ -37,7 +42,7 @@ class CheckoutScreen extends StatelessWidget {
               kHeight,
               CheckoutScreenPriceDisplayRow(
                 lable: "Total",
-                price: "7030",
+                price: (price + shippingCost).toString(),
                 color: Colors.black,
               ),
               kHeight,

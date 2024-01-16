@@ -19,10 +19,14 @@ class ShopScreen extends StatelessWidget {
     super.key,
     required this.imageList,
     required this.productName,
+    required this.description,
+    required this.price,
   });
 
   final List<String> imageList;
   final String productName;
+  final String description;
+  final String price;
 
   @override
   Widget build(BuildContext context) {
@@ -46,12 +50,16 @@ class ShopScreen extends StatelessWidget {
               imagePath: imageList,
               count: imageList.length,
             ),
+
+            // product details
             ShopProductDetailsTile(
               productName: productName,
+              description: description,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   GestureDetector(
                     onTap: () => Navigator.of(context).push(
@@ -72,7 +80,7 @@ class ShopScreen extends StatelessWidget {
                   GestureDetector(
                     onTap: () => Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => PlaceOrderScreen(),
+                        builder: (context) => PlaceOrderScreen(imagePath: imageList[0], productName: productName, productDescription: description, price: price),
                       ),
                     ),
                     child: const CustomStyledShopPageButton(
@@ -106,12 +114,12 @@ class ShopScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           CustomTextWidget(
-                            text: "Delivery in",
+                            text: "Delivery",
                             fontweight: FontWeight.w600,
                           ),
                           SizedBox(height: 5),
                           CustomTextWidget(
-                            text: "1 within Hour",
+                            text: "Within 4 Days",
                             fontSize: 21,
                             fontweight: FontWeight.w600,
                           )

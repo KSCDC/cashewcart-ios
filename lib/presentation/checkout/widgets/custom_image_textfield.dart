@@ -43,9 +43,7 @@ class CustomImageTextField extends StatelessWidget {
           ),
           focusedBorder: const OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(10)),
-            borderSide: BorderSide(
-              width: 1,
-            ),
+            borderSide: BorderSide(width: 2, color: kMainThemeColor),
           ),
           errorBorder: const OutlineInputBorder(
             borderSide: BorderSide(

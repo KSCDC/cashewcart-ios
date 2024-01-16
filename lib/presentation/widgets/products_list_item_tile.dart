@@ -25,10 +25,24 @@ class ProductsListItemTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     return Container(
+      margin: EdgeInsets.symmetric(
+        horizontal: 5,
+        vertical: 5,
+      ),
       width: screenSize.width * 0.4,
       height: 300,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.all(
+          width: 0.1,
+          color: Colors.grey,
+        ),
+        borderRadius: BorderRadius.all(
+          Radius.circular(10),
+        ),
+      ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+        padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
             Expanded(
@@ -57,20 +71,24 @@ class ProductsListItemTile extends StatelessWidget {
                       fontweight: FontWeight.w500,
                     ),
                     SizedBox(height: 5),
-                    CustomTextWidget(
-                      text: description,
-                      fontSize: 10,
-                      fontweight: FontWeight.w400,
+                    Text(
+                      description,
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontFamily: "Montserrat",
+                        fontWeight: FontWeight.w400,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                     CustomTextWidget(
-                      text: price,
+                      text: "₹${price}",
                       fontSize: 12,
                       fontweight: FontWeight.w500,
                     ),
                     Row(
                       children: [
                         Text(
-                          originalPrice,
+                          "₹${originalPrice}",
                           style: TextStyle(
                             fontFamily: "Montserrat",
                             fontSize: 15,

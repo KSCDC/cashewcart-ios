@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:internship_sample/core/colors.dart';
+import 'package:internship_sample/core/constatns.dart';
+import 'package:internship_sample/presentation/product_list/product_listing_screen.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 
-class NewArrivalsTile extends StatelessWidget {
-  const NewArrivalsTile({super.key});
+class ValueAddedProductsTile extends StatelessWidget {
+  const ValueAddedProductsTile({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +27,7 @@ class NewArrivalsTile extends StatelessWidget {
             // color: Colors.black,
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage("lib/core/assets/images/product_images/home/new_arrivals.jpg"),
+                image: AssetImage("lib/core/assets/images/product_images/Cashew Powder/Cashew Powder 1.jpg"),
                 fit: BoxFit.fitWidth,
               ),
             ),
@@ -37,19 +39,25 @@ class NewArrivalsTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   CustomTextWidget(
-                    text: "New Arrivals",
+                    text: "Value Added Products",
                     fontSize: 20,
                     fontweight: FontWeight.w500,
                   ),
                   CustomTextWidget(
-                    text: "Summer’ 25 Collections",
+                    text: "${valueAddedProducts.length}",
                     fontSize: 16,
                     fontweight: FontWeight.w400,
                   ),
                 ],
               ),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => ProductListingScreen(productDetailsList: valueAddedProducts),
+                    ),
+                  );
+                },
                 style: TextButton.styleFrom(
                   backgroundColor: kMainThemeColor,
                   side: BorderSide(width: 1, color: Colors.white),

@@ -4,28 +4,25 @@ import 'package:internship_sample/core/constatns.dart';
 import 'package:internship_sample/presentation/widgets/custom_star_rating_tile.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 
-class CartProductsListTile extends StatelessWidget {
-  const CartProductsListTile({
+class MyOrdersListTile extends StatelessWidget {
+  const MyOrdersListTile({
     super.key,
     required this.imagePath,
     required this.heading,
     required this.price,
-    required this.originalPrice,
-    required this.offerPercentage,
     required this.rating,
   });
   final String imagePath;
   final String heading;
   final String price;
-  final String originalPrice;
-  final String offerPercentage;
   final String rating;
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     return Container(
-      width: screenSize.width * 0.9,
-      height: 210,
+      // width: screenSize.width * 0.95,
+      width: double.infinity,
+      height: 230,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
@@ -62,26 +59,16 @@ class CartProductsListTile extends StatelessWidget {
                       const Row(
                         children: [
                           CustomTextWidget(
-                            text: "Variations :",
+                            text: "Quantity :",
                             fontSize: 12,
                             fontweight: FontWeight.w500,
                           ),
                           kWidth,
-                          CartProductListTileButton(
-                            buttonHeight: 20,
-                            buttonWidth: 40,
-                            label: "Black",
-                            fontSize: 10,
-                            fontWeight: FontWeight.w500,
+                          CustomTextWidget(
+                            text: "250GM",
+                            fontSize: 12,
                           ),
                           kWidth,
-                          CartProductListTileButton(
-                            buttonHeight: 20,
-                            buttonWidth: 40,
-                            label: "Red",
-                            fontSize: 10,
-                            fontWeight: FontWeight.w500,
-                          ),
                         ],
                       ),
                       kHeight,
@@ -117,28 +104,6 @@ class CartProductsListTile extends StatelessWidget {
                             fontWeight: FontWeight.w600,
                           ),
                           kWidth,
-                          Column(
-                            children: [
-                              CustomTextWidget(
-                                text: offerPercentage,
-                                fontColor: Color(0xFFFE735C),
-                                fontSize: 10,
-                                fontweight: FontWeight.w400,
-                              ),
-                              SizedBox(width: 10),
-                              Text(
-                                originalPrice,
-                                style: const TextStyle(
-                                  fontFamily: "Montserrat",
-                                  fontSize: 15,
-                                  color: Color(0xFF808488),
-                                  fontWeight: FontWeight.w500,
-                                  decoration: TextDecoration.lineThrough,
-                                  decorationColor: Color(0xFF808488),
-                                ),
-                              ),
-                            ],
-                          ),
                         ],
                       ),
                     ],
@@ -162,7 +127,23 @@ class CartProductsListTile extends StatelessWidget {
                   fontweight: FontWeight.w600,
                 )
               ],
-            )
+            ),
+            SizedBox(height: 5),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const CustomTextWidget(
+                  text: "Delivery Expected By :",
+                  fontSize: 12,
+                  fontweight: FontWeight.w500,
+                ),
+                CustomTextWidget(
+                  text: "18/01/2024",
+                  fontSize: 12,
+                  fontweight: FontWeight.w600,
+                )
+              ],
+            ),
           ],
         ),
       ),

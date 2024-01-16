@@ -13,18 +13,17 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+        centerTitle: true,
         leading: IconButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
           icon: Icon(Icons.arrow_back_ios_new),
         ),
-        title: Center(
-          child: CustomTextWidget(
-            text: title,
-            fontSize: 18,
-            fontweight: FontWeight.w600,
-          ),
+        title: CustomTextWidget(
+          text: title,
+          fontSize: 18,
+          fontweight: FontWeight.w600,
         ),
         actions: [
           Padding(

@@ -5,9 +5,9 @@ import 'package:internship_sample/presentation/widgets/main_appbar.dart';
 import 'package:internship_sample/presentation/widgets/products_list_item_tile.dart';
 import 'package:internship_sample/presentation/widgets/search_section_tile.dart';
 
-class WishlistScreen extends StatelessWidget {
-  const WishlistScreen({super.key});
-
+class ProductListingScreen extends StatelessWidget {
+  const ProductListingScreen({super.key, required this.productDetailsList});
+  final List productDetailsList;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,27 +27,29 @@ class WishlistScreen extends StatelessWidget {
                 crossAxisCount: 2,
                 mainAxisSpacing: 5,
                 crossAxisSpacing: 5,
-                children: List.generate(productDetailsList2.length, (index) {
+                children: List.generate(productDetailsList.length, (index) {
                   return GestureDetector(
                     onTap: () {
-                      print("image list ${productDetailsList1[index]['imagePath']}");
+                      print("image list ${productDetailsList[index]['imagePath']}");
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => ShopScreen(
-                            imageList: productDetailsList1[index]['imagePath'],
-                            productName: productDetailsList1[index]['name'],
+                            imageList: productDetailsList[index]['imagePath'],
+                            productName: productDetailsList[index]['name'],
+                            description: productDetailsList[index]['description'],
+                            price: productDetailsList[index]['offerPrice'],
                           ),
                         ),
                       );
                     },
                     child: ProductsListItemTile(
-                      imageList: productDetailsList1[index]['imagePath'],
-                      heading: productDetailsList1[index]['name'],
-                      description: productDetailsList1[index]['description'],
-                      price: productDetailsList1[index]['offerPrice'],
-                      originalPrice: productDetailsList1[index]['originalPrice'],
-                      offerPercentage: productDetailsList1[index]['offerPercentage'],
-                      numberOfRatings: productDetailsList1[index]['rating'],
+                      imageList: productDetailsList[index]['imagePath'],
+                      heading: productDetailsList[index]['name'],
+                      description: productDetailsList[index]['description'],
+                      price: productDetailsList[index]['offerPrice'],
+                      originalPrice: productDetailsList[index]['originalPrice'],
+                      offerPercentage: productDetailsList[index]['offerPercentage'],
+                      numberOfRatings: productDetailsList[index]['rating'],
                     ),
                   );
                 }),

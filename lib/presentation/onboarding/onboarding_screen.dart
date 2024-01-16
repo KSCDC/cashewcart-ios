@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/presentation/authentication/signin_screen.dart';
 import 'package:internship_sample/presentation/get_started/get_started_screen.dart';
 import 'package:internship_sample/presentation/onboarding/widgets/onboarding_tile.dart';
@@ -15,7 +16,9 @@ class OnboardingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: appBackgroundColor,
         appBar: AppBar(
+          backgroundColor: appBackgroundColor,
           leading: ValueListenableBuilder(
               valueListenable: pageNumberNotifier,
               builder: (BuildContext context, int value, _) {
@@ -60,31 +63,31 @@ class OnboardingScreen extends StatelessWidget {
           padding: EdgeInsets.only(bottom: 60),
           child: PageView(
             controller: controller,
+            onPageChanged: (newPageNo) {
+              pageNumberNotifier.value = newPageNo + 1;
+            },
             children: [
               OnboardingTile(
                 imagePath: "lib/core/assets/images/onboard_choose_products.png",
                 heading: "Choose Products",
-                description:
-                    "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit.",
+                description: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit.",
               ),
               OnboardingTile(
                 imagePath: "lib/core/assets/images/onboard_make_payment.png",
                 heading: "Make Payment",
-                description:
-                    "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit.",
+                description: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit.",
               ),
               OnboardingTile(
                 imagePath: "lib/core/assets/images/onboard_get_your_order.png",
                 heading: "Get Your Order",
-                description:
-                    "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit.",
+                description: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit.",
               ),
             ],
           ),
         ),
         bottomSheet: Container(
           height: 60,
-          color: Colors.white,
+          color: appBackgroundColor,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -100,8 +103,7 @@ class OnboardingScreen extends StatelessWidget {
                                   duration: const Duration(milliseconds: 500),
                                   curve: Curves.easeIn,
                                 );
-                                pageNumberNotifier.value =
-                                    controller.page!.toInt() + 1;
+                                pageNumberNotifier.value = controller.page!.toInt() + 1;
                               },
                               child: const CustomTextWidget(
                                 text: "Prev",
@@ -131,16 +133,14 @@ class OnboardingScreen extends StatelessWidget {
                   }),
               TextButton(
                 onPressed: () async {
-                  print("current page no : ${controller.page}");
                   if (controller.page == 2) {
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (context) =>const GetStartedScreen()));
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const GetStartedScreen()));
                   } else {
                     await controller.nextPage(
-                      duration:const  Duration(milliseconds: 500),
+                      duration: const Duration(milliseconds: 500),
                       curve: Curves.easeIn,
                     );
-                    
+
                     pageNumberNotifier.value = controller.page!.toInt() + 1;
                   }
                 },

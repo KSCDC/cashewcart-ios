@@ -1,9 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:internship_sample/core/colors.dart';
+import 'package:internship_sample/presentation/shop/shop_screen.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 
-class FlatAndHeelsTile extends StatelessWidget {
-  const FlatAndHeelsTile({super.key});
+class BuyNowTile extends StatelessWidget {
+  const BuyNowTile({
+    super.key,
+    required this.imagePath,
+    required this.productName,
+    required this.productDescription, required this.price,
+  });
+  final String imagePath;
+  final String productName;
+  final String productDescription;
+  final String price;
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +25,6 @@ class FlatAndHeelsTile extends StatelessWidget {
         ),
       ),
       child: Row(
-        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
@@ -50,8 +59,8 @@ class FlatAndHeelsTile extends StatelessWidget {
                   // color: Colors.black,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage("lib/core/assets/images/product_images/home/heels.jpg"),
-                      fit: BoxFit.fill,
+                      image: AssetImage(imagePath),
+                      fit: BoxFit.contain,
                     ),
                   ),
                 ),
@@ -61,21 +70,33 @@ class FlatAndHeelsTile extends StatelessWidget {
           Spacer(),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               CustomTextWidget(
-                text: "Flat and Heels",
+                text: productName,
                 fontSize: 16,
                 fontweight: FontWeight.w500,
               ),
               CustomTextWidget(
-                text: "Stand a chance to get rewarded",
+                text: productDescription,
                 fontSize: 10,
                 fontweight: FontWeight.w400,
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 30, top: 10),
+                padding: const EdgeInsets.only(top: 10),
                 child: TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => ShopScreen(
+                          imageList: [imagePath],
+                          productName: productName,
+                          description: productDescription,
+                          price: price,
+                        ),
+                      ),
+                    );
+                  },
                   style: TextButton.styleFrom(
                     backgroundColor: kMainThemeColor,
                     side: BorderSide(width: 1, color: Colors.white),
@@ -84,11 +105,10 @@ class FlatAndHeelsTile extends StatelessWidget {
                     ),
                   ),
                   child: Container(
-                    width: 100,
                     child: Row(
                       children: [
                         CustomTextWidget(
-                          text: "Visit Now",
+                          text: "Buy Now",
                           fontSize: 12,
                           fontColor: Colors.white,
                           fontweight: FontWeight.w600,

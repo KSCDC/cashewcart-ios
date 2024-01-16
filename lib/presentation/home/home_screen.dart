@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:internship_sample/core/constatns.dart';
 import 'package:internship_sample/presentation/home/widgets/circle_avatar_list_item.dart';
-import 'package:internship_sample/presentation/home/widgets/flat_and_heels_tile.dart';
-import 'package:internship_sample/presentation/home/widgets/new_arrivals_tile.dart';
+import 'package:internship_sample/presentation/home/widgets/buy_now_tile.dart';
+import 'package:internship_sample/presentation/home/widgets/value_added_products_tile.dart';
 import 'package:internship_sample/presentation/home/widgets/sliding_image_tile.dart';
 import 'package:internship_sample/presentation/home/widgets/sponsered_product_tile.dart';
 import 'package:internship_sample/presentation/home/widgets/view_offer_tile.dart';
@@ -30,8 +31,10 @@ class HomeScreen extends StatelessWidget {
           child: Column(
             children: [
               SearchSectionTile(heading: "All Featured"),
+
+              // circular list
               Container(
-                height: 87,
+                height: 95,
                 child: ListView.builder(
                   itemBuilder: (context, index) => CircleAvatarListItem(
                     imagePath: avatarImage[index]['imagePath'],
@@ -41,15 +44,32 @@ class HomeScreen extends StatelessWidget {
                   scrollDirection: Axis.horizontal,
                 ),
               ),
+
+              //sliding windows
               Container(
                 height: 230,
                 width: screenSize.width * 0.9,
                 child: PageView(
                   controller: controller,
                   children: const [
-                    SlidingImageTile(),
-                    SlidingImageTile(),
-                    SlidingImageTile(),
+                    SlidingImageTile(
+                      imagePath: "lib/core/assets/images/product_images/Cashew Vita Chocolate Flavoured/Cashew vita chocolate flavoured.jpg",
+                      name: "CASHEW VITA",
+                      description: "Cahew vita chocolate flavoured health drink",
+                      price: "500",
+                    ),
+                    SlidingImageTile(
+                      imagePath: "lib/core/assets/images/product_images/Roasted and Salted Cashew/Roasted and salted Cashew.png",
+                      name: "ROASTED AND SALTED CASHEW",
+                      description: "Roasted and salted cashew",
+                      price: "480",
+                    ),
+                    SlidingImageTile(
+                      imagePath: "lib/core/assets/images/product_images/Cashew Vanilla MilkShake/Cashew Vanilla Milk Shake Powder.jpg",
+                      name: "CASHEW VANILA MILK SHAKE",
+                      description: "Cahew vita vanila flavoured health drink",
+                      price: "450",
+                    ),
                   ],
                 ),
               ),
@@ -79,44 +99,58 @@ class HomeScreen extends StatelessWidget {
                 icon: Icons.timer_outlined,
                 subLabel: "22h 55m 20s remaining",
               ),
-              Container(
-                height: 250,
-                color: Colors.white,
-                child: ListView.builder(
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () {
-                        print("image list ${productDetailsList1[index]['imagePath']}");
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => ShopScreen(
-                              imageList: productDetailsList1[index]['imagePath'],
-                              productName: productDetailsList1[index]['name'],
-                            ),
+              kHeight,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CustomTextWidget(
+                    text: "Best Sellers",
+                    fontSize: 18,
+                    fontweight: FontWeight.w600,
+                  ),
+                  Container(
+                    height: 250,
+                    child: ListView.builder(
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => ShopScreen(
+                                  imageList: bestSellersList[index]['imagePath'],
+                                  productName: bestSellersList[index]['name'],
+                                  description: bestSellersList[index]['description'],
+                                  price: bestSellersList[index]['offerPrice'],
+                                ),
+                              ),
+                            );
+                          },
+                          child: ProductsListItemTile(
+                            imageList: bestSellersList[index]['imagePath'],
+                            heading: bestSellersList[index]['name'],
+                            description: bestSellersList[index]['description'],
+                            price: bestSellersList[index]['offerPrice'],
+                            originalPrice: bestSellersList[index]['originalPrice'],
+                            offerPercentage: bestSellersList[index]['offerPercentage'],
+                            numberOfRatings: bestSellersList[index]['rating'],
                           ),
                         );
                       },
-                      child: ProductsListItemTile(
-                        imageList: productDetailsList1[index]['imagePath'],
-                        heading: productDetailsList1[index]['name'],
-                        description: productDetailsList1[index]['description'],
-                        price: productDetailsList1[index]['offerPrice'],
-                        originalPrice: productDetailsList1[index]['originalPrice'],
-                        offerPercentage: productDetailsList1[index]['offerPercentage'],
-                        numberOfRatings: productDetailsList1[index]['rating'],
-                      ),
-                    );
-                  },
-                  itemCount: productDetailsList1.length,
-                  scrollDirection: Axis.horizontal,
-                ),
+                      itemCount: bestSellersList.length,
+                      scrollDirection: Axis.horizontal,
+                    ),
+                  ),
+                ],
               ),
+
+              //special offers
+
               Container(
                 height: 84,
                 width: screenSize.width * 0.9,
                 child: Row(
                   children: [
-                    Image.asset("lib/core/assets/images/product_images/home/special_offer.jpg"),
+                    Image.asset("lib/core/assets/images/product_images/home/special_offer.png"),
                     SizedBox(width: 20),
                     Container(
                       width: 180,
@@ -135,27 +169,38 @@ class HomeScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              const FlatAndHeelsTile(),
+              kHeight,
+
+              //buy now
+
+              const BuyNowTile(
+                imagePath: "lib/core/assets/images/product_images/Cashew Vita Chocolate Flavoured/Cashew_vita_Chocolate.png",
+                productName: "Cashew Vita",
+                productDescription: "Chocolate flavoured health drink",
+                price: "300",
+              ),
               const ViewOfferTile(
                 color: Color(0xFFFD6E87),
                 mainLabel: "Trending Products",
                 icon: Icons.calendar_month,
                 subLabel: "Last Date 29/02/22",
               ),
+
+              // products list
+
               Container(
                 height: 250,
-                color: Colors.white,
                 child: ListView.builder(
                   itemBuilder: (context, index) {
-                    print("Image list in kart ${productDetailsList2[index]['imagePath']}");
                     return GestureDetector(
                       onTap: () {
-                        print("image list ${productDetailsList1[index]['imagePath']}");
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => ShopScreen(
                               imageList: productDetailsList1[index]['imagePath'],
                               productName: productDetailsList1[index]['name'],
+                              description: productDetailsList1[index]['description'],
+                              price: bestSellersList[index]['offerPrice'],
                             ),
                           ),
                         );
@@ -176,10 +221,27 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 10),
-              const NewArrivalsTile(),
+
+              // value added products
+
+              const ValueAddedProductsTile(),
               const SizedBox(height: 15),
-              SponseredProductTile(
-                imagePath: "${productDetailsList1[5]['imagePath'][0]}",
+
+              //Sponsered product
+              GestureDetector(
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => ShopScreen(
+                      imageList: ["lib/core/assets/images/product_images/Cashew Vita Chocolate Flavoured/Cashew vita chocolate flavoured.jpg"],
+                      productName: "CASHEW VITA",
+                      description: "Cahew vita chocolate flavoured health drink",
+                      price: "500",
+                    ),
+                  ),
+                ),
+                child: SponseredProductTile(
+                  imagePath: "lib/core/assets/images/product_images/Cashew Vita Chocolate Flavoured/Cashew vita chocolate flavoured.jpg",
+                ),
               ),
             ],
           ),

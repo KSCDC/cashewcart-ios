@@ -4,16 +4,14 @@ import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/core/constatns.dart';
 import 'package:internship_sample/presentation/checkout/checkout_screen.dart';
 import 'package:internship_sample/presentation/cart/widgets/cart_product_list_tile.dart';
+import 'package:internship_sample/presentation/order_tracking/widgets/custom_timeline_tile.dart';
 import 'package:internship_sample/presentation/place_order/place_order_dropdown.dart';
 import 'package:internship_sample/presentation/widgets/custom_appbar.dart';
 import 'package:internship_sample/presentation/widgets/custom_elevated_button.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 
-List<String> weightList = ["65GM", "100GM", "250GM", "500GM", "1KG"];
-List<String> quantityList = ["1N", "2N", "3N", "4N", "5N"];
-
-class PlaceOrderScreen extends StatelessWidget {
-  const PlaceOrderScreen({
+class OrderTrackingScreen extends StatelessWidget {
+  const OrderTrackingScreen({
     super.key,
     required this.imagePath,
     required this.productName,
@@ -30,7 +28,7 @@ class PlaceOrderScreen extends StatelessWidget {
     final screenSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: CustomAppBar(
-        title: "Place Order",
+        title: "Product Details",
       ),
       backgroundColor: appBackgroundColor,
       body: SingleChildScrollView(
@@ -87,25 +85,29 @@ class PlaceOrderScreen extends StatelessWidget {
                             Row(
                               children: [
                                 Container(
-                                  color: Color(0xFFF2F2F2),
                                   height: 35,
                                   child: Row(
                                     children: [
-                                      CustomTextWidget(text: "Wt:"),
+                                      CustomTextWidget(
+                                        text: "Wt:",
+                                        fontweight: FontWeight.w600,
+                                      ),
                                       SizedBox(width: 5),
-                                      PlaceOrderDropDown(itemsList: weightList),
+                                      CustomTextWidget(text: "250GM"),
                                     ],
                                   ),
                                 ),
-                                kWidth,
+                                SizedBox(width: 20),
                                 Container(
-                                  color: Color(0xFFF2F2F2),
                                   height: 35,
                                   child: Row(
                                     children: [
-                                      CustomTextWidget(text: "Qty: "),
+                                      CustomTextWidget(
+                                        text: "Qty: ",
+                                        fontweight: FontWeight.w600,
+                                      ),
                                       SizedBox(width: 5),
-                                      PlaceOrderDropDown(itemsList: quantityList),
+                                      CustomTextWidget(text: "1"),
                                     ],
                                   ),
                                 ),
@@ -122,7 +124,7 @@ class PlaceOrderScreen extends StatelessWidget {
                                 ),
                                 kWidth,
                                 CustomTextWidget(
-                                  text: "10 May 2XXX",
+                                  text: "18 Jan 2024",
                                   fontSize: 13,
                                   fontweight: FontWeight.w600,
                                 )
@@ -135,23 +137,6 @@ class PlaceOrderScreen extends StatelessWidget {
                   ),
                   kHeight,
                   SizedBox(height: 20),
-                  Row(
-                    children: [
-                      Icon(CupertinoIcons.ticket),
-                      kWidth,
-                      CustomTextWidget(
-                        text: "Apply Coupons",
-                        fontSize: 16,
-                        fontweight: FontWeight.w500,
-                      ),
-                      Spacer(),
-                      CustomTextWidget(
-                        text: "Select",
-                        fontColor: kMainThemeColor,
-                        fontweight: FontWeight.w600,
-                      )
-                    ],
-                  ),
                   kHeight,
                   Divider(),
                   SizedBox(height: 20),
@@ -177,28 +162,6 @@ class PlaceOrderScreen extends StatelessWidget {
                     ],
                   ),
                   kHeight,
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      CustomTextWidget(
-                        text: "Convenience",
-                        fontSize: 16,
-                        fontweight: FontWeight.w400,
-                      ),
-                      SizedBox(width: 20),
-                      CustomTextWidget(
-                        text: "Know More",
-                        fontColor: kMainThemeColor,
-                        fontweight: FontWeight.w600,
-                      ),
-                      Spacer(),
-                      CustomTextWidget(
-                        text: "Apply Coupon",
-                        fontColor: kMainThemeColor,
-                        fontweight: FontWeight.w600,
-                      ),
-                    ],
-                  ),
                   kHeight,
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -222,7 +185,7 @@ class PlaceOrderScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       CustomTextWidget(
-                        text: "Order Total",
+                        text: "Total Paid",
                         fontSize: 17,
                         fontweight: FontWeight.w600,
                       ),
@@ -234,59 +197,27 @@ class PlaceOrderScreen extends StatelessWidget {
                     ],
                   ),
                   kHeight,
-                  Row(
-                    children: [
-                      CustomTextWidget(
-                        text: "EMI Available",
-                        fontSize: 16,
-                        fontweight: FontWeight.w400,
-                      ),
-                      SizedBox(width: 20),
-                      CustomTextWidget(
-                        text: "Details",
-                        fontColor: kMainThemeColor,
-                        fontweight: FontWeight.w600,
-                      ),
-                    ],
+                  CustomTimelineTile(
+                    isFirst: true,
+                    isCompleted: true,
+                    cardTitle: "Order Placed",
+                    dateAndTime: "Completed on 15/01/2024 - 10AM",
                   ),
-                  SizedBox(height: 50),
+                  CustomTimelineTile(
+                    isCompleted: true,
+                    cardTitle: "Product Shipped",
+                    dateAndTime: "Completed on 16/01/2024 - 2PM",
+                  ),
+                  CustomTimelineTile(
+                    cardTitle: "Arrival at Nearest Hub",
+                    dateAndTime: "Expected on 18/01/2024 - 11AM",
+                  ),
+                  CustomTimelineTile(
+                    isLast: true,
+                    cardTitle: "Out of Delivery",
+                    dateAndTime: "Expected on 18/01/2024 - 5PM",
+                  )
                 ],
-              ),
-            )
-          ],
-        ),
-      ),
-      bottomSheet: Container(
-        margin: EdgeInsets.all(20),
-        height: 55,
-        width: double.infinity,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              children: [
-                CustomTextWidget(
-                  text: "₹ ${price}.00",
-                  fontSize: 16,
-                  fontweight: FontWeight.w600,
-                ),
-                CustomTextWidget(
-                  text: "View Details",
-                  fontColor: kMainThemeColor,
-                  fontweight: FontWeight.w600,
-                ),
-              ],
-            ),
-            Container(
-              height: 55,
-              width: 250,
-              child: GestureDetector(
-                onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => CheckoutScreen(price: int.parse(price), shippingCost: 30),
-                  ),
-                ),
-                child: CustomElevatedButton(label: "Proceed to Payment"),
               ),
             )
           ],

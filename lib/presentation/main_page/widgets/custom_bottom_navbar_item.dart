@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
+import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 
 class CustomBottomNavbarItem extends StatelessWidget {
-  const CustomBottomNavbarItem(
-      {super.key,
-      required this.icon,
-      required this.label,
-      required this.index,
-      required this.color});
-  final Icon icon;
+  const CustomBottomNavbarItem({super.key, required this.iconWidget, required this.label, required this.index, required this.color});
+  final Widget iconWidget;
   final String label;
   final int index;
   final Color color;
@@ -21,9 +17,14 @@ class CustomBottomNavbarItem extends StatelessWidget {
           onPressed: () {
             bottomNavbarIndexNotifier.value = index;
           },
-          icon: icon,
+          icon: iconWidget,
         ),
-        Text(label),
+        CustomTextWidget(
+          text: label,
+          fontColor: color,
+          fontFamily: "",
+          fontweight: FontWeight.w600,
+        ),
       ],
     );
   }

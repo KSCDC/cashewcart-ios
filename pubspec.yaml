@@ -35,6 +35,7 @@ dependencies:
   flutter_svg: ^2.0.9
   persistent_bottom_nav_bar: ^5.0.2
   smooth_page_indicator: ^1.1.0
+  timeline_tile: ^2.0.0
 
 dev_dependencies:
   flutter_lints: ^2.0.0
@@ -72,15 +73,15 @@ flutter:
 
     - lib/core/assets/images/avatar.jpeg
     - lib/core/assets/images/product_images/home/heels.jpg
-    - lib/core/assets/images/product_images/home/special_offer.jpg
+    - lib/core/assets/images/product_images/home/special_offer.png
+    - lib/core/assets/images/other/special_offer.svg
 
     - lib/core/assets/images/product_images/home/yellow_bar.jpg
     - lib/core/assets/images/product_images/home/star.jpg
     - lib/core/assets/images/product_images/home/starbg.jpg
 
-    
-
-    - lib/core/assets/images/product_images/Cashew Apple Squash/Cashew apple squash.jpg
+    - lib/core/assets/images/product_images/Cashew Apple Squash/Cashew apple
+      squash.jpg
     - lib/core/assets/images/product_images/Cashew Pine Jam/Cashew pine jam.jpg
 
     - lib/core/assets/images/product_images/Cashew Powder/Cashew Powder 1.jpg
@@ -93,29 +94,44 @@ flutter:
     - lib/core/assets/images/product_images/Cashew Soup/Cashew Soup-mix .jpg
     - lib/core/assets/images/product_images/Cashew Soup/Cashew Soup.jpg
 
-    - lib/core/assets/images/product_images/Cashew Vanilla MilkShake/Cashew Vanilla Milk Shake Powder.jpg
+    - lib/core/assets/images/product_images/Cashew Vanilla MilkShake/Cashew
+      Vanilla Milk Shake Powder.jpg
 
     - lib/core/assets/images/product_images/Cashew Vita/Cashew Vita.jpg
 
-    - lib/core/assets/images/product_images/Cashew Vita Cardamom flavoured/Cashew vita cardamom flavoured.jpg
+    - lib/core/assets/images/product_images/Cashew Vita Cardamom
+      flavoured/Cashew vita cardamom flavoured.jpg
 
-    - lib/core/assets/images/product_images/Cashew Vita Chocolate Flavoured/Cashew Vita Chocolate Flavoured 1.jpg
-    - lib/core/assets/images/product_images/Cashew Vita Chocolate Flavoured/Cashew vita chocolate flavoured.jpg
+    - lib/core/assets/images/product_images/Cashew Vita Chocolate
+      Flavoured/Cashew Vita Chocolate Flavoured 1.jpg
+    - lib/core/assets/images/product_images/Cashew Vita Chocolate
+      Flavoured/Cashew vita chocolate flavoured.jpg
+    - lib/core/assets/images/product_images/Cashew Vita Chocolate
+      Flavoured/Cashew_vita_Chocolate.png
 
-    - lib/core/assets/images/product_images/Cashew Vita Pistachio flavoured/Cashew vita Pistachio flavoured.jpg
+    - lib/core/assets/images/product_images/Cashew Vita Pistachio
+      flavoured/Cashew vita Pistachio flavoured.jpg
 
     - lib/core/assets/images/product_images/Chilli Garlic/Chilly Garlic.jpg
 
-    - lib/core/assets/images/product_images/Chilly Coated/Red Chilly Coated Cashew.jpg
+    - lib/core/assets/images/product_images/Chilly Coated/Red Chilly Coated
+      Cashew.jpg
 
     - lib/core/assets/images/product_images/Honey Coated/Honey Coated Cashew.jpg
 
     - lib/core/assets/images/product_images/Plain Cashew/Plain cashew (B).png
     - lib/core/assets/images/product_images/Plain Cashew/Plain Cashew (F).png
 
-    - lib/core/assets/images/product_images/Roasted and Salted Cashew/Roasted and salted Cashew.png
+    - lib/core/assets/images/product_images/Roasted and Salted Cashew/Roasted
+      and salted Cashew.png
 
     - lib/core/assets/images/product_images/Salt and Pepper/Salt and Pepper.jpg
+
+    - lib/core/assets/images/product_images/Cashew Plain2-600x600.jpg
+    - lib/core/assets/images/home_icon.svg
+
+    - lib/core/assets/images/product_images/Roasted.jpg
+    
 
   # An image asset can refer to one or more resolution-specific "variants",
   # https://flutter.dev/assets-and-images/#resolution-aware

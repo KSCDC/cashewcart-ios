@@ -34,7 +34,7 @@ class CustomPasswordTextField extends StatelessWidget {
               suffix: GestureDetector(
                   onTap: () {
                     obscureTextNotifier.value = !obscureTextNotifier.value;
-                    print(obscureTextNotifier.value);
+                   
                   },
                   child: obscureTextNotifier.value
                       ? Icon(

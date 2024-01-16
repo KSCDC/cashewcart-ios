@@ -19,12 +19,24 @@ const List<String> statesList = [
 
 const List avatarImage = [
   {
-    'label': "Squash",
-    'imagePath': "lib/core/assets/images/product_images/Cashew Apple Squash/Cashew apple squash.jpg",
+    'label': "Plain",
+    'imagePath': "lib/core/assets/images/product_images/Plain Cashew/Plain Cashew (F).png",
+  },
+  {
+    'label': "Roast",
+    'imagePath': "lib/core/assets/images/get_started_bg_image.png",
   },
   {
     'label': "Jam",
     'imagePath': "lib/core/assets/images/product_images/Cashew Pine Jam/Cashew pine jam.jpg",
+  },
+  {
+    'label': "Shakes",
+    'imagePath': "lib/core/assets/images/product_images/Cashew Vanilla MilkShake/Cashew Vanilla Milk Shake Powder.jpg",
+  },
+  {
+    'label': "Powder",
+    'imagePath': "lib/core/assets/images/product_images/Cashew Powder/Cashew Powder 1.jpg",
   },
   {
     'label': "Soda",
@@ -34,25 +46,147 @@ const List avatarImage = [
     'label': "Squash",
     'imagePath': "lib/core/assets/images/product_images/Cashew Apple Squash/Cashew apple squash.jpg",
   },
+];
+const List bestSellersList = [
   {
-    'label': "Jam",
-    'imagePath': "lib/core/assets/images/product_images/Cashew Pine Jam/Cashew pine jam.jpg",
+    'imagePath': [
+      "lib/core/assets/images/product_images/Cashew Plain2-600x600.jpg",
+    ],
+    'name': "PLAIN CASHEW KERNELS W320",
+    'description':
+        "Plain W320 (500 gram), Price Rs.581 (GST Inclusive), Product available only in India, Shipping and other Charges:- Kerala 8% ,South India 13%, Other States 18% will be added with the price for completing the ordering procedure.",
+    'offerPrice': "581",
+    'originalPrice': "610",
+    'offerPercentage': "10%Off",
+    'rating': "56890",
   },
   {
-    'label': "Soda",
-    'imagePath': "lib/core/assets/images/product_images/Cashew Soda/Cashew soda.jpg",
+    'imagePath': [
+      "lib/core/assets/images/product_images/Cashew Soup/Cashew Soup-mix .jpg",
+    ],
+    'name': "CASHEW SOUP MIX",
+    'description':
+        "Cashew Soup Mix (65 gram), Price Rs.53 (GST Inclusive), Product available only in India, Shipping and other Charges:- Kerala 8% , South India 13%, Other States 18% will be added with the price for completing the ordering procedure.",
+    'offerPrice': "53",
+    'originalPrice': "60",
+    'offerPercentage': "10%Off",
+    'rating': "56890",
   },
   {
-    'label': "Squash",
-    'imagePath': "lib/core/assets/images/product_images/Cashew Apple Squash/Cashew apple squash.jpg",
+    'imagePath': [
+      "lib/core/assets/images/product_images/Cashew Plain2-600x600.jpg",
+    ],
+    'name': "PLAIN CASHEW KERNELS W320",
+    'description': "Neque porro quisquam est qui dolorem ipsum quia",
+    'offerPrice': "1500",
+    'originalPrice': "2499",
+    'offerPercentage': "40%Off",
+    'rating': "56890",
   },
   {
-    'label': "Jam",
-    'imagePath': "lib/core/assets/images/product_images/Cashew Pine Jam/Cashew pine jam.jpg",
+    'imagePath': ["lib/core/assets/images/product_images/Cashew Plain2-600x600.jpg"],
+    'name': "PLAIN CASHEW KERNELS W240",
+    'description': "Neque porro quisquam est qui dolorem ipsum quia",
+    'offerPrice': "1500",
+    'originalPrice': "2499",
+    'offerPercentage': "40%Off",
+    'rating': "56890",
   },
   {
-    'label': "Soda",
-    'imagePath': "lib/core/assets/images/product_images/Cashew Soda/Cashew soda.jpg",
+    'imagePath': ["lib/core/assets/images/product_images/Cashew Plain2-600x600.jpg"],
+    'name': "PLAIN CASHEW KERNELS W320",
+    'description': "Neque porro quisquam est qui dolorem ipsum quia",
+    'offerPrice': "1500",
+    'originalPrice': "2499",
+    'offerPercentage': "40%Off",
+    'rating': "56890",
+  },
+];
+
+const List plainCashewsList = [
+  {
+    'imagePath': [
+      "lib/core/assets/images/product_images/Cashew Plain2-600x600.jpg",
+    ],
+    'name': "PLAIN CASHEW KERNELS W320",
+    'description':
+        "Plain W320 (500 gram), Price Rs.581 (GST Inclusive), Product available only in India, Shipping and other Charges:- Kerala 8% ,South India 13%, Other States 18% will be added with the price for completing the ordering procedure.",
+    'offerPrice': "581",
+    'originalPrice': "610",
+    'offerPercentage': "10%Off",
+    'rating': "56890",
+  },
+  {
+    'imagePath': [
+      "lib/core/assets/images/product_images/Cashew Plain2-600x600.jpg",
+    ],
+    'name': "PLAIN CASHEW KERNELS W320",
+    'description': "Neque porro quisquam est qui dolorem ipsum quia",
+    'offerPrice': "1500",
+    'originalPrice': "2499",
+    'offerPercentage': "40%Off",
+    'rating': "56890",
+  },
+  {
+    'imagePath': ["lib/core/assets/images/product_images/Cashew Plain2-600x600.jpg"],
+    'name': "PLAIN CASHEW KERNELS W240",
+    'description': "Neque porro quisquam est qui dolorem ipsum quia",
+    'offerPrice': "1500",
+    'originalPrice': "2499",
+    'offerPercentage': "40%Off",
+    'rating': "56890",
+  },
+  {
+    'imagePath': ["lib/core/assets/images/product_images/Cashew Plain2-600x600.jpg"],
+    'name': "PLAIN CASHEW KERNELS W320",
+    'description': "Neque porro quisquam est qui dolorem ipsum quia",
+    'offerPrice': "1500",
+    'originalPrice': "2499",
+    'offerPercentage': "40%Off",
+    'rating': "56890",
+  },
+];
+const List roastedCashewsList = [
+  {
+    'imagePath': [
+      "lib/core/assets/images/product_images/Roasted.jpg",
+    ],
+    'name': "PLAIN CASHEW KERNELS W320",
+    'description':
+        "Plain W320 (500 gram), Price Rs.581 (GST Inclusive), Product available only in India, Shipping and other Charges:- Kerala 8% ,South India 13%, Other States 18% will be added with the price for completing the ordering procedure.",
+    'offerPrice': "581",
+    'originalPrice': "610",
+    'offerPercentage': "10%Off",
+    'rating': "56890",
+  },
+  {
+    'imagePath': [
+      "lib/core/assets/images/product_images/Roasted.jpg",
+    ],
+    'name': "PLAIN CASHEW KERNELS W320",
+    'description': "Neque porro quisquam est qui dolorem ipsum quia",
+    'offerPrice': "1500",
+    'originalPrice': "2499",
+    'offerPercentage': "40%Off",
+    'rating': "56890",
+  },
+  {
+    'imagePath': ["lib/core/assets/images/product_images/Roasted.jpg"],
+    'name': "PLAIN CASHEW KERNELS W240",
+    'description': "Neque porro quisquam est qui dolorem ipsum quia",
+    'offerPrice': "1500",
+    'originalPrice': "2499",
+    'offerPercentage': "40%Off",
+    'rating': "56890",
+  },
+  {
+    'imagePath': ["lib/core/assets/images/product_images/Roasted.jpg"],
+    'name': "PLAIN CASHEW KERNELS W320",
+    'description': "Neque porro quisquam est qui dolorem ipsum quia",
+    'offerPrice': "1500",
+    'originalPrice': "2499",
+    'offerPercentage': "40%Off",
+    'rating': "56890",
   },
 ];
 
@@ -177,6 +311,63 @@ const List productDetailsList1 = [
       "lib/core/assets/images/product_images/Chilli Garlic/Chilly Garlic.jpg",
     ],
     'name': "Chilly Garlic.",
+    'description': "Neque porro quisquam est qui dolorem ipsum quia",
+    'offerPrice': "1500",
+    'originalPrice': "2499",
+    'offerPercentage': "40%Off",
+    'rating': "56890",
+  },
+];
+const List valueAddedProducts = [
+  {
+    'imagePath': [
+      "lib/core/assets/images/product_images/Cashew Powder/Cashew Powder 1.jpg",
+    ],
+    'name': "CASHEW POWDER",
+    'description': "Neque porro quisquam est qui dolorem ipsum quia",
+    'offerPrice': "1500",
+    'originalPrice': "2499",
+    'offerPercentage': "40%Off",
+    'rating': "56890",
+  },
+  {
+    'imagePath': [
+      "lib/core/assets/images/product_images/Cashew Soup/Cashew Soup-mix .jpg",
+    ],
+    'name': "CASHEW SOUP MIX",
+    'description': "Neque porro quisquam est qui dolorem ipsum quia",
+    'offerPrice': "1500",
+    'originalPrice': "2499",
+    'offerPercentage': "40%Off",
+    'rating': "56890",
+  },
+  {
+    'imagePath': [
+      "lib/core/assets/images/product_images/Cashew Vita/Cashew Vita.jpg",
+    ],
+    'name': "CASHEW VITA",
+    'description': "Neque porro quisquam est qui dolorem ipsum quia",
+    'offerPrice': "1500",
+    'originalPrice': "2499",
+    'offerPercentage': "40%Off",
+    'rating': "56890",
+  },
+  {
+    'imagePath': [
+      "lib/core/assets/images/product_images/Roasted and Salted Cashew/Roasted and salted Cashew.png",
+    ],
+    'name': "Roasted and salted Cashew",
+    'description': "Neque porro quisquam est qui dolorem ipsum quia",
+    'offerPrice': "1500",
+    'originalPrice': "2499",
+    'offerPercentage': "40%Off",
+    'rating': "56890",
+  },
+  {
+    'imagePath': [
+      "lib/core/assets/images/product_images/Salt and Pepper/Salt and Pepper.jpg",
+    ],
+    'name': "Salt and Pepper",
     'description': "Neque porro quisquam est qui dolorem ipsum quia",
     'offerPrice': "1500",
     'originalPrice': "2499",
