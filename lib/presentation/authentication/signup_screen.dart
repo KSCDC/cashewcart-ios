@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:internship_sample/core/colors.dart';
+import 'package:internship_sample/core/constatns.dart';
 
 import 'package:internship_sample/presentation/authentication/widgets/alternative_signin_options.dart.dart';
 import 'package:internship_sample/presentation/authentication/widgets/authentication_page_title.dart';
 import 'package:internship_sample/presentation/authentication/widgets/custom_icon_text_field.dart';
 import 'package:internship_sample/presentation/authentication/widgets/custom_password_text_field.dart';
+import 'package:internship_sample/presentation/main_page/main_page_screen.dart';
 import 'package:internship_sample/presentation/widgets/custom_elevated_button.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 
@@ -17,14 +19,15 @@ class SignUpScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.all(29),
+    return Scaffold(
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 30),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                kHeight,
                 AuthenticationPageTitle(
                   heading: "Create an",
                 ),
@@ -34,8 +37,21 @@ class SignUpScreen extends StatelessWidget {
                 const SizedBox(height: 10),
                 CustomIconTextField(
                   icon: Icons.person_2,
-                  hintText: "Username or Email",
+                  hintText: "Username",
                   controller: usernameOrEmailController,
+                  keyboardType: TextInputType.name,
+                ),
+                CustomIconTextField(
+                  icon: Icons.mail_outline,
+                  hintText: "Email",
+                  controller: usernameOrEmailController,
+                  keyboardType: TextInputType.emailAddress,
+                ),
+                CustomIconTextField(
+                  icon: Icons.phone_outlined,
+                  hintText: "Phone",
+                  controller: usernameOrEmailController,
+                  keyboardType: TextInputType.phone,
                 ),
                 CustomPasswordTextField(
                   hintText: "Password",
@@ -73,7 +89,7 @@ class SignUpScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 50),
+                const SizedBox(height: 30),
                 SizedBox(
                   height: 55,
                   width: double.infinity,
@@ -98,6 +114,11 @@ class SignUpScreen extends StatelessWidget {
                             padding: EdgeInsets.all(20),
                           );
                           ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) => MainPageScreen(),
+                            ),
+                          );
                         }
                       },
                       child: CustomElevatedButton(
@@ -124,7 +145,8 @@ class SignUpScreen extends StatelessWidget {
                       ),
                     )
                   ],
-                )
+                ),
+                kHeight,
               ],
             ),
           ),

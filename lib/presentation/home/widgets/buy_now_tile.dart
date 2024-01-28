@@ -1,22 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:internship_sample/core/colors.dart';
+import 'package:internship_sample/core/constatns.dart';
+import 'package:internship_sample/main.dart';
+import 'package:internship_sample/presentation/home/home_screen.dart';
+import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
 import 'package:internship_sample/presentation/shop/shop_screen.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 
 class BuyNowTile extends StatelessWidget {
   const BuyNowTile({
     super.key,
-    required this.imagePath,
-    required this.productName,
-    required this.productDescription, required this.price,
+    required this.productDetails,
   });
-  final String imagePath;
-  final String productName;
-  final String productDescription;
-  final String price;
+  final productDetails;
 
   @override
   Widget build(BuildContext context) {
+    final String imagePath = productDetails['imagePath'][0];
+    final String productName = productDetails['name'];
+    final String productDescription = productDetails['category'][0]['description'];
+
     return Container(
       padding: EdgeInsets.all(5),
       decoration: BoxDecoration(
@@ -72,30 +75,30 @@ class BuyNowTile extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              CustomTextWidget(
-                text: productName,
-                fontSize: 16,
-                fontweight: FontWeight.w500,
+              SizedBox(
+                width: 210,
+                child: CustomTextWidget(
+                  text: productName,
+                  fontSize: 16,
+                  fontweight: FontWeight.w500,
+                ),
               ),
-              CustomTextWidget(
-                text: productDescription,
-                fontSize: 10,
-                fontweight: FontWeight.w400,
+              kHeight,
+              SizedBox(
+                width: 200,
+                child: CustomTextWidget(
+                  text: productDescription,
+                  fontSize: 10,
+                  fontweight: FontWeight.w400,
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 10),
                 child: TextButton(
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => ShopScreen(
-                          imageList: [imagePath],
-                          productName: productName,
-                          description: productDescription,
-                          price: price,
-                        ),
-                      ),
-                    );
+                  onPressed: () async {
+                    selectedProductDetails = await productDetails;
+                    previousPageIndex = bottomNavbarIndexNotifier.value;
+                    bottomNavbarIndexNotifier.value = 4;
                   },
                   style: TextButton.styleFrom(
                     backgroundColor: kMainThemeColor,

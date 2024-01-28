@@ -1,24 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:internship_sample/core/constatns.dart';
+import 'package:internship_sample/main.dart';
+import 'package:internship_sample/presentation/home/home_screen.dart';
+import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
 import 'package:internship_sample/presentation/shop/shop_screen.dart';
+import 'package:internship_sample/presentation/side_bar/side_bar.dart';
 import 'package:internship_sample/presentation/widgets/main_appbar.dart';
 import 'package:internship_sample/presentation/widgets/products_list_item_tile.dart';
 import 'package:internship_sample/presentation/widgets/search_section_tile.dart';
 
+List productDisplayList = [];
+
 class ProductListingScreen extends StatelessWidget {
-  const ProductListingScreen({super.key, required this.productDetailsList});
-  final List productDetailsList;
+  const ProductListingScreen({
+    super.key,
+  });
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: MainAppBar(),
+      drawer: SideBar(),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(8),
           child: Column(
             children: [
               SearchSectionTile(
-                heading: "52,082+ Iteams ",
+                heading: "${productDisplayList.length} Items ",
               ),
               GridView.count(
                 physics: const NeverScrollableScrollPhysics(),
@@ -27,29 +36,17 @@ class ProductListingScreen extends StatelessWidget {
                 crossAxisCount: 2,
                 mainAxisSpacing: 5,
                 crossAxisSpacing: 5,
-                children: List.generate(productDetailsList.length, (index) {
+                children: List.generate(productDisplayList.length, (index) {
                   return GestureDetector(
-                    onTap: () {
-                      print("image list ${productDetailsList[index]['imagePath']}");
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => ShopScreen(
-                            imageList: productDetailsList[index]['imagePath'],
-                            productName: productDetailsList[index]['name'],
-                            description: productDetailsList[index]['description'],
-                            price: productDetailsList[index]['offerPrice'],
-                          ),
-                        ),
-                      );
+                    onTap: () async {
+                      print("image list ${productDisplayList[index]['imagePath']}");
+
+                      selectedProductDetails = await productDisplayList[index];
+                      previousPageIndex = bottomNavbarIndexNotifier.value;
+                      bottomNavbarIndexNotifier.value = 4;
                     },
                     child: ProductsListItemTile(
-                      imageList: productDetailsList[index]['imagePath'],
-                      heading: productDetailsList[index]['name'],
-                      description: productDetailsList[index]['description'],
-                      price: productDetailsList[index]['offerPrice'],
-                      originalPrice: productDetailsList[index]['originalPrice'],
-                      offerPercentage: productDetailsList[index]['offerPercentage'],
-                      numberOfRatings: productDetailsList[index]['rating'],
+                      productDetails: productDisplayList[index],
                     ),
                   );
                 }),

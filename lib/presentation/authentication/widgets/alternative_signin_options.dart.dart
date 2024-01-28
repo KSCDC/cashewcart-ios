@@ -11,7 +11,7 @@ class AlternativeSigninOptionsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Padding(
-      padding: EdgeInsets.only(top: 60, bottom: 20),
+      padding: EdgeInsets.only(top: 30, bottom: 20),
       child: Column(
         children: [
           CustomTextWidget(

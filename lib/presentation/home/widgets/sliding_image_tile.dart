@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:internship_sample/main.dart';
+import 'package:internship_sample/presentation/home/home_screen.dart';
+import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
 import 'package:internship_sample/presentation/shop/shop_screen.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 
 class SlidingImageTile extends StatelessWidget {
   const SlidingImageTile({
     super.key,
-    required this.imagePath,
-    required this.name,
-    required this.description,
-    required this.price,
+    required this.productDetails,
   });
+  final productDetails;
 
-  final String imagePath;
-  final String name;
-  final String description;
-  final String price;
   @override
   Widget build(BuildContext context) {
+    final String imagePath = productDetails['imagePath'][0];
+    ;
+
     final screenSize = MediaQuery.of(context).size;
     return Container(
       padding: EdgeInsets.symmetric(vertical: 10),
@@ -69,14 +69,11 @@ class SlidingImageTile extends StatelessWidget {
                     ),
                   ),
                   child: GestureDetector(
-                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => ShopScreen(
-                        imageList: [imagePath],
-                        productName: name,
-                        description: description,
-                        price: price,
-                      ),
-                    )),
+                    onTap: () async {
+                      selectedProductDetails = await productDetails;
+                      previousPageIndex = bottomNavbarIndexNotifier.value;
+                      bottomNavbarIndexNotifier.value = 4;
+                    },
                     child: Container(
                       width: 90,
                       child: const Row(

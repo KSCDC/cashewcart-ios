@@ -18,9 +18,9 @@ class SignInScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Padding(
+    return Scaffold(
+      body: SafeArea(
+        child: Padding(
           padding: const EdgeInsets.all(29),
           child: SingleChildScrollView(
             child: Column(

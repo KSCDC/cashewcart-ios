@@ -25,7 +25,8 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    final screenSize = MediaQuery.of(context).size;
+    return Scaffold(
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -33,9 +34,8 @@ class _SplashScreenState extends State<SplashScreen> {
             Padding(
               padding: EdgeInsets.all(20),
               child: Image(
-                image:
-                    AssetImage("lib/core/assets/images/logos/app_logo.png"),
-                height: 100,
+                image: AssetImage("lib/core/assets/images/logos/app_logo.png"),
+                width: screenSize.width * 0.8,
               ),
             )
           ],

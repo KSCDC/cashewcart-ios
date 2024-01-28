@@ -6,17 +6,20 @@ class CustomIconTextField extends StatelessWidget {
     required this.icon,
     required this.hintText,
     required this.controller,
+    this.keyboardType = TextInputType.text,
     super.key,
   });
   final IconData icon;
   final String hintText;
   final TextEditingController controller;
+  final TextInputType keyboardType;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 15),
+      padding: const EdgeInsets.symmetric(vertical: 10),
       child: TextFormField(
+        keyboardType: keyboardType,
         controller: controller,
         style: const TextStyle(color: Colors.black),
         textCapitalization: TextCapitalization.sentences,
@@ -47,8 +50,6 @@ class CustomIconTextField extends StatelessWidget {
             ),
           ),
         ),
-        
-        
       ),
     );
   }

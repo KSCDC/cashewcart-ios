@@ -5,11 +5,13 @@ class CustomPasswordTextField extends StatelessWidget {
     super.key,
     required this.hintText,
     required this.controller,
+    this.keyboardType = TextInputType.text,
   });
 
   final String hintText;
 
   final TextEditingController controller;
+  final TextInputType keyboardType;
 
   ValueNotifier<bool> obscureTextNotifier = ValueNotifier(true);
   @override
@@ -20,6 +22,7 @@ class CustomPasswordTextField extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 15),
           child: TextFormField(
+            keyboardType: keyboardType,
             style: const TextStyle(color: Colors.black),
             obscureText: obscureTextNotifier.value,
             controller: controller,
@@ -34,7 +37,6 @@ class CustomPasswordTextField extends StatelessWidget {
               suffix: GestureDetector(
                   onTap: () {
                     obscureTextNotifier.value = !obscureTextNotifier.value;
-                   
                   },
                   child: obscureTextNotifier.value
                       ? Icon(

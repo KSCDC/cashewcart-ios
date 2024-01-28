@@ -4,29 +4,32 @@ import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/core/constatns.dart';
 import 'package:internship_sample/presentation/checkout/checkout_screen.dart';
 import 'package:internship_sample/presentation/cart/widgets/cart_product_list_tile.dart';
+import 'package:internship_sample/presentation/home/home_screen.dart';
 import 'package:internship_sample/presentation/place_order/place_order_dropdown.dart';
 import 'package:internship_sample/presentation/widgets/custom_appbar.dart';
 import 'package:internship_sample/presentation/widgets/custom_elevated_button.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 
-List<String> weightList = ["65GM", "100GM", "250GM", "500GM", "1KG"];
-List<String> quantityList = ["1N", "2N", "3N", "4N", "5N"];
+ValueNotifier<int> productCountNotifier = ValueNotifier(1);
 
 class PlaceOrderScreen extends StatelessWidget {
   const PlaceOrderScreen({
     super.key,
-    required this.imagePath,
-    required this.productName,
-    required this.productDescription,
-    required this.price,
+    required this.productDetails,
   });
-  final String imagePath;
-  final String productName;
-  final String productDescription;
-  final String price;
+  final productDetails;
 
   @override
   Widget build(BuildContext context) {
+    final int category = productDetails['category'];
+    final String imagePath = productDetails['product']['imagePath'][0];
+    final String name = productDetails['product']['name'];
+    final String description = productDetails['product']['category'][category]['description'];
+    final String price = productDetails['product']['category'][category]['offerPrice'];
+    // final String rating = productDetails['product']['category'][category]['rating'];
+    // final String weight = productDetails['product']['category'][category]['weight'];
+
+    final int count = productDetails['count'];
     final screenSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: CustomAppBar(
@@ -48,7 +51,7 @@ class PlaceOrderScreen extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(top: 10),
                         child: Container(
-                          height: 125,
+                          height: 100,
                           width: screenSize.width * 0.25,
                           decoration: BoxDecoration(
                             image: DecorationImage(
@@ -69,7 +72,7 @@ class PlaceOrderScreen extends StatelessWidget {
                             Container(
                               width: 250,
                               child: CustomTextWidget(
-                                text: productName,
+                                text: name,
                                 fontweight: FontWeight.w600,
                               ),
                             ),
@@ -77,57 +80,52 @@ class PlaceOrderScreen extends StatelessWidget {
                             Container(
                               width: screenSize.width * 0.6,
                               child: CustomTextWidget(
-                                text: productDescription,
+                                text: description,
                                 fontSize: 13,
                                 fontweight: FontWeight.w400,
                               ),
                             ),
                             kHeight,
-                            kHeight,
                             Row(
                               children: [
-                                Container(
-                                  color: Color(0xFFF2F2F2),
-                                  height: 35,
-                                  child: Row(
-                                    children: [
-                                      CustomTextWidget(text: "Wt:"),
-                                      SizedBox(width: 5),
-                                      PlaceOrderDropDown(itemsList: weightList),
-                                    ],
-                                  ),
+                                ValueListenableBuilder(
+                                  valueListenable: productCountNotifier,
+                                  builder: (context, newCount, _) {
+                                    return CustomTextWidget(text: "Nos : ${newCount}");
+                                  },
                                 ),
-                                kWidth,
-                                Container(
-                                  color: Color(0xFFF2F2F2),
-                                  height: 35,
-                                  child: Row(
-                                    children: [
-                                      CustomTextWidget(text: "Qty: "),
-                                      SizedBox(width: 5),
-                                      PlaceOrderDropDown(itemsList: quantityList),
-                                    ],
-                                  ),
+                                SizedBox(width: 20),
+                                GestureDetector(
+                                  onTap: () {
+                                    if (productCountNotifier.value != 1) productCountNotifier.value--;
+                                  },
+                                  child: Icon(Icons.remove),
                                 ),
-                                kWidth,
-                              ],
-                            ),
-                            kHeight,
-                            Row(
-                              children: [
-                                CustomTextWidget(
-                                  text: "Delivery by",
-                                  fontSize: 13,
-                                  fontweight: FontWeight.w400,
+                                SizedBox(width: 5),
+                                GestureDetector(
+                                  onTap: () {
+                                    productCountNotifier.value++;
+                                  },
+                                  child: Icon(Icons.add),
                                 ),
-                                kWidth,
-                                CustomTextWidget(
-                                  text: "10 May 2XXX",
-                                  fontSize: 13,
-                                  fontweight: FontWeight.w600,
-                                )
                               ],
                             )
+                            // kHeight,
+                            // Row(
+                            //   children: [
+                            //     CustomTextWidget(
+                            //       text: "Delivery by",
+                            //       fontSize: 13,
+                            //       fontweight: FontWeight.w400,
+                            //     ),
+                            //     kWidth,
+                            //     CustomTextWidget(
+                            //       text: "10 May 2XXX",
+                            //       fontSize: 13,
+                            //       fontweight: FontWeight.w600,
+                            //     )
+                            //   ],
+                            // )
                           ],
                         ),
                       )
@@ -161,21 +159,26 @@ class PlaceOrderScreen extends StatelessWidget {
                     fontweight: FontWeight.w500,
                   ),
                   SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      CustomTextWidget(
-                        text: "Order Amounts",
-                        fontSize: 16,
-                        fontweight: FontWeight.w400,
-                      ),
-                      CustomTextWidget(
-                        text: "₹ $price",
-                        fontSize: 16,
-                        fontweight: FontWeight.w600,
-                      )
-                    ],
-                  ),
+                  ValueListenableBuilder(
+                      valueListenable: productCountNotifier,
+                      builder: (context, newCount, _) {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            CustomTextWidget(
+                              text: "Order Amounts",
+                              fontSize: 16,
+                              fontweight: FontWeight.w400,
+                            ),
+                            CustomTextWidget(text: "${double.parse(price)} * ${newCount}"),
+                            CustomTextWidget(
+                              text: "₹ ${double.parse(price) * newCount}",
+                              fontSize: 16,
+                              fontweight: FontWeight.w600,
+                            )
+                          ],
+                        );
+                      }),
                   kHeight,
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -226,29 +229,20 @@ class PlaceOrderScreen extends StatelessWidget {
                         fontSize: 17,
                         fontweight: FontWeight.w600,
                       ),
-                      CustomTextWidget(
-                        text: "₹ $price",
-                        fontSize: 16,
-                        fontweight: FontWeight.w600,
+                      ValueListenableBuilder(
+                        valueListenable: productCountNotifier,
+                        builder: (context, newCount, _) {
+                          return CustomTextWidget(
+                            text: "₹ ${double.parse(price) * newCount}",
+                            fontSize: 16,
+                            fontweight: FontWeight.w600,
+                          );
+                        },
                       )
                     ],
                   ),
                   kHeight,
-                  Row(
-                    children: [
-                      CustomTextWidget(
-                        text: "EMI Available",
-                        fontSize: 16,
-                        fontweight: FontWeight.w400,
-                      ),
-                      SizedBox(width: 20),
-                      CustomTextWidget(
-                        text: "Details",
-                        fontColor: kMainThemeColor,
-                        fontweight: FontWeight.w600,
-                      ),
-                    ],
-                  ),
+                 
                   SizedBox(height: 50),
                 ],
               ),
@@ -263,29 +257,42 @@ class PlaceOrderScreen extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
-              children: [
-                CustomTextWidget(
-                  text: "₹ ${price}.00",
+            ValueListenableBuilder(
+              valueListenable: productCountNotifier,
+              builder: (context, newCount, _) {
+                return CustomTextWidget(
+                  text: "₹ ${double.parse(price) * newCount}",
                   fontSize: 16,
                   fontweight: FontWeight.w600,
-                ),
-                CustomTextWidget(
-                  text: "View Details",
-                  fontColor: kMainThemeColor,
-                  fontweight: FontWeight.w600,
-                ),
-              ],
+                );
+              },
             ),
             Container(
               height: 55,
               width: 250,
               child: GestureDetector(
-                onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => CheckoutScreen(price: int.parse(price), shippingCost: 30),
-                  ),
-                ),
+                onTap: () {
+                  final double total = double.parse(price) * productCountNotifier.value;
+                  if (total <= 500) {
+                    const snackBar = SnackBar(
+                      content: Text('Minimum order amount is Rs 500 and above'),
+                      behavior: SnackBarBehavior.floating,
+                      margin: EdgeInsets.all(10),
+                      padding: EdgeInsets.all(20),
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  } else {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => CheckoutScreen(
+                          price: total,
+                          shippingCost: 30,
+                          orderingProductsList: [productDetails],
+                        ),
+                      ),
+                    );
+                  }
+                },
                 child: CustomElevatedButton(label: "Proceed to Payment"),
               ),
             )

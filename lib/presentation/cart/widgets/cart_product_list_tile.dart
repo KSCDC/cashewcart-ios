@@ -1,31 +1,36 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/core/constatns.dart';
+import 'package:internship_sample/presentation/cart/cart_screen.dart';
+import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
 import 'package:internship_sample/presentation/widgets/custom_star_rating_tile.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 
 class CartProductsListTile extends StatelessWidget {
   const CartProductsListTile({
     super.key,
-    required this.imagePath,
-    required this.heading,
-    required this.price,
-    required this.originalPrice,
-    required this.offerPercentage,
-    required this.rating,
+    required this.productDetails,
+    required this.callSetState,
   });
-  final String imagePath;
-  final String heading;
-  final String price;
-  final String originalPrice;
-  final String offerPercentage;
-  final String rating;
+  final productDetails;
+  final VoidCallback callSetState;
   @override
   Widget build(BuildContext context) {
+    final String imagePath = productDetails['product']['imagePath'][0];
+    final String productName = productDetails['product']['name'];
+    final int selectedCategory = productDetails['category'];
+    final int count = productDetails['count'];
+
+    final String originalPrice = productDetails['product']['category'][selectedCategory]['originalPrice'];
+    final String offerPrice = productDetails['product']['category'][selectedCategory]['offerPrice'];
+    final String numberOfRatings = productDetails['product']['category'][selectedCategory]['rating'];
+    final String weight = productDetails['product']['category'][selectedCategory]['weight'];
     final screenSize = MediaQuery.of(context).size;
     return Container(
       width: screenSize.width * 0.9,
-      height: 210,
+      // height: 210,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
@@ -54,15 +59,20 @@ class CartProductsListTile extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      CustomTextWidget(
-                        text: heading,
-                        fontweight: FontWeight.w600,
+                      SizedBox(
+                        width: screenSize.width * 0.5,
+                        child: CustomTextWidget(
+                          text: productName,
+                          fontSize: 12,
+                          fontweight: FontWeight.w600,
+                          textOverflow: TextOverflow.ellipsis,
+                        ),
                       ),
                       const SizedBox(height: 5),
-                      const Row(
+                      Row(
                         children: [
                           CustomTextWidget(
-                            text: "Variations :",
+                            text: "Net Weight :",
                             fontSize: 12,
                             fontweight: FontWeight.w500,
                           ),
@@ -70,15 +80,7 @@ class CartProductsListTile extends StatelessWidget {
                           CartProductListTileButton(
                             buttonHeight: 20,
                             buttonWidth: 40,
-                            label: "Black",
-                            fontSize: 10,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          kWidth,
-                          CartProductListTileButton(
-                            buttonHeight: 20,
-                            buttonWidth: 40,
-                            label: "Red",
+                            label: weight,
                             fontSize: 10,
                             fontWeight: FontWeight.w500,
                           ),
@@ -88,7 +90,7 @@ class CartProductsListTile extends StatelessWidget {
                       Row(
                         children: [
                           CustomTextWidget(
-                            text: rating,
+                            text: numberOfRatings,
                             // fontColor: ,
                             fontSize: 12,
                           ),
@@ -112,15 +114,16 @@ class CartProductsListTile extends StatelessWidget {
                           CartProductListTileButton(
                             buttonHeight: 30,
                             buttonWidth: 85,
-                            label: "₹ ${price}",
+                            label: "₹ ${offerPrice}",
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                           ),
                           kWidth,
                           Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               CustomTextWidget(
-                                text: offerPercentage,
+                                text: "${(double.parse(offerPrice) * 100 / double.parse(originalPrice)).toStringAsFixed(2)}%",
                                 fontColor: Color(0xFFFE735C),
                                 fontSize: 10,
                                 fontweight: FontWeight.w400,
@@ -149,18 +152,51 @@ class CartProductsListTile extends StatelessWidget {
             kHeight,
             Divider(),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const CustomTextWidget(
-                  text: "Total Order (1) :",
+                CustomTextWidget(
+                  text: "Total Order ($count) :",
                   fontSize: 12,
                   fontweight: FontWeight.w500,
                 ),
+                kWidth,
+                GestureDetector(
+                  onTap: () {
+                    if (productDetails['count'] != 0) {
+                      productDetails['count']--;
+                    }
+
+                    callSetState();
+                  },
+                  child: Icon(Icons.remove),
+                ),
+                SizedBox(width: 5),
+                GestureDetector(
+                  onTap: () {
+                    productDetails['count']++;
+                    callSetState();
+                  },
+                  child: Icon(Icons.add),
+                ),
+                Spacer(),
+                GestureDetector(
+                  onTap: () {
+                    cartCountNotifier.value = (cartCountNotifier.value - productDetails['count']).toInt();
+                    cartProductsList.remove(productDetails);
+
+                    callSetState();
+                  },
+                  child: Icon(
+                    Icons.delete_forever_outlined,
+                    color: Colors.red,
+                  ),
+                ),
+                Spacer(),
                 CustomTextWidget(
-                  text: "₹ ${price}",
+                  text: "₹ ${count * double.parse(offerPrice)}",
                   fontSize: 12,
                   fontweight: FontWeight.w600,
-                )
+                ),
               ],
             )
           ],

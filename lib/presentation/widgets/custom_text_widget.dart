@@ -12,6 +12,8 @@ class CustomTextWidget extends StatelessWidget {
     this.textAlign = TextAlign.start,
     this.underline = false,
     this.height = 1.5,
+    this.maxLines = 2,
+    this.textOverflow = TextOverflow.ellipsis,
   });
 
   final String text;
@@ -22,6 +24,8 @@ class CustomTextWidget extends StatelessWidget {
   final TextAlign textAlign;
   final bool underline;
   final double height;
+  final int maxLines;
+  final TextOverflow textOverflow;
   @override
   Widget build(BuildContext context) {
     return Text(
@@ -35,8 +39,9 @@ class CustomTextWidget extends StatelessWidget {
         decorationColor: kMainThemeColor,
         height: height,
       ),
-      overflow: TextOverflow.visible,
+      overflow: textOverflow,
       textAlign: textAlign,
+      maxLines: maxLines,
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:internship_sample/core/constatns.dart';
+import 'package:internship_sample/presentation/home/home_screen.dart';
 import 'package:internship_sample/presentation/shop/widgets/custom_text_icon_button.dart';
 import 'package:internship_sample/presentation/shop/widgets/size_selector_widget.dart';
 import 'package:internship_sample/presentation/widgets/custom_star_rating_tile.dart';
@@ -10,16 +11,16 @@ ValueNotifier<int> sizeSelectNotifier = ValueNotifier(0);
 class ShopProductDetailsTile extends StatelessWidget {
   ShopProductDetailsTile({
     super.key,
-    required this.productName,
-    required this.description,
-
+    // required this.productName,
+    // required this.description,
   });
   ValueNotifier<bool> readMoreClickNotifier = ValueNotifier(false);
-  final String productName;
-  final String description;
+  // final String productName;
+  // final String description;
 
   @override
   Widget build(BuildContext context) {
+    sizeSelectNotifier.value = 0;
     return Padding(
       padding: const EdgeInsets.all(15),
       child: Column(
@@ -34,26 +35,12 @@ class ShopProductDetailsTile extends StatelessWidget {
                       text: "Net weight: ",
                       fontweight: FontWeight.w600,
                     ),
-                    if (value == 0)
-                      CustomTextWidget(
-                        text: "65 GM",
-                        fontweight: FontWeight.w600,
-                      ),
-                    if (value == 1)
-                      CustomTextWidget(
-                        text: "100 GM",
-                        fontweight: FontWeight.w600,
-                      ),
-                    if (value == 2)
-                      CustomTextWidget(
-                        text: "250 GM",
-                        fontweight: FontWeight.w600,
-                      ),
-                    if (value == 3)
-                      CustomTextWidget(
-                        text: "500 GM",
-                        fontweight: FontWeight.w600,
-                      ),
+                    for (int i = 0; i < selectedProductDetails['category'].length; i++)
+                      if (value == i)
+                        CustomTextWidget(
+                          text: selectedProductDetails['category'][i]['weight'],
+                          fontweight: FontWeight.w600,
+                        ),
                   ],
                 );
               }),
@@ -64,77 +51,65 @@ class ShopProductDetailsTile extends StatelessWidget {
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    SizeSelectorWidget(
-                      index: 0,
-                      label: "65 GM",
-                      fontColor: sizeSelectNotifier.value == 0 ? Colors.white : Color(0xFFFA7189),
-                      backgroundColor: sizeSelectNotifier.value == 0 ? Color(0xFFFA7189) : Colors.white,
-                    ),
-                    SizeSelectorWidget(
-                      index: 1,
-                      label: "100 GM",
-                      fontColor: sizeSelectNotifier.value == 1 ? Colors.white : Color(0xFFFA7189),
-                      backgroundColor: sizeSelectNotifier.value == 1 ? Color(0xFFFA7189) : Colors.white,
-                    ),
-                    SizeSelectorWidget(
-                      index: 2,
-                      label: "250 GM",
-                      fontColor: sizeSelectNotifier.value == 2 ? Colors.white : Color(0xFFFA7189),
-                      backgroundColor: sizeSelectNotifier.value == 2 ? Color(0xFFFA7189) : Colors.white,
-                    ),
-                    SizeSelectorWidget(
-                      index: 3,
-                      label: "500 GM",
-                      fontColor: sizeSelectNotifier.value == 3 ? Colors.white : Color(0xFFFA7189),
-                      backgroundColor: sizeSelectNotifier.value == 3 ? Color(0xFFFA7189) : Colors.white,
-                    ),
+                    for (int i = 0; i < selectedProductDetails['category'].length; i++)
+                      SizeSelectorWidget(
+                        index: i,
+                        label: selectedProductDetails['category'][i]['weight'],
+                        fontColor: sizeSelectNotifier.value == i ? Colors.white : Color(0xFFFA7189),
+                        backgroundColor: sizeSelectNotifier.value == i ? Color(0xFFFA7189) : Colors.white,
+                      ),
                   ],
                 );
               }),
           SizedBox(height: 10),
           CustomTextWidget(
-            text: productName,
+            text: selectedProductDetails['name'],
             fontSize: 20,
             fontweight: FontWeight.w600,
           ),
-          const CustomTextWidget(
-            text: "Vision Alta Men’s Shoes Size (All Colours)",
-            fontSize: 14,
-            fontweight: FontWeight.w400,
-          ),
+
           // SizedBox(height: 10),
-          CustomStarRatingTile(
-            numberOfRatings: "56,890",
-            iconAndTextSize: 18,
-          ),
-          const Row(
-            children: [
-              Text(
-                "2,999",
-                style: TextStyle(
-                  fontFamily: "Montserrat",
-                  fontSize: 14,
-                  color: Color(0xFF808488),
-                  fontWeight: FontWeight.w500,
-                  decoration: TextDecoration.lineThrough,
-                  decorationColor: Color(0xFF808488),
-                ),
-              ),
-              kWidth,
-              CustomTextWidget(
-                text: "1,500",
-                fontSize: 14,
-                fontweight: FontWeight.w400,
-              ),
-              kWidth,
-              CustomTextWidget(
-                text: "50%Off",
-                fontColor: Color(0xFFFE735C),
-                fontSize: 14,
-                fontweight: FontWeight.w400,
-              ),
-            ],
-          ),
+          ValueListenableBuilder(
+              valueListenable: sizeSelectNotifier,
+              builder: (context, value, _) {
+                return CustomStarRatingTile(
+                  numberOfRatings: "${selectedProductDetails['category'][value]['rating']}",
+                  iconAndTextSize: 18,
+                );
+              }),
+          ValueListenableBuilder(
+              valueListenable: sizeSelectNotifier,
+              builder: (context, value, _) {
+                return Row(
+                  children: [
+                    Text(
+                      "₹${selectedProductDetails['category'][value]['originalPrice']}",
+                      style: TextStyle(
+                        fontFamily: "Montserrat",
+                        fontSize: 14,
+                        color: Color(0xFF808488),
+                        fontWeight: FontWeight.w500,
+                        decoration: TextDecoration.lineThrough,
+                        decorationColor: Color(0xFF808488),
+                      ),
+                    ),
+                    kWidth,
+                    CustomTextWidget(
+                      text: "₹${selectedProductDetails['category'][value]['offerPrice']}",
+                      fontSize: 14,
+                      fontweight: FontWeight.w400,
+                    ),
+                    kWidth,
+                    CustomTextWidget(
+                      text:
+                          "${(double.parse(selectedProductDetails['category'][value]['offerPrice']) * 100 / double.parse(selectedProductDetails['category'][value]['originalPrice'])).toStringAsFixed(2)}%",
+                      fontColor: Color(0xFFFE735C),
+                      fontSize: 14,
+                      fontweight: FontWeight.w400,
+                    ),
+                  ],
+                );
+              }),
           kHeight,
           CustomTextWidget(
             text: "Product Details",
@@ -147,11 +122,15 @@ class ShopProductDetailsTile extends StatelessWidget {
             builder: (context, value, _) {
               return Wrap(
                 children: [
-                  Text(
-                    description,
-                    maxLines: readMoreClickNotifier.value ? 10 : 5,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+                  ValueListenableBuilder(
+                      valueListenable: sizeSelectNotifier,
+                      builder: (context, value, _) {
+                        return Text(
+                          selectedProductDetails['category'][value]['description'],
+                          maxLines: readMoreClickNotifier.value ? 10 : 5,
+                          overflow: TextOverflow.ellipsis,
+                        );
+                      }),
                   Container(
                     alignment: Alignment.bottomRight,
                     padding: EdgeInsets.all(6),
@@ -171,6 +150,34 @@ class ShopProductDetailsTile extends StatelessWidget {
               );
             },
           ),
+          ValueListenableBuilder(
+              valueListenable: sizeSelectNotifier,
+              builder: (context, value, _) {
+                bool stock = selectedProductDetails['category'][value]['haveStock'];
+                if (stock != null && stock == false) {
+                  return Center(
+                    child: Container(
+                      height: 40,
+                      width: 110,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.red, // Set the border color
+                          width: 1, // Set the border width
+                        ),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      child: Center(
+                        child: CustomTextWidget(
+                          text: "Out of stock",
+                          fontColor: Colors.red,
+                        ),
+                      ),
+                    ),
+                  );
+                } else
+                  return SizedBox();
+              }),
+          kHeight,
           const Row(
             children: [
               CustomTextIconButton(

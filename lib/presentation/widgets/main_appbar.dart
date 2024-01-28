@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/presentation/profile/profile_screen.dart';
+import 'package:internship_sample/presentation/side_bar/side_bar.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 
 class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -9,17 +10,20 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      leading: IconButton(
-        onPressed: () {},
-        icon: Icon(Icons.menu),
-      ),
+      centerTitle: true,
+      // leading: IconButton(
+      //   onPressed: () {
+      //     SideBar();
+      //   },
+      //   icon: Icon(Icons.menu),
+      // ),
       title: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SizedBox(
             height: 30,
             child: Image.asset(
-              "lib/core/assets/images/logos/app_logo.png",
+              "lib/core/assets/images/logos/company_logo.png",
             ),
           ),
         ],

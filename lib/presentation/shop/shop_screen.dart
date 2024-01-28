@@ -1,45 +1,52 @@
+import 'dart:developer';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:internship_sample/core/constatns.dart';
+import 'package:internship_sample/main.dart';
 import 'package:internship_sample/presentation/checkout/checkout_screen.dart';
 import 'package:internship_sample/presentation/cart/cart_screen.dart';
+import 'package:internship_sample/presentation/home/home_screen.dart';
+import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
 import 'package:internship_sample/presentation/place_order/place_order_screen.dart';
 import 'package:internship_sample/presentation/shop/widgets/custom_styled_shop_page_button.dart';
 import 'package:internship_sample/presentation/shop/widgets/custom_text_icon_button.dart';
+import 'package:internship_sample/presentation/shop/widgets/review_tile.dart';
 import 'package:internship_sample/presentation/shop/widgets/shop_product_details_tile.dart';
 import 'package:internship_sample/presentation/widgets/custom_appbar.dart';
+import 'package:internship_sample/presentation/widgets/custom_elevated_button.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 import 'package:internship_sample/presentation/widgets/products_list_item_tile.dart';
 import 'package:internship_sample/presentation/widgets/search_filter_bar.dart';
 import 'package:internship_sample/presentation/widgets/sliding_product_tile.dart';
 
+ValueNotifier<int> customerRatingNotifier = ValueNotifier(0);
+
 class ShopScreen extends StatelessWidget {
-  const ShopScreen({
+  ShopScreen({
     super.key,
-    required this.imageList,
-    required this.productName,
-    required this.description,
-    required this.price,
+    //  this.productDetails,
   });
 
-  final List<String> imageList;
-  final String productName;
-  final String description;
-  final String price;
+  // final productDetails;
 
   @override
   Widget build(BuildContext context) {
+    log("selected product details:${selectedProductDetails.toString()}");
+    final List<String> imageList = selectedProductDetails['imagePath'];
+    final String productName = selectedProductDetails['name'];
+    final String description = selectedProductDetails['category'][0]['description'];
+    final String price = selectedProductDetails['category'][0]['originalPrice'];
+    final String offerPrice = selectedProductDetails['category'][0]['offerPrice'];
     final screenSize = MediaQuery.of(context).size;
+    print("previous page index $previousPageIndex");
     return Scaffold(
-      appBar: CustomAppBar(
-        actionWidget: GestureDetector(
-          child: const CircleAvatar(
-            backgroundColor: Color(0xFFF2F2F2),
-            child: Icon(
-              Icons.shopping_cart_outlined,
-            ),
-          ),
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            bottomNavbarIndexNotifier.value = previousPageIndex;
+          },
+          icon: Icon(Icons.arrow_back_ios_new),
         ),
       ),
       body: SingleChildScrollView(
@@ -53,47 +60,102 @@ class ShopScreen extends StatelessWidget {
 
             // product details
             ShopProductDetailsTile(
-              productName: productName,
-              description: description,
-            ),
+                // productName: productName,
+                // description: description,
+                ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  GestureDetector(
-                    onTap: () => Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => CartScreen(),
-                      ),
-                    ),
-                    child: const CustomStyledShopPageButton(
-                      gradientColors: [
-                        Color(0xFF3F92FF),
-                        Color(0xFF0B3689),
+              child: ValueListenableBuilder(
+                  valueListenable: sizeSelectNotifier,
+                  builder: (context, value, _) {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            // log(cartProductsList[1]['category'].toString());
+                            // log(cartProductsList[1]['count'].toString());
+                            bool stock = selectedProductDetails['category'][value]['haveStock'];
+                            if (stock == true) {
+                              final cartProduct = {
+                                'product': selectedProductDetails,
+                                'category': value,
+                                'count': 1,
+                              };
+                              if (cartProductsList.isEmpty) {
+                                cartProductsList.add(cartProduct);
+                              } else {
+                                // log("list ->${cartProductsList.toString()}");
+                                int flag = 0;
+                                for (int i = 0; i < cartProductsList.length; i++) {
+                                  print("working");
+                                  String nameInCartProductList = cartProductsList[i]['product']['name'];
+                                  String nameOfCartProduct = cartProduct['product']['name'];
+                                  int categoryInCartProductList = cartProductsList[i]['category'];
+                                  // String categoryOfCartProduct = selectedProductDetails['category'][value]['weight'];
+                                  print("categories -> ${cartProductsList[i]['product']['name']} ------  ${cartProductsList[i]['category']}");
+                                  if (nameInCartProductList == nameOfCartProduct && categoryInCartProductList == value) {
+                                    log("item already exist :${nameInCartProductList}-${nameOfCartProduct},${categoryInCartProductList}------${value}");
+                                    int count = cartProductsList[i]['count'];
+                                    // print(count);
+                                    cartProductsList[i]['count'] = count + 1;
+                                    flag = 1;
+                                    // log("count now :${item['count']}");
+                                  }
+                                }
+                                if (flag == 0) {
+                                  log("item not exist :");
+                                  cartProductsList.add(cartProduct);
+                                }
+                              }
+
+                              cartCountNotifier.value++;
+                            }
+                          },
+                          child: const CustomStyledShopPageButton(
+                            gradientColors: [
+                              Color(0xFF3F92FF),
+                              Color(0xFF0B3689),
+                            ],
+                            icon: Icons.shopping_cart_outlined,
+                            label: "Add to cart",
+                          ),
+                        ),
+                        kWidth,
+                        GestureDetector(
+                          onTap: () {
+                            bool stock = selectedProductDetails['category'][value]['haveStock'];
+                            if (stock == true) {
+                              final buyingProduct = {
+                                'product': selectedProductDetails,
+                                'category': value,
+                                'count': 1,
+                              };
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => PlaceOrderScreen(
+                                    // imagePath: imageList[0],
+                                    // productName: productName,
+                                    // productDescription: description,
+                                    // price: selectedProductDetails['category'][value]['offerPrice'],
+                                    productDetails: buyingProduct,
+                                  ),
+                                ),
+                              );
+                            }
+                          },
+                          child: const CustomStyledShopPageButton(
+                            gradientColors: [
+                              Color(0xFF71F9A9),
+                              Color(0xFF31B769),
+                            ],
+                            icon: Icons.touch_app_outlined,
+                            label: "Buy Now",
+                          ),
+                        ),
                       ],
-                      icon: Icons.shopping_cart_outlined,
-                      label: "Go to cart",
-                    ),
-                  ),
-                  kWidth,
-                  GestureDetector(
-                    onTap: () => Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => PlaceOrderScreen(imagePath: imageList[0], productName: productName, productDescription: description, price: price),
-                      ),
-                    ),
-                    child: const CustomStyledShopPageButton(
-                      gradientColors: [
-                        Color(0xFF71F9A9),
-                        Color(0xFF31B769),
-                      ],
-                      icon: Icons.touch_app_outlined,
-                      label: "Buy Now",
-                    ),
-                  ),
-                ],
-              ),
+                    );
+                  }),
             ),
             Padding(
               padding: const EdgeInsets.all(16),
@@ -154,6 +216,135 @@ class ShopScreen extends StatelessWidget {
               ],
             ),
             kHeight,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: CustomTextWidget(
+                    text: "Ratings and Reviews",
+                    fontSize: 20,
+                    fontweight: FontWeight.w600,
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Column(
+                      children: [
+                        CustomTextWidget(
+                          text: "12 Ratings and 1 review",
+                          fontSize: 15,
+                          fontweight: FontWeight.w600,
+                        ),
+                        CustomTextWidget(text: "Average rating : 4.2"),
+                        kHeight,
+                        Container(
+                          height: 40,
+                          width: 110,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Colors.grey, // Set the border color
+                              width: 1, // Set the border width
+                            ),
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          child: Center(
+                            child: GestureDetector(
+                              onTap: () async {
+                                await showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return Dialog(
+                                      insetAnimationDuration: Duration(milliseconds: 1000),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.circular(6),
+                                        ),
+                                        width: screenSize.width * 0.9,
+                                        height: screenSize.width * 0.8,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(15),
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              ValueListenableBuilder(
+                                                valueListenable: customerRatingNotifier,
+                                                builder: (context, value, _) {
+                                                  return RatingStars();
+                                                },
+                                              ),
+                                              kHeight,
+                                              CustomTextWidget(text: "Enter your review here"),
+                                              TextField(
+                                                maxLines: 4, // Set to null for an unlimited number of lines
+                                                decoration: InputDecoration(
+                                                  border: OutlineInputBorder(),
+                                                ),
+                                              ),
+                                              SizedBox(height: 20),
+                                              GestureDetector(
+                                                onTap: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                                child: CustomElevatedButton(
+                                                  label: "Submit",
+                                                  fontSize: 16,
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                              child: CustomTextWidget(text: "Rate Product"),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                    Container(
+                      height: 100,
+                      width: 1,
+                      color: Colors.grey,
+                    ),
+                    const Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        DisplayStars(
+                          numberOfStars: 5,
+                          rating: 8,
+                        ),
+                        DisplayStars(
+                          numberOfStars: 4,
+                          rating: 2,
+                        ),
+                        DisplayStars(
+                          numberOfStars: 3,
+                          rating: 1,
+                        ),
+                        DisplayStars(
+                          numberOfStars: 2,
+                          rating: 1,
+                        ),
+                        DisplayStars(
+                          numberOfStars: 1,
+                          rating: 0,
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+                kHeight,
+                ReviewTile(rating: 5, review: "Great quality product", reviewerName: "Pratheep Kumar"),
+                ReviewTile(rating: 4, review: "Good product", reviewerName: "Arun"),
+              ],
+            ),
+            kHeight,
             const Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: CustomTextWidget(
@@ -165,7 +356,7 @@ class ShopScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: SearchFilterBar(
-                heading: "282+ Items",
+                heading: "24 Items",
               ),
             ),
             Container(
@@ -174,13 +365,7 @@ class ShopScreen extends StatelessWidget {
               child: ListView.builder(
                 itemBuilder: (context, index) {
                   return ProductsListItemTile(
-                    imageList: productDetailsList1[index]['imagePath'],
-                    heading: productDetailsList1[index]['name'],
-                    description: productDetailsList1[index]['description'],
-                    price: productDetailsList1[index]['offerPrice'],
-                    originalPrice: productDetailsList1[index]['originalPrice'],
-                    offerPercentage: productDetailsList1[index]['offerPercentage'],
-                    numberOfRatings: productDetailsList1[index]['rating'],
+                    productDetails: selectedProductDetails,
                   );
                 },
                 itemCount: productDetailsList1.length,
@@ -190,6 +375,59 @@ class ShopScreen extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class RatingStars extends StatelessWidget {
+  RatingStars({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        for (int i = 1; i <= 5; i++)
+          GestureDetector(
+            onTap: () {
+              customerRatingNotifier.value = i;
+            },
+            child: Icon(
+              Icons.star,
+              color: customerRatingNotifier.value < i ? Colors.grey : Color(0xFFF7B305),
+              size: 35,
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+class DisplayStars extends StatelessWidget {
+  const DisplayStars({
+    super.key,
+    required this.numberOfStars,
+    required this.rating,
+  });
+  final int numberOfStars;
+  final int rating;
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        SizedBox(
+          width: 20,
+          child: CustomTextWidget(
+            text: rating.toString(),
+          ),
+        ),
+        for (int i = 0; i < numberOfStars; i++)
+          Icon(
+            Icons.star,
+            color: Color(0xFFF7B305),
+            size: 18,
+          ),
+      ],
     );
   }
 }

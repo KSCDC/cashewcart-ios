@@ -1,3 +1,4 @@
+import 'package:easy_image_viewer/easy_image_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -64,16 +65,21 @@ class SlideItem extends StatelessWidget {
     final screenSize = MediaQuery.of(context).size;
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Container(
-        width: screenSize.width * 0.9,
-        height: screenSize.width * 0.8,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage(imagePath),
-            fit: BoxFit.fitHeight,
-          ),
-          borderRadius: BorderRadius.all(
-            Radius.circular(10),
+      child: GestureDetector(
+        onTap: () {
+          showImageViewer(context, AssetImage(imagePath), swipeDismissible: true, doubleTapZoomable: true);
+        },
+        child: Container(
+          width: screenSize.width * 0.9,
+          height: screenSize.width * 0.8,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(imagePath),
+              fit: BoxFit.fitHeight,
+            ),
+            borderRadius: BorderRadius.all(
+              Radius.circular(10),
+            ),
           ),
         ),
       ),

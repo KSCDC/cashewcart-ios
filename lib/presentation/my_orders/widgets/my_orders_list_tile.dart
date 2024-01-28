@@ -8,21 +8,26 @@ class MyOrdersListTile extends StatelessWidget {
   const MyOrdersListTile({
     super.key,
     required this.imagePath,
-    required this.heading,
+    required this.name,
     required this.price,
     required this.rating,
+    required this.count,
+    required this.weight,
   });
   final String imagePath;
-  final String heading;
+  final String name;
   final String price;
   final String rating;
+  final String weight;
+  final int count;
+
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     return Container(
       // width: screenSize.width * 0.95,
       width: double.infinity,
-      height: 230,
+      height: 250,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
@@ -51,21 +56,25 @@ class MyOrdersListTile extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      CustomTextWidget(
-                        text: heading,
-                        fontweight: FontWeight.w600,
+                      SizedBox(
+                        width: screenSize.width * 0.52,
+                        child: CustomTextWidget(
+                          text: name,
+                          fontSize: 13,
+                          fontweight: FontWeight.w600,
+                        ),
                       ),
                       const SizedBox(height: 5),
-                      const Row(
+                      Row(
                         children: [
-                          CustomTextWidget(
+                          const CustomTextWidget(
                             text: "Quantity :",
                             fontSize: 12,
                             fontweight: FontWeight.w500,
                           ),
                           kWidth,
                           CustomTextWidget(
-                            text: "250GM",
+                            text: weight.toString(),
                             fontSize: 12,
                           ),
                           kWidth,
@@ -116,13 +125,13 @@ class MyOrdersListTile extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const CustomTextWidget(
-                  text: "Total Order (1) :",
+                CustomTextWidget(
+                  text: "Total Order (${count}) :",
                   fontSize: 12,
                   fontweight: FontWeight.w500,
                 ),
                 CustomTextWidget(
-                  text: "₹ ${price}",
+                  text: "₹ ${double.parse(price) * count}",
                   fontSize: 12,
                   fontweight: FontWeight.w600,
                 )

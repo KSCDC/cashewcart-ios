@@ -5,10 +5,11 @@ import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 class CustomElevatedButton extends StatelessWidget {
   const CustomElevatedButton({
     super.key,
-    required this.label,
+    required this.label, this.fontSize = 20,
   });
 
   final String label;
+  final double fontSize;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -23,7 +24,7 @@ class CustomElevatedButton extends StatelessWidget {
       child: Center(
         child: CustomTextWidget(
           text: label,
-          fontSize: 20,
+          fontSize: fontSize,
           fontColor: kButtonTextColor,
           fontweight: FontWeight.w600,
         ),

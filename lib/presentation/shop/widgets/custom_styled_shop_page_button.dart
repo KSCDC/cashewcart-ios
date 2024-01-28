@@ -22,7 +22,7 @@ class CustomStyledShopPageButton extends StatelessWidget {
           padding: const EdgeInsets.all(5),
           child: Container(
             height: 40,
-            width: 130,
+            width: 140,
             decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,

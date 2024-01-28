@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:internship_sample/main.dart';
 import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 
@@ -15,6 +16,7 @@ class CustomBottomNavbarItem extends StatelessWidget {
         IconButton(
           color: color,
           onPressed: () {
+            previousPageIndex = index;
             bottomNavbarIndexNotifier.value = index;
           },
           icon: iconWidget,
