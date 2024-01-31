@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:internship_sample/core/constatns.dart';
+import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 
 class PlaceOrderItemWidget extends StatelessWidget {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/main.dart';
 import 'package:internship_sample/presentation/home/home_screen.dart';
 import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
@@ -41,29 +42,29 @@ class SlidingImageTile extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const CustomTextWidget(
-                  text: "50-40% OFF",
+                CustomTextWidget(
+                  text: "50-70% OFF",
                   fontSize: 20,
-                  fontColor: Colors.white,
+                  fontColor: kMainThemeColor.withOpacity(0.6),
                   fontweight: FontWeight.w700,
                 ),
-                const CustomTextWidget(
-                  text: "Now in (product)",
+                CustomTextWidget(
+                  text: "Now in different",
                   fontSize: 12,
-                  fontColor: Colors.white,
+                  fontColor: kMainThemeColor.withOpacity(0.6),
                   fontweight: FontWeight.w500,
                 ),
-                const CustomTextWidget(
-                  text: "Different flavours",
+                CustomTextWidget(
+                  text: "quantities",
                   fontSize: 12,
-                  fontColor: Colors.white,
+                  fontColor: kMainThemeColor.withOpacity(0.6),
                   fontweight: FontWeight.w500,
                 ),
                 TextButton(
                   onPressed: () {},
                   style: TextButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    side: BorderSide(width: 1, color: Colors.white),
+                    foregroundColor: kMainThemeColor.withOpacity(0.6),
+                    side: BorderSide(width: 1, color: kMainThemeColor.withOpacity(0.6)),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(6),
                     ),
@@ -71,22 +72,22 @@ class SlidingImageTile extends StatelessWidget {
                   child: GestureDetector(
                     onTap: () async {
                       selectedProductDetails = await productDetails;
-                      previousPageIndex = bottomNavbarIndexNotifier.value;
+                      previousPageIndexes.add(bottomNavbarIndexNotifier.value);
                       bottomNavbarIndexNotifier.value = 4;
                     },
                     child: Container(
                       width: 90,
-                      child: const Row(
+                      child: Row(
                         children: [
                           CustomTextWidget(
                             text: "Shop Now",
                             fontSize: 12,
-                            fontColor: Colors.white,
+                            fontColor: kMainThemeColor.withOpacity(0.6),
                             fontweight: FontWeight.w600,
                           ),
                           Icon(
                             Icons.arrow_forward_outlined,
-                            color: Colors.white,
+                            color: kMainThemeColor.withOpacity(0.6),
                           )
                         ],
                       ),

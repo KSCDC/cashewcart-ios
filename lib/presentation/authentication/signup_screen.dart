@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:internship_sample/core/colors.dart';
-import 'package:internship_sample/core/constatns.dart';
+import 'package:internship_sample/core/constants.dart';
 
 import 'package:internship_sample/presentation/authentication/widgets/alternative_signin_options.dart.dart';
 import 'package:internship_sample/presentation/authentication/widgets/authentication_page_title.dart';

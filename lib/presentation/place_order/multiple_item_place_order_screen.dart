@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:internship_sample/core/colors.dart';
-import 'package:internship_sample/core/constatns.dart';
+import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/presentation/cart/cart_screen.dart';
 import 'package:internship_sample/presentation/checkout/checkout_screen.dart';
 import 'package:internship_sample/presentation/cart/widgets/cart_product_list_tile.dart';
@@ -148,7 +148,8 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
                         fontweight: FontWeight.w400,
                       ),
                       CustomTextWidget(
-                        text: "₹ ${grandTotal}",
+                        text: "₹ ${grandTotal.toStringAsFixed(2)}",
+                        
                         fontSize: 16,
                         fontweight: FontWeight.w600,
                       )

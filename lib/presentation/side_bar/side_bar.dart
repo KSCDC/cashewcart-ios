@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:internship_sample/core/constatns.dart';
+import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/main.dart';
 import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
 import 'package:internship_sample/presentation/profile/profile_screen.dart';
@@ -37,7 +37,7 @@ class SideBar extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () {
-                previousPageIndex = 3;
+                previousPageIndexes.add(3);
                 bottomNavbarIndexNotifier.value = 6;
               },
               child: SideBarItemTile(

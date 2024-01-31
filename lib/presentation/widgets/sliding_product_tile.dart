@@ -23,8 +23,20 @@ class SlidingProductTile extends StatelessWidget {
             controller: controller,
             children: [
               for (int i = 0; i < count; i++)
-                SlideItem(
-                  imagePath: imagePath[i],
+                Stack(
+                  children: [
+                    SlideItem(
+                      imagePath: imagePath[i],
+                    ),
+                    Positioned(
+                      top: 25,
+                      right: 25,
+                      child: CircleAvatar(
+                        radius: 20,
+                        child: Icon(Icons.share),
+                      ),
+                    ),
+                  ],
                 ),
             ],
           ),
@@ -75,7 +87,7 @@ class SlideItem extends StatelessWidget {
           decoration: BoxDecoration(
             image: DecorationImage(
               image: AssetImage(imagePath),
-              fit: BoxFit.fitHeight,
+              fit: BoxFit.cover,
             ),
             borderRadius: BorderRadius.all(
               Radius.circular(10),

@@ -2,9 +2,10 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:internship_sample/core/colors.dart';
-import 'package:internship_sample/core/constatns.dart';
+import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/presentation/cart/cart_screen.dart';
 import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
+import 'package:internship_sample/presentation/shop/widgets/custom_text_icon_button.dart';
 import 'package:internship_sample/presentation/widgets/custom_star_rating_tile.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 
@@ -163,6 +164,7 @@ class CartProductsListTile extends StatelessWidget {
                 GestureDetector(
                   onTap: () {
                     if (productDetails['count'] != 0) {
+                      cartCountNotifier.value--;
                       productDetails['count']--;
                     }
 
@@ -173,22 +175,25 @@ class CartProductsListTile extends StatelessWidget {
                 SizedBox(width: 5),
                 GestureDetector(
                   onTap: () {
+                    cartCountNotifier.value++;
                     productDetails['count']++;
                     callSetState();
                   },
                   child: Icon(Icons.add),
                 ),
                 Spacer(),
-                GestureDetector(
-                  onTap: () {
-                    cartCountNotifier.value = (cartCountNotifier.value - productDetails['count']).toInt();
-                    cartProductsList.remove(productDetails);
+                Container(
+                  child: CustomTextIconButton(
+                    onPressed: () {
+                      cartCountNotifier.value = (cartCountNotifier.value - productDetails['count']).toInt();
+                      cartProductsList.remove(productDetails);
 
-                    callSetState();
-                  },
-                  child: Icon(
-                    Icons.delete_forever_outlined,
-                    color: Colors.red,
+                      callSetState();
+                    },
+                    icon: Icons.delete_outline,
+                    label: "Remove",
+                    textAndIconColor: Colors.red,
+                    textAndIconSize: 14,
                   ),
                 ),
                 Spacer(),

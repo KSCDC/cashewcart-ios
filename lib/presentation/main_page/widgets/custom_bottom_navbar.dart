@@ -19,6 +19,7 @@ class BottomNavigationWidget extends StatelessWidget {
     return ValueListenableBuilder(
         valueListenable: bottomNavbarIndexNotifier,
         builder: (BuildContext context, int newIndex, _) {
+          int previousPageIndex = previousPageIndexes.last;
           return Padding(
             padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
             child: Container(

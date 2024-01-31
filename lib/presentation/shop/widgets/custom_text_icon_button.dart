@@ -8,17 +8,19 @@ class CustomTextIconButton extends StatelessWidget {
     required this.label,
     required this.textAndIconColor,
     required this.textAndIconSize,
+    required this.onPressed,
   });
 
   final IconData icon;
   final String label;
   final Color textAndIconColor;
   final double textAndIconSize;
+  final void Function() onPressed;
 
   @override
   Widget build(BuildContext context) {
     return TextButton.icon(
-      onPressed: () {},
+      onPressed: onPressed,
       icon: Icon(
         icon,
         color: textAndIconColor,

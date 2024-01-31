@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:internship_sample/core/constatns.dart';
+import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/main.dart';
 import 'package:internship_sample/presentation/checkout/checkout_screen.dart';
 import 'package:internship_sample/presentation/cart/cart_screen.dart';
@@ -39,12 +39,17 @@ class ShopScreen extends StatelessWidget {
     final String price = selectedProductDetails['category'][0]['originalPrice'];
     final String offerPrice = selectedProductDetails['category'][0]['offerPrice'];
     final screenSize = MediaQuery.of(context).size;
-    print("previous page index $previousPageIndex");
+    // print("previous page index $previousPageIndex");
+
+    List similarProductsList = getSimilarProductsList();
+    ;
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
-            bottomNavbarIndexNotifier.value = previousPageIndex;
+            bottomNavbarIndexNotifier.value = previousPageIndexes.last;
+            previousPageIndexes.removeLast();
           },
           icon: Icon(Icons.arrow_back_ios_new),
         ),
@@ -59,10 +64,7 @@ class ShopScreen extends StatelessWidget {
             ),
 
             // product details
-            ShopProductDetailsTile(
-                // productName: productName,
-                // description: description,
-                ),
+            ShopProductDetailsTile(),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: ValueListenableBuilder(
@@ -71,6 +73,7 @@ class ShopScreen extends StatelessWidget {
                     return Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
+                        // add to cart button
                         GestureDetector(
                           onTap: () {
                             // log(cartProductsList[1]['category'].toString());
@@ -110,6 +113,13 @@ class ShopScreen extends StatelessWidget {
                               }
 
                               cartCountNotifier.value++;
+                              const snackBar = SnackBar(
+                                content: Text('Product added to cart'),
+                                behavior: SnackBarBehavior.floating,
+                                margin: EdgeInsets.all(10),
+                                padding: EdgeInsets.all(20),
+                              );
+                              ScaffoldMessenger.of(context).showSnackBar(snackBar);
                             }
                           },
                           child: const CustomStyledShopPageButton(
@@ -122,6 +132,8 @@ class ShopScreen extends StatelessWidget {
                           ),
                         ),
                         kWidth,
+
+                        // buy now button
                         GestureDetector(
                           onTap: () {
                             bool stock = selectedProductDetails['category'][value]['haveStock'];
@@ -197,22 +209,23 @@ class ShopScreen extends StatelessWidget {
               children: [
                 Container(
                   width: screenSize.width * 0.48,
-                  child: const CustomTextIconButton(
+                  child: CustomTextIconButton(
+                    onPressed: () {},
                     icon: Icons.remove_red_eye_outlined,
                     label: "Nearest Store",
                     textAndIconColor: Colors.black,
                     textAndIconSize: 14,
                   ),
                 ),
-                Container(
-                  width: screenSize.width * 0.48,
-                  child: const CustomTextIconButton(
-                    icon: Icons.difference_outlined,
-                    label: "Add to compare",
-                    textAndIconColor: Colors.black,
-                    textAndIconSize: 14,
-                  ),
-                ),
+                // Container(
+                //   width: screenSize.width * 0.48,
+                //   child: const CustomTextIconButton(
+                //     icon: Icons.difference_outlined,
+                //     label: "Add to compare",
+                //     textAndIconColor: Colors.black,
+                //     textAndIconSize: 14,
+                //   ),
+                // ),
               ],
             ),
             kHeight,
@@ -356,7 +369,7 @@ class ShopScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: SearchFilterBar(
-                heading: "24 Items",
+                heading: "${similarProductsList.length.toString()}+",
               ),
             ),
             Container(
@@ -365,10 +378,10 @@ class ShopScreen extends StatelessWidget {
               child: ListView.builder(
                 itemBuilder: (context, index) {
                   return ProductsListItemTile(
-                    productDetails: selectedProductDetails,
+                    productDetails: similarProductsList[index],
                   );
                 },
-                itemCount: productDetailsList1.length,
+                itemCount: similarProductsList.length,
                 scrollDirection: Axis.horizontal,
               ),
             ),
@@ -376,6 +389,22 @@ class ShopScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  List getSimilarProductsList() {
+    if (cashewsPlaneList.contains(selectedProductDetails)) {
+      List productsList = List.from(cashewsPlaneList);
+      productsList.remove(selectedProductDetails);
+      return productsList + roastedCashewsList + valueAddedProducts;
+    } else if (roastedCashewsList.contains(selectedProductDetails)) {
+      List productsList = List.from(roastedCashewsList);
+      productsList.remove(selectedProductDetails);
+      return productsList + cashewsPlaneList + valueAddedProducts;
+    } else {
+      List productsList = List.from(valueAddedProducts);
+      productsList.remove(selectedProductDetails);
+      return productsList + cashewsPlaneList + roastedCashewsList;
+    }
   }
 }
 

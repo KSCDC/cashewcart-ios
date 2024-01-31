@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:internship_sample/core/colors.dart';
-import 'package:internship_sample/core/constatns.dart';
+import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/main.dart';
 import 'package:internship_sample/presentation/checkout/widgets/checkout_price_display_row.dart';
 import 'package:internship_sample/presentation/checkout/widgets/custom_image_textfield.dart';
@@ -115,7 +115,7 @@ class CheckoutScreen extends StatelessWidget {
                   bottomNavbarIndexNotifier.value = 2;
                   // recentOrders.add(value)
 
-                  bottomNavbarIndexNotifier.value = previousPageIndex;
+                  previousPageIndexes.add(bottomNavbarIndexNotifier.value);
                   Future.delayed(Duration(seconds: 2), () {
                     Navigator.of(
                       context,

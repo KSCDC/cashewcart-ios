@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:internship_sample/core/colors.dart';
-import 'package:internship_sample/core/constatns.dart';
+import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/presentation/profile/widgets/profile_editing_textfield.dart';
 import 'package:internship_sample/presentation/widgets/custom_appbar.dart';
 import 'package:internship_sample/presentation/widgets/custom_elevated_button.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:internship_sample/core/colors.dart';
-import 'package:internship_sample/core/constatns.dart';
+import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 
 class SponseredProductTile extends StatelessWidget {
@@ -53,7 +53,7 @@ class SponseredProductTile extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Divider(
-                          color: Colors.white,
+                          color: kMainThemeColor.withOpacity(0.6),
                           thickness: 2,
                           indent: 90,
                           endIndent: 5,
@@ -62,13 +62,13 @@ class SponseredProductTile extends StatelessWidget {
                       CustomTextWidget(
                         text: "UP TO",
                         fontSize: 22,
-                        fontColor: Colors.white,
+                        fontColor: kMainThemeColor.withOpacity(0.6),
                         fontweight: FontWeight.w600,
                         height: 1,
                       ),
                       Expanded(
                         child: Divider(
-                          color: Colors.white,
+                          color: kMainThemeColor.withOpacity(0.6),
                           thickness: 2,
                           indent: 5,
                           endIndent: 90,
@@ -79,12 +79,12 @@ class SponseredProductTile extends StatelessWidget {
                   CustomTextWidget(
                     text: "50% OFF",
                     fontSize: 40,
-                    fontColor: Colors.white,
+                    fontColor: kMainThemeColor.withOpacity(0.6),
                     fontweight: FontWeight.w600,
                     height: 1,
                   ),
                   Divider(
-                    color: Colors.white,
+                    color: kMainThemeColor.withOpacity(0.6),
                     thickness: 2,
                     indent: 150,
                     endIndent: 150,

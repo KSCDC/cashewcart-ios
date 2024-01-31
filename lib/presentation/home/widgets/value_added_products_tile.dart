@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:internship_sample/core/colors.dart';
-import 'package:internship_sample/core/constatns.dart';
+import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/main.dart';
 import 'package:internship_sample/presentation/home/home_screen.dart';
 import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
@@ -61,7 +61,7 @@ class ValueAddedProductsTile extends StatelessWidget {
                   //   ),
                   // );
                   productDisplayList = valueAddedProducts;
-                  previousPageIndex = bottomNavbarIndexNotifier.value;
+                  previousPageIndexes.add(bottomNavbarIndexNotifier.value);
                   bottomNavbarIndexNotifier.value = 5;
                 },
                 style: TextButton.styleFrom(

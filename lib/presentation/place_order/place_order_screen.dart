@@ -1,24 +1,38 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:internship_sample/core/colors.dart';
-import 'package:internship_sample/core/constatns.dart';
+import 'package:internship_sample/core/constants.dart';
+import 'package:internship_sample/presentation/cart/cart_screen.dart';
 import 'package:internship_sample/presentation/checkout/checkout_screen.dart';
 import 'package:internship_sample/presentation/cart/widgets/cart_product_list_tile.dart';
 import 'package:internship_sample/presentation/home/home_screen.dart';
 import 'package:internship_sample/presentation/place_order/place_order_dropdown.dart';
+import 'package:internship_sample/presentation/place_order/widgets/address_tile.dart';
+import 'package:internship_sample/presentation/shop/widgets/custom_text_icon_button.dart';
 import 'package:internship_sample/presentation/widgets/custom_appbar.dart';
 import 'package:internship_sample/presentation/widgets/custom_elevated_button.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 
 ValueNotifier<int> productCountNotifier = ValueNotifier(1);
+ValueNotifier<int> selectedRadioNotifier = ValueNotifier(0);
+List<TextEditingController> deliveryAddressControllers = [];
+// int selectedAddressIndex = -1;
+var _oneValue = '';
+
+var _twoValue = '';
+
+var _threeValue = '';
+final List<String> three = ["1", "2", "3", "4", "5"];
 
 class PlaceOrderScreen extends StatelessWidget {
-  const PlaceOrderScreen({
+  PlaceOrderScreen({
     super.key,
     required this.productDetails,
   });
   final productDetails;
-
+  TextEditingController _textEditingController = TextEditingController(text: "216 St Paul's Rd, London N1 2LL, UK, \nContact :  +44-784232 ");
   @override
   Widget build(BuildContext context) {
     final int category = productDetails['category'];
@@ -41,7 +55,7 @@ class PlaceOrderScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(14),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -81,7 +95,7 @@ class PlaceOrderScreen extends StatelessWidget {
                               width: screenSize.width * 0.6,
                               child: CustomTextWidget(
                                 text: description,
-                                fontSize: 13,
+                                fontSize: 14,
                                 fontweight: FontWeight.w400,
                               ),
                             ),
@@ -110,36 +124,204 @@ class PlaceOrderScreen extends StatelessWidget {
                                 ),
                               ],
                             )
-                            // kHeight,
-                            // Row(
-                            //   children: [
-                            //     CustomTextWidget(
-                            //       text: "Delivery by",
-                            //       fontSize: 13,
-                            //       fontweight: FontWeight.w400,
-                            //     ),
-                            //     kWidth,
-                            //     CustomTextWidget(
-                            //       text: "10 May 2XXX",
-                            //       fontSize: 13,
-                            //       fontweight: FontWeight.w600,
-                            //     )
-                            //   ],
-                            // )
                           ],
                         ),
                       )
                     ],
                   ),
                   kHeight,
+
+                  //delivery addresses
+                  const Row(
+                    children: [
+                      Icon(
+                        Icons.location_on_outlined,
+                        size: 15,
+                      ),
+                      kWidth,
+                      CustomTextWidget(
+                        text: "Delivery Address",
+                        fontweight: FontWeight.w600,
+                      ),
+                    ],
+                  ),
+                  kHeight,
+
+                  if (deliveryAddressControllers.isEmpty)
+                    CustomTextWidget(text: "No saved addresses!")
+                  else
+                    Column(
+                      children: List.generate(
+                        deliveryAddressControllers.length,
+                        (index) {
+                          ValueNotifier<bool> isAddressEditableNotifier = ValueNotifier(false);
+                          ValueNotifier<bool> isChecked = ValueNotifier(false);
+
+                          return ValueListenableBuilder(
+                            valueListenable: isAddressEditableNotifier,
+                            builder: (context, value, _) {
+                              return Padding(
+                                padding: const EdgeInsets.only(top: 5),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      height: screenSize.width * 0.32,
+                                      width: screenSize.width * 0.8,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(6),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                                        child: Stack(
+                                          children: [
+                                            Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                SizedBox(height: 5),
+                                                CustomTextWidget(
+                                                  text: "Address :${index + 1}",
+                                                  fontSize: 12,
+                                                  fontweight: FontWeight.w500,
+                                                ),
+                                                kHeight,
+                                                TextField(
+                                                  controller: deliveryAddressControllers[index],
+                                                  style: TextStyle(fontSize: 14),
+                                                  maxLines: 2,
+                                                  enabled: value,
+                                                  decoration: InputDecoration(
+                                                    border: value ? OutlineInputBorder() : InputBorder.none,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            Positioned(
+                                              top: 0,
+                                              right: -5,
+                                              child: value
+                                                  ? GestureDetector(
+                                                      onTap: () {
+                                                        isAddressEditableNotifier.value = false;
+                                                      },
+                                                      child: Icon(
+                                                        Icons.done_rounded,
+                                                      ),
+                                                    )
+                                                  : GestureDetector(
+                                                      onTap: () {
+                                                        isAddressEditableNotifier.value = true;
+                                                      },
+                                                      child: Icon(Icons.edit_note_rounded),
+                                                    ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    // Checkbox
+                                    ValueListenableBuilder(
+                                      valueListenable: selectedRadioNotifier,
+                                      builder: (context, checkboxValue, _) {
+                                        return Container(
+                                          height: 20,
+                                          width: 20,
+                                          child: Radio(
+                                            value: index,
+                                            groupValue: checkboxValue,
+                                            onChanged: (int? newValue) {
+                                              // Allow changing the selected address when the radio button is tapped
+                                              if (newValue != null) {
+                                                checkboxValue = newValue;
+
+                                                selectedRadioNotifier.value = newValue;
+                                              } else {
+                                                checkboxValue = -1;
+                                                selectedRadioNotifier.value = 0;
+                                                // isAddressEditableNotifier.value = false;
+                                              }
+                                            },
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ),
+
+                  SizedBox(height: 5),
+
+                  // add new address button
+                  CustomTextIconButton(
+                    onPressed: () async {
+                      TextEditingController _newAddressController = TextEditingController();
+
+                      await showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return Dialog(
+                            insetAnimationDuration: Duration(milliseconds: 1000),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              width: screenSize.width * 0.9,
+                              height: screenSize.width * 0.8,
+                              child: Padding(
+                                padding: const EdgeInsets.all(15),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    kHeight,
+                                    CustomTextWidget(text: "Enter new address here"),
+                                    SizedBox(height: 5),
+                                    TextField(
+                                      controller: _newAddressController,
+                                      maxLines: 4, // Set to null for an unlimited number of lines
+                                      decoration: InputDecoration(
+                                        border: OutlineInputBorder(),
+                                      ),
+                                    ),
+                                    SizedBox(height: 20),
+                                    GestureDetector(
+                                      onTap: () {
+                                        deliveryAddressControllers.add(_newAddressController);
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: CustomElevatedButton(
+                                        label: "Submit",
+                                        fontSize: 16,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                    icon: Icons.add,
+                    label: "Add address",
+                    textAndIconColor: Colors.black,
+                    textAndIconSize: 12,
+                  ),
                   SizedBox(height: 20),
-                  Row(
+
+                  const Row(
                     children: [
                       Icon(CupertinoIcons.ticket),
                       kWidth,
                       CustomTextWidget(
                         text: "Apply Coupons",
-                        fontSize: 16,
+                        fontSize: 14,
                         fontweight: FontWeight.w500,
                       ),
                       Spacer(),
@@ -167,13 +349,17 @@ class PlaceOrderScreen extends StatelessWidget {
                           children: [
                             CustomTextWidget(
                               text: "Order Amounts",
-                              fontSize: 16,
+                              fontSize: 14,
                               fontweight: FontWeight.w400,
                             ),
-                            CustomTextWidget(text: "${double.parse(price)} * ${newCount}"),
+                            CustomTextWidget(
+                              text: "${double.parse(price)} * ${newCount}",
+                              fontSize: 14,
+                              fontweight: FontWeight.w600,
+                            ),
                             CustomTextWidget(
                               text: "₹ ${double.parse(price) * newCount}",
-                              fontSize: 16,
+                              fontSize: 14,
                               fontweight: FontWeight.w600,
                             )
                           ],
@@ -185,7 +371,7 @@ class PlaceOrderScreen extends StatelessWidget {
                     children: [
                       CustomTextWidget(
                         text: "Convenience",
-                        fontSize: 16,
+                        fontSize: 14,
                         fontweight: FontWeight.w400,
                       ),
                       SizedBox(width: 20),
@@ -208,7 +394,7 @@ class PlaceOrderScreen extends StatelessWidget {
                     children: [
                       CustomTextWidget(
                         text: "Delivery Fee",
-                        fontSize: 16,
+                        fontSize: 14,
                         fontweight: FontWeight.w400,
                       ),
                       CustomTextWidget(
@@ -234,7 +420,7 @@ class PlaceOrderScreen extends StatelessWidget {
                         builder: (context, newCount, _) {
                           return CustomTextWidget(
                             text: "₹ ${double.parse(price) * newCount}",
-                            fontSize: 16,
+                            fontSize: 14,
                             fontweight: FontWeight.w600,
                           );
                         },
@@ -242,7 +428,6 @@ class PlaceOrderScreen extends StatelessWidget {
                     ],
                   ),
                   kHeight,
-                 
                   SizedBox(height: 50),
                 ],
               ),
@@ -262,7 +447,7 @@ class PlaceOrderScreen extends StatelessWidget {
               builder: (context, newCount, _) {
                 return CustomTextWidget(
                   text: "₹ ${double.parse(price) * newCount}",
-                  fontSize: 16,
+                  fontSize: 14,
                   fontweight: FontWeight.w600,
                 );
               },

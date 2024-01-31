@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:internship_sample/core/colors.dart';
-import 'package:internship_sample/core/constatns.dart';
+import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/presentation/authentication/widgets/custom_circle_avatar_logo.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 

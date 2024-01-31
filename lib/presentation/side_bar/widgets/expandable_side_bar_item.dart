@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:internship_sample/core/colors.dart';
-import 'package:internship_sample/core/constatns.dart';
+import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/main.dart';
 import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
 import 'package:internship_sample/presentation/product_list/product_listing_screen.dart';
@@ -59,7 +59,7 @@ class ExpandableProductsSideBarItem extends StatelessWidget {
                       GestureDetector(
                         onTap: () {
                           productDisplayList = cashewsPlaneList;
-                          previousPageIndex = 0;
+                          previousPageIndexes.add(0);
 
                           bottomNavbarIndexNotifier.value = 5;
                           Navigator.of(context).pop();
@@ -69,7 +69,7 @@ class ExpandableProductsSideBarItem extends StatelessWidget {
                       GestureDetector(
                         onTap: () {
                           productDisplayList = roastedCashewsList;
-                          previousPageIndex = 0;
+                          previousPageIndexes.add(0);
                           bottomNavbarIndexNotifier.value = 7;
                           Navigator.of(context).pop();
                         },
@@ -78,7 +78,7 @@ class ExpandableProductsSideBarItem extends StatelessWidget {
                       GestureDetector(
                         onTap: () {
                           productDisplayList = valueAddedProducts;
-                          previousPageIndex = 0;
+                          previousPageIndexes.add(0);
                           bottomNavbarIndexNotifier.value = 8;
                           Navigator.of(context).pop();
                         },

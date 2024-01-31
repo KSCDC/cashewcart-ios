@@ -2,9 +2,11 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:internship_sample/core/colors.dart';
-import 'package:internship_sample/core/constatns.dart';
+import 'package:internship_sample/core/constants.dart';
+import 'package:internship_sample/main.dart';
 import 'package:internship_sample/presentation/cart/widgets/cart_product_list_tile.dart';
 import 'package:internship_sample/presentation/home/home_screen.dart';
+import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
 import 'package:internship_sample/presentation/place_order/multiple_item_place_order_screen.dart';
 import 'package:internship_sample/presentation/widgets/custom_appbar.dart';
 import 'package:internship_sample/presentation/widgets/custom_elevated_button.dart';
@@ -12,7 +14,6 @@ import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 
 List cartProductsList = [];
 ValueNotifier<double> grantTotalNotifier = ValueNotifier(0);
-ValueNotifier<bool> isAddressEditableNotifier = ValueNotifier(false);
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -24,7 +25,6 @@ class CartScreen extends StatefulWidget {
 class _CartScreenState extends State<CartScreen> {
   @override
   Widget build(BuildContext context) {
-    TextEditingController _textEditingController = TextEditingController(text: "216 St Paul's Rd, London N1 2LL, UK, \nContact :  +44-784232 ");
     double grandTotal = getGrandTotal();
     final screenSize = MediaQuery.of(context).size;
     grantTotalNotifier.value = 0;
@@ -34,6 +34,13 @@ class _CartScreenState extends State<CartScreen> {
     return Scaffold(
       backgroundColor: appBackgroundColor,
       appBar: AppBar(
+        leading: GestureDetector(
+          onTap: () {
+            bottomNavbarIndexNotifier.value = previousPageIndexes.last;
+            previousPageIndexes.removeLast();
+          },
+          child: Icon(Icons.arrow_back_ios_rounded),
+        ),
         centerTitle: true,
         title: CustomTextWidget(
           text: "Cart",
@@ -47,94 +54,6 @@ class _CartScreenState extends State<CartScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Row(
-                children: [
-                  Icon(
-                    Icons.location_on_outlined,
-                    size: 15,
-                  ),
-                  kWidth,
-                  CustomTextWidget(
-                    text: "Delivery Address",
-                    fontweight: FontWeight.w600,
-                  ),
-                ],
-              ),
-              kHeight,
-              ValueListenableBuilder(
-                  valueListenable: isAddressEditableNotifier,
-                  builder: (context, value, _) {
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          height: screenSize.width * 0.32,
-                          width: screenSize.width * 0.8,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(10),
-                            child: Stack(
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    CustomTextWidget(
-                                      text: "Address :",
-                                      fontSize: 12,
-                                      fontweight: FontWeight.w500,
-                                    ),
-                                    kHeight,
-                                    TextField(
-                                      controller: _textEditingController,
-                                      style: TextStyle(fontSize: 14),
-                                      maxLines: 2,
-                                      enabled: value,
-                                      decoration: InputDecoration(
-                                        border: value ? OutlineInputBorder() : InputBorder.none,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Positioned(
-                                  top: -5,
-                                  right: -2,
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      isAddressEditableNotifier.value = true;
-                                    },
-                                    child: Icon(Icons.edit_note_rounded),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        if (value)
-                          GestureDetector(
-                            onTap: () {
-                              isAddressEditableNotifier.value = false;
-                            },
-                            child: Container(
-                              height: screenSize.width * 0.1,
-                              width: screenSize.width * 0.1,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              child: const Padding(
-                                padding: EdgeInsets.all(10),
-                                child: Icon(
-                                  Icons.done_rounded,
-                                ),
-                              ),
-                            ),
-                          )
-                      ],
-                    );
-                  }),
               kHeight,
               const CustomTextWidget(
                 text: "Shopping List",

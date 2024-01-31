@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:internship_sample/core/constatns.dart';
+import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/main.dart';
 import 'package:internship_sample/presentation/home/widgets/circle_avatar_list_item.dart';
 import 'package:internship_sample/presentation/home/widgets/buy_now_tile.dart';
@@ -35,6 +35,7 @@ class HomeScreen extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SearchSectionTile(heading: "All Featured"),
 
@@ -112,7 +113,7 @@ class HomeScreen extends StatelessWidget {
                         return GestureDetector(
                           onTap: () async {
                             selectedProductDetails = await bestSellersList[index];
-                            previousPageIndex = bottomNavbarIndexNotifier.value;
+                            previousPageIndexes.add(bottomNavbarIndexNotifier.value);
                             bottomNavbarIndexNotifier.value = 4;
                           },
                           child: ProductsListItemTile(
@@ -126,7 +127,7 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ],
               ),
-
+              kHeight,
               //special offers
 
               Container(
@@ -134,7 +135,7 @@ class HomeScreen extends StatelessWidget {
                 width: screenSize.width * 0.9,
                 child: Row(
                   children: [
-                    Image.asset("lib/core/assets/images/product_images/home/special_offer.png"),
+                    Image.asset("lib/core/assets/images/home/special_offer.png"),
                     SizedBox(width: 20),
                     Container(
                       width: 180,
@@ -160,6 +161,7 @@ class HomeScreen extends StatelessWidget {
               BuyNowTile(
                 productDetails: cashewsPlaneList[0],
               ),
+
               const ViewOfferTile(
                 color: Color(0xFFFD6E87),
                 mainLabel: "Trending Products",
@@ -176,7 +178,7 @@ class HomeScreen extends StatelessWidget {
                     return GestureDetector(
                       onTap: () async {
                         selectedProductDetails = await productDetailsList2[index];
-                        previousPageIndex = bottomNavbarIndexNotifier.value;
+                        previousPageIndexes.add(bottomNavbarIndexNotifier.value);
                         bottomNavbarIndexNotifier.value = 4;
                       },
                       child: ProductsListItemTile(
@@ -198,14 +200,42 @@ class HomeScreen extends StatelessWidget {
               //Sponsered product
               GestureDetector(
                 onTap: () async {
-                  selectedProductDetails = await bestSellersList[0];
-                  previousPageIndex = bottomNavbarIndexNotifier.value;
+                  selectedProductDetails = await roastedCashewsList[0];
+                  previousPageIndexes.add(bottomNavbarIndexNotifier.value);
                   bottomNavbarIndexNotifier.value = 4;
                 },
                 child: SponseredProductTile(
-                  imagePath: "lib/core/assets/images/product_images/Cashew Vita Chocolate Flavoured/Cashew vita chocolate flavoured.jpg",
+                  imagePath: "lib/core/assets/images/product_images/Roasted and Salted Cashew/Roasted and salted Cashew.png",
                 ),
               ),
+              kHeight,
+              CustomTextWidget(
+                text: "All Featured Products",
+                fontSize: 18,
+                fontweight: FontWeight.w600,
+              ),
+              GridView.count(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                childAspectRatio: (20 / 30),
+                crossAxisCount: 2,
+                mainAxisSpacing: 5,
+                crossAxisSpacing: 5,
+                children: List.generate(allFeaturedProductsList.length, (index) {
+                  return GestureDetector(
+                    onTap: () async {
+                      print("image list ${allFeaturedProductsList[index]['imagePath']}");
+
+                      selectedProductDetails = await allFeaturedProductsList[index];
+                      previousPageIndexes.add(bottomNavbarIndexNotifier.value);
+                      bottomNavbarIndexNotifier.value = 4;
+                    },
+                    child: ProductsListItemTile(
+                      productDetails: allFeaturedProductsList[index],
+                    ),
+                  );
+                }),
+              )
             ],
           ),
         ),

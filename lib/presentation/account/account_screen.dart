@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:internship_sample/core/constatns.dart';
+import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/main.dart';
 import 'package:internship_sample/presentation/account/widgets/custom_text_button.dart';
 import 'package:internship_sample/presentation/authentication/signin_screen.dart';
@@ -54,7 +54,7 @@ class AccountScreen extends StatelessWidget {
               CustomTextButton(
                 label: "My Orders",
                 onPressed: () {
-                  previousPageIndex = 3;
+                  previousPageIndexes.add(3);
                   bottomNavbarIndexNotifier.value = 6;
                 },
               ),
@@ -62,7 +62,8 @@ class AccountScreen extends StatelessWidget {
               CustomTextButton(
                 label: "Buy Again",
                 onPressed: () {
-                  previousPageIndex = 3;
+                  previousPageIndexes.add(3);
+
                   bottomNavbarIndexNotifier.value = 6;
                 },
               ),

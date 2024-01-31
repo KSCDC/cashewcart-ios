@@ -16,7 +16,15 @@ class CustomBottomNavbarItem extends StatelessWidget {
         IconButton(
           color: color,
           onPressed: () {
-            previousPageIndex = index;
+            // previousPageIndex = index;
+
+            if (bottomNavbarIndexNotifier.value < 3) {
+              previousPageIndexes.add(index);
+            } else {
+              print("Adding");
+              previousPageIndexes.add(bottomNavbarIndexNotifier.value);
+            }
+
             bottomNavbarIndexNotifier.value = index;
           },
           icon: iconWidget,

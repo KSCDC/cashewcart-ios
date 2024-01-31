@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:internship_sample/core/constatns.dart';
+import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/presentation/home/home_screen.dart';
 import 'package:internship_sample/presentation/shop/widgets/custom_text_icon_button.dart';
 import 'package:internship_sample/presentation/shop/widgets/size_selector_widget.dart';
@@ -178,9 +178,12 @@ class ShopProductDetailsTile extends StatelessWidget {
                   return SizedBox();
               }),
           kHeight,
-          const Row(
+           Row(
             children: [
               CustomTextIconButton(
+                onPressed: () {
+                  
+                },
                 icon: Icons.location_on_outlined,
                 label: "Nearest Store",
                 textAndIconColor: Color(0xFF828282),
@@ -188,6 +191,9 @@ class ShopProductDetailsTile extends StatelessWidget {
               ),
               kWidth,
               CustomTextIconButton(
+                onPressed: () {
+                  
+                },
                 icon: Icons.lock_outline_sharp,
                 label: "VIP",
                 textAndIconColor: Color(0xFF828282),
@@ -195,6 +201,9 @@ class ShopProductDetailsTile extends StatelessWidget {
               ),
               kWidth,
               CustomTextIconButton(
+                onPressed: () {
+                  
+                },
                 icon: Icons.lock_outline_sharp,
                 label: "Return Policy",
                 textAndIconColor: Color(0xFF828282),

@@ -81,13 +81,14 @@ flutter:
     - lib/core/assets/images/other/offer_image1.jpg
 
     - lib/core/assets/images/avatar.jpeg
-    - lib/core/assets/images/product_images/home/heels.jpg
-    - lib/core/assets/images/product_images/home/special_offer.png
+    - lib/core/assets/images/home/heels.jpg
+    - lib/core/assets/images/home/special_offer.png
     - lib/core/assets/images/other/special_offer.svg
 
-    - lib/core/assets/images/product_images/home/yellow_bar.jpg
-    - lib/core/assets/images/product_images/home/star.jpg
-    - lib/core/assets/images/product_images/home/starbg.jpg
+    - lib/core/assets/images/home/yellow_bar.jpg
+    - lib/core/assets/images/home/star.jpg
+    - lib/core/assets/images/home/starbg.jpg
+    - lib/core/assets/images/home/star_bg.svg
 
     - lib/core/assets/images/product_images/Cashew Apple Squash/Cashew apple
       squash.jpg
@@ -130,9 +131,13 @@ flutter:
 
     - lib/core/assets/images/product_images/Plain Cashew/Plain cashew (B).png
     - lib/core/assets/images/product_images/Plain Cashew/Plain Cashew (F).png
+    - lib/core/assets/images/product_images/Plain Cashew/Plain cashew (B) bgwhite.png
+    - lib/core/assets/images/product_images/Plain Cashew/Plain Cashew (F) bgwhite.png
+    - lib/core/assets/images/product_images/Plain Cashew/Plain Cashew (F) nobg.png
 
     - lib/core/assets/images/product_images/Roasted and Salted Cashew/Roasted
       and salted Cashew.png
+    - lib/core/assets/images/product_images/Roasted and Salted Cashew/Roasted and salted Cashew bgwhite.png
 
     - lib/core/assets/images/product_images/Salt and Pepper/Salt and Pepper.jpg
 

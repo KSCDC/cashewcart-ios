@@ -20,7 +20,7 @@ const List<String> statesList = [
 const List avatarImage = [
   {
     'label': "Plain",
-    'imagePath': "lib/core/assets/images/product_images/Plain Cashew/Plain Cashew (F).png",
+    'imagePath': "lib/core/assets/images/product_images/Plain Cashew/Plain Cashew (F) bgwhite.png",
   },
   {
     'label': "Roast",
@@ -157,8 +157,8 @@ const List bestSellersList = [
 const List cashewsPlaneList = [
   {
     'imagePath': [
-      "lib/core/assets/images/product_images/Plain Cashew/Plain Cashew (F).png",
-      "lib/core/assets/images/product_images/Plain Cashew/Plain cashew (B).png",
+      "lib/core/assets/images/product_images/Plain Cashew/Plain Cashew (F) bgwhite.png",
+      "lib/core/assets/images/product_images/Plain Cashew/Plain cashew (B) bgwhite.png",
     ],
     'name': "PLAIN CASHEW KERNELS W180",
     'category': [
@@ -193,8 +193,8 @@ const List cashewsPlaneList = [
   },
   {
     'imagePath': [
-      "lib/core/assets/images/product_images/Plain Cashew/Plain Cashew (F).png",
-      "lib/core/assets/images/product_images/Plain Cashew/Plain cashew (B).png",
+      "lib/core/assets/images/product_images/Plain Cashew/Plain Cashew (F) bgwhite.png",
+      "lib/core/assets/images/product_images/Plain Cashew/Plain cashew (B) bgwhite.png",
     ],
     'name': "PLAIN CASHEW KERNELS W210",
     'category': [
@@ -229,8 +229,8 @@ const List cashewsPlaneList = [
   },
   {
     'imagePath': [
-      "lib/core/assets/images/product_images/Plain Cashew/Plain Cashew (F).png",
-      "lib/core/assets/images/product_images/Plain Cashew/Plain cashew (B).png",
+      "lib/core/assets/images/product_images/Plain Cashew/Plain Cashew (F) bgwhite.png",
+      "lib/core/assets/images/product_images/Plain Cashew/Plain cashew (B) bgwhite.png",
     ],
     'name': "PLAIN CASHEW KERNELS W240",
     'category': [
@@ -265,8 +265,8 @@ const List cashewsPlaneList = [
   },
   {
     'imagePath': [
-      "lib/core/assets/images/product_images/Plain Cashew/Plain Cashew (F).png",
-      "lib/core/assets/images/product_images/Plain Cashew/Plain cashew (B).png",
+      "lib/core/assets/images/product_images/Plain Cashew/Plain Cashew (F) bgwhite.png",
+      "lib/core/assets/images/product_images/Plain Cashew/Plain cashew (B) bgwhite.png",
     ],
     'name': "PLAIN CASHEW KERNELS W320",
     'category': [
@@ -301,8 +301,8 @@ const List cashewsPlaneList = [
   },
   {
     'imagePath': [
-      "lib/core/assets/images/product_images/Plain Cashew/Plain Cashew (F).png",
-      "lib/core/assets/images/product_images/Plain Cashew/Plain cashew (B).png",
+      "lib/core/assets/images/product_images/Plain Cashew/Plain Cashew (F) bgwhite.png",
+      "lib/core/assets/images/product_images/Plain Cashew/Plain cashew (B) bgwhite.png",
     ],
     'name': "PLAIN CASHEW KERNELS W450",
     'category': [
@@ -340,7 +340,7 @@ const List cashewsPlaneList = [
 const List roastedCashewsList = [
   {
     'imagePath': [
-      "lib/core/assets/images/product_images/Roasted and Salted Cashew/Roasted and salted Cashew.png",
+      "lib/core/assets/images/product_images/Roasted and Salted Cashew/Roasted and salted Cashew bgwhite.png",
     ],
     'name': "ROASTED & SALTED CASHEW W180",
     'category': [
@@ -366,7 +366,7 @@ const List roastedCashewsList = [
   },
   {
     'imagePath': [
-      "lib/core/assets/images/product_images/Roasted and Salted Cashew/Roasted and salted Cashew.png",
+      "lib/core/assets/images/product_images/Roasted and Salted Cashew/Roasted and salted Cashew bgwhite.png",
     ],
     'name': "ROASTED & SALTED CASHEW W240",
     'category': [
@@ -392,7 +392,7 @@ const List roastedCashewsList = [
   },
   {
     'imagePath': [
-      "lib/core/assets/images/product_images/Roasted and Salted Cashew/Roasted and salted Cashew.png",
+      "lib/core/assets/images/product_images/Roasted and Salted Cashew/Roasted and salted Cashew bgwhite.png",
     ],
     'name': "ROASTED & SALTED CASHEW W320",
     'category': [
@@ -417,6 +417,8 @@ const List roastedCashewsList = [
     ]
   },
 ];
+
+List allFeaturedProductsList = cashewsPlaneList + roastedCashewsList + valueAddedProducts;
 
 const List productDetailsList1 = [
   {
@@ -618,8 +620,8 @@ const List valueAddedProducts = [
 const List productDetailsList2 = [
   {
     'imagePath': [
-      "lib/core/assets/images/product_images/Plain Cashew/Plain cashew (B).png",
-      "lib/core/assets/images/product_images/Plain Cashew/Plain Cashew (F).png",
+      "lib/core/assets/images/product_images/Plain Cashew/Plain cashew (B) bgwhite.png",
+      "lib/core/assets/images/product_images/Plain Cashew/Plain Cashew (F) bgwhite.png",
     ],
     'name': "PLAIN CASHEW",
     'category': [
@@ -673,8 +675,8 @@ const List productDetailsList2 = [
 // const List productDetailsList2 = [
 //   {
 //     'imagePath': [
-//       "lib/core/assets/images/product_images/Plain Cashew/Plain cashew (B).png",
-//       "lib/core/assets/images/product_images/Plain Cashew/Plain Cashew (F).png",
+//       "lib/core/assets/images/product_images/Plain Cashew/Plain cashew (B) bgwhite.png",
+//       "lib/core/assets/images/product_images/Plain Cashew/Plain Cashew (F) bgwhite.png",
 //     ],
 //     'name': "Plain cashew ",
 //     'description': "Neque porro quisquam est qui dolorem ipsum quia",
@@ -710,7 +712,7 @@ const List productDetailsList2 = [
 //   },
 //   {
 //     'imagePath': [
-//       "lib/core/assets/images/product_images/Roasted and Salted Cashew/Roasted and salted Cashew.png",
+//       "lib/core/assets/images/product_images/Roasted and Salted Cashew/Roasted and salted Cashew bgwhite.png",
 //     ],
 //     'name': "Roasted and salted Cashew",
 //     'description': "Neque porro quisquam est qui dolorem ipsum quia",

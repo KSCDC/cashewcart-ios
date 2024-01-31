@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:internship_sample/presentation/main_page/main_page_screen.dart';
 import 'package:internship_sample/presentation/splash/splash_screen.dart';
 
-int previousPageIndex = 0;
+List<int> previousPageIndexes = [0];
 void main() {
   runApp(const MyApp());
 }
