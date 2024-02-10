@@ -9,6 +9,7 @@ import 'package:internship_sample/presentation/cart/cart_screen.dart';
 import 'package:internship_sample/presentation/home/home_screen.dart';
 import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
 import 'package:internship_sample/presentation/place_order/place_order_screen.dart';
+import 'package:internship_sample/presentation/place_order/widgets/address_section.dart';
 import 'package:internship_sample/presentation/shop/widgets/custom_styled_shop_page_button.dart';
 import 'package:internship_sample/presentation/shop/widgets/custom_text_icon_button.dart';
 import 'package:internship_sample/presentation/shop/widgets/review_tile.dart';
@@ -22,14 +23,20 @@ import 'package:internship_sample/presentation/widgets/sliding_product_tile.dart
 
 ValueNotifier<int> customerRatingNotifier = ValueNotifier(0);
 
-class ShopScreen extends StatelessWidget {
+class ShopScreen extends StatefulWidget {
   ShopScreen({
     super.key,
     //  this.productDetails,
   });
 
-  // final productDetails;
+  @override
+  State<ShopScreen> createState() => _ShopScreenState();
+}
 
+class _ShopScreenState extends State<ShopScreen> {
+  final _scrollController = ScrollController();
+
+  // final productDetails;
   @override
   Widget build(BuildContext context) {
     log("selected product details:${selectedProductDetails.toString()}");
@@ -42,10 +49,12 @@ class ShopScreen extends StatelessWidget {
     // print("previous page index $previousPageIndex");
 
     List similarProductsList = getSimilarProductsList();
+    List relatedProductsList = getRelatedProductsList();
     ;
 
     return Scaffold(
       appBar: AppBar(
+        scrolledUnderElevation: 0,
         leading: IconButton(
           onPressed: () {
             bottomNavbarIndexNotifier.value = previousPageIndexes.last;
@@ -55,6 +64,7 @@ class ShopScreen extends StatelessWidget {
         ),
       ),
       body: SingleChildScrollView(
+        controller: _scrollController,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -136,6 +146,7 @@ class ShopScreen extends StatelessWidget {
                         // buy now button
                         GestureDetector(
                           onTap: () {
+                            productCountNotifier.value = 1;
                             bool stock = selectedProductDetails['category'][value]['haveStock'];
                             if (stock == true) {
                               final buyingProduct = {
@@ -217,15 +228,6 @@ class ShopScreen extends StatelessWidget {
                     textAndIconSize: 14,
                   ),
                 ),
-                // Container(
-                //   width: screenSize.width * 0.48,
-                //   child: const CustomTextIconButton(
-                //     icon: Icons.difference_outlined,
-                //     label: "Add to compare",
-                //     textAndIconColor: Colors.black,
-                //     textAndIconSize: 14,
-                //   ),
-                // ),
               ],
             ),
             kHeight,
@@ -372,16 +374,77 @@ class ShopScreen extends StatelessWidget {
                 heading: "${similarProductsList.length.toString()}+",
               ),
             ),
+
             Container(
               height: 250,
               color: Colors.white,
               child: ListView.builder(
                 itemBuilder: (context, index) {
-                  return ProductsListItemTile(
-                    productDetails: similarProductsList[index],
+                  return GestureDetector(
+                    onTap: () async {
+                      selectedProductDetails = await similarProductsList[index];
+                      previousPageIndexes.add(bottomNavbarIndexNotifier.value);
+                      bottomNavbarIndexNotifier.value = 4;
+                      setState(() {});
+
+                      _scrollController.animateTo(
+                        _scrollController.position.minScrollExtent,
+                        curve: Curves.easeOut,
+                        duration: const Duration(milliseconds: 500),
+                      );
+                    },
+                    child: ProductsListItemTile(
+                      productDetails: similarProductsList[index],
+                    ),
                   );
                 },
                 itemCount: similarProductsList.length,
+                scrollDirection: Axis.horizontal,
+              ),
+            ),
+            kHeight,
+
+            //related products
+
+            const Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: CustomTextWidget(
+                text: "Related To",
+                fontSize: 20,
+                fontweight: FontWeight.w600,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: SearchFilterBar(
+                heading: "${relatedProductsList.length.toString()}+",
+              ),
+            ),
+
+            Container(
+              height: 250,
+              color: Colors.white,
+              child: ListView.builder(
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: () async {
+                      selectedProductDetails = await relatedProductsList[index];
+                      previousPageIndexes.add(bottomNavbarIndexNotifier.value);
+                      bottomNavbarIndexNotifier.value = 4;
+                      setState(() {});
+
+                      _scrollController.animateTo(
+                        _scrollController.position.minScrollExtent,
+                        curve: Curves.easeOut,
+                        duration: const Duration(milliseconds: 500),
+                      );
+                    },
+                    child: ProductsListItemTile(
+                      productDetails: relatedProductsList[index],
+                    ),
+                  );
+                },
+                itemCount: relatedProductsList.length,
                 scrollDirection: Axis.horizontal,
               ),
             ),
@@ -404,6 +467,22 @@ class ShopScreen extends StatelessWidget {
       List productsList = List.from(valueAddedProducts);
       productsList.remove(selectedProductDetails);
       return productsList + cashewsPlaneList + roastedCashewsList;
+    }
+  }
+
+  List getRelatedProductsList() {
+    if (cashewsPlaneList.contains(selectedProductDetails)) {
+      List relatedProductsList = allFeaturedProductsList.where((element) => !cashewsPlaneList.contains(element)).toList();
+
+      return relatedProductsList;
+    } else if (roastedCashewsList.contains(selectedProductDetails)) {
+      List relatedProductsList = allFeaturedProductsList.where((element) => !roastedCashewsList.contains(element)).toList();
+
+      return relatedProductsList;
+    } else {
+      List relatedProductsList = allFeaturedProductsList.where((element) => !valueAddedProducts.contains(element)).toList();
+
+      return relatedProductsList;
     }
   }
 }

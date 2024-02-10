@@ -4,7 +4,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/core/constants.dart';
+import 'package:internship_sample/main.dart';
 import 'package:internship_sample/presentation/cart/widgets/cart_product_list_tile.dart';
+import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
 import 'package:internship_sample/presentation/my_orders/widgets/my_orders_list_tile.dart';
 import 'package:internship_sample/presentation/order_tracking/order_tracking_screen.dart';
 import 'package:internship_sample/presentation/widgets/custom_appbar.dart';
@@ -20,12 +22,21 @@ class MyOrdersScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final recentOrdersListRev = recentOrdersList.reversed.toList();
     print(numberOfRecentOrders);
     log("Recent orders List :${recentOrdersList.toString()}");
     final screenSize = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: appBackgroundColor,
       appBar: AppBar(
+        scrolledUnderElevation: 0,
+        leading: IconButton(
+          onPressed: () {
+            bottomNavbarIndexNotifier.value = previousPageIndexes.last;
+            previousPageIndexes.removeLast();
+          },
+          icon: Icon(Icons.arrow_back_ios_new),
+        ),
         centerTitle: true,
         title: CustomTextWidget(
           text: "Orders",
@@ -50,15 +61,16 @@ class MyOrdersScreen extends StatelessWidget {
                 child: ListView.builder(
                   itemBuilder: (context, index) {
                     print("values ${productDetailsList1[index]['imagePath'][0]}");
-                    final int category = recentOrdersList[index]['category'];
-                    final String imagePath = recentOrdersList[index]['product']['imagePath'][0];
-                    final String name = recentOrdersList[index]['product']['name'];
-                    final String description = recentOrdersList[index]['product']['category'][category]['description'];
-                    final String price = recentOrdersList[index]['product']['category'][category]['offerPrice'];
-                    final String rating = recentOrdersList[index]['product']['category'][category]['rating'];
-                    final String weight = recentOrdersList[index]['product']['category'][category]['weight'];
+                    final int category = recentOrdersListRev[index]['category'];
+                    final String imagePath = recentOrdersListRev[index]['product']['imagePath'][0];
+                    final String name = recentOrdersListRev[index]['product']['name'];
+                    final String description = recentOrdersListRev[index]['product']['category'][category]['description'];
+                    final String price = recentOrdersListRev[index]['product']['category'][category]['offerPrice'];
+                    final String rating = recentOrdersListRev[index]['product']['category'][category]['rating'];
+                    final String weight = recentOrdersListRev[index]['product']['category'][category]['weight'];
 
-                    final int count = recentOrdersList[index]['count'];
+                    final int count = recentOrdersListRev[index]['count'];
+                    log("count :$count");
 
                     return Column(
                       children: [

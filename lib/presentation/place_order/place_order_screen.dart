@@ -9,15 +9,13 @@ import 'package:internship_sample/presentation/checkout/checkout_screen.dart';
 import 'package:internship_sample/presentation/cart/widgets/cart_product_list_tile.dart';
 import 'package:internship_sample/presentation/home/home_screen.dart';
 import 'package:internship_sample/presentation/place_order/place_order_dropdown.dart';
+import 'package:internship_sample/presentation/place_order/widgets/address_section.dart';
 import 'package:internship_sample/presentation/place_order/widgets/address_tile.dart';
 import 'package:internship_sample/presentation/shop/widgets/custom_text_icon_button.dart';
 import 'package:internship_sample/presentation/widgets/custom_appbar.dart';
 import 'package:internship_sample/presentation/widgets/custom_elevated_button.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 
-ValueNotifier<int> productCountNotifier = ValueNotifier(1);
-ValueNotifier<int> selectedRadioNotifier = ValueNotifier(0);
-List<TextEditingController> deliveryAddressControllers = [];
 // int selectedAddressIndex = -1;
 var _oneValue = '';
 
@@ -44,6 +42,7 @@ class PlaceOrderScreen extends StatelessWidget {
     // final String weight = productDetails['product']['category'][category]['weight'];
 
     final int count = productDetails['count'];
+
     final screenSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: CustomAppBar(
@@ -105,6 +104,7 @@ class PlaceOrderScreen extends StatelessWidget {
                                 ValueListenableBuilder(
                                   valueListenable: productCountNotifier,
                                   builder: (context, newCount, _) {
+                                    productDetails['count'] = newCount;
                                     return CustomTextWidget(text: "Nos : ${newCount}");
                                   },
                                 ),
@@ -132,128 +132,8 @@ class PlaceOrderScreen extends StatelessWidget {
                   kHeight,
 
                   //delivery addresses
-                  const Row(
-                    children: [
-                      Icon(
-                        Icons.location_on_outlined,
-                        size: 15,
-                      ),
-                      kWidth,
-                      CustomTextWidget(
-                        text: "Delivery Address",
-                        fontweight: FontWeight.w600,
-                      ),
-                    ],
-                  ),
-                  kHeight,
 
-                  if (deliveryAddressControllers.isEmpty)
-                    CustomTextWidget(text: "No saved addresses!")
-                  else
-                    Column(
-                      children: List.generate(
-                        deliveryAddressControllers.length,
-                        (index) {
-                          ValueNotifier<bool> isAddressEditableNotifier = ValueNotifier(false);
-                          ValueNotifier<bool> isChecked = ValueNotifier(false);
-
-                          return ValueListenableBuilder(
-                            valueListenable: isAddressEditableNotifier,
-                            builder: (context, value, _) {
-                              return Padding(
-                                padding: const EdgeInsets.only(top: 5),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Container(
-                                      height: screenSize.width * 0.32,
-                                      width: screenSize.width * 0.8,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(6),
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                                        child: Stack(
-                                          children: [
-                                            Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                SizedBox(height: 5),
-                                                CustomTextWidget(
-                                                  text: "Address :${index + 1}",
-                                                  fontSize: 12,
-                                                  fontweight: FontWeight.w500,
-                                                ),
-                                                kHeight,
-                                                TextField(
-                                                  controller: deliveryAddressControllers[index],
-                                                  style: TextStyle(fontSize: 14),
-                                                  maxLines: 2,
-                                                  enabled: value,
-                                                  decoration: InputDecoration(
-                                                    border: value ? OutlineInputBorder() : InputBorder.none,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            Positioned(
-                                              top: 0,
-                                              right: -5,
-                                              child: value
-                                                  ? GestureDetector(
-                                                      onTap: () {
-                                                        isAddressEditableNotifier.value = false;
-                                                      },
-                                                      child: Icon(
-                                                        Icons.done_rounded,
-                                                      ),
-                                                    )
-                                                  : GestureDetector(
-                                                      onTap: () {
-                                                        isAddressEditableNotifier.value = true;
-                                                      },
-                                                      child: Icon(Icons.edit_note_rounded),
-                                                    ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    // Checkbox
-                                    ValueListenableBuilder(
-                                      valueListenable: selectedRadioNotifier,
-                                      builder: (context, checkboxValue, _) {
-                                        return Container(
-                                          height: 20,
-                                          width: 20,
-                                          child: Radio(
-                                            value: index,
-                                            groupValue: checkboxValue,
-                                            onChanged: (int? newValue) {
-                                              // Allow changing the selected address when the radio button is tapped
-                                              if (newValue != null) {
-                                                checkboxValue = newValue;
-
-                                                selectedRadioNotifier.value = newValue;
-                                              } else {
-                                                checkboxValue = -1;
-                                                selectedRadioNotifier.value = 0;
-                                                // isAddressEditableNotifier.value = false;
-                                              }
-                                            },
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ),
+                  if (deliveryAddressControllers.isEmpty) CustomTextWidget(text: "No saved addresses!") else AddressSection(screenSize: screenSize),
 
                   SizedBox(height: 5),
 
@@ -313,6 +193,7 @@ class PlaceOrderScreen extends StatelessWidget {
                     textAndIconColor: Colors.black,
                     textAndIconSize: 12,
                   ),
+
                   SizedBox(height: 20),
 
                   const Row(
@@ -465,6 +346,7 @@ class PlaceOrderScreen extends StatelessWidget {
                       margin: EdgeInsets.all(10),
                       padding: EdgeInsets.all(20),
                     );
+
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
                   } else {
                     Navigator.of(context).push(

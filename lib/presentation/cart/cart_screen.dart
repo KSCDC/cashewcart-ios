@@ -28,8 +28,7 @@ class _CartScreenState extends State<CartScreen> {
     double grandTotal = getGrandTotal();
     final screenSize = MediaQuery.of(context).size;
     grantTotalNotifier.value = 0;
-    // print("cart product item :${cartProductsList[0]['weight']}");
-    //
+    
     print("building");
     return Scaffold(
       backgroundColor: appBackgroundColor,
@@ -70,12 +69,6 @@ class _CartScreenState extends State<CartScreen> {
               Container(
                 child: ListView.builder(
                   itemBuilder: (context, index) {
-                    // final int selectedCategory = cartProductsList[index]['category'];
-                    // final String price = cartProductsList[index]['product']['category'][selectedCategory]['offerPrice'];
-                    // final int count = cartProductsList[index]['count'];
-                    // final double total = double.parse(price) * count;
-                    // print("prices are ${price} * ${count}== ${total}");
-                    // grantTotalNotifier.value = grantTotalNotifier.value + total;
                     return Column(
                       children: [
                         kHeight,

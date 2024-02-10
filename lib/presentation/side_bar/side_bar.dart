@@ -41,7 +41,7 @@ class SideBar extends StatelessWidget {
                 bottomNavbarIndexNotifier.value = 6;
               },
               child: SideBarItemTile(
-                icon: Icons.shopping_bag_outlined,
+                icon: Icons.local_shipping_outlined,
                 label: "My Orders",
               ),
             ),

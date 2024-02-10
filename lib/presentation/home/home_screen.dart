@@ -72,23 +72,25 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 10),
-              SmoothPageIndicator(
-                controller: controller,
-                count: 3,
-                effect: const WormEffect(
-                  dotColor: Color(0xFFDEDBDB),
-                  activeDotColor: Color(0xFFFFA3B3),
-                  dotHeight: 10,
-                  dotWidth: 10,
-                  spacing: 15,
+              Center(
+                child: SmoothPageIndicator(
+                  controller: controller,
+                  count: 3,
+                  effect: const WormEffect(
+                    dotColor: Color(0xFFDEDBDB),
+                    activeDotColor: Color(0xFFFFA3B3),
+                    dotHeight: 10,
+                    dotWidth: 10,
+                    spacing: 15,
+                  ),
+                  onDotClicked: (index) {
+                    controller.animateToPage(
+                      index,
+                      duration: const Duration(milliseconds: 500),
+                      curve: Curves.easeIn,
+                    );
+                  },
                 ),
-                onDotClicked: (index) {
-                  controller.animateToPage(
-                    index,
-                    duration: const Duration(milliseconds: 500),
-                    curve: Curves.easeIn,
-                  );
-                },
               ),
               SizedBox(height: 10),
               ViewOfferTile(

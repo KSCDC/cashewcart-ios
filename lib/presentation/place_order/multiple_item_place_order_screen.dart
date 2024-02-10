@@ -8,7 +8,9 @@ import 'package:internship_sample/presentation/cart/cart_screen.dart';
 import 'package:internship_sample/presentation/checkout/checkout_screen.dart';
 import 'package:internship_sample/presentation/cart/widgets/cart_product_list_tile.dart';
 import 'package:internship_sample/presentation/place_order/place_order_dropdown.dart';
+import 'package:internship_sample/presentation/place_order/widgets/address_section.dart';
 import 'package:internship_sample/presentation/place_order/widgets/place_order_item_widget.dart';
+import 'package:internship_sample/presentation/shop/widgets/custom_text_icon_button.dart';
 import 'package:internship_sample/presentation/widgets/custom_appbar.dart';
 import 'package:internship_sample/presentation/widgets/custom_elevated_button.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
@@ -41,9 +43,6 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
                         final int selectedCategory = productList[index]['category'];
                         // final String price = cartProductsList[index]['product']['category'][selectedCategory]['offerPrice'];
                         final int count = productList[index]['count'];
-                        // final double total = double.parse(price) * count;
-                        // print("prices are ${price} * ${count}== ${total}");
-                        // grantTotalNotifier.value = grantTotalNotifier.value + total;
 
                         return Column(
                           children: [
@@ -55,6 +54,9 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
                                 productDescription: productList[index]['product']['category'][selectedCategory]['description'],
                                 count: count,
                               ),
+                            Divider(
+                              thickness: 0.3,
+                            )
                           ],
                         );
                       },
@@ -64,6 +66,70 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
                     ),
                   ),
                   kHeight,
+                  //delivery addresses
+
+                  kHeight,
+
+                  if (deliveryAddressControllers.isEmpty) CustomTextWidget(text: "No saved addresses!") else AddressSection(screenSize: screenSize),
+
+                  SizedBox(height: 5),
+
+                  // add new address button
+                  CustomTextIconButton(
+                    onPressed: () async {
+                      TextEditingController _newAddressController = TextEditingController();
+
+                      await showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return Dialog(
+                            insetAnimationDuration: Duration(milliseconds: 1000),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              width: screenSize.width * 0.9,
+                              height: screenSize.width * 0.8,
+                              child: Padding(
+                                padding: const EdgeInsets.all(15),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    kHeight,
+                                    CustomTextWidget(text: "Enter new address here"),
+                                    SizedBox(height: 5),
+                                    TextField(
+                                      controller: _newAddressController,
+                                      maxLines: 4, // Set to null for an unlimited number of lines
+                                      decoration: InputDecoration(
+                                        border: OutlineInputBorder(),
+                                      ),
+                                    ),
+                                    SizedBox(height: 20),
+                                    GestureDetector(
+                                      onTap: () {
+                                        deliveryAddressControllers.add(_newAddressController);
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: CustomElevatedButton(
+                                        label: "Submit",
+                                        fontSize: 16,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                    icon: Icons.add,
+                    label: "Add address",
+                    textAndIconColor: Colors.black,
+                    textAndIconSize: 12,
+                  ),
                   SizedBox(height: 20),
                   Row(
                     children: [
@@ -149,7 +215,6 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
                       ),
                       CustomTextWidget(
                         text: "₹ ${grandTotal.toStringAsFixed(2)}",
-                        
                         fontSize: 16,
                         fontweight: FontWeight.w600,
                       )

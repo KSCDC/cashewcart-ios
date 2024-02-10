@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:internship_sample/core/colors.dart';
@@ -28,7 +30,7 @@ class CheckoutScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
-
+    log("checkout :${orderingProductsList[0]}");
     return Scaffold(
       backgroundColor: appBackgroundColor,
       appBar: CustomAppBar(title: "Checkout"),
@@ -87,6 +89,7 @@ class CheckoutScreen extends StatelessWidget {
               GestureDetector(
                 onTap: () {
                   recentOrdersList.addAll(orderingProductsList);
+                  // recentOrdersList.reversed;
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
@@ -112,7 +115,7 @@ class CheckoutScreen extends StatelessWidget {
                       );
                     },
                   );
-                  bottomNavbarIndexNotifier.value = 2;
+                  bottomNavbarIndexNotifier.value = 6;
                   // recentOrders.add(value)
 
                   previousPageIndexes.add(bottomNavbarIndexNotifier.value);

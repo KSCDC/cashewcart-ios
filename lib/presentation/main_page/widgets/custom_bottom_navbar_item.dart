@@ -18,7 +18,7 @@ class CustomBottomNavbarItem extends StatelessWidget {
           onPressed: () {
             // previousPageIndex = index;
 
-            if (bottomNavbarIndexNotifier.value < 3) {
+            if (bottomNavbarIndexNotifier.value < 4) {
               previousPageIndexes.add(index);
             } else {
               print("Adding");
