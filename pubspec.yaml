@@ -30,20 +30,23 @@ environment:
 dependencies:
   cupertino_icons: ^1.0.2
   debouncer_widget: ^1.0.0
+  dio: ^5.4.1
   easy_image_viewer: ^1.4.0
   flutter:
     sdk: flutter
-
   flutter_svg: ^2.0.9
+  get: ^4.6.6
   persistent_bottom_nav_bar: ^5.0.2
+  shared_preferences: ^2.2.2
   smooth_page_indicator: ^1.1.0
   timeline_tile: ^2.0.0
+  validatorless: ^1.2.3
 
 dev_dependencies:
+  flutter_launcher_icons: ^0.13.1
   flutter_lints: ^2.0.0
   flutter_test:
     sdk: flutter
-  flutter_launcher_icons: ^0.13.1
 
 flutter_icons:
   android: true
@@ -124,13 +127,17 @@ flutter:
 
     - lib/core/assets/images/product_images/Plain Cashew/Plain cashew (B).png
     - lib/core/assets/images/product_images/Plain Cashew/Plain Cashew (F).png
-    - lib/core/assets/images/product_images/Plain Cashew/Plain cashew (B) bgwhite.png
-    - lib/core/assets/images/product_images/Plain Cashew/Plain Cashew (F) bgwhite.png
-    - lib/core/assets/images/product_images/Plain Cashew/Plain Cashew (F) nobg.png
+    - lib/core/assets/images/product_images/Plain Cashew/Plain cashew (B)
+      bgwhite.png
+    - lib/core/assets/images/product_images/Plain Cashew/Plain Cashew (F)
+      bgwhite.png
+    - lib/core/assets/images/product_images/Plain Cashew/Plain Cashew (F)
+      nobg.png
 
     - lib/core/assets/images/product_images/Roasted and Salted Cashew/Roasted
       and salted Cashew.png
-    - lib/core/assets/images/product_images/Roasted and Salted Cashew/Roasted and salted Cashew bgwhite.png
+    - lib/core/assets/images/product_images/Roasted and Salted Cashew/Roasted
+      and salted Cashew bgwhite.png
 
     - lib/core/assets/images/product_images/Salt and Pepper/Salt and Pepper.jpg
 

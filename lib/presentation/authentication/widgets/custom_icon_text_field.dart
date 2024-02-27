@@ -7,12 +7,14 @@ class CustomIconTextField extends StatelessWidget {
     required this.hintText,
     required this.controller,
     this.keyboardType = TextInputType.text,
+    this.validator,
     super.key,
   });
   final IconData icon;
   final String hintText;
   final TextEditingController controller;
   final TextInputType keyboardType;
+  final String? Function(String?)? validator;
 
   @override
   Widget build(BuildContext context) {
@@ -40,16 +42,19 @@ class CustomIconTextField extends StatelessWidget {
           focusedBorder: const OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(10)),
             borderSide: BorderSide(
+              color: Color(0xffA8A8A9),
               width: 1,
             ),
           ),
-          errorBorder: const OutlineInputBorder(
-            borderSide: BorderSide(
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(
               color: Colors.red,
-              width: 2,
+              width: 1,
             ),
           ),
         ),
+        validator: validator,
       ),
     );
   }

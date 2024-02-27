@@ -4,6 +4,9 @@ const Widget kWidth = SizedBox(width: 10);
 const Widget kHeight = SizedBox(height: 10);
 const Widget kProfileScreenGap = SizedBox(height: 20);
 
+const String ACCESSTOKEN = "accessToken";
+const String REFRESHTOKEN = "refreshToken";
+
 enum LoginWith {
   google,
   apple,
