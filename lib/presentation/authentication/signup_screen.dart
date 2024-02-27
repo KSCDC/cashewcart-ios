@@ -74,37 +74,48 @@ class SignUpScreen extends StatelessWidget {
                               hintText: "Username",
                               controller: usernameController,
                               keyboardType: TextInputType.name,
-                              validator: Validatorless.multiple([
-                                Validatorless.required('Name is required'),
-                                Validatorless.min(3, 'Username must be at least 3 characters'),
-                              ]),
+                              validator: Validatorless.multiple(
+                                [
+                                  Validatorless.required('Name is required'),
+                                  Validatorless.min(3, 'Username must be at least 3 characters'),
+                                ],
+                              ),
                             ),
                             CustomIconTextField(
                               icon: Icons.mail_outline,
                               hintText: "Email",
                               controller: emailController,
                               keyboardType: TextInputType.emailAddress,
-                              validator: Validatorless.multiple([Validatorless.required('Email is required'), Validatorless.email("Invalid Email")]),
+                              validator: Validatorless.multiple(
+                                [
+                                  Validatorless.required('Email is required'),
+                                  Validatorless.email("Invalid Email"),
+                                ],
+                              ),
                             ),
                             CustomIconTextField(
                               icon: Icons.phone_outlined,
                               hintText: "Phone",
                               controller: phoneNumberController,
                               keyboardType: TextInputType.phone,
-                              validator: Validatorless.multiple([
-                                Validatorless.required('Phone number is required'),
-                                Validatorless.number('Invalid Phone number'),
-                                Validatorless.min(10, 'Invalid Phone number'),
-                                Validatorless.max(10, 'Invalid Phone number'),
-                              ]),
+                              validator: Validatorless.multiple(
+                                [
+                                  Validatorless.required('Phone number is required'),
+                                  Validatorless.number('Invalid Phone number'),
+                                  Validatorless.min(10, 'Invalid Phone number'),
+                                  Validatorless.max(10, 'Invalid Phone number'),
+                                ],
+                              ),
                             ),
                             CustomPasswordTextField(
                               hintText: "Password",
                               controller: passwordController,
-                              validator: Validatorless.multiple([
-                                Validatorless.required('Password is required'),
-                                Validatorless.min(6, 'Password must contain atleast 6 characters'),
-                              ]),
+                              validator: Validatorless.multiple(
+                                [
+                                  Validatorless.required('Password is required'),
+                                  Validatorless.min(6, 'Password must contain atleast 6 characters'),
+                                ],
+                              ),
                             ),
                             CustomPasswordTextField(
                               hintText: "Confirm  Password",

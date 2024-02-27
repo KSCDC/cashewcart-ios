@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:internship_sample/core/constants.dart';
@@ -14,8 +16,26 @@ class AppController extends GetxController {
     if (response == null) {
       isLoading.value = false;
     } else {
-      final accessToken = response['token']['access'];
-      final refreshToken = response['token']['refresh'];
+      final accessToken = response.data['token']['access'];
+      final refreshToken = response.data['token']['refresh'];
+      print("access token :$accessToken\nrefresh token :$refreshToken");
+      SharedPreferences sharedPref = await SharedPreferences.getInstance();
+      sharedPref.setString(ACCESSTOKEN, accessToken);
+      sharedPref.setString(REFRESHTOKEN, refreshToken);
+      isLoading.value = false;
+      Get.to(() => MainPageScreen());
+    }
+  }
+
+  loginUser(BuildContext context, String email, String pasword) async {
+    isLoading.value = true;
+    final response = await ApiServices().loginUser(context, email, pasword);
+    if (response == null) {
+      isLoading.value = false;
+    } else {
+      log(response.data.toString());
+      final accessToken = response.data['token']['access'];
+      final refreshToken = response.data['token']['refresh'];
       print("access token :$accessToken\nrefresh token :$refreshToken");
       SharedPreferences sharedPref = await SharedPreferences.getInstance();
       sharedPref.setString(ACCESSTOKEN, accessToken);

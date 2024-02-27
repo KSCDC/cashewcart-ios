@@ -14,7 +14,7 @@ class ApiServices {
   get endpoint => null;
 
   registerUser(BuildContext context, String name, String email, String phoneNumber, String pasword) async {
-    final Map<String, dynamic> postData = {
+    final Map<String, dynamic> formData = {
       "name": name,
       "email": email,
       "phone_number": phoneNumber,
@@ -27,32 +27,69 @@ class ApiServices {
 
       final response = await dio.post(
         "$baseUrl${ApiEndPoints.registerUser}",
-        data: postData,
+        data: formData,
         options: Options(
           contentType: Headers.jsonContentType,
         ),
       );
 
-      if (response.statusCode == 201) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         print("Registration successful");
         Services().showCustomSnackBar(context, "Account created successfully");
         return response;
-        
       } else {
         print("Unexpected status code: ${response.statusCode}");
         return null;
       }
     } on DioException catch (e) {
       final errorData = e.response!.data['errors'];
-      print("Error :$e");
+      // print("Error :$e");
       print("Error: ${errorData}");
       if (errorData['phone_number'] != null) {
-        print(errorData['phone_number'][0]);
+        // print(errorData['phone_number'][0]);
         Services().showCustomSnackBar(context, errorData['phone_number'][0]);
       }
       if (errorData['email'] != null) {
-        print(errorData['email'][0]);
+        // print(errorData['email'][0]);
         Services().showCustomSnackBar(context, errorData['email'][0]);
+      }
+      return null;
+    }
+  }
+
+  loginUser(BuildContext context, String email, String pasword) async {
+    final Map<String, dynamic> formData = {
+      "email": email,
+      "password": pasword,
+    };
+
+    try {
+      final dio = Dio();
+
+      final response = await dio.post(
+        "$baseUrl${ApiEndPoints.loginUser}",
+        data: formData,
+        options: Options(
+          contentType: Headers.jsonContentType,
+        ),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        print("Login successful");
+        Services().showCustomSnackBar(context, "Login successful");
+        
+        return response;
+      } else {
+        print("Unexpected status code: ${response.statusCode}");
+        return null;
+      }
+    } on DioException catch (e) {
+      final errorData = e.response!.data['errors'];
+      // print("Error :$e");
+      print("Error: ${errorData}");
+      if (errorData['non_field_errors'] != null) {
+        print(errorData['non_field_errors'][0]);
+        Services().showCustomSnackBar(context, errorData['non_field_errors'][0]);
       }
       return null;
     }
