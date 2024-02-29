@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -77,7 +78,7 @@ class ApiServices {
       if (response.statusCode == 200 || response.statusCode == 201) {
         print("Login successful");
         Services().showCustomSnackBar(context, "Login successful");
-        
+
         return response;
       } else {
         print("Unexpected status code: ${response.statusCode}");
@@ -91,6 +92,86 @@ class ApiServices {
         print(errorData['non_field_errors'][0]);
         Services().showCustomSnackBar(context, errorData['non_field_errors'][0]);
       }
+      return null;
+    }
+  }
+
+  getAllProducts() async {
+    try {
+      final dio = Dio();
+
+      final response = await dio.get(
+        "$baseUrl${ApiEndPoints.getAllProducts}",
+        options: Options(
+          contentType: Headers.jsonContentType,
+        ),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        log(response.data.toString());
+        return response;
+      } else {
+        print("Unexpected status code: ${response.statusCode}");
+        return null;
+      }
+    } on DioException catch (e) {
+      print("Error :$e");
+
+      return null;
+    }
+  }
+
+  getProductByCategory(String category) async {
+    final params = <String, dynamic>{
+      "product__category__parent__name": category,
+    };
+
+    try {
+      final dio = Dio();
+
+      final response = await dio.get(
+        "$baseUrl${ApiEndPoints.filterProduct}",
+        queryParameters: params,
+        options: Options(
+          contentType: Headers.jsonContentType,
+        ),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        // log(response.data.toString());
+        return response;
+      } else {
+        print("Unexpected status code: ${response.statusCode}");
+        return null;
+      }
+    } on DioException catch (e) {
+      print("Error :$e");
+
+      return null;
+    }
+  }
+
+  getProductDetails(String id) async {
+    try {
+      final dio = Dio();
+
+      final response = await dio.get(
+        "$baseUrl${ApiEndPoints.getProductDetails}$id",
+        options: Options(
+          contentType: Headers.jsonContentType,
+        ),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        log(response.data.toString());
+        return response;
+      } else {
+        print("Unexpected status code: ${response.statusCode}");
+        return null;
+      }
+    } on DioException catch (e) {
+      print("Error :$e");
+
       return null;
     }
   }

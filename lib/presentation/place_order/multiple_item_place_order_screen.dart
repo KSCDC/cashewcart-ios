@@ -40,7 +40,8 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
                   Container(
                     child: ListView.builder(
                       itemBuilder: (context, index) {
-                        final int selectedCategory = productList[index]['category'];
+                        final int selectedCategory =
+                            productList[index]['category'];
                         // final String price = cartProductsList[index]['product']['category'][selectedCategory]['offerPrice'];
                         final int count = productList[index]['count'];
 
@@ -49,9 +50,13 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
                             kHeight,
                             if (count != 0)
                               PlaceOrderItemWidget(
-                                imagePath: productList[index]['product']['imagePath'][0],
-                                productName: productList[index]['product']['name'],
-                                productDescription: productList[index]['product']['category'][selectedCategory]['description'],
+                                imagePath: productList[index]['product']
+                                    ['imagePath'][0],
+                                productName: productList[index]['product']
+                                    ['name'],
+                                productDescription: productList[index]
+                                        ['product']['category']
+                                    [selectedCategory]['description'],
                                 count: count,
                               ),
                             Divider(
@@ -70,20 +75,25 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
 
                   kHeight,
 
-                  if (deliveryAddressControllers.isEmpty) CustomTextWidget(text: "No saved addresses!") else AddressSection(screenSize: screenSize),
+                  if (deliveryAddressControllers.isEmpty)
+                    CustomTextWidget(text: "No saved addresses!")
+                  else
+                    AddressSection(screenSize: screenSize),
 
                   SizedBox(height: 5),
 
                   // add new address button
                   CustomTextIconButton(
                     onPressed: () async {
-                      TextEditingController _newAddressController = TextEditingController();
+                      TextEditingController _newAddressController =
+                          TextEditingController();
 
                       await showDialog(
                         context: context,
                         builder: (BuildContext context) {
                           return Dialog(
-                            insetAnimationDuration: Duration(milliseconds: 1000),
+                            insetAnimationDuration:
+                                Duration(milliseconds: 1000),
                             child: Container(
                               decoration: BoxDecoration(
                                 color: Colors.white,
@@ -97,11 +107,13 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     kHeight,
-                                    CustomTextWidget(text: "Enter new address here"),
+                                    CustomTextWidget(
+                                        text: "Enter new address here"),
                                     SizedBox(height: 5),
                                     TextField(
                                       controller: _newAddressController,
-                                      maxLines: 4, // Set to null for an unlimited number of lines
+                                      maxLines:
+                                          4, // Set to null for an unlimited number of lines
                                       decoration: InputDecoration(
                                         border: OutlineInputBorder(),
                                       ),
@@ -109,7 +121,8 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
                                     SizedBox(height: 20),
                                     GestureDetector(
                                       onTap: () {
-                                        deliveryAddressControllers.add(_newAddressController);
+                                        deliveryAddressControllers
+                                            .add(_newAddressController);
                                         Navigator.of(context).pop();
                                       },
                                       child: CustomElevatedButton(
@@ -159,8 +172,10 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
                   Container(
                     child: ListView.builder(
                       itemBuilder: (context, index) {
-                        final int selectedCategory = productList[index]['category'];
-                        final String price = productList[index]['product']['category'][selectedCategory]['offerPrice'];
+                        final int selectedCategory =
+                            productList[index]['category'];
+                        final String price = productList[index]['product']
+                            ['category'][selectedCategory]['offerPrice'];
                         final int count = productList[index]['count'];
                         final double total = double.parse(price) * count;
                         // grantTotalNotifier.value = grantTotalNotifier.value + total;
@@ -348,7 +363,8 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
     log("grand total fn");
     for (int i = 0; i < cartProductsList.length; i++) {
       final int selectedCategory = cartProductsList[i]['category'];
-      final String price = cartProductsList[i]['product']['category'][selectedCategory]['offerPrice'];
+      final String price = cartProductsList[i]['product']['category']
+          [selectedCategory]['offerPrice'];
       final int count = cartProductsList[i]['count'];
       final double total = double.parse(price) * count;
       print("prices are ${price} * ${count}== ${total}");

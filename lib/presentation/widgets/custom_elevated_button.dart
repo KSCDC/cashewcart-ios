@@ -5,7 +5,8 @@ import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 class CustomElevatedButton extends StatelessWidget {
   const CustomElevatedButton({
     super.key,
-    required this.label, this.fontSize = 20,
+    required this.label,
+    this.fontSize = 20,
   });
 
   final String label;

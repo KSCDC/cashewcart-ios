@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:internship_sample/controllers/app_controller.dart';
 import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/main.dart';
@@ -14,10 +16,26 @@ import 'package:internship_sample/presentation/widgets/products_list_item_tile.d
 import 'package:internship_sample/presentation/widgets/search_section_tile.dart';
 
 class CategoriesScreen extends StatelessWidget {
-  const CategoriesScreen({super.key});
+  CategoriesScreen({super.key});
+
+  AppController controller = Get.put(AppController());
 
   @override
   Widget build(BuildContext context) {
+    if (!controller.isAlreadyLoadedPlainCashews) {
+      controller.getProductsByCategory("Plain Cashews");
+    }
+    if (!controller.isAlreadyLoadedRoastedAndSaltedCashews) {
+      controller.getProductsByCategory("Roasted and salted");
+    }
+    if (!controller.isAlreadyLoadedValueAdded) {
+      controller.getProductsByCategory("Value Added");
+    }
+    if (!controller.isAlreadyLoadedAllProducts) {
+      controller.getAllProducts();
+    }
+
+    controller.getAllProducts();
     return Scaffold(
       backgroundColor: appBackgroundColor,
       appBar: MainAppBar(),
@@ -33,43 +51,50 @@ class CategoriesScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: CustomTextWidget(
-                text: "PLANE CASHEWS\nPremium Grade ",
+                text: "PLAIN CASHEWS\nPremium Grade ",
                 fontSize: 18,
                 fontweight: FontWeight.w600,
               ),
             ),
             Container(
               height: 250,
-              child: ListView.builder(
-                itemBuilder: (context, index) {
-                  // log("details :${cashewsPlaneList[index]['category'][0]}");
-                  log("description :${cashewsPlaneList[index]['category'][0]['description']}");
-                  log("ofprice :${cashewsPlaneList[index]['category'][0]['offerPrice']}");
-                  log("name :${cashewsPlaneList[index]['name']}");
-                  log("length :${cashewsPlaneList.length}");
-                  // log("details :${cashewsPlaneList[index]['category'][0]}");
-                  // log("details :${cashewsPlaneList[index]['category'][0]}");
-                  return GestureDetector(
-                    onTap: () async {
-                      selectedProductDetails = await cashewsPlaneList[index];
-                      previousPageIndexes.add(bottomNavbarIndexNotifier.value);
-                      bottomNavbarIndexNotifier.value = 4;
+              child: Obx(
+                () {
+                  if (controller.plainCashews.value.count != 0) {
+                    return controller.isPlainCashewLoading.value
+                        ? Center(
+                            child: CircularProgressIndicator(),
+                          )
+                        : ListView.builder(
+                            itemBuilder: (context, index) {
+                              final productDetails = controller.plainCashews.value.results[index];
 
-                      // Navigator.of(context).push(
-                      //   MaterialPageRoute(
-                      //     builder: (context) => ShopScreen(
-                      //       productDetails: cashewsPlaneList[index],
-                      //     ),
-                      //   ),
-                      // );
-                    },
-                    child: ProductsListItemTile(
-                      productDetails: cashewsPlaneList[index],
-                    ),
-                  );
+                              return GestureDetector(
+                                onTap: () async {
+                                  final String productId = controller.plainCashews.value.results[index].product.id.toString();
+                                  // final currentCategoryProducts = controller.plainCashews.value;
+                                  controller.getSimilarProducts(controller.plainCashews.value, index);
+                                  await controller.getProductDetails(productId);
+                                  selectedProductDetails = controller.productDetails.value;
+                                  print(selectedProductDetails!.name);
+
+                                  previousPageIndexes.add(bottomNavbarIndexNotifier.value);
+                                  bottomNavbarIndexNotifier.value = 4;
+                                },
+                                child: ProductsListItemTile(
+                                  productDetails: productDetails,
+                                ),
+                              );
+                            },
+                            itemCount: controller.plainCashews.value.count,
+                            scrollDirection: Axis.horizontal,
+                          );
+                  } else {
+                    return Center(
+                      child: CustomTextWidget(text: "Plain cashews products not available right now."),
+                    );
+                  }
                 },
-                itemCount: cashewsPlaneList.length,
-                scrollDirection: Axis.horizontal,
               ),
             ),
             SizedBox(height: 20),
@@ -83,21 +108,44 @@ class CategoriesScreen extends StatelessWidget {
             ),
             Container(
               height: 250,
-              child: ListView.builder(
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () async {
-                      selectedProductDetails = await roastedCashewsList[index];
-                      previousPageIndexes.add(bottomNavbarIndexNotifier.value);
-                      bottomNavbarIndexNotifier.value = 4;
-                    },
-                    child: ProductsListItemTile(
-                      productDetails: roastedCashewsList[index],
-                    ),
-                  );
+              child: Obx(
+                () {
+                  if (controller.roastedAndSalted.value.count != 0) {
+                    return controller.isRoastedAndSaltedLoading.value
+                        ? Center(
+                            child: CircularProgressIndicator(),
+                          )
+                        : ListView.builder(
+                            itemBuilder: (context, index) {
+                              final productDetails = controller.roastedAndSalted.value.results[index];
+
+                              return GestureDetector(
+                                onTap: () async {
+                                  final String productId = controller.roastedAndSalted.value.results[index].product.id.toString();
+                                  print("Product id ::::::: $productId");
+                                  // currentCategoryProducts = controller.roastedAndSalted.value;
+                                  controller.getSimilarProducts(controller.roastedAndSalted.value, index);
+                                  await controller.getProductDetails(productId);
+                                  selectedProductDetails = controller.productDetails.value;
+                                  print(selectedProductDetails!.name);
+
+                                  previousPageIndexes.add(bottomNavbarIndexNotifier.value);
+                                  bottomNavbarIndexNotifier.value = 4;
+                                },
+                                child: ProductsListItemTile(
+                                  productDetails: productDetails,
+                                ),
+                              );
+                            },
+                            itemCount: controller.roastedAndSalted.value.count,
+                            scrollDirection: Axis.horizontal,
+                          );
+                  } else {
+                    return Center(
+                      child: CustomTextWidget(text: "Roasted and salted products not available right now."),
+                    );
+                  }
                 },
-                itemCount: roastedCashewsList.length,
-                scrollDirection: Axis.horizontal,
               ),
             ),
             SizedBox(height: 20),
@@ -111,28 +159,42 @@ class CategoriesScreen extends StatelessWidget {
             ),
             Container(
               height: 250,
-              child: ListView.builder(
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () async {
-                      // Navigator.of(context).push(
-                      //   MaterialPageRoute(
-                      //     builder: (context) => ShopScreen(
-                      //       productDetails: valueAddedProducts[index],
-                      //     ),
-                      //   ),
-                      // );
-                      selectedProductDetails = await valueAddedProducts[index];
-                      previousPageIndexes.add(bottomNavbarIndexNotifier.value);
-                      bottomNavbarIndexNotifier.value = 4;
-                    },
-                    child: ProductsListItemTile(
-                      productDetails: valueAddedProducts[index],
-                    ),
-                  );
+              child: Obx(
+                () {
+                  if (controller.valueAdded.value.count != 0) {
+                    return controller.isValueAddedLoading.value
+                        ? Center(
+                            child: CircularProgressIndicator(),
+                          )
+                        : ListView.builder(
+                            itemBuilder: (context, index) {
+                              final productDetails = controller.valueAdded.value.results[index];
+
+                              return GestureDetector(
+                                onTap: () async {
+                                  final String productId = controller.valueAdded.value.results[index].product.id.toString();
+                                  // currentCategoryProducts = controller.roastedAndSalted.value;
+                                  await controller.getProductDetails(productId);
+                                  selectedProductDetails = controller.productDetails.value;
+                                  print(selectedProductDetails!.name);
+
+                                  previousPageIndexes.add(bottomNavbarIndexNotifier.value);
+                                  bottomNavbarIndexNotifier.value = 4;
+                                },
+                                child: ProductsListItemTile(
+                                  productDetails: productDetails,
+                                ),
+                              );
+                            },
+                            itemCount: controller.valueAdded.value.count,
+                            scrollDirection: Axis.horizontal,
+                          );
+                  } else {
+                    return Center(
+                      child: CustomTextWidget(text: "Value added products not available right now."),
+                    );
+                  }
                 },
-                itemCount: valueAddedProducts.length,
-                scrollDirection: Axis.horizontal,
               ),
             ),
             SizedBox(height: 20),
@@ -146,28 +208,34 @@ class CategoriesScreen extends StatelessWidget {
             ),
             Container(
               height: 250,
-              child: ListView.builder(
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () async {
-                      // Navigator.of(context).push(
-                      //   MaterialPageRoute(
-                      //     builder: (context) => ShopScreen(
-                      //       productDetails: valueAddedProducts[index],
-                      //     ),
-                      //   ),
-                      // );
-                      selectedProductDetails = await allFeaturedProductsList[index];
-                      previousPageIndexes.add(bottomNavbarIndexNotifier.value);
-                      bottomNavbarIndexNotifier.value = 4;
-                    },
-                    child: ProductsListItemTile(
-                      productDetails: allFeaturedProductsList[index],
-                    ),
-                  );
-                },
-                itemCount: allFeaturedProductsList.length,
-                scrollDirection: Axis.horizontal,
+              child: Obx(
+                () => controller.isAllProductsLoading.value
+                    ? Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : ListView.builder(
+                        itemBuilder: (context, index) {
+                          final productDetails = controller.allProducts.value.results[index];
+
+                          return GestureDetector(
+                            onTap: () async {
+                              final String productId = controller.allProducts.value.results[index].product.id.toString();
+
+                              await controller.getProductDetails(productId);
+                              selectedProductDetails = controller.productDetails.value;
+                              print(selectedProductDetails!.name);
+
+                              previousPageIndexes.add(bottomNavbarIndexNotifier.value);
+                              bottomNavbarIndexNotifier.value = 4;
+                            },
+                            child: ProductsListItemTile(
+                              productDetails: productDetails,
+                            ),
+                          );
+                        },
+                        itemCount: controller.allProducts.value.count,
+                        scrollDirection: Axis.horizontal,
+                      ),
               ),
             ),
           ],

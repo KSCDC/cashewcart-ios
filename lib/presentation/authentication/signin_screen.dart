@@ -11,6 +11,7 @@ import 'package:internship_sample/presentation/authentication/widgets/custom_pas
 import 'package:internship_sample/presentation/main_page/main_page_screen.dart';
 import 'package:internship_sample/presentation/widgets/custom_elevated_button.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
+import 'package:internship_sample/services/api_services.dart';
 import 'package:validatorless/validatorless.dart';
 
 class SignInScreen extends StatelessWidget {
@@ -86,7 +87,7 @@ class SignInScreen extends StatelessWidget {
                   child: GestureDetector(
                     onTap: () {
                       if (_formKey.currentState!.validate()) {
-                        print("Trying to register user");
+                        print("Trying to login user");
                         controller.loginUser(context, emailController.text, passwordController.text);
                       }
                     },

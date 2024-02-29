@@ -79,7 +79,8 @@ class SlideItem extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: GestureDetector(
         onTap: () {
-          showImageViewer(context, AssetImage(imagePath), swipeDismissible: true, doubleTapZoomable: true);
+          showImageViewer(context, AssetImage(imagePath),
+              swipeDismissible: true, doubleTapZoomable: true);
         },
         child: Container(
           width: screenSize.width * 0.9,

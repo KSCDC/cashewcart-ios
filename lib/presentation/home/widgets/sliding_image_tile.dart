@@ -64,7 +64,8 @@ class SlidingImageTile extends StatelessWidget {
                   onPressed: () {},
                   style: TextButton.styleFrom(
                     foregroundColor: kMainThemeColor.withOpacity(0.6),
-                    side: BorderSide(width: 1, color: kMainThemeColor.withOpacity(0.6)),
+                    side: BorderSide(
+                        width: 1, color: kMainThemeColor.withOpacity(0.6)),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(6),
                     ),

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:internship_sample/controllers/app_controller.dart';
 import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/main.dart';
@@ -10,6 +12,8 @@ import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 class ExpandableProductsSideBarItem extends StatelessWidget {
   ExpandableProductsSideBarItem({super.key});
   ValueNotifier<bool> expandNotifier = ValueNotifier(false);
+
+  AppController controller = Get.put(AppController());
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -58,7 +62,7 @@ class ExpandableProductsSideBarItem extends StatelessWidget {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          productDisplayList = cashewsPlaneList;
+                          controller.productDisplayList = controller.plainCashews;
                           previousPageIndexes.add(0);
 
                           bottomNavbarIndexNotifier.value = 5;
@@ -68,7 +72,7 @@ class ExpandableProductsSideBarItem extends StatelessWidget {
                       ),
                       GestureDetector(
                         onTap: () {
-                          productDisplayList = roastedCashewsList;
+                          controller.productDisplayList  = controller.roastedAndSalted;
                           previousPageIndexes.add(0);
                           bottomNavbarIndexNotifier.value = 7;
                           Navigator.of(context).pop();
@@ -77,7 +81,7 @@ class ExpandableProductsSideBarItem extends StatelessWidget {
                       ),
                       GestureDetector(
                         onTap: () {
-                          productDisplayList = valueAddedProducts;
+                          controller.productDisplayList  = controller.valueAdded;
                           previousPageIndexes.add(0);
                           bottomNavbarIndexNotifier.value = 8;
                           Navigator.of(context).pop();

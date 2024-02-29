@@ -28,7 +28,7 @@ class _CartScreenState extends State<CartScreen> {
     double grandTotal = getGrandTotal();
     final screenSize = MediaQuery.of(context).size;
     grantTotalNotifier.value = 0;
-    
+
     print("building");
     return Scaffold(
       backgroundColor: appBackgroundColor,
@@ -105,7 +105,8 @@ class _CartScreenState extends State<CartScreen> {
                   onTap: () {
                     if (grandTotal <= 500) {
                       const snackBar = SnackBar(
-                        content: Text('Minimum order amount is Rs 500 and above'),
+                        content:
+                            Text('Minimum order amount is Rs 500 and above'),
                         behavior: SnackBarBehavior.floating,
                         margin: EdgeInsets.all(10),
                         padding: EdgeInsets.all(20),
@@ -114,7 +115,8 @@ class _CartScreenState extends State<CartScreen> {
                     } else {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => MultipleItemPlaceOrderScreen(productList: cartProductsList),
+                          builder: (context) => MultipleItemPlaceOrderScreen(
+                              productList: cartProductsList),
                         ),
                       );
                     }
@@ -136,7 +138,8 @@ class _CartScreenState extends State<CartScreen> {
     log("grand total fn");
     for (int i = 0; i < cartProductsList.length; i++) {
       final int selectedCategory = cartProductsList[i]['category'];
-      final String price = cartProductsList[i]['product']['category'][selectedCategory]['offerPrice'];
+      final String price = cartProductsList[i]['product']['category']
+          [selectedCategory]['offerPrice'];
       final int count = cartProductsList[i]['count'];
       final double total = double.parse(price) * count;
       print("prices are ${price} * ${count}== ${total}");

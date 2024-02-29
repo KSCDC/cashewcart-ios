@@ -48,7 +48,8 @@ class ForgotPasswordScreen extends StatelessWidget {
                     SizedBox(
                       width: screenSize.width * 0.7,
                       child: const CustomTextWidget(
-                        text: "We will send you a message to set or reset your new password ",
+                        text:
+                            "We will send you a message to set or reset your new password ",
                         fontSize: 12,
                         fontColor: kAuthentificationPageTextColor,
                         fontweight: FontWeight.w400,

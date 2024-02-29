@@ -4,7 +4,12 @@ import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_n
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 
 class CustomBottomNavbarItem extends StatelessWidget {
-  const CustomBottomNavbarItem({super.key, required this.iconWidget, required this.label, required this.index, required this.color});
+  const CustomBottomNavbarItem(
+      {super.key,
+      required this.iconWidget,
+      required this.label,
+      required this.index,
+      required this.color});
   final Widget iconWidget;
   final String label;
   final int index;

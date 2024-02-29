@@ -6,11 +6,10 @@ class AuthenticationPageTitle extends StatelessWidget {
   AuthenticationPageTitle({
     super.key,
     required this.heading,
-    
   });
   TextEditingController usernameOrEmailController = TextEditingController();
   final String heading;
-  
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -20,7 +19,6 @@ class AuthenticationPageTitle extends StatelessWidget {
           fontSize: 36,
           fontweight: FontWeight.w700,
         ),
-        
       ],
     );
   }

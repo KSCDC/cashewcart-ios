@@ -104,7 +104,8 @@ class CheckoutScreen extends StatelessWidget {
                           height: screenSize.width * 0.65,
                           child: Column(
                             children: [
-                              SvgPicture.asset("lib/core/assets/images/other/payment_success.svg"),
+                              SvgPicture.asset(
+                                  "lib/core/assets/images/other/payment_success.svg"),
                               CustomTextWidget(
                                 text: "Payment done successfully.",
                                 fontweight: FontWeight.w600,

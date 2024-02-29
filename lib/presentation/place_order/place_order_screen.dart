@@ -30,14 +30,17 @@ class PlaceOrderScreen extends StatelessWidget {
     required this.productDetails,
   });
   final productDetails;
-  TextEditingController _textEditingController = TextEditingController(text: "216 St Paul's Rd, London N1 2LL, UK, \nContact :  +44-784232 ");
+  TextEditingController _textEditingController = TextEditingController(
+      text: "216 St Paul's Rd, London N1 2LL, UK, \nContact :  +44-784232 ");
   @override
   Widget build(BuildContext context) {
     final int category = productDetails['category'];
     final String imagePath = productDetails['product']['imagePath'][0];
     final String name = productDetails['product']['name'];
-    final String description = productDetails['product']['category'][category]['description'];
-    final String price = productDetails['product']['category'][category]['offerPrice'];
+    final String description =
+        productDetails['product']['category'][category]['description'];
+    final String price =
+        productDetails['product']['category'][category]['offerPrice'];
     // final String rating = productDetails['product']['category'][category]['rating'];
     // final String weight = productDetails['product']['category'][category]['weight'];
 
@@ -105,13 +108,15 @@ class PlaceOrderScreen extends StatelessWidget {
                                   valueListenable: productCountNotifier,
                                   builder: (context, newCount, _) {
                                     productDetails['count'] = newCount;
-                                    return CustomTextWidget(text: "Nos : ${newCount}");
+                                    return CustomTextWidget(
+                                        text: "Nos : ${newCount}");
                                   },
                                 ),
                                 SizedBox(width: 20),
                                 GestureDetector(
                                   onTap: () {
-                                    if (productCountNotifier.value != 1) productCountNotifier.value--;
+                                    if (productCountNotifier.value != 1)
+                                      productCountNotifier.value--;
                                   },
                                   child: Icon(Icons.remove),
                                 ),
@@ -133,20 +138,25 @@ class PlaceOrderScreen extends StatelessWidget {
 
                   //delivery addresses
 
-                  if (deliveryAddressControllers.isEmpty) CustomTextWidget(text: "No saved addresses!") else AddressSection(screenSize: screenSize),
+                  if (deliveryAddressControllers.isEmpty)
+                    CustomTextWidget(text: "No saved addresses!")
+                  else
+                    AddressSection(screenSize: screenSize),
 
                   SizedBox(height: 5),
 
                   // add new address button
                   CustomTextIconButton(
                     onPressed: () async {
-                      TextEditingController _newAddressController = TextEditingController();
+                      TextEditingController _newAddressController =
+                          TextEditingController();
 
                       await showDialog(
                         context: context,
                         builder: (BuildContext context) {
                           return Dialog(
-                            insetAnimationDuration: Duration(milliseconds: 1000),
+                            insetAnimationDuration:
+                                Duration(milliseconds: 1000),
                             child: Container(
                               decoration: BoxDecoration(
                                 color: Colors.white,
@@ -160,11 +170,13 @@ class PlaceOrderScreen extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     kHeight,
-                                    CustomTextWidget(text: "Enter new address here"),
+                                    CustomTextWidget(
+                                        text: "Enter new address here"),
                                     SizedBox(height: 5),
                                     TextField(
                                       controller: _newAddressController,
-                                      maxLines: 4, // Set to null for an unlimited number of lines
+                                      maxLines:
+                                          4, // Set to null for an unlimited number of lines
                                       decoration: InputDecoration(
                                         border: OutlineInputBorder(),
                                       ),
@@ -172,7 +184,8 @@ class PlaceOrderScreen extends StatelessWidget {
                                     SizedBox(height: 20),
                                     GestureDetector(
                                       onTap: () {
-                                        deliveryAddressControllers.add(_newAddressController);
+                                        deliveryAddressControllers
+                                            .add(_newAddressController);
                                         Navigator.of(context).pop();
                                       },
                                       child: CustomElevatedButton(
@@ -338,7 +351,8 @@ class PlaceOrderScreen extends StatelessWidget {
               width: 250,
               child: GestureDetector(
                 onTap: () {
-                  final double total = double.parse(price) * productCountNotifier.value;
+                  final double total =
+                      double.parse(price) * productCountNotifier.value;
                   if (total <= 500) {
                     const snackBar = SnackBar(
                       content: Text('Minimum order amount is Rs 500 and above'),

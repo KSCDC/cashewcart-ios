@@ -60,14 +60,21 @@ class MyOrdersScreen extends StatelessWidget {
                 // color: Colors.white,
                 child: ListView.builder(
                   itemBuilder: (context, index) {
-                    print("values ${productDetailsList1[index]['imagePath'][0]}");
+                    print(
+                        "values ${productDetailsList1[index]['imagePath'][0]}");
                     final int category = recentOrdersListRev[index]['category'];
-                    final String imagePath = recentOrdersListRev[index]['product']['imagePath'][0];
-                    final String name = recentOrdersListRev[index]['product']['name'];
-                    final String description = recentOrdersListRev[index]['product']['category'][category]['description'];
-                    final String price = recentOrdersListRev[index]['product']['category'][category]['offerPrice'];
-                    final String rating = recentOrdersListRev[index]['product']['category'][category]['rating'];
-                    final String weight = recentOrdersListRev[index]['product']['category'][category]['weight'];
+                    final String imagePath =
+                        recentOrdersListRev[index]['product']['imagePath'][0];
+                    final String name =
+                        recentOrdersListRev[index]['product']['name'];
+                    final String description = recentOrdersListRev[index]
+                        ['product']['category'][category]['description'];
+                    final String price = recentOrdersListRev[index]['product']
+                        ['category'][category]['offerPrice'];
+                    final String rating = recentOrdersListRev[index]['product']
+                        ['category'][category]['rating'];
+                    final String weight = recentOrdersListRev[index]['product']
+                        ['category'][category]['weight'];
 
                     final int count = recentOrdersListRev[index]['count'];
                     log("count :$count");

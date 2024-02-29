@@ -24,10 +24,14 @@ class CartProductsListTile extends StatelessWidget {
     final int selectedCategory = productDetails['category'];
     final int count = productDetails['count'];
 
-    final String originalPrice = productDetails['product']['category'][selectedCategory]['originalPrice'];
-    final String offerPrice = productDetails['product']['category'][selectedCategory]['offerPrice'];
-    final String numberOfRatings = productDetails['product']['category'][selectedCategory]['rating'];
-    final String weight = productDetails['product']['category'][selectedCategory]['weight'];
+    final String originalPrice = productDetails['product']['category']
+        [selectedCategory]['originalPrice'];
+    final String offerPrice =
+        productDetails['product']['category'][selectedCategory]['offerPrice'];
+    final String numberOfRatings =
+        productDetails['product']['category'][selectedCategory]['rating'];
+    final String weight =
+        productDetails['product']['category'][selectedCategory]['weight'];
     final screenSize = MediaQuery.of(context).size;
     return Container(
       width: screenSize.width * 0.9,
@@ -124,7 +128,8 @@ class CartProductsListTile extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               CustomTextWidget(
-                                text: "${(double.parse(offerPrice) * 100 / double.parse(originalPrice)).toStringAsFixed(2)}%",
+                                text:
+                                    "${(double.parse(offerPrice) * 100 / double.parse(originalPrice)).toStringAsFixed(2)}%",
                                 fontColor: Color(0xFFFE735C),
                                 fontSize: 10,
                                 fontweight: FontWeight.w400,
@@ -185,7 +190,9 @@ class CartProductsListTile extends StatelessWidget {
                 Container(
                   child: CustomTextIconButton(
                     onPressed: () {
-                      cartCountNotifier.value = (cartCountNotifier.value - productDetails['count']).toInt();
+                      cartCountNotifier.value =
+                          (cartCountNotifier.value - productDetails['count'])
+                              .toInt();
                       cartProductsList.remove(productDetails);
 
                       callSetState();

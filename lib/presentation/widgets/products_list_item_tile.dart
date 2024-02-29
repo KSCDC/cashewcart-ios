@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:internship_sample/core/colors.dart';
+import 'package:internship_sample/models/product_model.dart';
 import 'package:internship_sample/presentation/widgets/custom_star_rating_tile.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 
@@ -11,16 +12,17 @@ class ProductsListItemTile extends StatelessWidget {
     required this.productDetails,
   });
 
-  final productDetails;
+  final Results productDetails;
 
   @override
   Widget build(BuildContext context) {
-    final String imagePath = productDetails['imagePath'][0];
-    final String productName = productDetails['name'];
-    final String description = productDetails['category'][0]['description'];
-    final String originalPrice = productDetails['category'][0]['originalPrice'];
-    final String offerPrice = productDetails['category'][0]['offerPrice'];
-    final String numberOfRatings = productDetails['category'][0]['rating'];
+    // final String imagePath = productDetails.product.productImages[0].productImage ?? "";
+    final String imagePath = "";
+    final String productName = productDetails.product.name;
+    final String description = productDetails.product.description;
+    final String originalPrice = productDetails.actualPrice;
+    final String offerPrice = productDetails.sellingPrice;
+    final String numberOfRatings = "4";
 
     final screenSize = MediaQuery.of(context).size;
     return Container(

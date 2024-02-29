@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
+import 'package:internship_sample/controllers/app_controller.dart';
 import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/main.dart';
+import 'package:internship_sample/models/product_details_model.dart';
+import 'package:internship_sample/models/product_model.dart';
 import 'package:internship_sample/presentation/home/widgets/circle_avatar_list_item.dart';
 import 'package:internship_sample/presentation/home/widgets/buy_now_tile.dart';
 import 'package:internship_sample/presentation/home/widgets/value_added_products_tile.dart';
@@ -18,15 +22,30 @@ import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 import 'package:internship_sample/presentation/widgets/main_appbar.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-var selectedProductDetails;
+ProductDetailsModel? selectedProductDetails;
+
+// ProductModel? currentCategoryProducts;
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
 
-  final controller = PageController();
+  final pageController = PageController();
+  AppController controller = Get.put(AppController());
 
   @override
   Widget build(BuildContext context) {
+    if (!controller.isAlreadyLoadedPlainCashews) {
+      controller.getProductsByCategory("Plain Cashews");
+    }
+    if (!controller.isAlreadyLoadedRoastedAndSaltedCashews) {
+      controller.getProductsByCategory("Roasted and salted");
+    }
+    if (!controller.isAlreadyLoadedValueAdded) {
+      controller.getProductsByCategory("Value Added");
+    }
+    if (!controller.isAlreadyLoadedAllProducts) {
+      controller.getAllProducts();
+    }
     final screenSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: MainAppBar(),
@@ -57,7 +76,7 @@ class HomeScreen extends StatelessWidget {
                 height: 230,
                 width: screenSize.width * 0.9,
                 child: PageView(
-                  controller: controller,
+                  controller: pageController,
                   children: [
                     SlidingImageTile(
                       productDetails: cashewsPlaneList[0],
@@ -74,7 +93,7 @@ class HomeScreen extends StatelessWidget {
               SizedBox(height: 10),
               Center(
                 child: SmoothPageIndicator(
-                  controller: controller,
+                  controller: pageController,
                   count: 3,
                   effect: const WormEffect(
                     dotColor: Color(0xFFDEDBDB),
@@ -84,7 +103,7 @@ class HomeScreen extends StatelessWidget {
                     spacing: 15,
                   ),
                   onDotClicked: (index) {
-                    controller.animateToPage(
+                    pageController.animateToPage(
                       index,
                       duration: const Duration(milliseconds: 500),
                       curve: Curves.easeIn,
@@ -196,7 +215,7 @@ class HomeScreen extends StatelessWidget {
 
               // value added products
 
-              const ValueAddedProductsTile(),
+              ValueAddedProductsTile(),
               const SizedBox(height: 15),
 
               //Sponsered product
@@ -216,28 +235,39 @@ class HomeScreen extends StatelessWidget {
                 fontSize: 18,
                 fontweight: FontWeight.w600,
               ),
-              GridView.count(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                childAspectRatio: (20 / 30),
-                crossAxisCount: 2,
-                mainAxisSpacing: 5,
-                crossAxisSpacing: 5,
-                children: List.generate(allFeaturedProductsList.length, (index) {
-                  return GestureDetector(
-                    onTap: () async {
-                      print("image list ${allFeaturedProductsList[index]['imagePath']}");
+              Obx(() {
+                return controller.isAllProductsLoading.value
+                    ? Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : GridView.count(
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        childAspectRatio: (20 / 30),
+                        crossAxisCount: 2,
+                        mainAxisSpacing: 5,
+                        crossAxisSpacing: 5,
+                        children: List.generate(controller.allProducts.value.count, (index) {
+                          final productDetails = controller.allProducts.value.results[index];
+                          return GestureDetector(
+                            onTap: () async {
+                              final String productId = controller.allProducts.value.results[index].product.id.toString();
 
-                      selectedProductDetails = await allFeaturedProductsList[index];
-                      previousPageIndexes.add(bottomNavbarIndexNotifier.value);
-                      bottomNavbarIndexNotifier.value = 4;
-                    },
-                    child: ProductsListItemTile(
-                      productDetails: allFeaturedProductsList[index],
-                    ),
-                  );
-                }),
-              )
+                              controller.getSimilarProducts(controller.allProducts.value, index);
+                              await controller.getProductDetails(productId);
+                              selectedProductDetails = controller.productDetails.value;
+                              print(selectedProductDetails!.name);
+
+                              previousPageIndexes.add(bottomNavbarIndexNotifier.value);
+                              bottomNavbarIndexNotifier.value = 4;
+                            },
+                            child: ProductsListItemTile(
+                              productDetails: productDetails,
+                            ),
+                          );
+                        }),
+                      );
+              })
             ],
           ),
         ),

@@ -7,7 +7,9 @@ import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 
 ValueNotifier<int> productCountNotifier = ValueNotifier(1);
 ValueNotifier<int> selectedRadioNotifier = ValueNotifier(0);
-List<TextEditingController> deliveryAddressControllers = [TextEditingController(text: "Kochi")];
+List<TextEditingController> deliveryAddressControllers = [
+  TextEditingController(text: "Kochi")
+];
 ValueNotifier<bool> isAddressEditableNotifier = ValueNotifier(false);
 
 class AddressSection extends StatelessWidget {
@@ -103,7 +105,9 @@ class AddressSection extends StatelessWidget {
                                   maxLines: 2,
                                   enabled: value,
                                   decoration: InputDecoration(
-                                    border: value ? OutlineInputBorder() : InputBorder.none,
+                                    border: value
+                                        ? OutlineInputBorder()
+                                        : InputBorder.none,
                                   ),
                                 ),
                               ],

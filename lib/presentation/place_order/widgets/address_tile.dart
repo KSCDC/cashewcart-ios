@@ -9,7 +9,8 @@ class AddressTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController _textEditingController = TextEditingController(text: "216 St Paul's Rd, London N1 2LL, UK, \nContact :  +44-784232 ");
+    TextEditingController _textEditingController = TextEditingController(
+        text: "216 St Paul's Rd, London N1 2LL, UK, \nContact :  +44-784232 ");
     ValueNotifier<bool> isAddressEditableNotifier = ValueNotifier(false);
     final screenSize = MediaQuery.of(context).size;
     return ValueListenableBuilder(
@@ -44,7 +45,8 @@ class AddressTile extends StatelessWidget {
                           maxLines: 2,
                           enabled: value,
                           decoration: InputDecoration(
-                            border: value ? OutlineInputBorder() : InputBorder.none,
+                            border:
+                                value ? OutlineInputBorder() : InputBorder.none,
                           ),
                         ),
                       ],

@@ -7,7 +7,8 @@ class SizeSelectorWidget extends StatelessWidget {
     super.key,
     required this.index,
     required this.fontColor,
-    required this.backgroundColor, required this.label,
+    required this.backgroundColor,
+    required this.label,
   });
   final int index;
   final String label;

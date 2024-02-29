@@ -35,10 +35,10 @@ class ShopProductDetailsTile extends StatelessWidget {
                       text: "Net weight: ",
                       fontweight: FontWeight.w600,
                     ),
-                    for (int i = 0; i < selectedProductDetails['category'].length; i++)
+                    for (int i = 0; i < selectedProductDetails!.productVariants.length; i++)
                       if (value == i)
                         CustomTextWidget(
-                          text: selectedProductDetails['category'][i]['weight'],
+                          text: selectedProductDetails!.productVariants[i].weightInGrams,
                           fontweight: FontWeight.w600,
                         ),
                   ],
@@ -51,10 +51,10 @@ class ShopProductDetailsTile extends StatelessWidget {
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    for (int i = 0; i < selectedProductDetails['category'].length; i++)
+                    for (int i = 0; i < selectedProductDetails!.productVariants.length; i++)
                       SizeSelectorWidget(
                         index: i,
-                        label: selectedProductDetails['category'][i]['weight'],
+                        label: selectedProductDetails!.productVariants[i].weightInGrams,
                         fontColor: sizeSelectNotifier.value == i ? Colors.white : Color(0xFFFA7189),
                         backgroundColor: sizeSelectNotifier.value == i ? Color(0xFFFA7189) : Colors.white,
                       ),
@@ -63,7 +63,7 @@ class ShopProductDetailsTile extends StatelessWidget {
               }),
           SizedBox(height: 10),
           CustomTextWidget(
-            text: selectedProductDetails['name'],
+            text: selectedProductDetails!.name,
             fontSize: 20,
             fontweight: FontWeight.w600,
           ),
@@ -73,7 +73,9 @@ class ShopProductDetailsTile extends StatelessWidget {
               valueListenable: sizeSelectNotifier,
               builder: (context, value, _) {
                 return CustomStarRatingTile(
-                  numberOfRatings: "${selectedProductDetails['category'][value]['rating']}",
+                  numberOfRatings:
+                      // "${selectedProductDetails['category'][value]['rating']}",
+                      "4",
                   iconAndTextSize: 18,
                 );
               }),
@@ -83,7 +85,7 @@ class ShopProductDetailsTile extends StatelessWidget {
                 return Row(
                   children: [
                     Text(
-                      "₹${selectedProductDetails['category'][value]['originalPrice']}",
+                      "₹${selectedProductDetails!.productVariants[value].actualPrice}",
                       style: TextStyle(
                         fontFamily: "Montserrat",
                         fontSize: 14,
@@ -95,14 +97,14 @@ class ShopProductDetailsTile extends StatelessWidget {
                     ),
                     kWidth,
                     CustomTextWidget(
-                      text: "₹${selectedProductDetails['category'][value]['offerPrice']}",
+                      text: "₹${selectedProductDetails!.productVariants[value].sellingPrice}",
                       fontSize: 14,
                       fontweight: FontWeight.w400,
                     ),
                     kWidth,
                     CustomTextWidget(
                       text:
-                          "${(double.parse(selectedProductDetails['category'][value]['offerPrice']) * 100 / double.parse(selectedProductDetails['category'][value]['originalPrice'])).toStringAsFixed(2)}%",
+                          "${(double.parse(selectedProductDetails!.productVariants[value].sellingPrice) * 100 / double.parse(selectedProductDetails!.productVariants[value].actualPrice)).toStringAsFixed(2)}%",
                       fontColor: Color(0xFFFE735C),
                       fontSize: 14,
                       fontweight: FontWeight.w400,
@@ -126,7 +128,7 @@ class ShopProductDetailsTile extends StatelessWidget {
                       valueListenable: sizeSelectNotifier,
                       builder: (context, value, _) {
                         return Text(
-                          selectedProductDetails['category'][value]['description'],
+                          selectedProductDetails!.description,
                           maxLines: readMoreClickNotifier.value ? 10 : 5,
                           overflow: TextOverflow.ellipsis,
                         );
@@ -151,39 +153,38 @@ class ShopProductDetailsTile extends StatelessWidget {
             },
           ),
           ValueListenableBuilder(
-              valueListenable: sizeSelectNotifier,
-              builder: (context, value, _) {
-                bool stock = selectedProductDetails['category'][value]['haveStock'];
-                if (stock != null && stock == false) {
-                  return Center(
-                    child: Container(
-                      height: 40,
-                      width: 110,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.red, // Set the border color
-                          width: 1, // Set the border width
-                        ),
-                        borderRadius: BorderRadius.circular(5),
+            valueListenable: sizeSelectNotifier,
+            builder: (context, value, _) {
+              int stock = selectedProductDetails!.productVariants[value].stockQty;
+              if (stock < 1) {
+                return Center(
+                  child: Container(
+                    height: 40,
+                    width: 110,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.red, // Set the border color
+                        width: 1, // Set the border width
                       ),
-                      child: Center(
-                        child: CustomTextWidget(
-                          text: "Out of stock",
-                          fontColor: Colors.red,
-                        ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Center(
+                      child: CustomTextWidget(
+                        text: "Out of stock",
+                        fontColor: Colors.red,
                       ),
                     ),
-                  );
-                } else
-                  return SizedBox();
-              }),
+                  ),
+                );
+              } else
+                return SizedBox();
+            },
+          ),
           kHeight,
-           Row(
+          Row(
             children: [
               CustomTextIconButton(
-                onPressed: () {
-                  
-                },
+                onPressed: () {},
                 icon: Icons.location_on_outlined,
                 label: "Nearest Store",
                 textAndIconColor: Color(0xFF828282),
@@ -191,9 +192,7 @@ class ShopProductDetailsTile extends StatelessWidget {
               ),
               kWidth,
               CustomTextIconButton(
-                onPressed: () {
-                  
-                },
+                onPressed: () {},
                 icon: Icons.lock_outline_sharp,
                 label: "VIP",
                 textAndIconColor: Color(0xFF828282),
@@ -201,9 +200,7 @@ class ShopProductDetailsTile extends StatelessWidget {
               ),
               kWidth,
               CustomTextIconButton(
-                onPressed: () {
-                  
-                },
+                onPressed: () {},
                 icon: Icons.lock_outline_sharp,
                 label: "Return Policy",
                 textAndIconColor: Color(0xFF828282),

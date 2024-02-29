@@ -77,7 +77,8 @@ class SignUpScreen extends StatelessWidget {
                               validator: Validatorless.multiple(
                                 [
                                   Validatorless.required('Name is required'),
-                                  Validatorless.min(3, 'Username must be at least 3 characters'),
+                                  Validatorless.min(3,
+                                      'Username must be at least 3 characters'),
                                 ],
                               ),
                             ),
@@ -100,7 +101,8 @@ class SignUpScreen extends StatelessWidget {
                               keyboardType: TextInputType.phone,
                               validator: Validatorless.multiple(
                                 [
-                                  Validatorless.required('Phone number is required'),
+                                  Validatorless.required(
+                                      'Phone number is required'),
                                   Validatorless.number('Invalid Phone number'),
                                   Validatorless.min(10, 'Invalid Phone number'),
                                   Validatorless.max(10, 'Invalid Phone number'),
@@ -112,8 +114,10 @@ class SignUpScreen extends StatelessWidget {
                               controller: passwordController,
                               validator: Validatorless.multiple(
                                 [
-                                  Validatorless.required('Password is required'),
-                                  Validatorless.min(6, 'Password must contain atleast 6 characters'),
+                                  Validatorless.required(
+                                      'Password is required'),
+                                  Validatorless.min(6,
+                                      'Password must contain atleast 6 characters'),
                                 ],
                               ),
                             ),
@@ -160,7 +164,8 @@ class SignUpScreen extends StatelessWidget {
                           onTap: () {
                             if (_formKey.currentState!.validate()) {
                               final _password = passwordController.text;
-                              final _confirmPassword = confirmPasswordController.text;
+                              final _confirmPassword =
+                                  confirmPasswordController.text;
                               if (_password != _confirmPassword) {
                                 const snackBar = SnackBar(
                                   content: Text("Passwords doesn't match!"),
@@ -168,7 +173,8 @@ class SignUpScreen extends StatelessWidget {
                                   margin: EdgeInsets.all(10),
                                   padding: EdgeInsets.all(20),
                                 );
-                                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
                               } else {
                                 print("Trying to register user");
                                 controller.registerNewUser(
