@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:internship_sample/core/base_url.dart';
 import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/models/product_model.dart';
 import 'package:internship_sample/presentation/widgets/custom_star_rating_tile.dart';
@@ -16,8 +17,9 @@ class ProductsListItemTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final String imagePath = productDetails.product.productImages[0].productImage ?? "";
-    final String imagePath = "";
+    // print(productDetails.product.productImages[0]['product_image'].toString());
+    // productDetails.product.productImages[0]
+    final String imagePath = "$baseUrl${productDetails.product.productImages[0]['product_image']}";
     final String productName = productDetails.product.name;
     final String description = productDetails.product.description;
     final String originalPrice = productDetails.actualPrice;
@@ -51,7 +53,7 @@ class ProductsListItemTile extends StatelessWidget {
                 width: screenSize.width * 0.4,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage(imagePath),
+                    image: NetworkImage(imagePath),
                     fit: BoxFit.fitHeight,
                   ),
                   borderRadius: BorderRadius.all(

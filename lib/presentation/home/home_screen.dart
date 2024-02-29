@@ -129,21 +129,34 @@ class HomeScreen extends StatelessWidget {
                   ),
                   Container(
                     height: 250,
-                    child: ListView.builder(
-                      itemBuilder: (context, index) {
-                        return GestureDetector(
-                          onTap: () async {
-                            selectedProductDetails = await bestSellersList[index];
-                            previousPageIndexes.add(bottomNavbarIndexNotifier.value);
-                            bottomNavbarIndexNotifier.value = 4;
-                          },
-                          child: ProductsListItemTile(
-                            productDetails: bestSellersList[index],
-                          ),
-                        );
-                      },
-                      itemCount: bestSellersList.length,
-                      scrollDirection: Axis.horizontal,
+                    child: Obx(
+                      () => controller.isAllProductsLoading.value
+                          ? Center(
+                              child: CircularProgressIndicator(),
+                            )
+                          : ListView.builder(
+                              itemBuilder: (context, index) {
+                                final productDetails = controller.allProducts.value.results[index];
+
+                                return GestureDetector(
+                                  onTap: () async {
+                                    final String productId = controller.allProducts.value.results[index].product.id.toString();
+
+                                    await controller.getProductDetails(productId);
+                                    selectedProductDetails = controller.productDetails.value;
+                                    print(selectedProductDetails!.name);
+
+                                    previousPageIndexes.add(bottomNavbarIndexNotifier.value);
+                                    bottomNavbarIndexNotifier.value = 4;
+                                  },
+                                  child: ProductsListItemTile(
+                                    productDetails: productDetails,
+                                  ),
+                                );
+                              },
+                              itemCount: controller.allProducts.value.count,
+                              scrollDirection: Axis.horizontal,
+                            ),
                     ),
                   ),
                 ],
@@ -194,21 +207,34 @@ class HomeScreen extends StatelessWidget {
 
               Container(
                 height: 250,
-                child: ListView.builder(
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () async {
-                        selectedProductDetails = await productDetailsList2[index];
-                        previousPageIndexes.add(bottomNavbarIndexNotifier.value);
-                        bottomNavbarIndexNotifier.value = 4;
-                      },
-                      child: ProductsListItemTile(
-                        productDetails: productDetailsList2[index],
-                      ),
-                    );
-                  },
-                  itemCount: productDetailsList2.length,
-                  scrollDirection: Axis.horizontal,
+                child: Obx(
+                  () => controller.isAllProductsLoading.value
+                      ? Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : ListView.builder(
+                          itemBuilder: (context, index) {
+                            final productDetails = controller.allProducts.value.results[index];
+
+                            return GestureDetector(
+                              onTap: () async {
+                                final String productId = controller.allProducts.value.results[index].product.id.toString();
+
+                                await controller.getProductDetails(productId);
+                                selectedProductDetails = controller.productDetails.value;
+                                print(selectedProductDetails!.name);
+
+                                previousPageIndexes.add(bottomNavbarIndexNotifier.value);
+                                bottomNavbarIndexNotifier.value = 4;
+                              },
+                              child: ProductsListItemTile(
+                                productDetails: productDetails,
+                              ),
+                            );
+                          },
+                          itemCount: controller.allProducts.value.count,
+                          scrollDirection: Axis.horizontal,
+                        ),
                 ),
               ),
               const SizedBox(height: 10),
