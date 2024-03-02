@@ -23,13 +23,13 @@ class CategoriesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (!controller.isAlreadyLoadedPlainCashews) {
-      controller.getProductsByCategory("Plain Cashews");
+      controller.getProductsByCategory("Plain Cashews", "");
     }
     if (!controller.isAlreadyLoadedRoastedAndSaltedCashews) {
-      controller.getProductsByCategory("Roasted and salted");
+      controller.getProductsByCategory("Roasted and salted", "");
     }
     if (!controller.isAlreadyLoadedValueAdded) {
-      controller.getProductsByCategory("Value Added");
+      controller.getProductsByCategory("Value Added", "");
     }
     if (!controller.isAlreadyLoadedAllProducts) {
       controller.getAllProducts();
@@ -51,9 +51,38 @@ class CategoriesScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: CustomTextWidget(
-                text: "PLAIN CASHEWS\nPremium Grade ",
+                text: "PLAIN CASHEWS",
                 fontSize: 18,
                 fontweight: FontWeight.w600,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Obx(
+                () {
+                  return DropdownButton<String>(
+                    value: controller.selectedPlainCashewCategory.value,
+                    onChanged: (String? newValue) {
+                      print(newValue);
+                      if (newValue == "All") {
+                        controller.getProductsByCategory("Plain Cashews", '');
+                        controller.selectedPlainCashewCategory.value = newValue!;
+                      } else {
+                        controller.getProductsByCategory("Plain Cashews", newValue!);
+                        controller.selectedPlainCashewCategory.value = newValue;
+                      }
+                    },
+                    items: controller.plainCashewSubCategories.map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: CustomTextWidget(
+                          text: value,
+                          fontweight: FontWeight.w600,
+                        ),
+                      );
+                    }).toList(),
+                  );
+                },
               ),
             ),
             Container(
@@ -74,12 +103,12 @@ class CategoriesScreen extends StatelessWidget {
                                   final String productId = controller.plainCashews.value.results[index].product.id.toString();
                                   // final currentCategoryProducts = controller.plainCashews.value;
                                   controller.getSimilarProducts(controller.plainCashews.value, index);
-                                  await controller.getProductDetails(productId);
-                                  selectedProductDetails = controller.productDetails.value;
-                                  print(selectedProductDetails!.name);
+                                  controller.productDetails.value = controller.productDetails.value;
+                                  print(controller.productDetails.value!.name);
 
                                   previousPageIndexes.add(bottomNavbarIndexNotifier.value);
                                   bottomNavbarIndexNotifier.value = 4;
+                                  controller.getProductDetails(productId);
                                 },
                                 child: ProductsListItemTile(
                                   productDetails: productDetails,
@@ -101,15 +130,45 @@ class CategoriesScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: CustomTextWidget(
-                text: "ROASTED & SALTED CASHEWS\nPremium Grade",
+                text: "ROASTED & SALTED CASHEWS",
                 fontSize: 18,
                 fontweight: FontWeight.w600,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Obx(
+                () {
+                  return DropdownButton<String>(
+                    value: controller.selectedRoastedAndSaltedCategory.value,
+                    onChanged: (String? newValue) {
+                      print(newValue);
+                      if (newValue == "All") {
+                        controller.getProductsByCategory("Roasted and salted", '');
+                        controller.selectedRoastedAndSaltedCategory.value = newValue!;
+                      } else {
+                        controller.getProductsByCategory("Roasted and salted", newValue!);
+                        controller.selectedRoastedAndSaltedCategory.value = newValue;
+                      }
+                    },
+                    items: controller.roastedAndSaltedSubCategories.map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: CustomTextWidget(
+                          text: value,
+                          fontweight: FontWeight.w600,
+                        ),
+                      );
+                    }).toList(),
+                  );
+                },
               ),
             ),
             Container(
               height: 250,
               child: Obx(
                 () {
+                  print(controller.roastedAndSalted.value.results);
                   if (controller.roastedAndSalted.value.count != 0) {
                     return controller.isRoastedAndSaltedLoading.value
                         ? Center(
@@ -122,12 +181,13 @@ class CategoriesScreen extends StatelessWidget {
                               return GestureDetector(
                                 onTap: () async {
                                   final String productId = controller.roastedAndSalted.value.results[index].product.id.toString();
+                                  controller.getProductDetails(productId);
+
                                   print("Product id ::::::: $productId");
                                   // currentCategoryProducts = controller.roastedAndSalted.value;
                                   controller.getSimilarProducts(controller.roastedAndSalted.value, index);
-                                  await controller.getProductDetails(productId);
-                                  selectedProductDetails = controller.productDetails.value;
-                                  print(selectedProductDetails!.name);
+                                  controller.productDetails.value = controller.productDetails.value;
+                                  print(controller.productDetails.value!.name);
 
                                   previousPageIndexes.add(bottomNavbarIndexNotifier.value);
                                   bottomNavbarIndexNotifier.value = 4;
@@ -157,6 +217,35 @@ class CategoriesScreen extends StatelessWidget {
                 fontweight: FontWeight.w600,
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Obx(
+                () {
+                  return DropdownButton<String>(
+                    value: controller.selectedValueAddedCategory.value,
+                    onChanged: (String? newValue) {
+                      print(newValue);
+                      if (newValue == "All") {
+                        controller.getProductsByCategory("Value Added", '');
+                        controller.selectedValueAddedCategory.value = newValue!;
+                      } else {
+                        controller.getProductsByCategory("Value Added", newValue!);
+                        controller.selectedValueAddedCategory.value = newValue;
+                      }
+                    },
+                    items: controller.valueAddedSubCategories.map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: CustomTextWidget(
+                          text: value,
+                          fontweight: FontWeight.w600,
+                        ),
+                      );
+                    }).toList(),
+                  );
+                },
+              ),
+            ),
             Container(
               height: 250,
               child: Obx(
@@ -174,12 +263,12 @@ class CategoriesScreen extends StatelessWidget {
                                 onTap: () async {
                                   final String productId = controller.valueAdded.value.results[index].product.id.toString();
                                   // currentCategoryProducts = controller.roastedAndSalted.value;
-                                  await controller.getProductDetails(productId);
-                                  selectedProductDetails = controller.productDetails.value;
-                                  print(selectedProductDetails!.name);
+                                  controller.productDetails.value = controller.productDetails.value;
+                                  print(controller.productDetails.value!.name);
 
                                   previousPageIndexes.add(bottomNavbarIndexNotifier.value);
                                   bottomNavbarIndexNotifier.value = 4;
+                                  controller.getProductDetails(productId);
                                 },
                                 child: ProductsListItemTile(
                                   productDetails: productDetails,
@@ -221,9 +310,9 @@ class CategoriesScreen extends StatelessWidget {
                             onTap: () async {
                               final String productId = controller.allProducts.value.results[index].product.id.toString();
 
-                              await controller.getProductDetails(productId);
-                              selectedProductDetails = controller.productDetails.value;
-                              print(selectedProductDetails!.name);
+                              controller.getProductDetails(productId);
+                              controller.productDetails.value = controller.productDetails.value;
+                              print(controller.productDetails.value!.name);
 
                               previousPageIndexes.add(bottomNavbarIndexNotifier.value);
                               bottomNavbarIndexNotifier.value = 4;

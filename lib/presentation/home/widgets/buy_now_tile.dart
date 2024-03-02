@@ -17,11 +17,9 @@ class BuyNowTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String imagePath =
-        "lib/core/assets/images/product_images/Plain Cashew/Plain Cashew (F) nobg.png";
+    final String imagePath = "lib/core/assets/images/product_images/Plain Cashew/Plain Cashew (F) nobg.png";
     final String productName = productDetails['name'];
-    final String productDescription =
-        productDetails['category'][0]['description'];
+    final String productDescription = productDetails['category'][0]['description'];
 
     return Container(
       padding: EdgeInsets.all(5),
@@ -51,8 +49,7 @@ class BuyNowTile extends StatelessWidget {
                 height: 180,
                 // color: Colors.black,
 
-                child:
-                    SvgPicture.asset("lib/core/assets/images/home/star_bg.svg"),
+                child: SvgPicture.asset("lib/core/assets/images/home/star_bg.svg"),
               ),
               Padding(
                 padding: const EdgeInsets.all(10),
@@ -96,7 +93,7 @@ class BuyNowTile extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 10),
                 child: TextButton(
                   onPressed: () async {
-                    selectedProductDetails = await productDetails;
+                    // controller.productDetails.value = await productDetails;
                     previousPageIndexes.add(bottomNavbarIndexNotifier.value);
                     bottomNavbarIndexNotifier.value = 4;
                   },

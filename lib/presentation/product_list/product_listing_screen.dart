@@ -21,50 +21,47 @@ class ProductListingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       appBar: MainAppBar(),
       drawer: SideBar(),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(8),
-          child: Obx(
-           () {
-              return Column(
-                children: [
-                  SearchSectionTile(
-                    heading: "${controller.productDisplayList.value.count} Items ",
-                  ),
-                  GridView.count(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    childAspectRatio: (20 / 30),
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 5,
-                    crossAxisSpacing: 5,
-                    children: List.generate(controller.productDisplayList.value.count, (index) {
-                      final productDetails = controller.productDisplayList.value.results[index];
-                      return GestureDetector(
-                        onTap: () async {
-                          // print(
-                          //     "image list ${controller.productDisplayList.valueindex]}");
-                          final String productId = controller.productDisplayList.value.results[index].product.id.toString();
-                          controller.getSimilarProducts(controller.plainCashews.value, index);
-                          await controller.getProductDetails(productId);
-                          selectedProductDetails = controller.productDetails.value;
-                          previousPageIndexes.add(bottomNavbarIndexNotifier.value);
-                          bottomNavbarIndexNotifier.value = 4;
-                        },
-                        child: ProductsListItemTile(
-                          productDetails: productDetails,
-                        ),
-                      );
-                    }),
-                  )
-                ],
-              );
-            }
-          ),
+          child: Obx(() {
+            return Column(
+              children: [
+                SearchSectionTile(
+                  heading: "${controller.productDisplayList.value.count} Items ",
+                ),
+                GridView.count(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  childAspectRatio: (20 / 30),
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 5,
+                  crossAxisSpacing: 5,
+                  children: List.generate(controller.productDisplayList.value.count, (index) {
+                    final productDetails = controller.productDisplayList.value.results[index];
+                    return GestureDetector(
+                      onTap: () async {
+                        // print(
+                        //     "image list ${controller.productDisplayList.valueindex]}");
+                        final String productId = controller.productDisplayList.value.results[index].product.id.toString();
+                        controller.getSimilarProducts(controller.plainCashews.value, index);
+                        await controller.getProductDetails(productId);
+                        controller.productDetails.value = controller.productDetails.value;
+                        previousPageIndexes.add(bottomNavbarIndexNotifier.value);
+                        bottomNavbarIndexNotifier.value = 4;
+                      },
+                      child: ProductsListItemTile(
+                        productDetails: productDetails,
+                      ),
+                    );
+                  }),
+                )
+              ],
+            );
+          }),
         ),
       ),
     );

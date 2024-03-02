@@ -72,7 +72,7 @@ class SlidingImageTile extends StatelessWidget {
                   ),
                   child: GestureDetector(
                     onTap: () async {
-                      selectedProductDetails = await productDetails;
+                      // controller.productDetails.value = await productDetails;
                       previousPageIndexes.add(bottomNavbarIndexNotifier.value);
                       bottomNavbarIndexNotifier.value = 4;
                     },

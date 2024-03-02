@@ -22,7 +22,7 @@ import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 import 'package:internship_sample/presentation/widgets/main_appbar.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-ProductDetailsModel? selectedProductDetails;
+// ProductDetailsModel? controller.productDetails.value;
 
 // ProductModel? currentCategoryProducts;
 
@@ -35,13 +35,13 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (!controller.isAlreadyLoadedPlainCashews) {
-      controller.getProductsByCategory("Plain Cashews");
+      controller.getProductsByCategory("Plain Cashews", "");
     }
     if (!controller.isAlreadyLoadedRoastedAndSaltedCashews) {
-      controller.getProductsByCategory("Roasted and salted");
+      controller.getProductsByCategory("Roasted and salted", "");
     }
     if (!controller.isAlreadyLoadedValueAdded) {
-      controller.getProductsByCategory("Value Added");
+      controller.getProductsByCategory("Value Added", "");
     }
     if (!controller.isAlreadyLoadedAllProducts) {
       controller.getAllProducts();
@@ -61,13 +61,26 @@ class HomeScreen extends StatelessWidget {
               // circular list
               Container(
                 height: 95,
-                child: ListView.builder(
-                  itemBuilder: (context, index) => CircleAvatarListItem(
-                    imagePath: avatarImage[index]['imagePath'],
-                    label: avatarImage[index]['label'],
-                  ),
-                  itemCount: avatarImage.length,
-                  scrollDirection: Axis.horizontal,
+                child: Obx(
+                  () {
+                    return controller.isAllProductsLoading.value
+                        ? Center(
+                            child: CircularProgressIndicator(),
+                          )
+                        : ListView.builder(
+                            itemBuilder: (context, index) {
+                              // final productImageUrl = controller.allProducts.value.results[index].product.productImages[0]['product_image'];
+                              final productImageUrl = '';
+                              final productName = controller.allProducts.value.results[index].product.name;
+                              return CircleAvatarListItem(
+                                imagePath: productImageUrl,
+                                label: productName,
+                              );
+                            },
+                            itemCount: avatarImage.length,
+                            scrollDirection: Axis.horizontal,
+                          );
+                  },
                 ),
               ),
 
@@ -141,13 +154,11 @@ class HomeScreen extends StatelessWidget {
                                 return GestureDetector(
                                   onTap: () async {
                                     final String productId = controller.allProducts.value.results[index].product.id.toString();
-
-                                    await controller.getProductDetails(productId);
-                                    selectedProductDetails = controller.productDetails.value;
-                                    print(selectedProductDetails!.name);
-
                                     previousPageIndexes.add(bottomNavbarIndexNotifier.value);
                                     bottomNavbarIndexNotifier.value = 4;
+                                    controller.getProductDetails(productId);
+                                    // controller.productDetails.value = controller.productDetails.value;
+                                    // print(controller.productDetails.value!.name);
                                   },
                                   child: ProductsListItemTile(
                                     productDetails: productDetails,
@@ -220,12 +231,12 @@ class HomeScreen extends StatelessWidget {
                               onTap: () async {
                                 final String productId = controller.allProducts.value.results[index].product.id.toString();
 
-                                await controller.getProductDetails(productId);
-                                selectedProductDetails = controller.productDetails.value;
-                                print(selectedProductDetails!.name);
+                                // controller.productDetails.value = controller.productDetails.value;
+                                // print(controller.productDetails.value!.name);
 
                                 previousPageIndexes.add(bottomNavbarIndexNotifier.value);
                                 bottomNavbarIndexNotifier.value = 4;
+                                controller.getProductDetails(productId);
                               },
                               child: ProductsListItemTile(
                                 productDetails: productDetails,
@@ -247,7 +258,7 @@ class HomeScreen extends StatelessWidget {
               //Sponsered product
               GestureDetector(
                 onTap: () async {
-                  selectedProductDetails = await roastedCashewsList[0];
+                  // controller.productDetails.value = await roastedCashewsList[0];
                   previousPageIndexes.add(bottomNavbarIndexNotifier.value);
                   bottomNavbarIndexNotifier.value = 4;
                 },
@@ -280,12 +291,12 @@ class HomeScreen extends StatelessWidget {
                               final String productId = controller.allProducts.value.results[index].product.id.toString();
 
                               controller.getSimilarProducts(controller.allProducts.value, index);
-                              await controller.getProductDetails(productId);
-                              selectedProductDetails = controller.productDetails.value;
-                              print(selectedProductDetails!.name);
+                              // controller.productDetails.value = controller.productDetails.value;
+                              // print(controller.productDetails.value!.name);
 
                               previousPageIndexes.add(bottomNavbarIndexNotifier.value);
                               bottomNavbarIndexNotifier.value = 4;
+                              controller.getProductDetails(productId);
                             },
                             child: ProductsListItemTile(
                               productDetails: productDetails,

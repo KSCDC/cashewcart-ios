@@ -1,19 +1,24 @@
 import 'package:easy_image_viewer/easy_image_viewer.dart';
 import 'package:flutter/material.dart';
+import 'package:internship_sample/core/base_url.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class SlidingProductTile extends StatelessWidget {
   SlidingProductTile({
     super.key,
-    required this.imagePath,
+    required this.imageList,
     required this.count,
   });
   final controller = PageController();
-  final List<String> imagePath;
+  final List<dynamic> imageList;
   final int count;
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
+    if (imageList.isEmpty) {
+      // add image to display if the product image is missing from the api
+      imageList.add("");
+    }
     return Column(
       children: [
         Container(
@@ -26,7 +31,7 @@ class SlidingProductTile extends StatelessWidget {
                 Stack(
                   children: [
                     SlideItem(
-                      imagePath: imagePath[i],
+                      imagePath: "$baseUrl${imageList[i]['product_image']}",
                     ),
                     Positioned(
                       top: 25,
@@ -79,15 +84,14 @@ class SlideItem extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: GestureDetector(
         onTap: () {
-          showImageViewer(context, AssetImage(imagePath),
-              swipeDismissible: true, doubleTapZoomable: true);
+          showImageViewer(context, NetworkImage(imagePath), swipeDismissible: true, doubleTapZoomable: true);
         },
         child: Container(
           width: screenSize.width * 0.9,
           height: screenSize.width * 0.8,
           decoration: BoxDecoration(
             image: DecorationImage(
-              image: AssetImage(imagePath),
+              image: NetworkImage(imagePath),
               fit: BoxFit.cover,
             ),
             borderRadius: BorderRadius.all(

@@ -71,9 +71,9 @@ class ValueAddedProductsTile extends StatelessWidget {
                           // final currentCategoryProducts = controller.valueAdded.value;
                           // controller.getSimilarProducts(controller.valueAdded.value, 0);
                           // await controller.getProductDetails(productId);
-                          // selectedProductDetails = controller.productDetails.value;
+                          // controller.productDetails.value = controller.productDetails.value;
                           controller.productDisplayList = controller.valueAdded;
-                          // print(selectedProductDetails!.name);
+                          // print(controller.productDetails.value!.name);
                           // print(controller.productDisplayList .toString());
 
                           previousPageIndexes.add(bottomNavbarIndexNotifier.value);

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:internship_sample/controllers/app_controller.dart';
 import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/presentation/home/home_screen.dart';
 import 'package:internship_sample/presentation/shop/widgets/custom_text_icon_button.dart';
@@ -17,6 +19,7 @@ class ShopProductDetailsTile extends StatelessWidget {
   ValueNotifier<bool> readMoreClickNotifier = ValueNotifier(false);
   // final String productName;
   // final String description;
+  AppController controller = Get.put(AppController());
 
   @override
   Widget build(BuildContext context) {
@@ -35,10 +38,10 @@ class ShopProductDetailsTile extends StatelessWidget {
                       text: "Net weight: ",
                       fontweight: FontWeight.w600,
                     ),
-                    for (int i = 0; i < selectedProductDetails!.productVariants.length; i++)
+                    for (int i = 0; i < controller.productDetails.value!.productVariants.length; i++)
                       if (value == i)
                         CustomTextWidget(
-                          text: selectedProductDetails!.productVariants[i].weightInGrams,
+                          text: controller.productDetails.value!.productVariants[i].weightInGrams,
                           fontweight: FontWeight.w600,
                         ),
                   ],
@@ -51,10 +54,10 @@ class ShopProductDetailsTile extends StatelessWidget {
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    for (int i = 0; i < selectedProductDetails!.productVariants.length; i++)
+                    for (int i = 0; i < controller.productDetails.value!.productVariants.length; i++)
                       SizeSelectorWidget(
                         index: i,
-                        label: selectedProductDetails!.productVariants[i].weightInGrams,
+                        label: controller.productDetails.value!.productVariants[i].weightInGrams,
                         fontColor: sizeSelectNotifier.value == i ? Colors.white : Color(0xFFFA7189),
                         backgroundColor: sizeSelectNotifier.value == i ? Color(0xFFFA7189) : Colors.white,
                       ),
@@ -63,7 +66,7 @@ class ShopProductDetailsTile extends StatelessWidget {
               }),
           SizedBox(height: 10),
           CustomTextWidget(
-            text: selectedProductDetails!.name,
+            text: controller.productDetails.value!.name,
             fontSize: 20,
             fontweight: FontWeight.w600,
           ),
@@ -74,7 +77,7 @@ class ShopProductDetailsTile extends StatelessWidget {
               builder: (context, value, _) {
                 return CustomStarRatingTile(
                   numberOfRatings:
-                      // "${selectedProductDetails['category'][value]['rating']}",
+                      // "${controller.productDetails.value['category'][value]['rating']}",
                       "4",
                   iconAndTextSize: 18,
                 );
@@ -85,7 +88,7 @@ class ShopProductDetailsTile extends StatelessWidget {
                 return Row(
                   children: [
                     Text(
-                      "₹${selectedProductDetails!.productVariants[value].actualPrice}",
+                      "₹${controller.productDetails.value!.productVariants[value].actualPrice}",
                       style: TextStyle(
                         fontFamily: "Montserrat",
                         fontSize: 14,
@@ -97,14 +100,14 @@ class ShopProductDetailsTile extends StatelessWidget {
                     ),
                     kWidth,
                     CustomTextWidget(
-                      text: "₹${selectedProductDetails!.productVariants[value].sellingPrice}",
+                      text: "₹${controller.productDetails.value!.productVariants[value].sellingPrice}",
                       fontSize: 14,
                       fontweight: FontWeight.w400,
                     ),
                     kWidth,
                     CustomTextWidget(
                       text:
-                          "${(double.parse(selectedProductDetails!.productVariants[value].sellingPrice) * 100 / double.parse(selectedProductDetails!.productVariants[value].actualPrice)).toStringAsFixed(2)}%",
+                          "${(double.parse(controller.productDetails.value!.productVariants[value].sellingPrice) * 100 / double.parse(controller.productDetails.value!.productVariants[value].actualPrice)).toStringAsFixed(2)}%",
                       fontColor: Color(0xFFFE735C),
                       fontSize: 14,
                       fontweight: FontWeight.w400,
@@ -128,7 +131,7 @@ class ShopProductDetailsTile extends StatelessWidget {
                       valueListenable: sizeSelectNotifier,
                       builder: (context, value, _) {
                         return Text(
-                          selectedProductDetails!.description,
+                          controller.productDetails.value!.description,
                           maxLines: readMoreClickNotifier.value ? 10 : 5,
                           overflow: TextOverflow.ellipsis,
                         );
@@ -155,7 +158,7 @@ class ShopProductDetailsTile extends StatelessWidget {
           ValueListenableBuilder(
             valueListenable: sizeSelectNotifier,
             builder: (context, value, _) {
-              int stock = selectedProductDetails!.productVariants[value].stockQty;
+              int stock = controller.productDetails.value!.productVariants[value].stockQty;
               if (stock < 1) {
                 return Center(
                   child: Container(

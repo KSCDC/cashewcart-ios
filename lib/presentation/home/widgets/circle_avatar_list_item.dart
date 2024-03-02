@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:internship_sample/core/base_url.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 
 class CircleAvatarListItem extends StatelessWidget {
@@ -19,7 +20,7 @@ class CircleAvatarListItem extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 30,
-              backgroundImage: AssetImage(imagePath),
+              backgroundImage: NetworkImage("$baseUrl${imagePath}"),
             ),
             CustomTextWidget(
               text: label,

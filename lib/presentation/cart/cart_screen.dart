@@ -1,11 +1,8 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/main.dart';
 import 'package:internship_sample/presentation/cart/widgets/cart_product_list_tile.dart';
-import 'package:internship_sample/presentation/home/home_screen.dart';
 import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
 import 'package:internship_sample/presentation/place_order/multiple_item_place_order_screen.dart';
 import 'package:internship_sample/presentation/widgets/custom_appbar.dart';
@@ -15,14 +12,9 @@ import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 List cartProductsList = [];
 ValueNotifier<double> grantTotalNotifier = ValueNotifier(0);
 
-class CartScreen extends StatefulWidget {
-  const CartScreen({super.key});
+class CartScreen extends StatelessWidget {
+  const CartScreen({Key? key}) : super(key: key);
 
-  @override
-  State<CartScreen> createState() => _CartScreenState();
-}
-
-class _CartScreenState extends State<CartScreen> {
   @override
   Widget build(BuildContext context) {
     double grandTotal = getGrandTotal();
@@ -36,7 +28,9 @@ class _CartScreenState extends State<CartScreen> {
         leading: GestureDetector(
           onTap: () {
             bottomNavbarIndexNotifier.value = previousPageIndexes.last;
-            previousPageIndexes.removeLast();
+            if (previousPageIndexes.length > 1) {
+              previousPageIndexes.removeLast();
+            }
           },
           child: Icon(Icons.arrow_back_ios_rounded),
         ),
@@ -74,7 +68,7 @@ class _CartScreenState extends State<CartScreen> {
                         kHeight,
                         CartProductsListTile(
                           productDetails: cartProductsList[index],
-                          callSetState: callSetState,
+                          // callSetState: callSetState,
                         ),
                       ],
                     );
@@ -105,8 +99,7 @@ class _CartScreenState extends State<CartScreen> {
                   onTap: () {
                     if (grandTotal <= 500) {
                       const snackBar = SnackBar(
-                        content:
-                            Text('Minimum order amount is Rs 500 and above'),
+                        content: Text('Minimum order amount is Rs 500 and above'),
                         behavior: SnackBarBehavior.floating,
                         margin: EdgeInsets.all(10),
                         padding: EdgeInsets.all(20),
@@ -115,8 +108,7 @@ class _CartScreenState extends State<CartScreen> {
                     } else {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => MultipleItemPlaceOrderScreen(
-                              productList: cartProductsList),
+                          builder: (context) => MultipleItemPlaceOrderScreen(productList: cartProductsList),
                         ),
                       );
                     }
@@ -133,23 +125,17 @@ class _CartScreenState extends State<CartScreen> {
     );
   }
 
-  getGrandTotal() {
+  double getGrandTotal() {
     double grandTotal = 0;
-    log("grand total fn");
+    print("grand total fn");
     for (int i = 0; i < cartProductsList.length; i++) {
       final int selectedCategory = cartProductsList[i]['category'];
-      final String price = cartProductsList[i]['product']['category']
-          [selectedCategory]['offerPrice'];
+      final String price = cartProductsList[i]['product']['category'][selectedCategory]['offerPrice'];
       final int count = cartProductsList[i]['count'];
       final double total = double.parse(price) * count;
       print("prices are ${price} * ${count}== ${total}");
       grandTotal = grandTotal + total;
     }
-    // log("GTOT:${grantTotalNotifier.value}");
     return grandTotal;
-  }
-
-  callSetState() {
-    setState(() {});
   }
 }

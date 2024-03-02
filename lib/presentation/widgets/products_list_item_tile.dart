@@ -19,7 +19,8 @@ class ProductsListItemTile extends StatelessWidget {
   Widget build(BuildContext context) {
     // print(productDetails.product.productImages[0]['product_image'].toString());
     // productDetails.product.productImages[0]
-    final String imagePath = "$baseUrl${productDetails.product.productImages[0]['product_image']}";
+    // final String imagePath = "$baseUrl${productDetails.product.productImages[0]['product_image']}";
+    final String imagePath = "";
     final String productName = productDetails.product.name;
     final String description = productDetails.product.description;
     final String originalPrice = productDetails.actualPrice;

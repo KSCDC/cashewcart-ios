@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:get/get.dart';
+import 'package:internship_sample/controllers/app_controller.dart';
 import 'package:internship_sample/core/colors.dart';
-import 'package:internship_sample/presentation/widgets/custom_search_filtering_button.dart';
-import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 import 'package:internship_sample/presentation/widgets/search_filter_bar.dart';
+import 'package:internship_sample/services/debouncer.dart';
 
 class SearchSectionTile extends StatelessWidget {
   SearchSectionTile({
@@ -13,7 +14,8 @@ class SearchSectionTile extends StatelessWidget {
 
   final searchController = TextEditingController();
   final String heading;
-
+  final _debouncer = Debouncer(milliseconds: 1 * 1000);
+  AppController controller = Get.put(AppController());
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -24,6 +26,18 @@ class SearchSectionTile extends StatelessWidget {
         children: [
           TextFormField(
             controller: searchController,
+           
+            onChanged: (value) {
+              _debouncer.run(
+                () async {
+                 
+                  if (searchController.text.trim() != "") {
+                    controller.searchProducts(searchController.text);
+                  }
+                },
+              );
+            },
+
             style: const TextStyle(
               color: kSearchBarElementsColor,
               fontFamily: "Montserrat",

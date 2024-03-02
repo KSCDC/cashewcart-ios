@@ -27,10 +27,10 @@ class BottomNavigationWidget extends StatelessWidget {
               decoration: BoxDecoration(
                 color: kMainThemeColor,
                 borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(30),
-                  topRight: Radius.circular(30),
-                  bottomLeft: Radius.circular(30),
-                  bottomRight: Radius.circular(30),
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                  bottomLeft: Radius.circular(20),
+                  bottomRight: Radius.circular(20),
                 ),
               ),
               child: Padding(
@@ -41,26 +41,17 @@ class BottomNavigationWidget extends StatelessWidget {
                     CustomBottomNavbarItem(
                       iconWidget: SvgPicture.asset(
                         "lib/core/assets/images/home_icon.svg",
-                        color: bottomNavbarIndexNotifier.value == 0 ||
-                                previousPageIndex == 0
-                            ? Colors.white
-                            : Colors.white.withOpacity(0.5),
+                        color: bottomNavbarIndexNotifier.value == 0 || previousPageIndex == 0 ? Colors.white : Colors.white.withOpacity(0.5),
                       ),
                       label: "Home",
                       index: 0,
-                      color: bottomNavbarIndexNotifier.value == 0 ||
-                              previousPageIndex == 0
-                          ? Colors.white
-                          : Colors.white.withOpacity(0.5),
+                      color: bottomNavbarIndexNotifier.value == 0 || previousPageIndex == 0 ? Colors.white : Colors.white.withOpacity(0.5),
                     ),
                     CustomBottomNavbarItem(
                       iconWidget: Icon(Icons.category_outlined),
                       label: "Categories",
                       index: 1,
-                      color: bottomNavbarIndexNotifier.value == 1 ||
-                              previousPageIndex == 1
-                          ? Colors.white
-                          : Colors.white.withOpacity(0.5),
+                      color: bottomNavbarIndexNotifier.value == 1 || previousPageIndex == 1 ? Colors.white : Colors.white.withOpacity(0.5),
                     ),
                     Stack(
                       children: [
@@ -68,10 +59,7 @@ class BottomNavigationWidget extends StatelessWidget {
                           iconWidget: Icon(Icons.shopping_cart_outlined),
                           label: "Cart",
                           index: 2,
-                          color: bottomNavbarIndexNotifier.value == 2 ||
-                                  previousPageIndex == 2
-                              ? Colors.white
-                              : Colors.white.withOpacity(0.5),
+                          color: bottomNavbarIndexNotifier.value == 2 || previousPageIndex == 2 ? Colors.white : Colors.white.withOpacity(0.5),
                         ),
                         Positioned(
                           top: 7,
@@ -96,10 +84,7 @@ class BottomNavigationWidget extends StatelessWidget {
                       iconWidget: Icon(Icons.person_outlined),
                       label: "Account",
                       index: 3,
-                      color: bottomNavbarIndexNotifier.value == 3 ||
-                              previousPageIndex == 3
-                          ? Colors.white
-                          : Colors.white.withOpacity(0.5),
+                      color: bottomNavbarIndexNotifier.value == 3 || previousPageIndex == 3 ? Colors.white : Colors.white.withOpacity(0.5),
                     ),
                   ],
                 ),
