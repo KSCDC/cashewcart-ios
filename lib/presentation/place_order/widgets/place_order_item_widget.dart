@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:internship_sample/core/base_url.dart';
 import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 
@@ -27,7 +28,7 @@ class PlaceOrderItemWidget extends StatelessWidget {
             width: screenSize.width * 0.25,
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage(imagePath),
+                image: NetworkImage("$baseUrl$imagePath"),
                 fit: BoxFit.fitWidth,
               ),
               borderRadius: BorderRadius.all(

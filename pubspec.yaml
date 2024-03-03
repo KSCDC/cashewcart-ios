@@ -95,37 +95,8 @@ flutter:
     - lib/core/assets/images/home/starbg.jpg
     - lib/core/assets/images/home/star_bg.svg
 
-    - lib/core/assets/images/product_images/Cashew Apple Squash/Cashew apple
-      squash.jpg
-    - lib/core/assets/images/product_images/Cashew Pine Jam/Cashew pine jam.jpg
+  
 
-    - lib/core/assets/images/product_images/Cashew Powder/Cashew Powder 1.jpg
-    - lib/core/assets/images/product_images/Cashew Powder/Cashew Powder 2.jpg
-    - lib/core/assets/images/product_images/Cashew Powder/Cashew Powder 3.jpg
-    - lib/core/assets/images/product_images/Cashew Powder/Cashew Powder 4.jpg
-
-    - lib/core/assets/images/product_images/Cashew Soda/Cashew soda.jpg
-
-    - lib/core/assets/images/product_images/Cashew Soup/Cashew Soup-mix .jpg
-    - lib/core/assets/images/product_images/Cashew Soup/Cashew Soup.jpg
-
-    - lib/core/assets/images/product_images/Cashew Vanilla MilkShake/Cashew
-      Vanilla Milk Shake Powder.jpg
-
-    - lib/core/assets/images/product_images/Cashew Vita/Cashew Vita.jpg
-
-    - lib/core/assets/images/product_images/Cashew Vita Cardamom
-      flavoured/Cashew vita cardamom flavoured.jpg
-
-    - lib/core/assets/images/product_images/Cashew Vita Pistachio
-      flavoured/Cashew vita Pistachio flavoured.jpg
-
-    - lib/core/assets/images/product_images/Chilli Garlic/Chilly Garlic.jpg
-
-    - lib/core/assets/images/product_images/Chilly Coated/Red Chilly Coated
-      Cashew.jpg
-
-    - lib/core/assets/images/product_images/Honey Coated/Honey Coated Cashew.jpg
 
     - lib/core/assets/images/product_images/Plain Cashew/Plain cashew (B).png
     - lib/core/assets/images/product_images/Plain Cashew/Plain Cashew (F).png
@@ -141,7 +112,6 @@ flutter:
     - lib/core/assets/images/product_images/Roasted and Salted Cashew/Roasted
       and salted Cashew bgwhite.png
 
-    - lib/core/assets/images/product_images/Salt and Pepper/Salt and Pepper.jpg
 
     - lib/core/assets/images/product_images/Cashew Plain2-600x600.jpg
     - lib/core/assets/images/home_icon.svg

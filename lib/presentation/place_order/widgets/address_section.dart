@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:internship_sample/controllers/app_controller.dart';
 import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/presentation/shop/widgets/custom_text_icon_button.dart';
@@ -7,21 +9,28 @@ import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 
 ValueNotifier<int> productCountNotifier = ValueNotifier(1);
 ValueNotifier<int> selectedRadioNotifier = ValueNotifier(0);
-List<TextEditingController> deliveryAddressControllers = [
-  TextEditingController(text: "Kochi")
-];
+List<TextEditingController> deliveryAddressControllers = [];
 ValueNotifier<bool> isAddressEditableNotifier = ValueNotifier(false);
 
 class AddressSection extends StatelessWidget {
-  const AddressSection({
+  AddressSection({
     super.key,
     required this.screenSize,
   });
 
   final Size screenSize;
-
+  AppController controller = Get.put(AppController());
   @override
   Widget build(BuildContext context) {
+    deliveryAddressControllers.clear();
+    for (int i = 0; i < controller.addressList.length; i++) {
+      deliveryAddressControllers.add(
+        TextEditingController(
+          text:
+              "${controller.addressList[i].streetAddress}, ${controller.addressList[i].city}, ${controller.addressList[i].state}, ${controller.addressList[i].postalCode}, ${controller.addressList[i].country}",
+        ),
+      );
+    }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -105,9 +114,7 @@ class AddressSection extends StatelessWidget {
                                   maxLines: 2,
                                   enabled: value,
                                   decoration: InputDecoration(
-                                    border: value
-                                        ? OutlineInputBorder()
-                                        : InputBorder.none,
+                                    border: value ? OutlineInputBorder() : InputBorder.none,
                                   ),
                                 ),
                               ],

@@ -1,4 +1,4 @@
-package com.example.internship_sample
+package com.example.cashewcart
 
 import io.flutter.embedding.android.FlutterActivity
 

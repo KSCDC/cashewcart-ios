@@ -2,8 +2,11 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:internship_sample/controllers/app_controller.dart';
 import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/core/constants.dart';
+import 'package:internship_sample/models/cart_product_model.dart';
 import 'package:internship_sample/presentation/cart/cart_screen.dart';
 import 'package:internship_sample/presentation/checkout/checkout_screen.dart';
 import 'package:internship_sample/presentation/cart/widgets/cart_product_list_tile.dart';
@@ -14,14 +17,16 @@ import 'package:internship_sample/presentation/shop/widgets/custom_text_icon_but
 import 'package:internship_sample/presentation/widgets/custom_appbar.dart';
 import 'package:internship_sample/presentation/widgets/custom_elevated_button.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
+import 'package:internship_sample/services/api_services.dart';
 
 class MultipleItemPlaceOrderScreen extends StatelessWidget {
-  const MultipleItemPlaceOrderScreen({super.key, required this.productList});
-  final productList;
-
+  MultipleItemPlaceOrderScreen({super.key, required this.productList});
+  final List<Result> productList;
+  AppController controller = Get.put(AppController());
   @override
   Widget build(BuildContext context) {
     double grandTotal = getGrandTotal();
+    controller.getUserAddresses();
     final screenSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: CustomAppBar(
@@ -40,23 +45,18 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
                   Container(
                     child: ListView.builder(
                       itemBuilder: (context, index) {
-                        final int selectedCategory =
-                            productList[index]['category'];
-                        // final String price = cartProductsList[index]['product']['category'][selectedCategory]['offerPrice'];
-                        final int count = productList[index]['count'];
+                        // final int selectedCategory = productList[index]['category'];
+
+                        final int count = productList[index].purchaseCount;
 
                         return Column(
                           children: [
                             kHeight,
                             if (count != 0)
                               PlaceOrderItemWidget(
-                                imagePath: productList[index]['product']
-                                    ['imagePath'][0],
-                                productName: productList[index]['product']
-                                    ['name'],
-                                productDescription: productList[index]
-                                        ['product']['category']
-                                    [selectedCategory]['description'],
+                                imagePath: productList[index].product.product.productImages.isNotEmpty ? productList[index].product.product.productImages[0].productImage : '',
+                                productName: productList[index].product.product.name,
+                                productDescription: productList[index].product.product.description,
                                 count: count,
                               ),
                             Divider(
@@ -75,68 +75,64 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
 
                   kHeight,
 
-                  if (deliveryAddressControllers.isEmpty)
-                    CustomTextWidget(text: "No saved addresses!")
-                  else
-                    AddressSection(screenSize: screenSize),
+                  Obx(() {
+                    return controller.addressList.isEmpty ? CustomTextWidget(text: "No saved addresses!") : AddressSection(screenSize: screenSize);
+                  }),
 
                   SizedBox(height: 5),
 
                   // add new address button
                   CustomTextIconButton(
                     onPressed: () async {
-                      TextEditingController _newAddressController =
-                          TextEditingController();
+                      showAddressPopup(context);
 
-                      await showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return Dialog(
-                            insetAnimationDuration:
-                                Duration(milliseconds: 1000),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              width: screenSize.width * 0.9,
-                              height: screenSize.width * 0.8,
-                              child: Padding(
-                                padding: const EdgeInsets.all(15),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    kHeight,
-                                    CustomTextWidget(
-                                        text: "Enter new address here"),
-                                    SizedBox(height: 5),
-                                    TextField(
-                                      controller: _newAddressController,
-                                      maxLines:
-                                          4, // Set to null for an unlimited number of lines
-                                      decoration: InputDecoration(
-                                        border: OutlineInputBorder(),
-                                      ),
-                                    ),
-                                    SizedBox(height: 20),
-                                    GestureDetector(
-                                      onTap: () {
-                                        deliveryAddressControllers
-                                            .add(_newAddressController);
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: CustomElevatedButton(
-                                        label: "Submit",
-                                        fontSize: 16,
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      );
+                      // TextEditingController _newAddressController = TextEditingController();
+
+                      // await showDialog(
+                      //   context: context,
+                      //   builder: (BuildContext context) {
+                      //     return Dialog(
+                      //       insetAnimationDuration: Duration(milliseconds: 1000),
+                      //       child: Container(
+                      //         decoration: BoxDecoration(
+                      //           color: Colors.white,
+                      //           borderRadius: BorderRadius.circular(6),
+                      //         ),
+                      //         width: screenSize.width * 0.9,
+                      //         height: screenSize.width * 0.8,
+                      //         child: Padding(
+                      //           padding: const EdgeInsets.all(15),
+                      //           child: Column(
+                      //             crossAxisAlignment: CrossAxisAlignment.start,
+                      //             children: [
+                      //               kHeight,
+                      //               CustomTextWidget(text: "Enter new address here"),
+                      //               SizedBox(height: 5),
+                      //               TextField(
+                      //                 controller: _newAddressController,
+                      //                 maxLines: 4, // Set to null for an unlimited number of lines
+                      //                 decoration: InputDecoration(
+                      //                   border: OutlineInputBorder(),
+                      //                 ),
+                      //               ),
+                      //               SizedBox(height: 20),
+                      //               GestureDetector(
+                      //                 onTap: () {
+                      //                   deliveryAddressControllers.add(_newAddressController);
+                      //                   Navigator.of(context).pop();
+                      //                 },
+                      //                 child: CustomElevatedButton(
+                      //                   label: "Submit",
+                      //                   fontSize: 16,
+                      //                 ),
+                      //               )
+                      //             ],
+                      //           ),
+                      //         ),
+                      //       ),
+                      //     );
+                      //   },
+                      // );
                     },
                     icon: Icons.add,
                     label: "Add address",
@@ -172,11 +168,9 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
                   Container(
                     child: ListView.builder(
                       itemBuilder: (context, index) {
-                        final int selectedCategory =
-                            productList[index]['category'];
-                        final String price = productList[index]['product']
-                            ['category'][selectedCategory]['offerPrice'];
-                        final int count = productList[index]['count'];
+                        // final int selectedCategory = productList[index]['category'];
+                        final String price = productList[index].product.sellingPrice;
+                        final int count = productList[index].purchaseCount;
                         final double total = double.parse(price) * count;
                         // grantTotalNotifier.value = grantTotalNotifier.value + total;
                         return Column(
@@ -187,7 +181,7 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
                                 // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   CustomTextWidget(
-                                    text: productList[index]['product']['name'],
+                                    text: productList[index].product.product.name,
                                     fontSize: 11,
                                     fontweight: FontWeight.w400,
                                   ),
@@ -363,8 +357,7 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
     log("grand total fn");
     for (int i = 0; i < cartProductsList.length; i++) {
       final int selectedCategory = cartProductsList[i]['category'];
-      final String price = cartProductsList[i]['product']['category']
-          [selectedCategory]['offerPrice'];
+      final String price = cartProductsList[i]['product']['category'][selectedCategory]['offerPrice'];
       final int count = cartProductsList[i]['count'];
       final double total = double.parse(price) * count;
       print("prices are ${price} * ${count}== ${total}");
@@ -372,5 +365,71 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
     }
     log("GTOT:${grantTotalNotifier.value}");
     return grantTotalNotifier.value;
+  }
+
+  void showAddressPopup(BuildContext context) {
+    final TextEditingController streetController = TextEditingController();
+    final TextEditingController cityController = TextEditingController();
+    final TextEditingController stateController = TextEditingController();
+    final TextEditingController postalCodeController = TextEditingController();
+    final TextEditingController countryController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return SizedBox(
+          // width: MediaQuery.of(context).size.width * 0.9,
+          child: AlertDialog(
+            title: Text('Add Address'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: streetController,
+                  decoration: InputDecoration(hintText: 'Street Address'),
+                ),
+                TextField(
+                  controller: cityController,
+                  decoration: InputDecoration(hintText: 'City'),
+                ),
+                TextField(
+                  controller: stateController,
+                  decoration: InputDecoration(hintText: 'State'),
+                ),
+                TextField(
+                  controller: postalCodeController,
+                  decoration: InputDecoration(hintText: 'Postal Code'),
+                ),
+                TextField(
+                  controller: countryController,
+                  decoration: InputDecoration(hintText: 'Country'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    // Save the values from text controllers
+                    String street = streetController.text;
+                    String city = cityController.text;
+                    String state = stateController.text;
+                    String postalCode = postalCodeController.text;
+                    String country = countryController.text;
+
+                    // Do something with the values
+                    print('Street: $street');
+                    print('City: $city');
+                    print('State: $state');
+                    print('Postal Code: $postalCode');
+                    print('Country: $country');
+                    ApiServices().createUserAddress(street, city, state, postalCode, false);
+                    // Close the dialog
+                    Navigator.pop(context);
+                  },
+                  child: Text('Add'),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 }

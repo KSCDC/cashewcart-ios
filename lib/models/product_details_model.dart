@@ -13,14 +13,14 @@ class ProductDetailsModel {
   late final Category category;
   late final List<dynamic> productImages;
   late final List<ProductVariants> productVariants;
-  
-  ProductDetailsModel.fromJson(Map<String, dynamic> json){
+
+  ProductDetailsModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
     description = json['description'];
     category = Category.fromJson(json['category']);
     productImages = List.castFrom<dynamic, dynamic>(json['product_images']);
-    productVariants = List.from(json['product_variants']).map((e)=>ProductVariants.fromJson(e)).toList();
+    productVariants = List.from(json['product_variants']).map((e) => ProductVariants.fromJson(e)).toList();
   }
 
   Map<String, dynamic> toJson() {
@@ -30,7 +30,7 @@ class ProductDetailsModel {
     _data['description'] = description;
     _data['category'] = category.toJson();
     _data['product_images'] = productImages;
-    _data['product_variants'] = productVariants.map((e)=>e.toJson()).toList();
+    _data['product_variants'] = productVariants.map((e) => e.toJson()).toList();
     return _data;
   }
 }
@@ -46,8 +46,8 @@ class Category {
   late final String name;
   late final String parentName;
   late final List<dynamic> children;
-  
-  Category.fromJson(Map<String, dynamic> json){
+
+  Category.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
     parentName = json['parent_name'];
@@ -81,8 +81,8 @@ class ProductVariants {
   late final String sku;
   late final int stockQty;
   late final bool isAvailable;
-  
-  ProductVariants.fromJson(Map<String, dynamic> json){
+
+  ProductVariants.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     weightInGrams = json['weight_in_grams'];
     actualPrice = json['actual_price'];

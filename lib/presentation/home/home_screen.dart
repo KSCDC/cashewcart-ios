@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:internship_sample/controllers/app_controller.dart';
+import 'package:internship_sample/core/base_url.dart';
 import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/main.dart';
 import 'package:internship_sample/models/product_details_model.dart';
@@ -70,7 +71,10 @@ class HomeScreen extends StatelessWidget {
                         : ListView.builder(
                             itemBuilder: (context, index) {
                               // final productImageUrl = controller.allProducts.value.results[index].product.productImages[0]['product_image'];
-                              final productImageUrl = '';
+                              final productImageUrl = controller.allProducts.value.results[index].product.productImages.isNotEmpty
+                                  ? "${controller.allProducts.value.results[index].product.productImages[0]['product_image']}"
+                                  : "";
+
                               final productName = controller.allProducts.value.results[index].product.name;
                               return CircleAvatarListItem(
                                 imagePath: productImageUrl,
@@ -203,9 +207,11 @@ class HomeScreen extends StatelessWidget {
 
               //buy now
 
-              BuyNowTile(
-                productDetails: cashewsPlaneList[0],
-              ),
+              Obx(() {
+                return BuyNowTile(
+                  productDetails: controller.plainCashews.value,
+                );
+              }),
 
               const ViewOfferTile(
                 color: Color(0xFFFD6E87),

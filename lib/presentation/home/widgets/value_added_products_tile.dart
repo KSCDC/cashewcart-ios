@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:internship_sample/controllers/app_controller.dart';
+import 'package:internship_sample/core/base_url.dart';
 import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/main.dart';
@@ -23,6 +24,9 @@ class ValueAddedProductsTile extends StatelessWidget {
         ),
       ),
       child: Obx(() {
+        final productImage =
+            controller.valueAdded.value.results[0].product.productImages.isNotEmpty ? "$baseUrl${controller.valueAdded.value.results[0].product.productImages[0]['product_image']}" : "";
+
         return controller.isValueAddedLoading.value
             ? Center(
                 child: CircularProgressIndicator(),
@@ -37,7 +41,7 @@ class ValueAddedProductsTile extends StatelessWidget {
                     // color: Colors.black,
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: AssetImage("lib/core/assets/images/product_images/Cashew Powder/Cashew Powder 1.jpg"),
+                        image: NetworkImage(productImage),
                         fit: BoxFit.fitWidth,
                       ),
                     ),

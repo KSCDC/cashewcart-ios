@@ -3,9 +3,13 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:internship_sample/core/constants.dart';
+import 'package:internship_sample/models/cart_product_model.dart';
 import 'package:internship_sample/models/product_details_model.dart';
 import 'package:internship_sample/models/product_model.dart';
+import 'package:internship_sample/models/product_reviews_model.dart';
+import 'package:internship_sample/models/user_address_model.dart';
 import 'package:internship_sample/presentation/main_page/main_page_screen.dart';
+import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
 import 'package:internship_sample/services/api_services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -19,17 +23,24 @@ class AppController extends GetxController {
   RxBool isPlainCashewLoading = false.obs;
   RxBool isRoastedAndSaltedLoading = false.obs;
   RxBool isValueAddedLoading = false.obs;
+  RxBool isBestSellersLoading = false.obs;
   RxBool isSimilarProductsLoading = false.obs;
+  RxBool isReviewsLoading = false.obs;
   Rx<ProductModel> allProducts = ProductModel(count: 0, next: null, previous: null, results: []).obs;
   Rx<ProductModel> plainCashews = ProductModel(count: 0, next: null, previous: null, results: []).obs;
   Rx<ProductModel> roastedAndSalted = ProductModel(count: 0, next: null, previous: null, results: []).obs;
   Rx<ProductModel> valueAdded = ProductModel(count: 0, next: null, previous: null, results: []).obs;
+  Rx<ProductModel> bestSellers = ProductModel(count: 0, next: null, previous: null, results: []).obs;
   Rx<ProductModel> similarProducts = ProductModel(count: 0, next: null, previous: null, results: []).obs;
   Rx<ProductModel> productDisplayList = ProductModel(count: 0, next: null, previous: null, results: []).obs;
-  Rx<ProductModel> cartProducts = ProductModel(count: 0, next: null, previous: null, results: []).obs;
+  Rx<CartProductModel> cartProducts = CartProductModel(count: 0, next: null, previous: null, results: []).obs;
   Rx<ProductModel> searchResults = ProductModel(count: 0, next: null, previous: null, results: []).obs;
+  RxBool haveSearchResult = false.obs;
 
   Rxn<ProductDetailsModel> productDetails = Rxn<ProductDetailsModel>();
+  // Rxn<ProductReviewsModel> productReviews = Rxn<ProductReviewsModel>();
+  RxList<ProductReviewsModel> productReviewsList = <ProductReviewsModel>[].obs;
+  RxList<UserAddressModel> addressList = <UserAddressModel>[].obs;
 
   bool isAlreadyLoadedAllProducts = false;
   bool isAlreadyLoadedPlainCashews = false;
@@ -145,7 +156,10 @@ class AppController extends GetxController {
     if (response != null) {
       final data = ProductModel.fromJson(response.data);
       searchResults.value = data;
-    } else {}
+      haveSearchResult.value = true;
+    } else {
+      haveSearchResult.value = false;
+    }
 
     isLoading.value = false;
   }
@@ -160,6 +174,44 @@ class AppController extends GetxController {
     }
 
     isLoading.value = false;
+  }
+
+  getProductReviews(String productId) async {
+    isReviewsLoading.value = true;
+    productReviewsList.clear();
+    final List<ProductReviewsModel> tempList = [];
+    final response = await ApiServices().getProductReviews(productId);
+
+    if (response != null) {
+      final List<dynamic> responseData = response.data;
+
+      for (final item in responseData) {
+        final review = ProductReviewsModel.fromJson(item);
+        tempList.add(review);
+      }
+
+      productReviewsList.value = tempList;
+
+      // productReviews.value = productReviewsList;
+    }
+
+    isReviewsLoading.value = false;
+  }
+
+  addProductReview(BuildContext context, String productId, String reviewText, int numberOfStars) async {
+    final List<ProductReviewsModel> tempList = [];
+    final response = await ApiServices().addProductReview(context, productId, reviewText, numberOfStars);
+
+    if (response != null) {
+      // final review = ProductReviewsModel.fromJson(item);
+      final data = await ProductReviewsModel.fromJson(response.data);
+      productReviewsList.add(data);
+      // }
+
+      // productReviewsList = productReviewsList + tempList;
+
+      // productReviews.value = productReviewsList;
+    }
   }
 
   getSimilarProducts(ProductModel currentCategoryProducts, int selectedIndex) {
@@ -188,17 +240,48 @@ class AppController extends GetxController {
   }
 
   getCartList() async {
-    isLoading.value = true;
+    // isLoading.value = true;
     final response = await ApiServices().getCartList();
     if (response != null) {
-      final data = ProductModel.fromJson(response.data);
+      final data = CartProductModel.fromJson(response.data);
       log(response.data.toString());
+      cartProducts.value = data;
+      cartCountNotifier.value = data.count;
     }
 
-    isLoading.value = false;
+    // isLoading.value = false;
   }
 
-  addProductToCart(String productId) async {
-    final response = await ApiServices().addProductToCart(productId);
+  addProductToCart(BuildContext context, String productId) async {
+    await ApiServices().addProductToCart(context, productId);
+  }
+
+  removeProductFromCart(BuildContext context, String productId) async {
+    await ApiServices().removeFromCart(context, productId);
+    getCartList();
+  }
+
+  getUserAddresses() async {
+    print("getting addresses");
+    isLoading.value = true;
+    productReviewsList.clear();
+    final List<UserAddressModel> tempList = [];
+    final response = await ApiServices().getUserAddresses();
+
+    if (response != null) {
+      final List<dynamic> responseData = response.data;
+      print(responseData);
+      for (final item in responseData) {
+        final address = UserAddressModel.fromJson(item);
+        tempList.add(address);
+      }
+
+      addressList.value = tempList;
+
+      // productReviews.value = productReviewsList;
+    }
+    print("city----${addressList.value[0].city}");
+
+    isLoading.value = false;
   }
 }

@@ -1,4 +1,8 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:internship_sample/controllers/app_controller.dart';
 import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/main.dart';
@@ -13,15 +17,17 @@ List cartProductsList = [];
 ValueNotifier<double> grantTotalNotifier = ValueNotifier(0);
 
 class CartScreen extends StatelessWidget {
-  const CartScreen({Key? key}) : super(key: key);
-
+  CartScreen({Key? key}) : super(key: key);
+  AppController controller = Get.put(AppController());
   @override
   Widget build(BuildContext context) {
-    double grandTotal = getGrandTotal();
-    final screenSize = MediaQuery.of(context).size;
     grantTotalNotifier.value = 0;
+    getGrandTotal();
+    final screenSize = MediaQuery.of(context).size;
+    // grantTotalNotifier.value = 0;
 
     print("building");
+    // print("product name :::::${controller.cartProducts.value.results[0].product.product.name}");
     return Scaffold(
       backgroundColor: appBackgroundColor,
       appBar: AppBar(
@@ -53,33 +59,36 @@ class CartScreen extends StatelessWidget {
                 fontweight: FontWeight.w600,
               ),
               kHeight,
-              if (cartProductsList.isEmpty)
-                Center(
-                  child: CustomTextWidget(
-                    text: "You dont have any items in your kart",
-                    fontSize: 16,
-                  ),
-                ),
-              Container(
-                child: ListView.builder(
-                  itemBuilder: (context, index) {
-                    return Column(
-                      children: [
-                        kHeight,
-                        CartProductsListTile(
-                          productDetails: cartProductsList[index],
-                          // callSetState: callSetState,
+              Obx(() {
+                return controller.cartProducts.value.count == 0
+                    ? Center(
+                        child: CustomTextWidget(
+                          text: "You dont have any items in your cart",
+                          fontSize: 16,
                         ),
-                      ],
-                    );
-                  },
-                  itemCount: cartProductsList.length,
-                  physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                ),
-              ),
+                      )
+                    : Container(
+                        child: ListView.builder(
+                          itemBuilder: (context, index) {
+                            print("\n\n\n");
+                            print("product name :::::${controller.cartProducts.value.results[index].product.product.name}");
+                            return Column(
+                              children: [
+                                kHeight,
+                                CartProductsListTile(
+                                  productDetails: controller.cartProducts.value.results[index],
+                                ),
+                              ],
+                            );
+                          },
+                          itemCount: controller.cartProducts.value.count,
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                        ),
+                      );
+              }),
               kHeight,
-              if (cartProductsList.isNotEmpty)
+              if (controller.cartProducts.value.count != 0)
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -87,17 +96,21 @@ class CartScreen extends StatelessWidget {
                       text: "Grant Total : ",
                       fontweight: FontWeight.w600,
                     ),
-                    CustomTextWidget(
-                      text: grandTotal.toStringAsFixed(2),
-                      fontweight: FontWeight.w600,
-                    )
+                    ValueListenableBuilder(
+                        valueListenable: grantTotalNotifier,
+                        builder: (context, grandTotal, _) {
+                          return CustomTextWidget(
+                            text: grandTotal.toStringAsFixed(2),
+                            fontweight: FontWeight.w600,
+                          );
+                        })
                   ],
                 ),
               kHeight,
-              if (cartProductsList.isNotEmpty)
+              if (controller.cartProducts.value.count != 0)
                 GestureDetector(
                   onTap: () {
-                    if (grandTotal <= 500) {
+                    if (grantTotalNotifier.value <= 500) {
                       const snackBar = SnackBar(
                         content: Text('Minimum order amount is Rs 500 and above'),
                         behavior: SnackBarBehavior.floating,
@@ -106,10 +119,8 @@ class CartScreen extends StatelessWidget {
                       );
                       ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     } else {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => MultipleItemPlaceOrderScreen(productList: cartProductsList),
-                        ),
+                      Get.to(
+                        () => MultipleItemPlaceOrderScreen(productList: controller.cartProducts.value.results),
                       );
                     }
                   },
@@ -125,17 +136,18 @@ class CartScreen extends StatelessWidget {
     );
   }
 
-  double getGrandTotal() {
-    double grandTotal = 0;
+  getGrandTotal() {
+    // double grandTotal = 0;
     print("grand total fn");
-    for (int i = 0; i < cartProductsList.length; i++) {
-      final int selectedCategory = cartProductsList[i]['category'];
-      final String price = cartProductsList[i]['product']['category'][selectedCategory]['offerPrice'];
-      final int count = cartProductsList[i]['count'];
+    for (int i = 0; i < controller.cartProducts.value.count; i++) {
+      // final int selectedCategory = cartProductsList[i]['category'];
+      final String price = controller.cartProducts.value.results[i].product.sellingPrice;
+      final int count = controller.cartProducts.value.results[i].purchaseCount;
       final double total = double.parse(price) * count;
       print("prices are ${price} * ${count}== ${total}");
-      grandTotal = grandTotal + total;
+      grantTotalNotifier.value = grantTotalNotifier.value + total;
+      log(grantTotalNotifier.value.toString());
     }
-    return grandTotal;
+    // return grandTotal;
   }
 }

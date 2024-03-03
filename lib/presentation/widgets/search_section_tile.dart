@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:internship_sample/controllers/app_controller.dart';
 import 'package:internship_sample/core/colors.dart';
+import 'package:internship_sample/models/product_model.dart';
 import 'package:internship_sample/presentation/widgets/search_filter_bar.dart';
 import 'package:internship_sample/services/debouncer.dart';
 
@@ -26,18 +27,19 @@ class SearchSectionTile extends StatelessWidget {
         children: [
           TextFormField(
             controller: searchController,
-           
             onChanged: (value) {
               _debouncer.run(
                 () async {
-                 
                   if (searchController.text.trim() != "") {
                     controller.searchProducts(searchController.text);
+                  } else {
+                    // controller.searchResults = ProductModel(count: 0, next: null, previous: null, results: []).obs;
+                    controller.haveSearchResult.value = false;
+                    print("${controller.searchResults.value.count}");
                   }
                 },
               );
             },
-
             style: const TextStyle(
               color: kSearchBarElementsColor,
               fontFamily: "Montserrat",

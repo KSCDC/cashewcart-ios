@@ -1,6 +1,7 @@
 import 'package:easy_image_viewer/easy_image_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:internship_sample/core/base_url.dart';
+import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class SlidingProductTile extends StatelessWidget {
@@ -15,10 +16,10 @@ class SlidingProductTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
-    if (imageList.isEmpty) {
-      // add image to display if the product image is missing from the api
-      imageList.add("");
-    }
+    // if (imageList.isEmpty) {
+    //   // add image to display if the product image is missing from the api
+    //   imageList.add("");
+    // }
     return Column(
       children: [
         Container(
@@ -31,7 +32,7 @@ class SlidingProductTile extends StatelessWidget {
                 Stack(
                   children: [
                     SlideItem(
-                      imagePath: "$baseUrl${imageList[i]['product_image']}",
+                      imagePath: imageList.isEmpty ? '' : "$baseUrl${imageList[i]['product_image']}",
                     ),
                     Positioned(
                       top: 25,
@@ -79,6 +80,7 @@ class SlideItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("Image path: $imagePath");
     final screenSize = MediaQuery.of(context).size;
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -86,19 +88,32 @@ class SlideItem extends StatelessWidget {
         onTap: () {
           showImageViewer(context, NetworkImage(imagePath), swipeDismissible: true, doubleTapZoomable: true);
         },
-        child: Container(
-          width: screenSize.width * 0.9,
-          height: screenSize.width * 0.8,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: NetworkImage(imagePath),
-              fit: BoxFit.cover,
-            ),
-            borderRadius: BorderRadius.all(
-              Radius.circular(10),
-            ),
-          ),
-        ),
+        child: imagePath == ''
+            ? Container(
+                width: screenSize.width * 0.9,
+                height: screenSize.width * 0.8,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                ),
+                child: Center(
+                  child: CustomTextWidget(text: "Product image not available right now"),
+                ),
+              )
+            : Container(
+                width: screenSize.width * 0.9,
+                height: screenSize.width * 0.8,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: NetworkImage(imagePath),
+                    fit: BoxFit.cover,
+                  ),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                ),
+              ),
       ),
     );
   }

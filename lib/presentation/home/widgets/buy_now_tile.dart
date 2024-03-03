@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
+import 'package:internship_sample/controllers/app_controller.dart';
+import 'package:internship_sample/core/base_url.dart';
 import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/main.dart';
@@ -9,17 +12,18 @@ import 'package:internship_sample/presentation/shop/shop_screen.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 
 class BuyNowTile extends StatelessWidget {
-  const BuyNowTile({
+  BuyNowTile({
     super.key,
     required this.productDetails,
   });
   final productDetails;
-
+  AppController controller = Get.put(AppController());
   @override
   Widget build(BuildContext context) {
-    final String imagePath = "lib/core/assets/images/product_images/Plain Cashew/Plain Cashew (F) nobg.png";
-    final String productName = productDetails['name'];
-    final String productDescription = productDetails['category'][0]['description'];
+    final String imagePath = productDetails.results[0].product.productImages.isNotEmpty ? "${productDetails.results[0].product.productImages[0]['product_image']}" : "";
+    ;
+    final String productName = productDetails.results[0].product.name;
+    final String productDescription = productDetails.results[0].product.description;
 
     return Container(
       padding: EdgeInsets.all(5),
@@ -59,7 +63,7 @@ class BuyNowTile extends StatelessWidget {
                   // color: Colors.black,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage(imagePath),
+                      image: NetworkImage("$baseUrl$imagePath"),
                       fit: BoxFit.contain,
                     ),
                   ),
@@ -93,7 +97,10 @@ class BuyNowTile extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 10),
                 child: TextButton(
                   onPressed: () async {
-                    // controller.productDetails.value = await productDetails;
+                    final String productId = productDetails.results[0].product.id.toString();
+                    controller.getProductDetails(productId);
+                    controller.getProductReviews(productId);
+                    // controller.productDetails.value = productDetails.results[0];
                     previousPageIndexes.add(bottomNavbarIndexNotifier.value);
                     bottomNavbarIndexNotifier.value = 4;
                   },

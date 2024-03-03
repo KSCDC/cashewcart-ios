@@ -56,6 +56,8 @@ class _ShopScreenState extends State<ShopScreen> {
     // List relatedProductsList = getRelatedProductsList();
     // controller.getSimilarProducts();
     // print("similar : $similarProductsList");
+    TextEditingController reviewController = TextEditingController();
+    print("selected product ${controller.productDetails.value!.id.toString()}");
 
     return Scaffold(
       appBar: AppBar(
@@ -73,7 +75,7 @@ class _ShopScreenState extends State<ShopScreen> {
         child: Obx(() {
           // print("selected product image:${controller.productDetails.value!.productImages[0]['product_image'].toString()}");
           // final img = controller.productDetails.value!.productImages[0]['product_image'];
-          
+
           return controller.isLoading.value
               ? SizedBox(
                   height: screenSize.height * 0.9,
@@ -87,7 +89,7 @@ class _ShopScreenState extends State<ShopScreen> {
                   children: [
                     SlidingProductTile(
                       imageList: controller.productDetails.value!.productImages,
-                      count: controller.productDetails.value!.productImages.length,
+                      count: controller.productDetails.value!.productImages.isNotEmpty ? controller.productDetails.value!.productImages.length : 1,
                     ),
 
                     // product details
@@ -105,9 +107,10 @@ class _ShopScreenState extends State<ShopScreen> {
                                   onTap: () {
                                     int stock = controller.productDetails.value!.productVariants[value].stockQty;
                                     if (stock > 0) {
-                                      print(controller.productDetails.value!.category.id.toString());
-                                      controller.addProductToCart(controller.productDetails.value!.category.id.toString());
-                                      Services().showCustomSnackBar(context, "Product added to cart");
+                                      print("id for adding cart${controller.productDetails.value!.productVariants[value].id.toString()}");
+                                      // controller.addProductToCart(controller.productDetails.value!.category.id.toString());
+                                      controller.addProductToCart(context, controller.productDetails.value!.productVariants[value].id.toString());
+                                      
                                       // final cartProduct = {
                                       //   'product': controller.productDetails.value,
                                       //   'category': value,
@@ -250,134 +253,150 @@ class _ShopScreenState extends State<ShopScreen> {
                       ],
                     ),
                     kHeight,
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: CustomTextWidget(
-                            text: "Ratings and Reviews",
-                            fontSize: 20,
-                            fontweight: FontWeight.w600,
-                          ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Column(
-                              children: [
-                                CustomTextWidget(
-                                  text: "12 Ratings and 1 review",
-                                  fontSize: 15,
-                                  fontweight: FontWeight.w600,
-                                ),
-                                CustomTextWidget(text: "Average rating : 4.2"),
-                                kHeight,
-                                Container(
-                                  height: 40,
-                                  width: 110,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Colors.grey, // Set the border color
-                                      width: 1, // Set the border width
-                                    ),
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                  child: Center(
-                                    child: GestureDetector(
-                                      onTap: () async {
-                                        await showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return Dialog(
-                                              insetAnimationDuration: Duration(milliseconds: 1000),
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  borderRadius: BorderRadius.circular(6),
-                                                ),
-                                                width: screenSize.width * 0.9,
-                                                height: screenSize.width * 0.8,
-                                                child: Padding(
-                                                  padding: const EdgeInsets.all(15),
-                                                  child: Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: [
-                                                      ValueListenableBuilder(
-                                                        valueListenable: customerRatingNotifier,
-                                                        builder: (context, value, _) {
-                                                          return RatingStars();
-                                                        },
-                                                      ),
-                                                      kHeight,
-                                                      CustomTextWidget(text: "Enter your review here"),
-                                                      TextField(
-                                                        maxLines: 4, // Set to null for an unlimited number of lines
-                                                        decoration: InputDecoration(
-                                                          border: OutlineInputBorder(),
-                                                        ),
-                                                      ),
-                                                      SizedBox(height: 20),
-                                                      GestureDetector(
-                                                        onTap: () {
-                                                          Navigator.of(context).pop();
-                                                        },
-                                                        child: CustomElevatedButton(
-                                                          label: "Submit",
-                                                          fontSize: 16,
-                                                        ),
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                        );
-                                      },
-                                      child: CustomTextWidget(text: "Rate Product"),
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                            Container(
-                              height: 100,
-                              width: 1,
-                              color: Colors.grey,
-                            ),
-                            const Column(
+                    Obx(() {
+                      return controller.isReviewsLoading.value
+                          ? Center(
+                              child: CircularProgressIndicator(),
+                            )
+                          : Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                DisplayStars(
-                                  numberOfStars: 5,
-                                  rating: 8,
+                                Padding(
+                                  padding: const EdgeInsets.all(10),
+                                  child: CustomTextWidget(
+                                    text: "Ratings and Reviews",
+                                    fontSize: 20,
+                                    fontweight: FontWeight.w600,
+                                  ),
                                 ),
-                                DisplayStars(
-                                  numberOfStars: 4,
-                                  rating: 2,
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Column(
+                                      children: [
+                                        CustomTextWidget(
+                                          text: "${controller.productReviewsList.length.toString()} Ratings and reviews",
+                                          fontSize: 15,
+                                          fontweight: FontWeight.w600,
+                                        ),
+                                        CustomTextWidget(text: "Average rating : 4.2"),
+                                        kHeight,
+                                        Container(
+                                          height: 40,
+                                          width: 110,
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                              color: Colors.grey, // Set the border color
+                                              width: 1, // Set the border width
+                                            ),
+                                            borderRadius: BorderRadius.circular(5),
+                                          ),
+                                          child: Center(
+                                            child: GestureDetector(
+                                              onTap: () async {
+                                                await showDialog(
+                                                  context: context,
+                                                  builder: (BuildContext context) {
+                                                    return Dialog(
+                                                      insetAnimationDuration: Duration(milliseconds: 1000),
+                                                      child: Container(
+                                                        decoration: BoxDecoration(
+                                                          color: Colors.white,
+                                                          borderRadius: BorderRadius.circular(6),
+                                                        ),
+                                                        width: screenSize.width * 0.9,
+                                                        height: screenSize.width * 0.8,
+                                                        child: Padding(
+                                                          padding: const EdgeInsets.all(15),
+                                                          child: Column(
+                                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                                            children: [
+                                                              ValueListenableBuilder(
+                                                                  valueListenable: customerRatingNotifier,
+                                                                  builder: (context, value, _) {
+                                                                    return RatingStars();
+                                                                  }),
+                                                              kHeight,
+                                                              CustomTextWidget(text: "Enter your review here"),
+                                                              TextField(
+                                                                controller: reviewController,
+                                                                maxLines: 4, // Set to null for an unlimited number of lines
+                                                                decoration: InputDecoration(
+                                                                  border: OutlineInputBorder(),
+                                                                ),
+                                                              ),
+                                                              SizedBox(height: 20),
+                                                              GestureDetector(
+                                                                onTap: () {
+                                                                  Navigator.of(context).pop();
+                                                                },
+                                                                child: GestureDetector(
+                                                                  onTap: () {
+                                                                    controller.addProductReview(
+                                                                        context, controller.productDetails.value!.id.toString(), reviewController.text, customerRatingNotifier.value);
+                                                                  },
+                                                                  child: CustomElevatedButton(
+                                                                    label: "Submit",
+                                                                    fontSize: 16,
+                                                                  ),
+                                                                ),
+                                                              )
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                );
+                                              },
+                                              child: CustomTextWidget(text: "Rate Product"),
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    Container(
+                                      height: 100,
+                                      width: 1,
+                                      color: Colors.grey,
+                                    ),
+                                    const Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        DisplayStars(
+                                          numberOfStars: 5,
+                                          rating: 8,
+                                        ),
+                                        DisplayStars(
+                                          numberOfStars: 4,
+                                          rating: 2,
+                                        ),
+                                        DisplayStars(
+                                          numberOfStars: 3,
+                                          rating: 1,
+                                        ),
+                                        DisplayStars(
+                                          numberOfStars: 2,
+                                          rating: 1,
+                                        ),
+                                        DisplayStars(
+                                          numberOfStars: 1,
+                                          rating: 0,
+                                        ),
+                                      ],
+                                    )
+                                  ],
                                 ),
-                                DisplayStars(
-                                  numberOfStars: 3,
-                                  rating: 1,
-                                ),
-                                DisplayStars(
-                                  numberOfStars: 2,
-                                  rating: 1,
-                                ),
-                                DisplayStars(
-                                  numberOfStars: 1,
-                                  rating: 0,
-                                ),
+                                kHeight,
+                                for (int i = controller.productReviewsList.length - 1; i >= 0; i--)
+                                  ReviewTile(
+                                      rating: controller.productReviewsList.value[i].stars,
+                                      review: controller.productReviewsList.value[i].reviewText,
+                                      reviewerName: controller.productReviewsList.value[i].userName),
+                                // ReviewTile(rating: 4, review: "Good product", reviewerName: "Arun"),
                               ],
-                            )
-                          ],
-                        ),
-                        kHeight,
-                        ReviewTile(rating: 5, review: "Great quality product", reviewerName: "Pratheep Kumar"),
-                        ReviewTile(rating: 4, review: "Good product", reviewerName: "Arun"),
-                      ],
-                    ),
+                            );
+                    }),
                     kHeight,
                     const Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),

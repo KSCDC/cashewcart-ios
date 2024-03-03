@@ -1,6 +1,9 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:internship_sample/controllers/app_controller.dart';
+import 'package:internship_sample/core/base_url.dart';
 import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/presentation/cart/cart_screen.dart';
@@ -8,27 +11,29 @@ import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_n
 import 'package:internship_sample/presentation/shop/widgets/custom_text_icon_button.dart';
 import 'package:internship_sample/presentation/widgets/custom_star_rating_tile.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
+import 'package:internship_sample/services/api_services.dart';
 
 class CartProductsListTile extends StatelessWidget {
-  const CartProductsListTile({
+  CartProductsListTile({
     super.key,
     required this.productDetails,
-    // required this.callSetState,
   });
-  final productDetails;
-  // final VoidCallback callSetState;
+  final  productDetails;
+  AppController controller = Get.put(AppController());
   @override
   Widget build(BuildContext context) {
-    final String imagePath = productDetails['product']['imagePath'][0];
-    final String productName = productDetails['product']['name'];
-    final int selectedCategory = productDetails['category'];
-    final int count = productDetails['count'];
-
-    final String originalPrice = productDetails['product']['category'][selectedCategory]['originalPrice'];
-    final String offerPrice = productDetails['product']['category'][selectedCategory]['offerPrice'];
-    final String numberOfRatings = productDetails['product']['category'][selectedCategory]['rating'];
-    final String weight = productDetails['product']['category'][selectedCategory]['weight'];
+    final String imagePath = productDetails.product.product.productImages.isNotEmpty ? productDetails.product.product.productImages[0].productImage : "";
+    final String productName = productDetails.product.product.name;
+    // final int selectedCategory = 1;
+    ValueNotifier<int> currentProductCountNotifier = ValueNotifier(productDetails.purchaseCount);
+    print("purchase count:${productDetails.purchaseCount}");
+    final String originalPrice = productDetails.product.actualPrice;
+    final String offerPrice = productDetails.product.sellingPrice;
+    final String numberOfRatings = "20";
+    final String weight = productDetails.product.weightInGrams;
     final screenSize = MediaQuery.of(context).size;
+
+    print("Product name:$productName");
     return Container(
       width: screenSize.width * 0.9,
       // height: 210,
@@ -47,7 +52,7 @@ class CartProductsListTile extends StatelessWidget {
                   width: 130,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage(imagePath),
+                      image: NetworkImage("$baseUrl$imagePath"),
                       fit: BoxFit.cover,
                     ),
                     borderRadius: BorderRadius.all(
@@ -152,58 +157,63 @@ class CartProductsListTile extends StatelessWidget {
             ),
             kHeight,
             Divider(),
-            Row(
-              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                CustomTextWidget(
-                  text: "Total Order ($count) :",
-                  fontSize: 12,
-                  fontweight: FontWeight.w500,
-                ),
-                kWidth,
-                GestureDetector(
-                  onTap: () {
-                    if (productDetails['count'] != 0) {
-                      cartCountNotifier.value--;
-                      productDetails['count']--;
-                    }
+            ValueListenableBuilder(
+                valueListenable: currentProductCountNotifier,
+                builder: (context, newCount, _) {
+                  return Row(
+                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      CustomTextWidget(
+                        text: "Total Order (${newCount}) :",
+                        fontSize: 12,
+                        fontweight: FontWeight.w500,
+                      ),
+                      kWidth,
+                      GestureDetector(
+                        onTap: () {
+                          if (newCount != 0) {
+                            cartCountNotifier.value--;
+                            currentProductCountNotifier.value--;
+                            ApiServices().updateCartCount(productDetails.id.toString(), currentProductCountNotifier.value);
+                          }
 
-                    // callSetState();
-                  },
-                  child: Icon(Icons.remove),
-                ),
-                SizedBox(width: 5),
-                GestureDetector(
-                  onTap: () {
-                    cartCountNotifier.value++;
-                    productDetails['count']++;
-                    // callSetState();
-                  },
-                  child: Icon(Icons.add),
-                ),
-                Spacer(),
-                Container(
-                  child: CustomTextIconButton(
-                    onPressed: () {
-                      cartCountNotifier.value = (cartCountNotifier.value - productDetails['count']).toInt();
-                      cartProductsList.remove(productDetails);
-
-                      // callSetState();
-                    },
-                    icon: Icons.delete_outline,
-                    label: "Remove",
-                    textAndIconColor: Colors.red,
-                    textAndIconSize: 14,
-                  ),
-                ),
-                Spacer(),
-                CustomTextWidget(
-                  text: "₹ ${count * double.parse(offerPrice)}",
-                  fontSize: 12,
-                  fontweight: FontWeight.w600,
-                ),
-              ],
-            )
+                          // callSetState();
+                        },
+                        child: Icon(Icons.remove),
+                      ),
+                      SizedBox(width: 5),
+                      GestureDetector(
+                        onTap: () {
+                          cartCountNotifier.value++;
+                          currentProductCountNotifier.value++;
+                          ApiServices().updateCartCount(productDetails.id.toString(), currentProductCountNotifier.value);
+                          // callSetState();
+                        },
+                        child: Icon(Icons.add),
+                      ),
+                      Spacer(),
+                      Container(
+                        child: CustomTextIconButton(
+                          onPressed: () {
+                            cartCountNotifier.value = (cartCountNotifier.value - newCount).toInt();
+                            cartProductsList.remove(productDetails);
+                            controller.removeProductFromCart(context, productDetails.product.id.toString());
+                          },
+                          icon: Icons.delete_outline,
+                          label: "Remove",
+                          textAndIconColor: Colors.red,
+                          textAndIconSize: 14,
+                        ),
+                      ),
+                      Spacer(),
+                      CustomTextWidget(
+                        text: "₹ ${newCount * double.parse(offerPrice)}",
+                        fontSize: 12,
+                        fontweight: FontWeight.w600,
+                      ),
+                    ],
+                  );
+                })
           ],
         ),
       ),
