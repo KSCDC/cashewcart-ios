@@ -268,7 +268,10 @@ class ProfileScreen extends StatelessWidget {
                   } else if (_newPasswordController.text.length < 6) {
                     Services().showCustomSnackBar(context, "Password must contain atleast 6 characters");
                   } else {
-                    ApiServices().changePassword(_newPasswordController.text, _confirmNewPasswordController.text);
+                    final response = ApiServices().changePassword(_newPasswordController.text, _confirmNewPasswordController.text);
+                    if (response != null) {
+                      Services().showCustomSnackBar(context, "Password changed successfully");
+                    }
                   }
                   Get.back();
                 },

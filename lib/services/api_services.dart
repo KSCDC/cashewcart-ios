@@ -97,7 +97,7 @@ class ApiServices {
     }
   }
 
-  changePassword(String password, String confirmPassword) async {
+  changePassword( String password, String confirmPassword) async {
     try {
       final dio = Dio();
       final Map<String, dynamic> formData = {
@@ -106,7 +106,7 @@ class ApiServices {
       };
       SharedPreferences sharedPref = await SharedPreferences.getInstance();
       final authToken = sharedPref.getString(ACCESSTOKEN);
-      final response = await dio.patch(
+      final response = await dio.post(
         "$baseUrl${ApiEndPoints.changePassword}",
         data: formData,
         options: Options(
@@ -302,9 +302,11 @@ class ApiServices {
     }
   }
 
-  searchProduct(String searchKey) async {
+  searchProduct(String searchKey,int minPrice,int maxPrice) async {
     final params = <String, dynamic>{
       "search": searchKey,
+      "min_price": minPrice,
+      "max_price": maxPrice,
     };
 
     try {

@@ -24,6 +24,8 @@ class AppController extends GetxController {
   int numOf4Stars = 0;
   int numOf5Stars = 0;
   RxDouble avgRating = 0.0.obs;
+  RxInt minSearchPrice = 0.obs;
+  RxInt maxSearchPrice = 5000.obs;
   // String selectedProductId = "";
   RxBool isLoading = false.obs;
   RxBool isAllProductsLoading = false.obs;
@@ -206,7 +208,7 @@ class AppController extends GetxController {
 
   searchProducts(String searchKey) async {
     isLoading.value = true;
-    final response = await ApiServices().searchProduct(searchKey);
+    final response = await ApiServices().searchProduct(searchKey,minSearchPrice.value,maxSearchPrice.value);
     if (response != null) {
       final data = ProductModel.fromJson(response.data);
       searchResults.value = data;
@@ -365,6 +367,4 @@ class AppController extends GetxController {
 
     isLoading.value = false;
   }
-
-
 }

@@ -5,15 +5,16 @@ class CustomSearchFilteringButton extends StatelessWidget {
   const CustomSearchFilteringButton({
     super.key,
     required this.label,
-    required this.icon,
+    required this.icon,required this.onTap,
   });
 
   final String label;
   final IconData icon;
+  final Function()? onTap;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap:onTap,
       child: Container(
         height: 24,
         width: 61,

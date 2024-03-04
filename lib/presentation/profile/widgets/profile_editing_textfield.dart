@@ -27,6 +27,7 @@ class ProfileEditingTextField extends StatelessWidget {
         kHeight,
         TextFormField(
           enabled: enabled,
+          controller: controller,
           obscureText: obscureText,
           style: const TextStyle(color: Colors.black),
           textCapitalization: TextCapitalization.sentences,

@@ -34,7 +34,7 @@ class CategoriesScreen extends StatelessWidget {
     if (!controller.isAlreadyLoadedAllProducts) {
       controller.getAllProducts();
     }
-
+    
     controller.getAllProducts();
     return Scaffold(
       backgroundColor: appBackgroundColor,
