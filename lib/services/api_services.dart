@@ -187,6 +187,81 @@ class ApiServices {
     }
   }
 
+  getSponserdProducts() async {
+    try {
+      final dio = Dio();
+
+      final response = await dio.get(
+        "$baseUrl${ApiEndPoints.getSponserdProducts}",
+        options: Options(
+          contentType: Headers.jsonContentType,
+        ),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        // log(response.data.toString());
+        return response;
+      } else {
+        print("Unexpected status code: ${response.statusCode}");
+        return null;
+      }
+    } on DioException catch (e) {
+      print("Error :$e");
+
+      return null;
+    }
+  }
+
+  getTrendingProducts() async {
+    try {
+      final dio = Dio();
+
+      final response = await dio.get(
+        "$baseUrl${ApiEndPoints.getTrendingProducts}",
+        options: Options(
+          contentType: Headers.jsonContentType,
+        ),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        // log(response.data.toString());
+        return response;
+      } else {
+        print("Unexpected status code: ${response.statusCode}");
+        return null;
+      }
+    } on DioException catch (e) {
+      print("Error :$e");
+
+      return null;
+    }
+  }
+
+  getBestSellerProducts() async {
+    try {
+      final dio = Dio();
+
+      final response = await dio.get(
+        "$baseUrl${ApiEndPoints.getBestSellerProducts}",
+        options: Options(
+          contentType: Headers.jsonContentType,
+        ),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        // log(response.data.toString());
+        return response;
+      } else {
+        print("Unexpected status code: ${response.statusCode}");
+        return null;
+      }
+    } on DioException catch (e) {
+      print("Error :$e");
+
+      return null;
+    }
+  }
+
   searchProduct(String searchKey) async {
     final params = <String, dynamic>{
       "search": searchKey,
@@ -220,9 +295,34 @@ class ApiServices {
   getProductDetails(String id) async {
     try {
       final dio = Dio();
-
+      print("Url : $baseUrl${ApiEndPoints.getProductDetails}$id");
       final response = await dio.get(
         "$baseUrl${ApiEndPoints.getProductDetails}$id",
+        options: Options(
+          contentType: Headers.jsonContentType,
+        ),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        log(response.data.toString());
+        return response;
+      } else {
+        print("Unexpected status code: ${response.statusCode}");
+        return null;
+      }
+    } on DioException catch (e) {
+      print("Error :${e.response}");
+
+      return null;
+    }
+  }
+
+  getProductReviews(String id) async {
+    try {
+      final dio = Dio();
+
+      final response = await dio.get(
+        "$baseUrl${ApiEndPoints.reviews}$id/list/",
         options: Options(
           contentType: Headers.jsonContentType,
         ),
@@ -242,12 +342,12 @@ class ApiServices {
     }
   }
 
-  getProductReviews(String id) async {
+  getAverageStarRatings(String id) async {
     try {
       final dio = Dio();
 
       final response = await dio.get(
-        "$baseUrl${ApiEndPoints.reviewseviews}$id/list/",
+        "$baseUrl${ApiEndPoints.reviews}$id/average-rating/",
         options: Options(
           contentType: Headers.jsonContentType,
         ),
@@ -278,7 +378,7 @@ class ApiServices {
       final dio = Dio();
 
       final response = await dio.post(
-        "$baseUrl${ApiEndPoints.reviewseviews}$id/add-review/",
+        "$baseUrl${ApiEndPoints.reviews}$id/add-review/",
         data: formData,
         options: Options(
           headers: {
@@ -489,7 +589,7 @@ class ApiServices {
     }
   }
 
-  createUserAddress(String streetAddress, String city, String state, String postalCode, bool isDefaultAddress) async {
+  createUserAddress(BuildContext context, String streetAddress, String city, String state, String postalCode, bool isDefaultAddress) async {
     final Map<String, dynamic> formData = {
       "street_address": streetAddress,
       "city": city,
@@ -529,7 +629,10 @@ class ApiServices {
       if (e.response!.statusCode == 401) {
         print("refresh token");
         refreshAccessToken();
-        createUserAddress(streetAddress, city, state, postalCode, isDefaultAddress);
+        createUserAddress(context, streetAddress, city, state, postalCode, isDefaultAddress);
+      }
+      if (e.response!.statusCode == 400) {
+        Services().showCustomSnackBar(context, "Please fill all the fields!");
       }
       return null;
     }

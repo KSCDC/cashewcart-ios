@@ -9,6 +9,7 @@ import 'package:internship_sample/presentation/my_orders/my_orders_screen.dart';
 import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
 import 'package:internship_sample/presentation/categories/categories_screen.dart';
 import 'package:internship_sample/presentation/product_list/product_listing_screen.dart';
+import 'package:internship_sample/presentation/product_list/trending_model_product_listing_screen.dart';
 import 'package:internship_sample/presentation/shop/shop_screen.dart';
 import 'package:internship_sample/presentation/side_bar/side_bar.dart';
 
@@ -25,6 +26,7 @@ class MainPageScreen extends StatelessWidget {
     MyOrdersScreen(),
     ProductListingScreen(),
     ProductListingScreen(),
+    TrendingModelProductListingScreen(),
   ];
   AppController controller = Get.put(AppController());
   @override

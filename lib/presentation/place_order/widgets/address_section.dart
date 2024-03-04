@@ -7,7 +7,6 @@ import 'package:internship_sample/presentation/shop/widgets/custom_text_icon_but
 import 'package:internship_sample/presentation/widgets/custom_elevated_button.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 
-ValueNotifier<int> productCountNotifier = ValueNotifier(1);
 ValueNotifier<int> selectedRadioNotifier = ValueNotifier(0);
 List<TextEditingController> deliveryAddressControllers = [];
 ValueNotifier<bool> isAddressEditableNotifier = ValueNotifier(false);

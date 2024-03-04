@@ -18,6 +18,7 @@ import 'package:internship_sample/presentation/widgets/custom_appbar.dart';
 import 'package:internship_sample/presentation/widgets/custom_elevated_button.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 import 'package:internship_sample/services/api_services.dart';
+import 'package:internship_sample/services/services.dart';
 
 class MultipleItemPlaceOrderScreen extends StatelessWidget {
   MultipleItemPlaceOrderScreen({super.key, required this.productList});
@@ -84,55 +85,7 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
                   // add new address button
                   CustomTextIconButton(
                     onPressed: () async {
-                      showAddressPopup(context);
-
-                      // TextEditingController _newAddressController = TextEditingController();
-
-                      // await showDialog(
-                      //   context: context,
-                      //   builder: (BuildContext context) {
-                      //     return Dialog(
-                      //       insetAnimationDuration: Duration(milliseconds: 1000),
-                      //       child: Container(
-                      //         decoration: BoxDecoration(
-                      //           color: Colors.white,
-                      //           borderRadius: BorderRadius.circular(6),
-                      //         ),
-                      //         width: screenSize.width * 0.9,
-                      //         height: screenSize.width * 0.8,
-                      //         child: Padding(
-                      //           padding: const EdgeInsets.all(15),
-                      //           child: Column(
-                      //             crossAxisAlignment: CrossAxisAlignment.start,
-                      //             children: [
-                      //               kHeight,
-                      //               CustomTextWidget(text: "Enter new address here"),
-                      //               SizedBox(height: 5),
-                      //               TextField(
-                      //                 controller: _newAddressController,
-                      //                 maxLines: 4, // Set to null for an unlimited number of lines
-                      //                 decoration: InputDecoration(
-                      //                   border: OutlineInputBorder(),
-                      //                 ),
-                      //               ),
-                      //               SizedBox(height: 20),
-                      //               GestureDetector(
-                      //                 onTap: () {
-                      //                   deliveryAddressControllers.add(_newAddressController);
-                      //                   Navigator.of(context).pop();
-                      //                 },
-                      //                 child: CustomElevatedButton(
-                      //                   label: "Submit",
-                      //                   fontSize: 16,
-                      //                 ),
-                      //               )
-                      //             ],
-                      //           ),
-                      //         ),
-                      //       ),
-                      //     );
-                      //   },
-                      // );
+                      Services().showAddressPopup(context);
                     },
                     icon: Icons.add,
                     label: "Add address",
@@ -365,71 +318,5 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
     }
     log("GTOT:${grantTotalNotifier.value}");
     return grantTotalNotifier.value;
-  }
-
-  void showAddressPopup(BuildContext context) {
-    final TextEditingController streetController = TextEditingController();
-    final TextEditingController cityController = TextEditingController();
-    final TextEditingController stateController = TextEditingController();
-    final TextEditingController postalCodeController = TextEditingController();
-    final TextEditingController countryController = TextEditingController();
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return SizedBox(
-          // width: MediaQuery.of(context).size.width * 0.9,
-          child: AlertDialog(
-            title: Text('Add Address'),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(
-                  controller: streetController,
-                  decoration: InputDecoration(hintText: 'Street Address'),
-                ),
-                TextField(
-                  controller: cityController,
-                  decoration: InputDecoration(hintText: 'City'),
-                ),
-                TextField(
-                  controller: stateController,
-                  decoration: InputDecoration(hintText: 'State'),
-                ),
-                TextField(
-                  controller: postalCodeController,
-                  decoration: InputDecoration(hintText: 'Postal Code'),
-                ),
-                TextField(
-                  controller: countryController,
-                  decoration: InputDecoration(hintText: 'Country'),
-                ),
-                TextButton(
-                  onPressed: () {
-                    // Save the values from text controllers
-                    String street = streetController.text;
-                    String city = cityController.text;
-                    String state = stateController.text;
-                    String postalCode = postalCodeController.text;
-                    String country = countryController.text;
-
-                    // Do something with the values
-                    print('Street: $street');
-                    print('City: $city');
-                    print('State: $state');
-                    print('Postal Code: $postalCode');
-                    print('Country: $country');
-                    ApiServices().createUserAddress(street, city, state, postalCode, false);
-                    // Close the dialog
-                    Navigator.pop(context);
-                  },
-                  child: Text('Add'),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
   }
 }

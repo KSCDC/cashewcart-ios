@@ -6,8 +6,11 @@ class ApiEndPoints {
   static String getAllProducts = "/api/product/list/";
   static String getAllCategories = "/api/product/categories/";
   static String filterProduct = "/api/product/list/";
+  static String getSponserdProducts = "/api/product/sponsors/";
+  static String getTrendingProducts = "/api/product/trending/";
+  static String getBestSellerProducts = "/api/product/bestsellers/";
   static String getProductDetails = "/api/product/detail/";
-  static String reviewseviews = "/api/product/reviews/";
+  static String reviews = "/api/product/reviews/";
   static String listCart = "/api/product/cart/list/";
   static String addOrRemoveFromCart = "/api/product/cart/";
   static String updateCartCount = "/api/product/cart/update_purchase_count/";

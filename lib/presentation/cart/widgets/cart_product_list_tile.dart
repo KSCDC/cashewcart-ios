@@ -18,7 +18,7 @@ class CartProductsListTile extends StatelessWidget {
     super.key,
     required this.productDetails,
   });
-  final  productDetails;
+  final productDetails;
   AppController controller = Get.put(AppController());
   @override
   Widget build(BuildContext context) {
@@ -175,9 +175,8 @@ class CartProductsListTile extends StatelessWidget {
                             cartCountNotifier.value--;
                             currentProductCountNotifier.value--;
                             ApiServices().updateCartCount(productDetails.id.toString(), currentProductCountNotifier.value);
+                            CartScreen().getGrandTotal();
                           }
-
-                          // callSetState();
                         },
                         child: Icon(Icons.remove),
                       ),
@@ -187,7 +186,7 @@ class CartProductsListTile extends StatelessWidget {
                           cartCountNotifier.value++;
                           currentProductCountNotifier.value++;
                           ApiServices().updateCartCount(productDetails.id.toString(), currentProductCountNotifier.value);
-                          // callSetState();
+                          CartScreen().getGrandTotal();
                         },
                         child: Icon(Icons.add),
                       ),
@@ -198,6 +197,7 @@ class CartProductsListTile extends StatelessWidget {
                             cartCountNotifier.value = (cartCountNotifier.value - newCount).toInt();
                             cartProductsList.remove(productDetails);
                             controller.removeProductFromCart(context, productDetails.product.id.toString());
+                            CartScreen().getGrandTotal();
                           },
                           icon: Icons.delete_outline,
                           label: "Remove",

@@ -57,7 +57,7 @@ class _ShopScreenState extends State<ShopScreen> {
     // controller.getSimilarProducts();
     // print("similar : $similarProductsList");
     TextEditingController reviewController = TextEditingController();
-    print("selected product ${controller.productDetails.value!.id.toString()}");
+    // print("selected product ${controller.productDetails.value!.id.toString()}");
 
     return Scaffold(
       appBar: AppBar(
@@ -110,47 +110,6 @@ class _ShopScreenState extends State<ShopScreen> {
                                       print("id for adding cart${controller.productDetails.value!.productVariants[value].id.toString()}");
                                       // controller.addProductToCart(controller.productDetails.value!.category.id.toString());
                                       controller.addProductToCart(context, controller.productDetails.value!.productVariants[value].id.toString());
-                                      
-                                      // final cartProduct = {
-                                      //   'product': controller.productDetails.value,
-                                      //   'category': value,
-                                      //   'count': 1,
-                                      // };
-                                      // if (cartProductsList.isEmpty) {
-                                      //   cartProductsList.add(cartProduct);
-                                      // } else {
-                                      //   // log("list ->${cartProductsList.toString()}");
-                                      //   int flag = 0;
-                                      //   for (int i = 0; i < cartProductsList.length; i++) {
-                                      //     print("working");
-                                      //     String nameInCartProductList = cartProductsList[i]['product']['name'];
-                                      //     String nameOfCartProduct = "";
-                                      //     int categoryInCartProductList = cartProductsList[i]['category'];
-                                      //     // String categoryOfCartProduct = controller.productDetails.value['category'][value]['weight'];
-                                      //     print("categories -> ${cartProductsList[i]['product']['name']} ------  ${cartProductsList[i]['category']}");
-                                      //     if (nameInCartProductList == nameOfCartProduct && categoryInCartProductList == value) {
-                                      //       log("item already exist :${nameInCartProductList}-${nameOfCartProduct},${categoryInCartProductList}------${value}");
-                                      //       int count = cartProductsList[i]['count'];
-                                      //       // print(count);
-                                      //       cartProductsList[i]['count'] = count + 1;
-                                      //       flag = 1;
-                                      //       // log("count now :${item['count']}");
-                                      //     }
-                                      //   }
-                                      //   if (flag == 0) {
-                                      //     log("item not exist :");
-                                      //     cartProductsList.add(cartProduct);
-                                      //   }
-                                      // }
-
-                                      // cartCountNotifier.value++;
-                                      // const snackBar = SnackBar(
-                                      //   content: Text('Product added to cart'),
-                                      //   behavior: SnackBarBehavior.floating,
-                                      //   margin: EdgeInsets.all(10),
-                                      //   padding: EdgeInsets.all(20),
-                                      // );
-                                      // ScaffoldMessenger.of(context).showSnackBar(snackBar);
                                     }
                                   },
                                   child: const CustomStyledShopPageButton(
@@ -171,19 +130,11 @@ class _ShopScreenState extends State<ShopScreen> {
                                     // int stock = controller.productDetails.value!.productVariants[i].stockQty;
                                     int stock = 1;
                                     if (stock > 0) {
-                                      final buyingProduct = {
-                                        'product': controller.productDetails.value,
-                                        'category': value,
-                                        'count': 1,
-                                      };
+                                      controller.getUserAddresses();
                                       Navigator.of(context).push(
                                         MaterialPageRoute(
                                           builder: (context) => PlaceOrderScreen(
-                                            // imagePath: imageList[0],
-                                            // productName: productName,
-                                            // productDescription: description,
-                                            // price: controller.productDetails.value['category'][value]['offerPrice'],
-                                            productDetails: buyingProduct,
+                                            productDetails: controller.productDetails.value!,
                                           ),
                                         ),
                                       );
@@ -254,6 +205,8 @@ class _ShopScreenState extends State<ShopScreen> {
                     ),
                     kHeight,
                     Obx(() {
+                      print("Stars : ${controller.numOf1Stars},${controller.numOf2Stars},${controller.numOf3Stars},${controller.numOf4Stars},${controller.numOf5Stars}");
+
                       return controller.isReviewsLoading.value
                           ? Center(
                               child: CircularProgressIndicator(),
@@ -279,7 +232,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                           fontSize: 15,
                                           fontweight: FontWeight.w600,
                                         ),
-                                        CustomTextWidget(text: "Average rating : 4.2"),
+                                        CustomTextWidget(text: "Average rating : ${controller.avgRating}"),
                                         kHeight,
                                         Container(
                                           height: 40,
@@ -360,28 +313,28 @@ class _ShopScreenState extends State<ShopScreen> {
                                       width: 1,
                                       color: Colors.grey,
                                     ),
-                                    const Column(
+                                    Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         DisplayStars(
                                           numberOfStars: 5,
-                                          rating: 8,
+                                          rating: controller.numOf5Stars,
                                         ),
                                         DisplayStars(
                                           numberOfStars: 4,
-                                          rating: 2,
+                                          rating: controller.numOf4Stars,
                                         ),
                                         DisplayStars(
                                           numberOfStars: 3,
-                                          rating: 1,
+                                          rating: controller.numOf3Stars,
                                         ),
                                         DisplayStars(
                                           numberOfStars: 2,
-                                          rating: 1,
+                                          rating: controller.numOf2Stars,
                                         ),
                                         DisplayStars(
                                           numberOfStars: 1,
-                                          rating: 0,
+                                          rating: controller.numOf1Stars,
                                         ),
                                       ],
                                     )
@@ -409,7 +362,7 @@ class _ShopScreenState extends State<ShopScreen> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: SearchFilterBar(
-                        heading: "${controller.similarProducts.value.count.toString()}+",
+                        heading: "${(controller.similarProducts.value.count - 1).toString()}+",
                       ),
                     ),
 
@@ -468,7 +421,7 @@ class _ShopScreenState extends State<ShopScreen> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: SearchFilterBar(
-                        heading: "${controller.similarProducts.value.count.toString()}+",
+                        heading: "${controller.allProducts.value.count.toString()}+",
                       ),
                     ),
 
@@ -476,18 +429,24 @@ class _ShopScreenState extends State<ShopScreen> {
                       height: 250,
                       child: Obx(
                         () {
-                          if (controller.valueAdded.value.count != 0) {
-                            return controller.isValueAddedLoading.value
+                          // for showing shuffled list of all products as related products
+                          List numbers = List.generate(controller.allProducts.value.count, (index) => index);
+                          print('Original list: $numbers');
+
+                          numbers.shuffle();
+                          print('Shuffled list: $numbers');
+                          if (controller.allProducts.value.count != 0) {
+                            return controller.isAllProductsLoading.value
                                 ? Center(
                                     child: CircularProgressIndicator(),
                                   )
                                 : ListView.builder(
                                     itemBuilder: (context, index) {
-                                      final productDetails = controller.valueAdded.value.results[index];
+                                      final productDetails = controller.allProducts.value.results[numbers[index]];
 
                                       return GestureDetector(
                                         onTap: () async {
-                                          final String productId = controller.valueAdded.value.results[index].product.id.toString();
+                                          final String productId = controller.allProducts.value.results[index].product.id.toString();
                                           // currentCategoryProducts = controller.roastedAndSalted.value;
                                           await controller.getProductDetails(productId);
                                           controller.productDetails.value = controller.productDetails.value;
@@ -501,7 +460,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                         ),
                                       );
                                     },
-                                    itemCount: controller.valueAdded.value.count,
+                                    itemCount: controller.allProducts.value.count,
                                     scrollDirection: Axis.horizontal,
                                   );
                           } else {
@@ -523,8 +482,8 @@ class _ShopScreenState extends State<ShopScreen> {
                     ),
                     Container(
                       height: 250,
-                      child: Obx(
-                        () => controller.isAllProductsLoading.value
+                      child: Obx(() {
+                        return controller.isAllProductsLoading.value
                             ? Center(
                                 child: CircularProgressIndicator(),
                               )
@@ -550,8 +509,8 @@ class _ShopScreenState extends State<ShopScreen> {
                                 },
                                 itemCount: controller.allProducts.value.count,
                                 scrollDirection: Axis.horizontal,
-                              ),
-                      ),
+                              );
+                      }),
                     ),
                   ],
                 );
@@ -630,7 +589,7 @@ class DisplayStars extends StatelessWidget {
     return Row(
       children: [
         SizedBox(
-          width: 20,
+          width: 45,
           child: CustomTextWidget(
             text: rating.toString(),
           ),

@@ -88,47 +88,53 @@ class CartScreen extends StatelessWidget {
                       );
               }),
               kHeight,
-              if (controller.cartProducts.value.count != 0)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    CustomTextWidget(
-                      text: "Grant Total : ",
-                      fontweight: FontWeight.w600,
-                    ),
-                    ValueListenableBuilder(
-                        valueListenable: grantTotalNotifier,
-                        builder: (context, grandTotal, _) {
-                          return CustomTextWidget(
-                            text: grandTotal.toStringAsFixed(2),
-                            fontweight: FontWeight.w600,
-                          );
-                        })
-                  ],
-                ),
-              kHeight,
-              if (controller.cartProducts.value.count != 0)
-                GestureDetector(
-                  onTap: () {
-                    if (grantTotalNotifier.value <= 500) {
-                      const snackBar = SnackBar(
-                        content: Text('Minimum order amount is Rs 500 and above'),
-                        behavior: SnackBarBehavior.floating,
-                        margin: EdgeInsets.all(10),
-                        padding: EdgeInsets.all(20),
-                      );
-                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                    } else {
-                      Get.to(
-                        () => MultipleItemPlaceOrderScreen(productList: controller.cartProducts.value.results),
-                      );
-                    }
-                  },
-                  child: CustomElevatedButton(
-                    label: "Buy Now",
-                    fontSize: 16,
-                  ),
-                ),
+              Obx(() {
+                return controller.cartProducts.value.count != 0
+                    ? Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              CustomTextWidget(
+                                text: "Grant Total : ",
+                                fontweight: FontWeight.w600,
+                              ),
+                              ValueListenableBuilder(
+                                  valueListenable: grantTotalNotifier,
+                                  builder: (context, grandTotal, _) {
+                                    return CustomTextWidget(
+                                      text: grandTotal.toStringAsFixed(2),
+                                      fontweight: FontWeight.w600,
+                                    );
+                                  })
+                            ],
+                          ),
+                          kHeight,
+                          GestureDetector(
+                            onTap: () {
+                              if (grantTotalNotifier.value <= 500) {
+                                const snackBar = SnackBar(
+                                  content: Text('Minimum order amount is Rs 500 and above'),
+                                  behavior: SnackBarBehavior.floating,
+                                  margin: EdgeInsets.all(10),
+                                  padding: EdgeInsets.all(20),
+                                );
+                                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                              } else {
+                                Get.to(
+                                  () => MultipleItemPlaceOrderScreen(productList: controller.cartProducts.value.results),
+                                );
+                              }
+                            },
+                            child: CustomElevatedButton(
+                              label: "Buy Now",
+                              fontSize: 16,
+                            ),
+                          )
+                        ],
+                      )
+                    : SizedBox();
+              })
             ],
           ),
         ),

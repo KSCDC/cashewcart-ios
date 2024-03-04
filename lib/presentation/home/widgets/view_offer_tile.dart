@@ -2,17 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 
 class ViewOfferTile extends StatelessWidget {
-  const ViewOfferTile({
+  ViewOfferTile({
     super.key,
     required this.color,
     required this.mainLabel,
     required this.icon,
     required this.subLabel,
+    this.onPressed,
   });
   final Color color;
   final String mainLabel;
   final IconData icon;
   final String subLabel;
+  void Function()? onPressed;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -60,7 +62,7 @@ class ViewOfferTile extends StatelessWidget {
               ),
             ),
             TextButton(
-              onPressed: () {},
+              onPressed: onPressed,
               style: TextButton.styleFrom(
                 foregroundColor: Colors.white,
                 side: BorderSide(width: 1, color: Colors.white),

@@ -8,18 +8,21 @@ import 'package:internship_sample/presentation/widgets/custom_star_rating_tile.d
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 
 class ProductsListItemTile extends StatelessWidget {
-  const ProductsListItemTile({
+  ProductsListItemTile({
     super.key,
     required this.productDetails,
+    this.imagePath = '',
   });
 
-  final Results productDetails;
+  final productDetails;
+  String imagePath;
 
   @override
   Widget build(BuildContext context) {
-    
-    final String imagePath = productDetails.product.productImages.isNotEmpty ? "$baseUrl${productDetails.product.productImages[0]['product_image']}" : "";
-    
+    if (imagePath == '') {
+      imagePath = productDetails.product.productImages.isNotEmpty ? "$baseUrl${productDetails.product.productImages[0]['product_image']}" : "";
+    }
+
     final String productName = productDetails.product.name;
     final String description = productDetails.product.description;
     final String originalPrice = productDetails.actualPrice;

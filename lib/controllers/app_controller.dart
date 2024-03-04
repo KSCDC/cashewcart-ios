@@ -7,6 +7,7 @@ import 'package:internship_sample/models/cart_product_model.dart';
 import 'package:internship_sample/models/product_details_model.dart';
 import 'package:internship_sample/models/product_model.dart';
 import 'package:internship_sample/models/product_reviews_model.dart';
+import 'package:internship_sample/models/trending_product_model.dart';
 import 'package:internship_sample/models/user_address_model.dart';
 import 'package:internship_sample/presentation/main_page/main_page_screen.dart';
 import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
@@ -17,22 +18,36 @@ class AppController extends GetxController {
   String userName = "";
   String email = "";
   String phoneNo = "";
+  int numOf1Stars = 0;
+  int numOf2Stars = 0;
+  int numOf3Stars = 0;
+  int numOf4Stars = 0;
+  int numOf5Stars = 0;
+  RxDouble avgRating = 0.0.obs;
   // String selectedProductId = "";
   RxBool isLoading = false.obs;
   RxBool isAllProductsLoading = false.obs;
   RxBool isPlainCashewLoading = false.obs;
   RxBool isRoastedAndSaltedLoading = false.obs;
   RxBool isValueAddedLoading = false.obs;
-  RxBool isBestSellersLoading = false.obs;
   RxBool isSimilarProductsLoading = false.obs;
+  RxBool isBestSellersLoading = false.obs;
+  RxBool isSponserdLoading = false.obs;
+  RxBool isTrendingLoading = false.obs;
   RxBool isReviewsLoading = false.obs;
+  RxBool isDisplayingTrendingModelList = false.obs;
+
   Rx<ProductModel> allProducts = ProductModel(count: 0, next: null, previous: null, results: []).obs;
   Rx<ProductModel> plainCashews = ProductModel(count: 0, next: null, previous: null, results: []).obs;
   Rx<ProductModel> roastedAndSalted = ProductModel(count: 0, next: null, previous: null, results: []).obs;
+  Rx<TrendingProductModel> trending = TrendingProductModel(count: 0, next: null, previous: null, results: []).obs;
+  Rx<TrendingProductModel> bestSellers = TrendingProductModel(count: 0, next: null, previous: null, results: []).obs;
+  Rx<TrendingProductModel> sponserd = TrendingProductModel(count: 0, next: null, previous: null, results: []).obs;
   Rx<ProductModel> valueAdded = ProductModel(count: 0, next: null, previous: null, results: []).obs;
-  Rx<ProductModel> bestSellers = ProductModel(count: 0, next: null, previous: null, results: []).obs;
   Rx<ProductModel> similarProducts = ProductModel(count: 0, next: null, previous: null, results: []).obs;
+  Rx<ProductModel> relatedProducts = ProductModel(count: 0, next: null, previous: null, results: []).obs;
   Rx<ProductModel> productDisplayList = ProductModel(count: 0, next: null, previous: null, results: []).obs;
+  Rx<TrendingProductModel> productDisplayList2 = TrendingProductModel(count: 0, next: null, previous: null, results: []).obs;
   Rx<CartProductModel> cartProducts = CartProductModel(count: 0, next: null, previous: null, results: []).obs;
   Rx<ProductModel> searchResults = ProductModel(count: 0, next: null, previous: null, results: []).obs;
   RxBool haveSearchResult = false.obs;
@@ -46,6 +61,9 @@ class AppController extends GetxController {
   bool isAlreadyLoadedPlainCashews = false;
   bool isAlreadyLoadedRoastedAndSaltedCashews = false;
   bool isAlreadyLoadedValueAdded = false;
+  bool isAlreadyLoadedTrending = false;
+  bool isAlreadyLoadedBestsellers = false;
+  bool isAlreadyLoadedSponserd = false;
 
   List<String> plainCashewSubCategories = ["All"];
   RxString selectedPlainCashewCategory = "All".obs;
@@ -98,6 +116,42 @@ class AppController extends GetxController {
     }
 
     isAllProductsLoading.value = false;
+  }
+
+  getTrendingProducts() async {
+    isTrendingLoading.value = true;
+    final response = await ApiServices().getTrendingProducts();
+    if (response != null) {
+      final data = TrendingProductModel.fromJson(response.data);
+      trending.value = data;
+      isAlreadyLoadedTrending = true;
+    }
+
+    isTrendingLoading.value = false;
+  }
+
+  getBestSellerProducts() async {
+    isBestSellersLoading.value = true;
+    final response = await ApiServices().getBestSellerProducts();
+    if (response != null) {
+      final data = TrendingProductModel.fromJson(response.data);
+      bestSellers.value = data;
+      isAlreadyLoadedBestsellers = true;
+    }
+    print("best sellers :${bestSellers}");
+    isBestSellersLoading.value = false;
+  }
+
+  getSponserdProducts() async {
+    isSponserdLoading.value = true;
+    final response = await ApiServices().getSponserdProducts();
+    if (response != null) {
+      final data = TrendingProductModel.fromJson(response.data);
+      sponserd.value = data;
+      isAlreadyLoadedSponserd = true;
+    }
+
+    isSponserdLoading.value = false;
   }
 
   getProductsByCategory(String category, String categoryName) async {
@@ -181,13 +235,40 @@ class AppController extends GetxController {
     productReviewsList.clear();
     final List<ProductReviewsModel> tempList = [];
     final response = await ApiServices().getProductReviews(productId);
-
+    final avgRatingResponse = await ApiServices().getAverageStarRatings(productId);
+    if (avgRatingResponse != null) {
+      print("avg ratings :${avgRatingResponse.data['average_rating']}");
+      avgRating.value = avgRatingResponse.data['average_rating'];
+    }
     if (response != null) {
       final List<dynamic> responseData = response.data;
-
+      numOf1Stars = 0;
+      numOf2Stars = 0;
+      numOf3Stars = 0;
+      numOf4Stars = 0;
+      numOf5Stars = 0;
       for (final item in responseData) {
         final review = ProductReviewsModel.fromJson(item);
         tempList.add(review);
+        switch (review.stars) {
+          case 1:
+            numOf1Stars++;
+            break;
+          case 2:
+            numOf2Stars++;
+            break;
+          case 3:
+            numOf3Stars++;
+            break;
+          case 4:
+            numOf4Stars++;
+            break;
+          case 5:
+            numOf5Stars++;
+            break;
+          default:
+            print('Invalid number of stars');
+        }
       }
 
       productReviewsList.value = tempList;

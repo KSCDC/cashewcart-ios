@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:internship_sample/controllers/app_controller.dart';
 import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/core/constants.dart';
+import 'package:internship_sample/main.dart';
+import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 
 class SponseredProductTile extends StatelessWidget {
-  const SponseredProductTile({
+  SponseredProductTile({
     super.key,
     required this.imagePath,
   });
   final String imagePath;
-
+  AppController controller = Get.put(AppController());
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
@@ -38,7 +42,7 @@ class SponseredProductTile extends StatelessWidget {
                 // color: Colors.black,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage(imagePath),
+                    image: NetworkImage(imagePath),
                     fit: BoxFit.cover,
                   ),
                   borderRadius: BorderRadius.all(
@@ -102,7 +106,13 @@ class SponseredProductTile extends StatelessWidget {
                 fontweight: FontWeight.w700,
               ),
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  controller.productDisplayList2 = controller.sponserd;
+
+                  print("sponserd : ${controller.productDisplayList2.value.count}");
+                  previousPageIndexes.add(bottomNavbarIndexNotifier.value);
+                  bottomNavbarIndexNotifier.value = 9;
+                },
                 icon: Icon(Icons.arrow_forward_ios),
               )
             ],

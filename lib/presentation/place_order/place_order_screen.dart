@@ -2,8 +2,12 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:internship_sample/controllers/app_controller.dart';
+import 'package:internship_sample/core/base_url.dart';
 import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/core/constants.dart';
+import 'package:internship_sample/models/product_details_model.dart';
 import 'package:internship_sample/presentation/cart/cart_screen.dart';
 import 'package:internship_sample/presentation/checkout/checkout_screen.dart';
 import 'package:internship_sample/presentation/cart/widgets/cart_product_list_tile.dart';
@@ -12,9 +16,11 @@ import 'package:internship_sample/presentation/place_order/place_order_dropdown.
 import 'package:internship_sample/presentation/place_order/widgets/address_section.dart';
 import 'package:internship_sample/presentation/place_order/widgets/address_tile.dart';
 import 'package:internship_sample/presentation/shop/widgets/custom_text_icon_button.dart';
+import 'package:internship_sample/presentation/shop/widgets/shop_product_details_tile.dart';
 import 'package:internship_sample/presentation/widgets/custom_appbar.dart';
 import 'package:internship_sample/presentation/widgets/custom_elevated_button.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
+import 'package:internship_sample/services/services.dart';
 
 // int selectedAddressIndex = -1;
 var _oneValue = '';
@@ -23,28 +29,23 @@ var _twoValue = '';
 
 var _threeValue = '';
 final List<String> three = ["1", "2", "3", "4", "5"];
+ValueNotifier<int> productCountNotifier = ValueNotifier(1);
 
 class PlaceOrderScreen extends StatelessWidget {
   PlaceOrderScreen({
     super.key,
     required this.productDetails,
   });
-  final productDetails;
-  TextEditingController _textEditingController = TextEditingController(
-      text: "216 St Paul's Rd, London N1 2LL, UK, \nContact :  +44-784232 ");
+  final ProductDetailsModel productDetails;
+  // TextEditingController _textEditingController = TextEditingController(text: "216 St Paul's Rd, London N1 2LL, UK, \nContact :  +44-784232 ");
+  AppController controller = Get.put(AppController());
   @override
   Widget build(BuildContext context) {
-    final int category = productDetails['category'];
-    final String imagePath = productDetails['product']['imagePath'][0];
-    final String name = productDetails['product']['name'];
-    final String description =
-        productDetails['product']['category'][category]['description'];
-    final String price =
-        productDetails['product']['category'][category]['offerPrice'];
-    // final String rating = productDetails['product']['category'][category]['rating'];
-    // final String weight = productDetails['product']['category'][category]['weight'];
-
-    final int count = productDetails['count'];
+    // final int category = productDetails['category'];
+    final String imagePath = productDetails.productImages.isNotEmpty ? "$baseUrl${productDetails.productImages[0]['product_image']}" : "";
+    final String name = productDetails.name;
+    final String description = productDetails.description;
+    final String price = productDetails.productVariants[sizeSelectNotifier.value].sellingPrice;
 
     final screenSize = MediaQuery.of(context).size;
     return Scaffold(
@@ -71,7 +72,7 @@ class PlaceOrderScreen extends StatelessWidget {
                           width: screenSize.width * 0.25,
                           decoration: BoxDecoration(
                             image: DecorationImage(
-                              image: AssetImage(imagePath),
+                              image: NetworkImage(imagePath),
                               fit: BoxFit.fitWidth,
                             ),
                             borderRadius: BorderRadius.all(
@@ -107,16 +108,13 @@ class PlaceOrderScreen extends StatelessWidget {
                                 ValueListenableBuilder(
                                   valueListenable: productCountNotifier,
                                   builder: (context, newCount, _) {
-                                    productDetails['count'] = newCount;
-                                    return CustomTextWidget(
-                                        text: "Nos : ${newCount}");
+                                    return CustomTextWidget(text: "Nos : ${newCount}");
                                   },
                                 ),
                                 SizedBox(width: 20),
                                 GestureDetector(
                                   onTap: () {
-                                    if (productCountNotifier.value != 1)
-                                      productCountNotifier.value--;
+                                    if (productCountNotifier.value != 1) productCountNotifier.value--;
                                   },
                                   child: Icon(Icons.remove),
                                 ),
@@ -138,68 +136,18 @@ class PlaceOrderScreen extends StatelessWidget {
 
                   //delivery addresses
 
-                  if (deliveryAddressControllers.isEmpty)
-                    CustomTextWidget(text: "No saved addresses!")
-                  else
-                    AddressSection(screenSize: screenSize),
+                  Obx(() {
+                    return controller.addressList.isEmpty ? CustomTextWidget(text: "No saved addresses!") : AddressSection(screenSize: screenSize);
+                  }),
 
                   SizedBox(height: 5),
 
                   // add new address button
                   CustomTextIconButton(
                     onPressed: () async {
-                      TextEditingController _newAddressController =
-                          TextEditingController();
+                      TextEditingController _newAddressController = TextEditingController();
 
-                      await showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return Dialog(
-                            insetAnimationDuration:
-                                Duration(milliseconds: 1000),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              width: screenSize.width * 0.9,
-                              height: screenSize.width * 0.8,
-                              child: Padding(
-                                padding: const EdgeInsets.all(15),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    kHeight,
-                                    CustomTextWidget(
-                                        text: "Enter new address here"),
-                                    SizedBox(height: 5),
-                                    TextField(
-                                      controller: _newAddressController,
-                                      maxLines:
-                                          4, // Set to null for an unlimited number of lines
-                                      decoration: InputDecoration(
-                                        border: OutlineInputBorder(),
-                                      ),
-                                    ),
-                                    SizedBox(height: 20),
-                                    GestureDetector(
-                                      onTap: () {
-                                        deliveryAddressControllers
-                                            .add(_newAddressController);
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: CustomElevatedButton(
-                                        label: "Submit",
-                                        fontSize: 16,
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      );
+                      Services().showAddressPopup(context);
                     },
                     icon: Icons.add,
                     label: "Add address",
@@ -351,18 +299,13 @@ class PlaceOrderScreen extends StatelessWidget {
               width: 250,
               child: GestureDetector(
                 onTap: () {
-                  final double total =
-                      double.parse(price) * productCountNotifier.value;
+                  final double total = double.parse(price) * productCountNotifier.value;
                   if (total <= 500) {
-                    const snackBar = SnackBar(
-                      content: Text('Minimum order amount is Rs 500 and above'),
-                      behavior: SnackBarBehavior.floating,
-                      margin: EdgeInsets.all(10),
-                      padding: EdgeInsets.all(20),
-                    );
-
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    Services().showCustomSnackBar(context, "Minimum order amount is Rs 500 and above");
                   } else {
+                    if (controller.addressList.isEmpty) {
+                      Services().showCustomSnackBar(context, "Add atleast one address");
+                    }
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => CheckoutScreen(

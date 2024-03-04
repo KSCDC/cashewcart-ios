@@ -47,6 +47,13 @@ class HomeScreen extends StatelessWidget {
     if (!controller.isAlreadyLoadedAllProducts) {
       controller.getAllProducts();
     }
+    if (!controller.isAlreadyLoadedBestsellers) {
+      controller.getBestSellerProducts();
+    }
+    if (!controller.isAlreadyLoadedSponserd) {
+      controller.getSponserdProducts();
+    }
+
     final screenSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: MainAppBar(),
@@ -89,24 +96,34 @@ class HomeScreen extends StatelessWidget {
               ),
 
               //sliding windows
-              Container(
-                height: 230,
-                width: screenSize.width * 0.9,
-                child: PageView(
-                  controller: pageController,
-                  children: [
-                    SlidingImageTile(
-                      productDetails: cashewsPlaneList[0],
-                    ),
-                    SlidingImageTile(
-                      productDetails: roastedCashewsList[0],
-                    ),
-                    SlidingImageTile(
-                      productDetails: valueAddedProducts[0],
-                    ),
-                  ],
-                ),
-              ),
+              Obx(() {
+                return controller.isPlainCashewLoading.value || controller.isRoastedAndSaltedLoading.value
+                    ? SizedBox(
+                        height: 230,
+                        width: screenSize.width * 0.9,
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      )
+                    : SizedBox(
+                        height: 230,
+                        width: screenSize.width * 0.9,
+                        child: PageView(
+                          controller: pageController,
+                          children: [
+                            SlidingImageTile(
+                              productDetails: controller.plainCashews.value.results[0],
+                            ),
+                            SlidingImageTile(
+                              productDetails: controller.roastedAndSalted.value.results[0],
+                            ),
+                            SlidingImageTile(
+                              productDetails: controller.valueAdded.value.results[0],
+                            ),
+                          ],
+                        ),
+                      );
+              }),
               SizedBox(height: 10),
               Center(
                 child: SmoothPageIndicator(
@@ -147,17 +164,22 @@ class HomeScreen extends StatelessWidget {
                   Container(
                     height: 250,
                     child: Obx(
-                      () => controller.isAllProductsLoading.value
-                          ? Center(
-                              child: CircularProgressIndicator(),
+                      () => controller.isBestSellersLoading.value
+                          ? SizedBox(
+                              width: screenSize.width * 0.4,
+                              height: 300,
+                              child: Center(
+                                child: CircularProgressIndicator(),
+                              ),
                             )
                           : ListView.builder(
                               itemBuilder: (context, index) {
-                                final productDetails = controller.allProducts.value.results[index];
+                                final productDetails = controller.bestSellers.value.results[index].product;
+                                print("${productDetails.product.productImages[0].productImage}");
 
                                 return GestureDetector(
                                   onTap: () async {
-                                    final String productId = controller.allProducts.value.results[index].product.id.toString();
+                                    final String productId = controller.bestSellers.value.results[index].product.product.id.toString();
                                     previousPageIndexes.add(bottomNavbarIndexNotifier.value);
                                     bottomNavbarIndexNotifier.value = 4;
                                     controller.getProductDetails(productId);
@@ -166,10 +188,11 @@ class HomeScreen extends StatelessWidget {
                                   },
                                   child: ProductsListItemTile(
                                     productDetails: productDetails,
+                                    imagePath: productDetails.product.productImages.isNotEmpty ? "$baseUrl${productDetails.product.productImages[0].productImage}" : "abc",
                                   ),
                                 );
                               },
-                              itemCount: controller.allProducts.value.count,
+                              itemCount: controller.bestSellers.value.count,
                               scrollDirection: Axis.horizontal,
                             ),
                     ),
@@ -208,17 +231,37 @@ class HomeScreen extends StatelessWidget {
               //buy now
 
               Obx(() {
-                return BuyNowTile(
-                  productDetails: controller.plainCashews.value,
-                );
+                return controller.isPlainCashewLoading.value
+                    ? Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : BuyNowTile(
+                        productDetails: controller.plainCashews.value,
+                      );
               }),
 
-              const ViewOfferTile(
-                color: Color(0xFFFD6E87),
-                mainLabel: "Trending Products",
-                icon: Icons.calendar_month,
-                subLabel: "Last Date 29/02/22",
-              ),
+              Obx(() {
+                return controller.isTrendingLoading.value
+                    ? Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : ViewOfferTile(
+                        onPressed: () {
+                          if (!controller.isAlreadyLoadedTrending) {
+                            controller.getTrendingProducts();
+                          }
+
+                          controller.productDisplayList2 = controller.trending;
+                          print("Trending : ${controller.productDisplayList2.value.count}");
+                          previousPageIndexes.add(bottomNavbarIndexNotifier.value);
+                          bottomNavbarIndexNotifier.value = 9;
+                        },
+                        color: Color(0xFFFD6E87),
+                        mainLabel: "Trending Products",
+                        icon: Icons.calendar_month,
+                        subLabel: "Last Date 29/02/22",
+                      );
+              }),
 
               // products list
 
@@ -226,8 +269,12 @@ class HomeScreen extends StatelessWidget {
                 height: 250,
                 child: Obx(
                   () => controller.isAllProductsLoading.value
-                      ? Center(
-                          child: CircularProgressIndicator(),
+                      ? SizedBox(
+                          width: screenSize.width * 0.4,
+                          height: 300,
+                          child: Center(
+                            child: CircularProgressIndicator(),
+                          ),
                         )
                       : ListView.builder(
                           itemBuilder: (context, index) {
@@ -262,15 +309,26 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(height: 15),
 
               //Sponsered product
-              GestureDetector(
-                onTap: () async {
-                  // controller.productDetails.value = await roastedCashewsList[0];
-                  previousPageIndexes.add(bottomNavbarIndexNotifier.value);
-                  bottomNavbarIndexNotifier.value = 4;
+              Obx(
+                () {
+                  if (controller.sponserd.value.count == 0) {
+                    return SizedBox(
+                      width: screenSize.width * 0.95,
+                      height: screenSize.width * 0.8,
+                      child: Center(child: CustomTextWidget(text: "No sponserd products right now")),
+                    );
+                  } else {
+                    return controller.isSponserdLoading.value
+                        ? Center(
+                            child: CircularProgressIndicator(),
+                          )
+                        : GestureDetector(
+                            child: SponseredProductTile(
+                              imagePath: "$baseUrl${controller.sponserd.value.results[0].product.product.productImages[0].productImage}",
+                            ),
+                          );
+                  }
                 },
-                child: SponseredProductTile(
-                  imagePath: "lib/core/assets/images/product_images/Roasted and Salted Cashew/Roasted and salted Cashew.png",
-                ),
               ),
               kHeight,
               CustomTextWidget(
@@ -280,8 +338,12 @@ class HomeScreen extends StatelessWidget {
               ),
               Obx(() {
                 return controller.isAllProductsLoading.value
-                    ? Center(
-                        child: CircularProgressIndicator(),
+                    ? SizedBox(
+                        width: screenSize.width * 0.4,
+                        height: 300,
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        ),
                       )
                     : GridView.count(
                         physics: const NeverScrollableScrollPhysics(),

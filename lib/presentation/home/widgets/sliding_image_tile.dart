@@ -1,22 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:internship_sample/controllers/app_controller.dart';
+import 'package:internship_sample/core/base_url.dart';
 import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/main.dart';
+// import 'package:internship_sample/models/cart_product_model.dart';
 import 'package:internship_sample/presentation/home/home_screen.dart';
 import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
 import 'package:internship_sample/presentation/shop/shop_screen.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 
 class SlidingImageTile extends StatelessWidget {
-  const SlidingImageTile({
+  SlidingImageTile({
     super.key,
     required this.productDetails,
   });
   final productDetails;
-
+  AppController controller = Get.put(AppController());
   @override
   Widget build(BuildContext context) {
-    final String imagePath = productDetails['imagePath'][0];
-    ;
+    final String imagePath = productDetails.product.productImages[0]['product_image'];
 
     final screenSize = MediaQuery.of(context).size;
     return Container(
@@ -28,7 +31,7 @@ class SlidingImageTile extends StatelessWidget {
             height: screenSize.width * 0.8,
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage(imagePath),
+                image: NetworkImage("$baseUrl${imagePath}"),
                 fit: BoxFit.fitWidth,
               ),
               borderRadius: BorderRadius.all(
@@ -64,8 +67,7 @@ class SlidingImageTile extends StatelessWidget {
                   onPressed: () {},
                   style: TextButton.styleFrom(
                     foregroundColor: kMainThemeColor.withOpacity(0.6),
-                    side: BorderSide(
-                        width: 1, color: kMainThemeColor.withOpacity(0.6)),
+                    side: BorderSide(width: 1, color: kMainThemeColor.withOpacity(0.6)),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(6),
                     ),
@@ -73,6 +75,9 @@ class SlidingImageTile extends StatelessWidget {
                   child: GestureDetector(
                     onTap: () async {
                       // controller.productDetails.value = await productDetails;
+                      final String productId = productDetails.product.id.toString();
+                      controller.getProductDetails(productId);
+                      controller.getProductReviews(productId);
                       previousPageIndexes.add(bottomNavbarIndexNotifier.value);
                       bottomNavbarIndexNotifier.value = 4;
                     },

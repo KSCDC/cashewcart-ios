@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:internship_sample/controllers/app_controller.dart';
 import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/presentation/profile/widgets/profile_editing_textfield.dart';
@@ -20,18 +22,11 @@ class ProfileScreen extends StatelessWidget {
   TextEditingController _bankAccountNoController = TextEditingController();
   TextEditingController _accountHolderNameController = TextEditingController();
   TextEditingController _ifscCodeController = TextEditingController();
-
+  AppController controller = Get.put(AppController());
   @override
   Widget build(BuildContext context) {
-    //initial values of text fields
-    _emailController.text = "aashifa@gmail.com";
-    _passwordController.text = "asdasdasdasdad";
-    _pinCodeController.text = "450116";
-    _addressController.text = "216 St Paul's Rd, ";
-    _cityController.text = "London";
-    _countryController.text = "United Kingdom";
     _bankAccountNoController.text = "204356XXXXXXX";
-    _accountHolderNameController.text = "Abhiraj Sisodiya";
+
     _ifscCodeController.text = "SBIN00428";
 
     return Scaffold(
@@ -53,8 +48,7 @@ class ProfileScreen extends StatelessWidget {
                         padding: const EdgeInsets.only(right: 10),
                         child: CircleAvatar(
                           radius: 50,
-                          backgroundImage:
-                              AssetImage("lib/core/assets/images/avatar.jpeg"),
+                          backgroundImage: AssetImage("lib/core/assets/images/avatar.jpeg"),
                         ),
                       ),
                       Positioned(
@@ -85,90 +79,108 @@ class ProfileScreen extends StatelessWidget {
 
               //Personal details section
 
-              ProfileScreenSubHeading(text: "Personal Details"),
-              kProfileScreenGap,
-              ProfileEditingTextField(
-                hintText: "Email Address",
-                controller: _emailController,
-              ),
-              kProfileScreenGap,
-              ProfileEditingTextField(
-                hintText: "Password",
-                controller: _passwordController,
-                obscureText: true,
-              ),
-              kHeight,
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  CustomTextWidget(
-                    text: "Change Password",
-                    fontSize: 12,
-                    fontColor: kMainThemeColor,
-                    fontweight: FontWeight.w500,
-                    underline: true,
-                  )
-                ],
-              ),
-              kProfileScreenGap,
-              Divider(),
-              kProfileScreenGap,
+              Obx(() {
+                // initial values of text fields
+                _emailController.text = controller.email;
+                _accountHolderNameController.text = controller.userName;
+                _passwordController.text = "**********";
+                _pinCodeController.text = controller.addressList.value[0].postalCode;
+                _addressController.text = controller.addressList.value[0].streetAddress;
+                _cityController.text = controller.addressList.value[0].city;
+                _countryController.text = controller.addressList.value[0].country;
+                return controller.isLoading.value
+                    ? Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : Column(
+                        children: [
+                          ProfileScreenSubHeading(text: "Personal Details"),
+                          kProfileScreenGap,
+                          ProfileEditingTextField(
+                            hintText: "Email Address",
+                            controller: _emailController,
+                          ),
+                          kProfileScreenGap,
+                          ProfileEditingTextField(
+                            hintText: "Password",
+                            controller: _passwordController,
+                            obscureText: true,
+                          ),
+                          kHeight,
+                          const Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              CustomTextWidget(
+                                text: "Change Password",
+                                fontSize: 12,
+                                fontColor: kMainThemeColor,
+                                fontweight: FontWeight.w500,
+                                underline: true,
+                              )
+                            ],
+                          ),
+                          kProfileScreenGap,
+                          Divider(),
+                          kProfileScreenGap,
 
-              //Buisiness address details section
+                          //Buisiness address details section
 
-              ProfileScreenSubHeading(text: "Business Address Details"),
-              kProfileScreenGap,
-              ProfileEditingTextField(
-                hintText: "Pincode",
-                controller: _pinCodeController,
-              ),
-              kProfileScreenGap,
-              ProfileEditingTextField(
-                hintText: "Address",
-                controller: _addressController,
-              ),
-              kProfileScreenGap,
-              ProfileEditingTextField(
-                hintText: "City",
-                controller: _cityController,
-              ),
-              kProfileScreenGap,
-              const CustomTextWidget(
-                text: "States",
-                fontweight: FontWeight.w400,
-              ),
-              kHeight,
-              DropdownButtonFormField(
-                items: statesList.map((String state) {
-                  return new DropdownMenuItem(
-                    value: state,
-                    child: Text(state),
-                  );
-                }).toList(),
-                onChanged: (newValue) {},
-                value: "N1 2LL",
-                decoration: const InputDecoration(
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    borderSide: BorderSide(
-                      color: Color(0xffA8A8A9),
-                      width: 1,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    borderSide: BorderSide(
-                      width: 1,
-                    ),
-                  ),
-                ),
-                icon: Icon(Icons.keyboard_arrow_down_sharp),
-              ),
-              kProfileScreenGap,
-              ProfileEditingTextField(
-                hintText: "Country",
-                controller: _countryController,
-              ),
+                          ProfileScreenSubHeading(text: "Business Address Details"),
+                          kProfileScreenGap,
+                          ProfileEditingTextField(
+                            hintText: "Pincode",
+                            controller: _pinCodeController,
+                          ),
+                          kProfileScreenGap,
+                          ProfileEditingTextField(
+                            hintText: "Address",
+                            controller: _addressController,
+                          ),
+                          kProfileScreenGap,
+                          ProfileEditingTextField(
+                            hintText: "City",
+                            controller: _cityController,
+                          ),
+                          kProfileScreenGap,
+                          const CustomTextWidget(
+                            text: "States",
+                            fontweight: FontWeight.w400,
+                          ),
+                          kHeight,
+                          DropdownButtonFormField(
+                            items: statesList.map((String state) {
+                              return new DropdownMenuItem(
+                                value: state,
+                                child: Text(state),
+                              );
+                            }).toList(),
+                            onChanged: (newValue) {},
+                            value: "N1 2LL",
+                            decoration: const InputDecoration(
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(10)),
+                                borderSide: BorderSide(
+                                  color: Color(0xffA8A8A9),
+                                  width: 1,
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(10)),
+                                borderSide: BorderSide(
+                                  width: 1,
+                                ),
+                              ),
+                            ),
+                            icon: Icon(Icons.keyboard_arrow_down_sharp),
+                          ),
+                          kProfileScreenGap,
+                          ProfileEditingTextField(
+                            hintText: "Country",
+                            controller: _countryController,
+                          ),
+                        ],
+                      );
+              }),
 
               kProfileScreenGap,
               Divider(),
@@ -180,17 +192,17 @@ class ProfileScreen extends StatelessWidget {
               kProfileScreenGap,
               ProfileEditingTextField(
                 hintText: "Bank Account Number",
-                controller: _cityController,
+                controller: _bankAccountNoController,
               ),
               kProfileScreenGap,
               ProfileEditingTextField(
                 hintText: "Account Holder's Name",
-                controller: _cityController,
+                controller: _accountHolderNameController,
               ),
               kProfileScreenGap,
               ProfileEditingTextField(
                 hintText: "IFSC Code",
-                controller: _cityController,
+                controller: _ifscCodeController,
               ),
               kProfileScreenGap,
               const SizedBox(

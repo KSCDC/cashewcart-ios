@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:internship_sample/controllers/app_controller.dart';
 import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/presentation/profile/profile_screen.dart';
 import 'package:internship_sample/presentation/side_bar/side_bar.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 
 class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const MainAppBar({super.key});
-
+  MainAppBar({super.key});
+  AppController controller = Get.put(AppController());
   @override
   Widget build(BuildContext context) {
     return AppBar(
@@ -32,11 +34,11 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: GestureDetector(
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => ProfileScreen(),
-              ),
-            ),
+            onTap: () {
+              controller.getProfileDetails();
+              controller.getUserAddresses();
+              Get.to(() => ProfileScreen());
+            },
             child: CircleAvatar(
               child: Image.asset("lib/core/assets/images/avatar.jpeg"),
             ),
