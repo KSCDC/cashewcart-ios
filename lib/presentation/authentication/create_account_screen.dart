@@ -4,7 +4,6 @@ import 'package:internship_sample/controllers/app_controller.dart';
 // import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/core/constants.dart';
-import 'package:internship_sample/presentation/authentication/otp_verification.dart';
 
 import 'package:internship_sample/presentation/authentication/widgets/alternative_signin_options.dart.dart';
 import 'package:internship_sample/presentation/authentication/widgets/authentication_page_title.dart';
@@ -16,8 +15,8 @@ import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 import 'package:internship_sample/services/api_services.dart';
 import 'package:validatorless/validatorless.dart';
 
-class ForgotPasswordScreen extends StatelessWidget {
-  ForgotPasswordScreen({super.key});
+class CreateAccountScreen extends StatelessWidget {
+  CreateAccountScreen({super.key});
 
   TextEditingController usernameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
@@ -60,7 +59,10 @@ class ForgotPasswordScreen extends StatelessWidget {
                     children: [
                       kHeight,
                       AuthenticationPageTitle(
-                        heading: "Forgot\nPassword?",
+                        heading: "Create an",
+                      ),
+                      AuthenticationPageTitle(
+                        heading: "account",
                       ),
                       const SizedBox(height: 10),
                       Form(
@@ -68,37 +70,73 @@ class ForgotPasswordScreen extends StatelessWidget {
                         child: Column(
                           children: [
                             CustomIconTextField(
-                              icon: Icons.mail_outline,
-                              hintText: "Email",
-                              controller: emailController,
-                              keyboardType: TextInputType.emailAddress,
+                              icon: Icons.person_2,
+                              hintText: "Username",
+                              controller: usernameController,
+                              keyboardType: TextInputType.name,
                               validator: Validatorless.multiple(
                                 [
-                                  Validatorless.required('Email is required'),
-                                  Validatorless.email("Invalid Email"),
+                                  Validatorless.required('Name is required'),
+                                  Validatorless.min(3, 'Username must be at least 3 characters'),
                                 ],
                               ),
+                            ),
+                            CustomIconTextField(
+                              icon: Icons.phone_outlined,
+                              hintText: "Phone",
+                              controller: phoneNumberController,
+                              keyboardType: TextInputType.phone,
+                              validator: Validatorless.multiple(
+                                [
+                                  Validatorless.required('Phone number is required'),
+                                  Validatorless.number('Invalid Phone number'),
+                                  Validatorless.min(10, 'Invalid Phone number'),
+                                  Validatorless.max(10, 'Invalid Phone number'),
+                                ],
+                              ),
+                            ),
+                            CustomPasswordTextField(
+                              hintText: "Password",
+                              controller: passwordController,
+                              validator: Validatorless.multiple(
+                                [
+                                  Validatorless.required('Password is required'),
+                                  Validatorless.min(6, 'Password must contain atleast 6 characters'),
+                                ],
+                              ),
+                            ),
+                            CustomPasswordTextField(
+                              hintText: "Confirm  Password",
+                              controller: confirmPasswordController,
                             ),
                           ],
                         ),
                       ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      const Wrap(
                         children: [
-                          const CustomTextWidget(
-                            text: "* ",
+                          CustomTextWidget(
+                            text: "By clicking the ",
+                            fontSize: 12,
+                            fontColor: kAuthentificationPageTextColor,
+                            fontweight: FontWeight.w400,
+                          ),
+                          CustomTextWidget(
+                            text: "Register ",
                             fontSize: 12,
                             fontColor: Color(0xffFF4B26),
                             fontweight: FontWeight.w400,
                           ),
-                          SizedBox(
-                            width: screenSize.width * 0.7,
-                            child: const CustomTextWidget(
-                              text: "We will send a message to verify your mail",
-                              fontSize: 12,
-                              fontColor: kAuthentificationPageTextColor,
-                              fontweight: FontWeight.w400,
-                            ),
+                          CustomTextWidget(
+                            text: "button, you agree",
+                            fontSize: 12,
+                            fontColor: kAuthentificationPageTextColor,
+                            fontweight: FontWeight.w400,
+                          ),
+                          CustomTextWidget(
+                            text: "to the public offer",
+                            fontSize: 12,
+                            fontColor: kAuthentificationPageTextColor,
+                            fontweight: FontWeight.w400,
                           ),
                         ],
                       ),
@@ -109,13 +147,30 @@ class ForgotPasswordScreen extends StatelessWidget {
                         child: GestureDetector(
                           onTap: () {
                             if (_formKey.currentState!.validate()) {
-                              Get.to(() => OtpVerificationScreen(
-                                    isNewUser: false,
-                                  ));
+                              final _password = passwordController.text;
+                              final _confirmPassword = confirmPasswordController.text;
+                              if (_password != _confirmPassword) {
+                                const snackBar = SnackBar(
+                                  content: Text("Passwords doesn't match!"),
+                                  behavior: SnackBarBehavior.floating,
+                                  margin: EdgeInsets.all(10),
+                                  padding: EdgeInsets.all(20),
+                                );
+                                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                              } else {
+                                print("Trying to register user");
+                                controller.registerNewUser(
+                                  context,
+                                  usernameController.text,
+                                  emailController.text,
+                                  phoneNumberController.text,
+                                  passwordController.text,
+                                );
+                              }
                             }
                           },
                           child: CustomElevatedButton(
-                            label: "Verify Email",
+                            label: "Create Account",
                           ),
                         ),
                       ),

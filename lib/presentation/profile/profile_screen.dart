@@ -7,6 +7,8 @@ import 'package:internship_sample/presentation/profile/widgets/profile_editing_t
 import 'package:internship_sample/presentation/widgets/custom_appbar.dart';
 import 'package:internship_sample/presentation/widgets/custom_elevated_button.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
+import 'package:internship_sample/services/api_services.dart';
+import 'package:internship_sample/services/services.dart';
 
 class ProfileScreen extends StatelessWidget {
   ProfileScreen({super.key});
@@ -105,17 +107,23 @@ class ProfileScreen extends StatelessWidget {
                             hintText: "Password",
                             controller: _passwordController,
                             obscureText: true,
+                            enabled: false,
                           ),
                           kHeight,
-                          const Row(
+                          Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              CustomTextWidget(
-                                text: "Change Password",
-                                fontSize: 12,
-                                fontColor: kMainThemeColor,
-                                fontweight: FontWeight.w500,
-                                underline: true,
+                              GestureDetector(
+                                onTap: () {
+                                  showPasswordEditingPopup(context);
+                                },
+                                child: CustomTextWidget(
+                                  text: "Change Password",
+                                  fontSize: 12,
+                                  fontColor: kMainThemeColor,
+                                  fontweight: FontWeight.w500,
+                                  underline: true,
+                                ),
                               )
                             ],
                           ),
@@ -205,16 +213,71 @@ class ProfileScreen extends StatelessWidget {
                 controller: _ifscCodeController,
               ),
               kProfileScreenGap,
-              const SizedBox(
+              SizedBox(
                 height: 55,
                 width: double.infinity,
-                child: CustomElevatedButton(label: "Save"),
+                child: GestureDetector(
+                  onTap: () async {
+                    ApiServices().editUserAddress(context, controller.addressList[0].id.toString(), _addressController.text, _cityController.text, "kerala", _pinCodeController.text, true);
+                    controller.getUserAddresses();
+                  },
+                  child: CustomElevatedButton(label: "Save"),
+                ),
               ),
               const SizedBox(height: 50),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  void showPasswordEditingPopup(BuildContext context) {
+    TextEditingController _currentPasswordController = TextEditingController();
+    TextEditingController _newPasswordController = TextEditingController();
+    TextEditingController _confirmNewPasswordController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          child: AlertDialog(
+            title: Text('Popup Title'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ProfileEditingTextField(
+                  hintText: "Current Password",
+                  controller: _currentPasswordController,
+                ),
+                ProfileEditingTextField(
+                  hintText: "New Password",
+                  controller: _newPasswordController,
+                ),
+                ProfileEditingTextField(
+                  hintText: "Confirm New Password",
+                  controller: _confirmNewPasswordController,
+                ),
+              ],
+            ),
+            actions: [
+              GestureDetector(
+                onTap: () {
+                  if (_newPasswordController.text != _confirmNewPasswordController.text) {
+                    Services().showCustomSnackBar(context, "Password and confirm password doesn't match");
+                  } else if (_newPasswordController.text.length < 6) {
+                    Services().showCustomSnackBar(context, "Password must contain atleast 6 characters");
+                  } else {
+                    ApiServices().changePassword(_newPasswordController.text, _confirmNewPasswordController.text);
+                  }
+                  Get.back();
+                },
+                child: CustomElevatedButton(label: "Update"),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

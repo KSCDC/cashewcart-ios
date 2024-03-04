@@ -58,6 +58,7 @@ class _ShopScreenState extends State<ShopScreen> {
     // print("similar : $similarProductsList");
     TextEditingController reviewController = TextEditingController();
     // print("selected product ${controller.productDetails.value!.id.toString()}");
+    
 
     return Scaffold(
       appBar: AppBar(

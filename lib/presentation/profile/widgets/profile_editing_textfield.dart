@@ -8,11 +8,13 @@ class ProfileEditingTextField extends StatelessWidget {
     required this.hintText,
     required this.controller,
     this.obscureText = false,
+    this.enabled = true,
   });
 
   final String hintText;
   final TextEditingController controller;
   final bool obscureText;
+  final bool enabled;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -24,13 +26,13 @@ class ProfileEditingTextField extends StatelessWidget {
         ),
         kHeight,
         TextFormField(
-          controller: controller,
+          enabled: enabled,
           obscureText: obscureText,
           style: const TextStyle(color: Colors.black),
           textCapitalization: TextCapitalization.sentences,
           decoration: InputDecoration(
             fillColor: Colors.white,
-            enabledBorder: const OutlineInputBorder(
+            border: const OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(10)),
               borderSide: BorderSide(
                 color: Color(0xffA8A8A9),

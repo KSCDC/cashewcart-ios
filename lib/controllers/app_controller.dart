@@ -365,4 +365,6 @@ class AppController extends GetxController {
 
     isLoading.value = false;
   }
+
+
 }

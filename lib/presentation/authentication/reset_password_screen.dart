@@ -14,8 +14,8 @@ import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 import 'package:internship_sample/services/api_services.dart';
 import 'package:validatorless/validatorless.dart';
 
-class SignInScreen extends StatelessWidget {
-  SignInScreen({super.key});
+class ResetPasswordScreen extends StatelessWidget {
+  ResetPasswordScreen({super.key});
 
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -33,29 +33,24 @@ class SignInScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 AuthenticationPageTitle(
-                  heading: "Welcome",
-                ),
-                AuthenticationPageTitle(
-                  heading: "Back!",
+                  heading: "Reset\nPassword",
                 ),
                 const SizedBox(height: 10),
                 Form(
                   key: _formKey,
                   child: Column(
                     children: [
-                      CustomIconTextField(
-                        icon: Icons.person_2,
-                        hintText: "Email",
-                        controller: emailController,
+                      CustomPasswordTextField(
+                        hintText: "Password",
+                        controller: passwordController,
                         validator: Validatorless.multiple(
                           [
-                            Validatorless.required('Email is required'),
-                            Validatorless.email("Invalid Email"),
+                            Validatorless.required('Password is required'),
                           ],
                         ),
                       ),
                       CustomPasswordTextField(
-                        hintText: "Password",
+                        hintText: "Confirm Password",
                         controller: passwordController,
                         validator: Validatorless.multiple(
                           [
@@ -66,20 +61,6 @@ class SignInScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    GestureDetector(
-                      onTap: () => Get.to(() => ForgotPasswordScreen()),
-                      child: const CustomTextWidget(
-                        text: "Forgot Password?",
-                        fontSize: 12,
-                        fontColor: Color(0xffF83758),
-                        fontweight: FontWeight.w400,
-                      ),
-                    ),
-                  ],
-                ),
                 const SizedBox(height: 50),
                 SizedBox(
                   height: 55,
@@ -87,37 +68,15 @@ class SignInScreen extends StatelessWidget {
                   child: GestureDetector(
                     onTap: () {
                       if (_formKey.currentState!.validate()) {
-                        print("Trying to login user");
+                        // print("Trying to login user");
                         controller.loginUser(context, emailController.text, passwordController.text);
                       }
                     },
                     child: CustomElevatedButton(
-                      label: "Login",
+                      label: "Reset and Login",
                     ),
                   ),
                 ),
-                const AlternativeSigninOptionsWidget(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const CustomTextWidget(
-                      text: "Create An Account ",
-                      fontSize: 14,
-                      fontColor: kAuthentificationPageTextColor,
-                      fontweight: FontWeight.w400,
-                    ),
-                    GestureDetector(
-                      onTap: () => Get.to(() => SignUpScreen()),
-                      child: const CustomTextWidget(
-                        text: "Sign Up",
-                        fontSize: 14,
-                        fontColor: kMainThemeColor,
-                        fontweight: FontWeight.w600,
-                        underline: true,
-                      ),
-                    )
-                  ],
-                )
               ],
             ),
           ),

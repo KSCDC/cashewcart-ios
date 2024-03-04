@@ -97,6 +97,46 @@ class ApiServices {
     }
   }
 
+  changePassword(String password, String confirmPassword) async {
+    try {
+      final dio = Dio();
+      final Map<String, dynamic> formData = {
+        "password": password,
+        "password2": confirmPassword,
+      };
+      SharedPreferences sharedPref = await SharedPreferences.getInstance();
+      final authToken = sharedPref.getString(ACCESSTOKEN);
+      final response = await dio.patch(
+        "$baseUrl${ApiEndPoints.changePassword}",
+        data: formData,
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $authToken',
+            'Content-Type': Headers.jsonContentType,
+          },
+        ),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        log(response.data.toString());
+        
+        return response;
+      } else {
+        print("Unexpected status code: ${response.statusCode}");
+        return null;
+      }
+    } on DioException catch (e) {
+      print(e.response!.statusCode);
+      print("Error :${e.response!.data}");
+      if (e.response!.statusCode == 401) {
+        print("refresh token");
+        refreshAccessToken();
+        changePassword(password, confirmPassword);
+      }
+      return null;
+    }
+  }
+
   refreshAccessToken() async {
     try {
       print("refreshing token");
@@ -655,6 +695,48 @@ class ApiServices {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         log(response.data.toString());
+        return response;
+      } else {
+        print("Unexpected status code: ${response.statusCode}");
+        return null;
+      }
+    } on DioException catch (e) {
+      print("Error :$e");
+      if (e.response!.statusCode == 401) {
+        print("refresh token");
+        refreshAccessToken();
+        getUserAddresses();
+      }
+      return null;
+    }
+  }
+
+  editUserAddress(BuildContext context, String id, String streetAddress, String city, String state, String postalCode, bool isDefaultAddress) async {
+    try {
+      final dio = Dio();
+      final Map<String, dynamic> formData = {
+        "street_address": streetAddress,
+        "city": city,
+        "state": state,
+        "postal_code": postalCode,
+        "is_default": isDefaultAddress,
+      };
+      SharedPreferences sharedPref = await SharedPreferences.getInstance();
+      final authToken = sharedPref.getString(ACCESSTOKEN);
+      final response = await dio.put(
+        "$baseUrl${ApiEndPoints.address}$id/",
+        data: formData,
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $authToken',
+            'Content-Type': Headers.jsonContentType,
+          },
+        ),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        log(response.data.toString());
+        Services().showCustomSnackBar(context, "Address updated successfully");
         return response;
       } else {
         print("Unexpected status code: ${response.statusCode}");

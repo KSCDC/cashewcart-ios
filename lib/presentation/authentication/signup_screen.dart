@@ -4,6 +4,7 @@ import 'package:internship_sample/controllers/app_controller.dart';
 // import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/core/constants.dart';
+import 'package:internship_sample/presentation/authentication/otp_verification.dart';
 
 import 'package:internship_sample/presentation/authentication/widgets/alternative_signin_options.dart.dart';
 import 'package:internship_sample/presentation/authentication/widgets/authentication_page_title.dart';
@@ -59,29 +60,13 @@ class SignUpScreen extends StatelessWidget {
                     children: [
                       kHeight,
                       AuthenticationPageTitle(
-                        heading: "Create an",
-                      ),
-                      AuthenticationPageTitle(
-                        heading: "account",
+                        heading: "Verify your\nEmail",
                       ),
                       const SizedBox(height: 10),
                       Form(
                         key: _formKey,
                         child: Column(
                           children: [
-                            CustomIconTextField(
-                              icon: Icons.person_2,
-                              hintText: "Username",
-                              controller: usernameController,
-                              keyboardType: TextInputType.name,
-                              validator: Validatorless.multiple(
-                                [
-                                  Validatorless.required('Name is required'),
-                                  Validatorless.min(3,
-                                      'Username must be at least 3 characters'),
-                                ],
-                              ),
-                            ),
                             CustomIconTextField(
                               icon: Icons.mail_outline,
                               hintText: "Email",
@@ -94,65 +79,26 @@ class SignUpScreen extends StatelessWidget {
                                 ],
                               ),
                             ),
-                            CustomIconTextField(
-                              icon: Icons.phone_outlined,
-                              hintText: "Phone",
-                              controller: phoneNumberController,
-                              keyboardType: TextInputType.phone,
-                              validator: Validatorless.multiple(
-                                [
-                                  Validatorless.required(
-                                      'Phone number is required'),
-                                  Validatorless.number('Invalid Phone number'),
-                                  Validatorless.min(10, 'Invalid Phone number'),
-                                  Validatorless.max(10, 'Invalid Phone number'),
-                                ],
-                              ),
-                            ),
-                            CustomPasswordTextField(
-                              hintText: "Password",
-                              controller: passwordController,
-                              validator: Validatorless.multiple(
-                                [
-                                  Validatorless.required(
-                                      'Password is required'),
-                                  Validatorless.min(6,
-                                      'Password must contain atleast 6 characters'),
-                                ],
-                              ),
-                            ),
-                            CustomPasswordTextField(
-                              hintText: "Confirm  Password",
-                              controller: confirmPasswordController,
-                            ),
                           ],
                         ),
                       ),
-                      const Wrap(
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          CustomTextWidget(
-                            text: "By clicking the ",
-                            fontSize: 12,
-                            fontColor: kAuthentificationPageTextColor,
-                            fontweight: FontWeight.w400,
-                          ),
-                          CustomTextWidget(
-                            text: "Register ",
+                          const CustomTextWidget(
+                            text: "* ",
                             fontSize: 12,
                             fontColor: Color(0xffFF4B26),
                             fontweight: FontWeight.w400,
                           ),
-                          CustomTextWidget(
-                            text: "button, you agree",
-                            fontSize: 12,
-                            fontColor: kAuthentificationPageTextColor,
-                            fontweight: FontWeight.w400,
-                          ),
-                          CustomTextWidget(
-                            text: "to the public offer",
-                            fontSize: 12,
-                            fontColor: kAuthentificationPageTextColor,
-                            fontweight: FontWeight.w400,
+                          SizedBox(
+                            width: screenSize.width * 0.7,
+                            child: const CustomTextWidget(
+                              text: "We will send a message to verify your mail",
+                              fontSize: 12,
+                              fontColor: kAuthentificationPageTextColor,
+                              fontweight: FontWeight.w400,
+                            ),
                           ),
                         ],
                       ),
@@ -163,32 +109,11 @@ class SignUpScreen extends StatelessWidget {
                         child: GestureDetector(
                           onTap: () {
                             if (_formKey.currentState!.validate()) {
-                              final _password = passwordController.text;
-                              final _confirmPassword =
-                                  confirmPasswordController.text;
-                              if (_password != _confirmPassword) {
-                                const snackBar = SnackBar(
-                                  content: Text("Passwords doesn't match!"),
-                                  behavior: SnackBarBehavior.floating,
-                                  margin: EdgeInsets.all(10),
-                                  padding: EdgeInsets.all(20),
-                                );
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(snackBar);
-                              } else {
-                                print("Trying to register user");
-                                controller.registerNewUser(
-                                  context,
-                                  usernameController.text,
-                                  emailController.text,
-                                  phoneNumberController.text,
-                                  passwordController.text,
-                                );
-                              }
+                              Get.to(() => OtpVerificationScreen(isNewUser: true,));
                             }
                           },
                           child: CustomElevatedButton(
-                            label: "Create Account",
+                            label: "Verify Email",
                           ),
                         ),
                       ),

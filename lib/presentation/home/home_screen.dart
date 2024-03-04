@@ -183,6 +183,7 @@ class HomeScreen extends StatelessWidget {
                                     previousPageIndexes.add(bottomNavbarIndexNotifier.value);
                                     bottomNavbarIndexNotifier.value = 4;
                                     controller.getProductDetails(productId);
+                                    controller.getProductReviews(productId);
                                     // controller.productDetails.value = controller.productDetails.value;
                                     // print(controller.productDetails.value!.name);
                                   },
@@ -290,6 +291,7 @@ class HomeScreen extends StatelessWidget {
                                 previousPageIndexes.add(bottomNavbarIndexNotifier.value);
                                 bottomNavbarIndexNotifier.value = 4;
                                 controller.getProductDetails(productId);
+                                controller.getProductReviews(productId);
                               },
                               child: ProductsListItemTile(
                                 productDetails: productDetails,
@@ -365,6 +367,7 @@ class HomeScreen extends StatelessWidget {
                               previousPageIndexes.add(bottomNavbarIndexNotifier.value);
                               bottomNavbarIndexNotifier.value = 4;
                               controller.getProductDetails(productId);
+                              controller.getProductReviews(productId);
                             },
                             child: ProductsListItemTile(
                               productDetails: productDetails,
