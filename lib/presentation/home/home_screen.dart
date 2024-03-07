@@ -62,320 +62,374 @@ class HomeScreen extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SearchSectionTile(heading: "All Featured"),
+              SearchSectionTile(),
+              Obx(() {
+                if (controller.isLoading.value) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else {
+                  print("count : ${controller.searchResults.value.count}");
+                  if (!controller.haveSearchResult.value) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // circular list
+                        Container(
+                          height: 95,
+                          child: Obx(
+                            () {
+                              return controller.isAllProductsLoading.value
+                                  ? Center(
+                                      child: CircularProgressIndicator(),
+                                    )
+                                  : ListView.builder(
+                                      itemBuilder: (context, index) {
+                                        String productImageUrl = '';
+                                        // final productImageUrl = controller.allProducts.value.results[index].product.productImages[0]['product_image'];
+                                        if (controller.allProducts.value.results!.isNotEmpty) {
+                                          final productImageUrl = controller.allProducts.value.results![index].product.productImages.isNotEmpty
+                                              ? "${controller.allProducts.value.results![index].product.productImages[0]['product_image']}"
+                                              : "";
+                                        }
 
-              // circular list
-              Container(
-                height: 95,
-                child: Obx(
-                  () {
-                    return controller.isAllProductsLoading.value
-                        ? Center(
-                            child: CircularProgressIndicator(),
-                          )
-                        : ListView.builder(
-                            itemBuilder: (context, index) {
-                              // final productImageUrl = controller.allProducts.value.results[index].product.productImages[0]['product_image'];
-                              final productImageUrl = controller.allProducts.value.results[index].product.productImages.isNotEmpty
-                                  ? "${controller.allProducts.value.results[index].product.productImages[0]['product_image']}"
-                                  : "";
+                                        final productName = controller.allProducts.value.results![index].product.name;
+                                        return CircleAvatarListItem(
+                                          imagePath: productImageUrl,
+                                          label: productName,
+                                        );
+                                      },
+                                      itemCount: controller.allProducts.value.results!.length,
+                                      scrollDirection: Axis.horizontal,
+                                    );
+                            },
+                          ),
+                        ),
 
-                              final productName = controller.allProducts.value.results[index].product.name;
-                              return CircleAvatarListItem(
-                                imagePath: productImageUrl,
-                                label: productName,
+                        //sliding windows
+                        Obx(() {
+                          return controller.isPlainCashewLoading.value || controller.isRoastedAndSaltedLoading.value
+                              ? SizedBox(
+                                  height: 230,
+                                  width: screenSize.width * 0.9,
+                                  child: Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                )
+                              : SizedBox(
+                                  height: 230,
+                                  width: screenSize.width * 0.9,
+                                  child: PageView(
+                                    controller: pageController,
+                                    children: [
+                                      SlidingImageTile(
+                                        productDetails: controller.plainCashews.value,
+                                      ),
+                                      SlidingImageTile(
+                                        productDetails: controller.roastedAndSalted.value,
+                                      ),
+                                      SlidingImageTile(
+                                        productDetails: controller.valueAdded.value,
+                                      ),
+                                    ],
+                                  ),
+                                );
+                        }),
+                        SizedBox(height: 10),
+                        Center(
+                          child: SmoothPageIndicator(
+                            controller: pageController,
+                            count: 3,
+                            effect: const WormEffect(
+                              dotColor: Color(0xFFDEDBDB),
+                              activeDotColor: Color(0xFFFFA3B3),
+                              dotHeight: 10,
+                              dotWidth: 10,
+                              spacing: 15,
+                            ),
+                            onDotClicked: (index) {
+                              pageController.animateToPage(
+                                index,
+                                duration: const Duration(milliseconds: 500),
+                                curve: Curves.easeIn,
                               );
                             },
-                            itemCount: avatarImage.length,
-                            scrollDirection: Axis.horizontal,
-                          );
-                  },
-                ),
-              ),
-
-              //sliding windows
-              Obx(() {
-                return controller.isPlainCashewLoading.value || controller.isRoastedAndSaltedLoading.value
-                    ? SizedBox(
-                        height: 230,
-                        width: screenSize.width * 0.9,
-                        child: Center(
-                          child: CircularProgressIndicator(),
+                          ),
                         ),
-                      )
-                    : SizedBox(
-                        height: 230,
-                        width: screenSize.width * 0.9,
-                        child: PageView(
-                          controller: pageController,
+                        SizedBox(height: 10),
+                        ViewOfferTile(
+                          color: Color(0xFF4392F9),
+                          mainLabel: "Deal of the Day",
+                          icon: Icons.timer_outlined,
+                          subLabel: "22h 55m 20s remaining",
+                        ),
+                        kHeight,
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SlidingImageTile(
-                              productDetails: controller.plainCashews.value.results[0],
+                            CustomTextWidget(
+                              text: "Best Sellers",
+                              fontSize: 18,
+                              fontweight: FontWeight.w600,
                             ),
-                            SlidingImageTile(
-                              productDetails: controller.roastedAndSalted.value.results[0],
-                            ),
-                            SlidingImageTile(
-                              productDetails: controller.valueAdded.value.results[0],
+                            Container(
+                              height: 250,
+                              child: Obx(
+                                () => controller.isBestSellersLoading.value
+                                    ? SizedBox(
+                                        width: screenSize.width * 0.4,
+                                        height: 300,
+                                        child: Center(
+                                          child: CircularProgressIndicator(),
+                                        ),
+                                      )
+                                    : ListView.builder(
+                                        itemBuilder: (context, index) {
+                                          final productDetails = controller.bestSellers.value.results[index].product;
+                                          print("${productDetails.product.productImages[0].productImage}");
+
+                                          return GestureDetector(
+                                            onTap: () async {
+                                              final String productId = controller.bestSellers.value.results[index].product.product.id.toString();
+                                              previousPageIndexes.add(bottomNavbarIndexNotifier.value);
+                                              bottomNavbarIndexNotifier.value = 4;
+                                              controller.getProductDetails(productId);
+                                              controller.getProductReviews(productId);
+                                              controller.getSimilarProducts(controller.plainCashews.value, index);
+                                              // controller.productDetails.value = controller.productDetails.value;
+                                              // print(controller.productDetails.value!.name);
+                                            },
+                                            child: ProductsListItemTile(
+                                              productDetails: productDetails,
+                                              imagePath: productDetails.product.productImages.isNotEmpty ? "$baseUrl${productDetails.product.productImages[0].productImage}" : "abc",
+                                            ),
+                                          );
+                                        },
+                                        itemCount: controller.bestSellers.value.count,
+                                        scrollDirection: Axis.horizontal,
+                                      ),
+                              ),
                             ),
                           ],
                         ),
-                      );
-              }),
-              SizedBox(height: 10),
-              Center(
-                child: SmoothPageIndicator(
-                  controller: pageController,
-                  count: 3,
-                  effect: const WormEffect(
-                    dotColor: Color(0xFFDEDBDB),
-                    activeDotColor: Color(0xFFFFA3B3),
-                    dotHeight: 10,
-                    dotWidth: 10,
-                    spacing: 15,
-                  ),
-                  onDotClicked: (index) {
-                    pageController.animateToPage(
-                      index,
-                      duration: const Duration(milliseconds: 500),
-                      curve: Curves.easeIn,
-                    );
-                  },
-                ),
-              ),
-              SizedBox(height: 10),
-              ViewOfferTile(
-                color: Color(0xFF4392F9),
-                mainLabel: "Deal of the Day",
-                icon: Icons.timer_outlined,
-                subLabel: "22h 55m 20s remaining",
-              ),
-              kHeight,
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CustomTextWidget(
-                    text: "Best Sellers",
-                    fontSize: 18,
-                    fontweight: FontWeight.w600,
-                  ),
-                  Container(
-                    height: 250,
-                    child: Obx(
-                      () => controller.isBestSellersLoading.value
-                          ? SizedBox(
-                              width: screenSize.width * 0.4,
-                              height: 300,
-                              child: Center(
-                                child: CircularProgressIndicator(),
-                              ),
-                            )
-                          : ListView.builder(
-                              itemBuilder: (context, index) {
-                                final productDetails = controller.bestSellers.value.results[index].product;
-                                print("${productDetails.product.productImages[0].productImage}");
+                        kHeight,
+                        //special offers
 
-                                return GestureDetector(
-                                  onTap: () async {
-                                    final String productId = controller.bestSellers.value.results[index].product.product.id.toString();
-                                    previousPageIndexes.add(bottomNavbarIndexNotifier.value);
-                                    bottomNavbarIndexNotifier.value = 4;
-                                    controller.getProductDetails(productId);
-                                    controller.getProductReviews(productId);
-                                    // controller.productDetails.value = controller.productDetails.value;
-                                    // print(controller.productDetails.value!.name);
-                                  },
-                                  child: ProductsListItemTile(
-                                    productDetails: productDetails,
-                                    imagePath: productDetails.product.productImages.isNotEmpty ? "$baseUrl${productDetails.product.productImages[0].productImage}" : "abc",
-                                  ),
-                                );
-                              },
-                              itemCount: controller.bestSellers.value.count,
-                              scrollDirection: Axis.horizontal,
-                            ),
-                    ),
-                  ),
-                ],
-              ),
-              kHeight,
-              //special offers
-
-              Container(
-                height: 84,
-                width: screenSize.width * 0.9,
-                child: Row(
-                  children: [
-                    Image.asset("lib/core/assets/images/home/special_offer.png"),
-                    SizedBox(width: 20),
-                    Container(
-                      width: 180,
-                      child: const Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          CustomTextWidget(text: "Special Offers 😱"),
-                          CustomTextWidget(
-                            text: "We make sure you get the offer you need at best prices",
-                            fontSize: 12,
-                            fontweight: FontWeight.w300,
+                        Container(
+                          height: 84,
+                          width: screenSize.width * 0.9,
+                          child: Row(
+                            children: [
+                              Image.asset("lib/core/assets/images/home/special_offer.png"),
+                              SizedBox(width: 20),
+                              Container(
+                                width: 180,
+                                child: const Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    CustomTextWidget(text: "Special Offers 😱"),
+                                    CustomTextWidget(
+                                      text: "We make sure you get the offer you need at best prices",
+                                      fontSize: 12,
+                                      fontweight: FontWeight.w300,
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ],
                           ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              kHeight,
-
-              //buy now
-
-              Obx(() {
-                return controller.isPlainCashewLoading.value
-                    ? Center(
-                        child: CircularProgressIndicator(),
-                      )
-                    : BuyNowTile(
-                        productDetails: controller.plainCashews.value,
-                      );
-              }),
-
-              Obx(() {
-                return controller.isTrendingLoading.value
-                    ? Center(
-                        child: CircularProgressIndicator(),
-                      )
-                    : ViewOfferTile(
-                        onPressed: () {
-                          if (!controller.isAlreadyLoadedTrending) {
-                            controller.getTrendingProducts();
-                          }
-
-                          controller.productDisplayList2 = controller.trending;
-                          print("Trending : ${controller.productDisplayList2.value.count}");
-                          previousPageIndexes.add(bottomNavbarIndexNotifier.value);
-                          bottomNavbarIndexNotifier.value = 9;
-                        },
-                        color: Color(0xFFFD6E87),
-                        mainLabel: "Trending Products",
-                        icon: Icons.calendar_month,
-                        subLabel: "Last Date 29/02/22",
-                      );
-              }),
-
-              // products list
-
-              Container(
-                height: 250,
-                child: Obx(
-                  () => controller.isAllProductsLoading.value
-                      ? SizedBox(
-                          width: screenSize.width * 0.4,
-                          height: 300,
-                          child: Center(
-                            child: CircularProgressIndicator(),
-                          ),
-                        )
-                      : ListView.builder(
-                          itemBuilder: (context, index) {
-                            final productDetails = controller.allProducts.value.results[index];
-
-                            return GestureDetector(
-                              onTap: () async {
-                                final String productId = controller.allProducts.value.results[index].product.id.toString();
-
-                                // controller.productDetails.value = controller.productDetails.value;
-                                // print(controller.productDetails.value!.name);
-
-                                previousPageIndexes.add(bottomNavbarIndexNotifier.value);
-                                bottomNavbarIndexNotifier.value = 4;
-                                controller.getProductDetails(productId);
-                                controller.getProductReviews(productId);
-                              },
-                              child: ProductsListItemTile(
-                                productDetails: productDetails,
-                              ),
-                            );
-                          },
-                          itemCount: controller.allProducts.value.count,
-                          scrollDirection: Axis.horizontal,
                         ),
-                ),
-              ),
-              const SizedBox(height: 10),
+                        kHeight,
 
-              // value added products
+                        //buy now
 
-              ValueAddedProductsTile(),
-              const SizedBox(height: 15),
+                        Obx(() {
+                          return controller.isPlainCashewLoading.value
+                              ? Center(
+                                  child: CircularProgressIndicator(),
+                                )
+                              : BuyNowTile(
+                                  productDetails: controller.plainCashews.value,
+                                );
+                        }),
 
-              //Sponsered product
-              Obx(
-                () {
-                  if (controller.sponserd.value.count == 0) {
-                    return SizedBox(
-                      width: screenSize.width * 0.95,
-                      height: screenSize.width * 0.8,
-                      child: Center(child: CustomTextWidget(text: "No sponserd products right now")),
+                        Obx(() {
+                          return controller.isTrendingLoading.value
+                              ? Center(
+                                  child: CircularProgressIndicator(),
+                                )
+                              : ViewOfferTile(
+                                  onPressed: () {
+                                    if (!controller.isAlreadyLoadedTrending) {
+                                      controller.getTrendingProducts();
+                                    }
+
+                                    controller.productDisplayList2 = controller.trending;
+                                    print("Trending : ${controller.productDisplayList2.value.count}");
+                                    previousPageIndexes.add(bottomNavbarIndexNotifier.value);
+                                    bottomNavbarIndexNotifier.value = 9;
+                                  },
+                                  color: Color(0xFFFD6E87),
+                                  mainLabel: "Trending Products",
+                                  icon: Icons.calendar_month,
+                                  subLabel: "Last Date 29/02/22",
+                                );
+                        }),
+
+                        // products list
+
+                        Container(
+                          height: 250,
+                          child: Obx(
+                            () => controller.isAllProductsLoading.value
+                                ? SizedBox(
+                                    width: screenSize.width * 0.4,
+                                    height: 300,
+                                    child: Center(
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                  )
+                                : ListView.builder(
+                                    itemBuilder: (context, index) {
+                                      final productDetails = controller.allProducts.value.results![index];
+
+                                      return GestureDetector(
+                                        onTap: () async {
+                                          final String productId = controller.allProducts.value.results![index].product.id.toString();
+
+                                          // controller.productDetails.value = controller.productDetails.value;
+                                          // print(controller.productDetails.value!.name);
+
+                                          previousPageIndexes.add(bottomNavbarIndexNotifier.value);
+                                          bottomNavbarIndexNotifier.value = 4;
+                                          controller.getProductDetails(productId);
+                                          controller.getProductReviews(productId);
+                                          controller.getSimilarProducts(controller.allProducts.value, index);
+                                        },
+                                        child: ProductsListItemTile(
+                                          productDetails: productDetails,
+                                        ),
+                                      );
+                                    },
+                                    itemCount: controller.allProducts.value.count,
+                                    scrollDirection: Axis.horizontal,
+                                  ),
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+
+                        // value added products
+
+                        ValueAddedProductsTile(),
+                        const SizedBox(height: 15),
+
+                        //Sponsered product
+                        Obx(
+                          () {
+                            if (controller.sponserd.value.count == 0) {
+                              return SizedBox(
+                                width: screenSize.width * 0.95,
+                                height: screenSize.width * 0.8,
+                                child: Center(child: CustomTextWidget(text: "No sponserd products right now")),
+                              );
+                            } else {
+                              return controller.isSponserdLoading.value
+                                  ? Center(
+                                      child: CircularProgressIndicator(),
+                                    )
+                                  : GestureDetector(
+                                      child: SponseredProductTile(
+                                        imagePath: "$baseUrl${controller.sponserd.value.results[0].product.product.productImages[0].productImage}",
+                                      ),
+                                    );
+                            }
+                          },
+                        ),
+                        kHeight,
+                        CustomTextWidget(
+                          text: "All Featured Products",
+                          fontSize: 18,
+                          fontweight: FontWeight.w600,
+                        ),
+                        Obx(() {
+                          return controller.isAllProductsLoading.value
+                              ? SizedBox(
+                                  width: screenSize.width * 0.4,
+                                  height: 300,
+                                  child: Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                )
+                              : GridView.count(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  childAspectRatio: (20 / 30),
+                                  crossAxisCount: 2,
+                                  mainAxisSpacing: 5,
+                                  crossAxisSpacing: 5,
+                                  children: List.generate(controller.allProducts.value.count, (index) {
+                                    final productDetails = controller.allProducts.value.results![index];
+                                    return GestureDetector(
+                                      onTap: () async {
+                                        final String productId = controller.allProducts.value.results![index].product.id.toString();
+
+                                        controller.getSimilarProducts(controller.allProducts.value, index);
+                                        // controller.productDetails.value = controller.productDetails.value;
+                                        // print(controller.productDetails.value!.name);
+
+                                        previousPageIndexes.add(bottomNavbarIndexNotifier.value);
+                                        bottomNavbarIndexNotifier.value = 4;
+                                        controller.getProductDetails(productId);
+                                        controller.getProductReviews(productId);
+                                      },
+                                      child: ProductsListItemTile(
+                                        productDetails: productDetails,
+                                      ),
+                                    );
+                                  }),
+                                );
+                        })
+                      ],
                     );
                   } else {
-                    return controller.isSponserdLoading.value
+                    return controller.searchResults.value.count == 0
                         ? Center(
-                            child: CircularProgressIndicator(),
-                          )
-                        : GestureDetector(
-                            child: SponseredProductTile(
-                              imagePath: "$baseUrl${controller.sponserd.value.results[0].product.product.productImages[0].productImage}",
+                            child: CustomTextWidget(
+                              text: "Product not found",
+                              fontSize: 16,
                             ),
+                          )
+                        : GridView.count(
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            childAspectRatio: (20 / 30),
+                            crossAxisCount: 2,
+                            mainAxisSpacing: 5,
+                            crossAxisSpacing: 5,
+                            children: List.generate(controller.searchResults.value.count, (index) {
+                              final productDetails = controller.searchResults.value.results![index];
+
+                              return GestureDetector(
+                                onTap: () async {
+                                  // print(
+                                  //     "image list ${controller.productDisplayList.valueindex]}");
+                                  final String productId = controller.searchResults.value.results![index].product.id.toString();
+                                  controller.getSimilarProducts(controller.searchResults.value, index);
+                                  await controller.getProductDetails(productId);
+                                  // controller.productDetails.value = controller.productDetails.value;
+                                  previousPageIndexes.add(bottomNavbarIndexNotifier.value);
+                                  bottomNavbarIndexNotifier.value = 4;
+                                },
+                                child: ProductsListItemTile(
+                                  productDetails: productDetails,
+                                ),
+                              );
+                            }),
                           );
                   }
-                },
-              ),
-              kHeight,
-              CustomTextWidget(
-                text: "All Featured Products",
-                fontSize: 18,
-                fontweight: FontWeight.w600,
-              ),
-              Obx(() {
-                return controller.isAllProductsLoading.value
-                    ? SizedBox(
-                        width: screenSize.width * 0.4,
-                        height: 300,
-                        child: Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                      )
-                    : GridView.count(
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        childAspectRatio: (20 / 30),
-                        crossAxisCount: 2,
-                        mainAxisSpacing: 5,
-                        crossAxisSpacing: 5,
-                        children: List.generate(controller.allProducts.value.count, (index) {
-                          final productDetails = controller.allProducts.value.results[index];
-                          return GestureDetector(
-                            onTap: () async {
-                              final String productId = controller.allProducts.value.results[index].product.id.toString();
-
-                              controller.getSimilarProducts(controller.allProducts.value, index);
-                              // controller.productDetails.value = controller.productDetails.value;
-                              // print(controller.productDetails.value!.name);
-
-                              previousPageIndexes.add(bottomNavbarIndexNotifier.value);
-                              bottomNavbarIndexNotifier.value = 4;
-                              controller.getProductDetails(productId);
-                              controller.getProductReviews(productId);
-                            },
-                            child: ProductsListItemTile(
-                              productDetails: productDetails,
-                            ),
-                          );
-                        }),
-                      );
-              })
+                }
+              }),
             ],
           ),
         ),

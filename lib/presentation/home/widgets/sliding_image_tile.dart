@@ -19,7 +19,10 @@ class SlidingImageTile extends StatelessWidget {
   AppController controller = Get.put(AppController());
   @override
   Widget build(BuildContext context) {
-    final String imagePath = productDetails.product.productImages[0]['product_image'];
+    String imagePath = "";
+    if (productDetails.results.isNotEmpty) {
+      imagePath = productDetails.results[0].product.productImages[0]['product_image'];
+    }
 
     final screenSize = MediaQuery.of(context).size;
     return Container(
@@ -74,10 +77,11 @@ class SlidingImageTile extends StatelessWidget {
                   ),
                   child: GestureDetector(
                     onTap: () async {
-                      // controller.productDetails.value = await productDetails;
-                      final String productId = productDetails.product.id.toString();
+                      // controller.productDetails.results[0].value = await productDetails.results[0];
+                      final String productId = productDetails.results[0].product.id.toString();
                       controller.getProductDetails(productId);
                       controller.getProductReviews(productId);
+                      controller.getSimilarProducts(productDetails, 0);
                       previousPageIndexes.add(bottomNavbarIndexNotifier.value);
                       bottomNavbarIndexNotifier.value = 4;
                     },

@@ -16,4 +16,6 @@ class ApiEndPoints {
   static String updateCartCount = "/api/product/cart/update_purchase_count/";
   static String address = "/api/order/addresses/";
   static String changePassword = "/api/user/changepassword/";
+  static String sendVerificationMail = "/api/user/sentverification/";
+  static String verifyMail = "/api/user/verify/";
 }

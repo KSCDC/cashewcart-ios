@@ -20,10 +20,14 @@ class BuyNowTile extends StatelessWidget {
   AppController controller = Get.put(AppController());
   @override
   Widget build(BuildContext context) {
-    final String imagePath = productDetails.results[0].product.productImages.isNotEmpty ? "${productDetails.results[0].product.productImages[0]['product_image']}" : "";
-    ;
-    final String productName = productDetails.results[0].product.name;
-    final String productDescription = productDetails.results[0].product.description;
+     String imagePath = '';
+     String productName='';
+     String productDescription='';
+    if (productDetails.results.isNotEmpty) {
+      imagePath = productDetails.results[0].product.productImages.isNotEmpty ? "${productDetails.results[0].product.productImages[0]['product_image']}" : "";
+      productName = productDetails.results[0].product.name;
+      productDescription = productDetails.results[0].product.description;
+    } 
 
     return Container(
       padding: EdgeInsets.all(5),

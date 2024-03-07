@@ -13,7 +13,6 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
@@ -22,8 +21,8 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xffF83758)),
         useMaterial3: true,
       ),
-      // home: const SplashScreen(),
-      home: SignInScreen(),
+      home: const SplashScreen(),
+      // home: SignInScreen(),
       // home: MainPageScreen(),
     );
   }

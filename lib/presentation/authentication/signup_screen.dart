@@ -20,7 +20,7 @@ class SignUpScreen extends StatelessWidget {
   SignUpScreen({super.key});
 
   TextEditingController usernameController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
   TextEditingController phoneNumberController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
@@ -70,7 +70,7 @@ class SignUpScreen extends StatelessWidget {
                             CustomIconTextField(
                               icon: Icons.mail_outline,
                               hintText: "Email",
-                              controller: emailController,
+                              controller: _emailController,
                               keyboardType: TextInputType.emailAddress,
                               validator: Validatorless.multiple(
                                 [
@@ -109,7 +109,8 @@ class SignUpScreen extends StatelessWidget {
                         child: GestureDetector(
                           onTap: () {
                             if (_formKey.currentState!.validate()) {
-                              Get.to(() => OtpVerificationScreen(isNewUser: true,));
+                              ApiServices().sendVerificationMail(_emailController.text);
+                              // Get.to(() => OtpVerificationScreen(isNewUser: true,));
                             }
                           },
                           child: CustomElevatedButton(

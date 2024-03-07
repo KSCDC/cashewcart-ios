@@ -281,11 +281,11 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
               width: 250,
               child: GestureDetector(
                 onTap: () {
-                  // List orderingProductsList = [];
-                  // for (var item in productList) {
-                  //   final product = item['product'];
-                  //   orderingProductsList.add(product);
-                  // }
+                  List orderingProductsList = [];
+                  for (var product in productList) {
+                    // final product = item['product'];
+                    orderingProductsList.add(product);
+                  }
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => CheckoutScreen(

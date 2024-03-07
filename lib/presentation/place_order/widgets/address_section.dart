@@ -6,6 +6,7 @@ import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/presentation/shop/widgets/custom_text_icon_button.dart';
 import 'package:internship_sample/presentation/widgets/custom_elevated_button.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
+import 'package:internship_sample/services/api_services.dart';
 
 ValueNotifier<int> selectedRadioNotifier = ValueNotifier(0);
 List<TextEditingController> deliveryAddressControllers = [];
@@ -75,85 +76,103 @@ class AddressSection extends StatelessWidget {
             ],
           ),
         ),
-        Column(
-          children: List.generate(
-            deliveryAddressControllers.length,
-            (index) {
-              return ValueListenableBuilder(
-                valueListenable: isAddressEditableNotifier,
-                builder: (context, value, _) {
-                  print("edit $value");
-                  return Padding(
-                    padding: const EdgeInsets.only(top: 5),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          height: screenSize.width * 0.32,
-                          width: screenSize.width * 0.8,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SizedBox(height: 5),
-                                CustomTextWidget(
-                                  text: "Address :${index + 1}",
-                                  fontSize: 12,
-                                  fontweight: FontWeight.w500,
-                                ),
-                                kHeight,
-                                TextField(
-                                  controller: deliveryAddressControllers[index],
-                                  style: TextStyle(fontSize: 14),
-                                  maxLines: 2,
-                                  enabled: value,
-                                  decoration: InputDecoration(
-                                    border: value ? OutlineInputBorder() : InputBorder.none,
+        Obx(() {
+          return Column(
+            children: List.generate(
+              controller.addressList.length,
+              (index) {
+                return ValueListenableBuilder(
+                  valueListenable: isAddressEditableNotifier,
+                  builder: (context, value, _) {
+                    print("edit $value");
+                    return Padding(
+                      padding: const EdgeInsets.only(top: 5),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            height: screenSize.width * 0.32,
+                            width: screenSize.width * 0.8,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 10),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(height: 5),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      CustomTextWidget(
+                                        text: "Address :${index + 1}",
+                                        fontSize: 12,
+                                        fontweight: FontWeight.w500,
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          final adderssId = controller.addressList[index].id.toString();
+                                          ApiServices().deleteUserAddress(adderssId);
+                                          // ApiServices().getUserAddresses();
+                                          controller.getUserAddresses();
+                                        },
+                                        child: Icon(
+                                          Icons.delete,
+                                          color: Colors.red,
+                                        ),
+                                      )
+                                    ],
                                   ),
-                                ),
-                              ],
+                                  kHeight,
+                                  TextField(
+                                    controller: deliveryAddressControllers[index],
+                                    style: TextStyle(fontSize: 14),
+                                    maxLines: 2,
+                                    enabled: value,
+                                    decoration: InputDecoration(
+                                      border: value ? OutlineInputBorder() : InputBorder.none,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                        // Checkbox
-                        ValueListenableBuilder(
-                          valueListenable: selectedRadioNotifier,
-                          builder: (context, checkboxValue, _) {
-                            return Container(
-                              height: 20,
-                              width: 20,
-                              child: Radio(
-                                value: index,
-                                groupValue: checkboxValue,
-                                onChanged: (int? newValue) {
-                                  // Allow changing the selected address when the radio button is tapped
-                                  if (newValue != null) {
-                                    checkboxValue = newValue;
+                          // Checkbox
+                          ValueListenableBuilder(
+                            valueListenable: selectedRadioNotifier,
+                            builder: (context, checkboxValue, _) {
+                              return Container(
+                                height: 20,
+                                width: 20,
+                                child: Radio(
+                                  value: index,
+                                  groupValue: checkboxValue,
+                                  onChanged: (int? newValue) {
+                                    if (newValue != null) {
+                                      checkboxValue = newValue;
 
-                                    selectedRadioNotifier.value = newValue;
-                                  } else {
-                                    checkboxValue = -1;
-                                    selectedRadioNotifier.value = 0;
-                                    // isAddressEditableNotifier.value = false;
-                                  }
-                                },
-                              ),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              );
-            },
-          ),
-        ),
+                                      selectedRadioNotifier.value = newValue;
+                                    } else {
+                                      checkboxValue = -1;
+                                      selectedRadioNotifier.value = 0;
+                                      isAddressEditableNotifier.value = false;
+                                    }
+                                  },
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+          );
+        }),
       ],
     );
   }

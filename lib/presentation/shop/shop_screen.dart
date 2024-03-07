@@ -41,24 +41,10 @@ class _ShopScreenState extends State<ShopScreen> {
   AppController controller = Get.put(AppController());
   @override
   Widget build(BuildContext context) {
-    // controller.getProductDetails(controller.productDetails.value!.id.toString());
-    // print("selected product image:${controller.productDetails.value!.productImages[0]['product_image'].toString()}");
-    // final List<dynamic> imageList = controller.productDetails.value!.productImages;
-    // final String productName = controller.productDetails.value!.name;
-    // final String description = controller.productDetails.value!.description;
-    // controller.productDetails.value['category'][0]['description'];
-    // final String price = controller.productDetails.value!.productVariants[0].actualPrice;
-    // final String offerPrice = controller.productDetails.value!.productVariants[0].sellingPrice;
-    final screenSize = MediaQuery.of(context).size;
-    // print("previous page index $previousPageIndex");
-
-    // List similarProductsList = getSimilarProductsList();
-    // List relatedProductsList = getRelatedProductsList();
-    // controller.getSimilarProducts();
-    // print("similar : $similarProductsList");
-    TextEditingController reviewController = TextEditingController();
-    // print("selected product ${controller.productDetails.value!.id.toString()}");
     
+    final screenSize = MediaQuery.of(context).size;
+
+    TextEditingController reviewController = TextEditingController();
 
     return Scaffold(
       appBar: AppBar(
@@ -74,9 +60,6 @@ class _ShopScreenState extends State<ShopScreen> {
       body: SingleChildScrollView(
         controller: _scrollController,
         child: Obx(() {
-          // print("selected product image:${controller.productDetails.value!.productImages[0]['product_image'].toString()}");
-          // final img = controller.productDetails.value!.productImages[0]['product_image'];
-
           return controller.isLoading.value
               ? SizedBox(
                   height: screenSize.height * 0.9,
@@ -362,8 +345,10 @@ class _ShopScreenState extends State<ShopScreen> {
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: SearchFilterBar(
-                        heading: "${(controller.similarProducts.value.count - 1).toString()}+",
+                      child: CustomTextWidget(
+                        text: "${(controller.similarProducts.value.count - 1).toString()}+",
+                        fontSize: 20,
+                        fontweight: FontWeight.w600,
                       ),
                     ),
 
@@ -378,11 +363,11 @@ class _ShopScreenState extends State<ShopScreen> {
                                   )
                                 : ListView.builder(
                                     itemBuilder: (context, index) {
-                                      final productDetails = controller.similarProducts.value.results[index];
+                                      final productDetails = controller.similarProducts.value.results![index];
 
                                       return GestureDetector(
                                         onTap: () async {
-                                          final String productId = controller.similarProducts.value.results[index].product.id.toString();
+                                          final String productId = controller.similarProducts.value.results![index].product.id.toString();
                                           // currentCategoryProducts = controller.roastedAndSalted.value;
                                           await controller.getProductDetails(productId);
                                           controller.productDetails.value = controller.productDetails.value;
@@ -401,7 +386,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                   );
                           } else {
                             return Center(
-                              child: CustomTextWidget(text: "Value added products not available right now."),
+                              child: CustomTextWidget(text: "No similar products"),
                             );
                           }
                         },
@@ -421,8 +406,10 @@ class _ShopScreenState extends State<ShopScreen> {
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: SearchFilterBar(
-                        heading: "${controller.allProducts.value.count.toString()}+",
+                      child: CustomTextWidget(
+                        text: "${controller.allProducts.value.count.toString()}+",
+                        fontSize: 20,
+                        fontweight: FontWeight.w600,
                       ),
                     ),
 
@@ -443,14 +430,14 @@ class _ShopScreenState extends State<ShopScreen> {
                                   )
                                 : ListView.builder(
                                     itemBuilder: (context, index) {
-                                      final productDetails = controller.allProducts.value.results[numbers[index]];
+                                      final productDetails = controller.allProducts.value.results![numbers[index]];
 
                                       return GestureDetector(
                                         onTap: () async {
-                                          final String productId = controller.allProducts.value.results[index].product.id.toString();
-                                          // currentCategoryProducts = controller.roastedAndSalted.value;
+                                          final String productId = controller.allProducts.value.results![numbers[index]].product.id.toString();
+
                                           await controller.getProductDetails(productId);
-                                          controller.productDetails.value = controller.productDetails.value;
+
                                           print(controller.productDetails.value!.name);
 
                                           previousPageIndexes.add(bottomNavbarIndexNotifier.value);
@@ -466,7 +453,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                   );
                           } else {
                             return Center(
-                              child: CustomTextWidget(text: "Value added products not available right now."),
+                              child: CustomTextWidget(text: "Related products not available right now."),
                             );
                           }
                         },
@@ -490,14 +477,14 @@ class _ShopScreenState extends State<ShopScreen> {
                               )
                             : ListView.builder(
                                 itemBuilder: (context, index) {
-                                  final productDetails = controller.allProducts.value.results[index];
+                                  final productDetails = controller.allProducts.value.results![index];
 
                                   return GestureDetector(
                                     onTap: () async {
-                                      final String productId = controller.allProducts.value.results[index].product.id.toString();
+                                      final String productId = controller.allProducts.value.results![index].product.id.toString();
 
                                       await controller.getProductDetails(productId);
-                                      controller.productDetails.value = controller.productDetails.value;
+
                                       print(controller.productDetails.value!.name);
 
                                       previousPageIndexes.add(bottomNavbarIndexNotifier.value);
@@ -520,37 +507,37 @@ class _ShopScreenState extends State<ShopScreen> {
     );
   }
 
-  List getSimilarProductsList() {
-    if (cashewsPlaneList.contains(controller.productDetails.value)) {
-      List productsList = List.from(cashewsPlaneList);
-      productsList.remove(controller.productDetails.value);
-      return productsList + roastedCashewsList + valueAddedProducts;
-    } else if (roastedCashewsList.contains(controller.productDetails.value)) {
-      List productsList = List.from(roastedCashewsList);
-      productsList.remove(controller.productDetails.value);
-      return productsList + cashewsPlaneList + valueAddedProducts;
-    } else {
-      List productsList = List.from(valueAddedProducts);
-      productsList.remove(controller.productDetails.value);
-      return productsList + cashewsPlaneList + roastedCashewsList;
-    }
-  }
+  // List getSimilarProductsList() {
+  //   if (cashewsPlaneList.contains(controller.productDetails.value)) {
+  //     List productsList = List.from(cashewsPlaneList);
+  //     productsList.remove(controller.productDetails.value);
+  //     return productsList + roastedCashewsList + valueAddedProducts;
+  //   } else if (roastedCashewsList.contains(controller.productDetails.value)) {
+  //     List productsList = List.from(roastedCashewsList);
+  //     productsList.remove(controller.productDetails.value);
+  //     return productsList + cashewsPlaneList + valueAddedProducts;
+  //   } else {
+  //     List productsList = List.from(valueAddedProducts);
+  //     productsList.remove(controller.productDetails.value);
+  //     return productsList + cashewsPlaneList + roastedCashewsList;
+  //   }
+  // }
 
-  List getRelatedProductsList() {
-    if (cashewsPlaneList.contains(controller.productDetails.value)) {
-      List relatedProductsList = allFeaturedProductsList.where((element) => !cashewsPlaneList.contains(element)).toList();
+  // List getRelatedProductsList() {
+  //   if (cashewsPlaneList.contains(controller.productDetails.value)) {
+  //     List relatedProductsList = allFeaturedProductsList.where((element) => !cashewsPlaneList.contains(element)).toList();
 
-      return relatedProductsList;
-    } else if (roastedCashewsList.contains(controller.productDetails.value)) {
-      List relatedProductsList = allFeaturedProductsList.where((element) => !roastedCashewsList.contains(element)).toList();
+  //     return relatedProductsList;
+  //   } else if (roastedCashewsList.contains(controller.productDetails.value)) {
+  //     List relatedProductsList = allFeaturedProductsList.where((element) => !roastedCashewsList.contains(element)).toList();
 
-      return relatedProductsList;
-    } else {
-      List relatedProductsList = allFeaturedProductsList.where((element) => !valueAddedProducts.contains(element)).toList();
+  //     return relatedProductsList;
+  //   } else {
+  //     List relatedProductsList = allFeaturedProductsList.where((element) => !valueAddedProducts.contains(element)).toList();
 
-      return relatedProductsList;
-    }
-  }
+  //     return relatedProductsList;
+  //   }
+  // }
 }
 
 class RatingStars extends StatelessWidget {

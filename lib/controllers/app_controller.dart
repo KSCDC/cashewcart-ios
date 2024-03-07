@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'dart:developer';
 
+import 'package:encrypt/encrypt.dart' as enc;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:internship_sample/core/constants.dart';
@@ -23,6 +25,9 @@ class AppController extends GetxController {
   int numOf3Stars = 0;
   int numOf4Stars = 0;
   int numOf5Stars = 0;
+  final key = enc.Key.fromLength(32);
+  final iv = enc.IV.fromLength(8);
+
   RxDouble avgRating = 0.0.obs;
   RxInt minSearchPrice = 0.obs;
   RxInt maxSearchPrice = 5000.obs;
@@ -33,11 +38,16 @@ class AppController extends GetxController {
   RxBool isRoastedAndSaltedLoading = false.obs;
   RxBool isValueAddedLoading = false.obs;
   RxBool isSimilarProductsLoading = false.obs;
+  RxBool isRelatedProductsLoading = false.obs;
   RxBool isBestSellersLoading = false.obs;
   RxBool isSponserdLoading = false.obs;
   RxBool isTrendingLoading = false.obs;
   RxBool isReviewsLoading = false.obs;
   RxBool isDisplayingTrendingModelList = false.obs;
+  RxBool sortProduct = false.obs;
+  RxBool sortAscending = false.obs;
+
+  RxString dropdownValue = 'All Featured Products'.obs;
 
   Rx<ProductModel> allProducts = ProductModel(count: 0, next: null, previous: null, results: []).obs;
   Rx<ProductModel> plainCashews = ProductModel(count: 0, next: null, previous: null, results: []).obs;
@@ -52,6 +62,7 @@ class AppController extends GetxController {
   Rx<TrendingProductModel> productDisplayList2 = TrendingProductModel(count: 0, next: null, previous: null, results: []).obs;
   Rx<CartProductModel> cartProducts = CartProductModel(count: 0, next: null, previous: null, results: []).obs;
   Rx<ProductModel> searchResults = ProductModel(count: 0, next: null, previous: null, results: []).obs;
+  var sortedSearchList;
   RxBool haveSearchResult = false.obs;
 
   Rxn<ProductDetailsModel> productDetails = Rxn<ProductDetailsModel>();
@@ -74,9 +85,9 @@ class AppController extends GetxController {
   List<String> valueAddedSubCategories = ["All"];
   RxString selectedValueAddedCategory = "All".obs;
 
-  registerNewUser(BuildContext context, String name, String email, String phoneNumber, String pasword) async {
+  registerNewUser(BuildContext context, String name, String email, String phoneNumber, String password) async {
     isLoading.value = true;
-    final response = await ApiServices().registerUser(context, name, email, phoneNumber, pasword);
+    final response = await ApiServices().registerUser(context, name, email, phoneNumber, password);
     if (response == null) {
       isLoading.value = false;
     } else {
@@ -86,22 +97,39 @@ class AppController extends GetxController {
       SharedPreferences sharedPref = await SharedPreferences.getInstance();
       sharedPref.setString(ACCESSTOKEN, accessToken);
       sharedPref.setString(REFRESHTOKEN, refreshToken);
+
+      final encrypter = enc.Encrypter(enc.AES(key));
+      final encrypted = encrypter.encrypt(password, iv: iv);
+
+      final encryptedBase64 = base64.encode(encrypted.bytes);
+
+      await sharedPref.setString(EMAIL, email);
+      await sharedPref.setString(ENCRYPTEDPASSWORD, encryptedBase64);
+      print("Encrypted:$encryptedBase64");
       isLoading.value = false;
       Get.offAll(() => MainPageScreen());
     }
   }
 
-  loginUser(BuildContext context, String email, String pasword) async {
+  loginUser(BuildContext context, String email, String password) async {
     isLoading.value = true;
-    final response = await ApiServices().loginUser(context, email, pasword);
+    final response = await ApiServices().loginUser(context, email, password);
+
     if (response != null) {
       log(response.data.toString());
       final accessToken = response.data['token']['access'];
       final refreshToken = response.data['token']['refresh'];
       print("access token :$accessToken\nrefresh token :$refreshToken");
       SharedPreferences sharedPref = await SharedPreferences.getInstance();
-      sharedPref.setString(ACCESSTOKEN, accessToken);
-      sharedPref.setString(REFRESHTOKEN, refreshToken);
+
+      final encrypter = enc.Encrypter(enc.AES(key));
+      final encrypted = encrypter.encrypt(password, iv: iv);
+
+      final encryptedBase64 = base64.encode(encrypted.bytes);
+
+      await sharedPref.setString(EMAIL, email);
+      await sharedPref.setString(ENCRYPTEDPASSWORD, encryptedBase64);
+      print("Encrypted:$encryptedBase64");
 
       Get.offAll(() => MainPageScreen());
     }
@@ -165,7 +193,7 @@ class AppController extends GetxController {
       final data = ProductModel.fromJson(response.data);
       plainCashews.value = data;
       for (int i = 0; i < data.count; i++) {
-        final categoryName = data.results[i].product.category.name;
+        final categoryName = data.results![i].product.category.name;
         if (!plainCashewSubCategories.contains(categoryName)) {
           plainCashewSubCategories.add(categoryName);
         }
@@ -181,7 +209,7 @@ class AppController extends GetxController {
       final data = ProductModel.fromJson(response.data);
       roastedAndSalted.value = data;
       for (int i = 0; i < data.count; i++) {
-        final categoryName = data.results[i].product.category.name;
+        final categoryName = data.results![i].product.category.name;
         if (!roastedAndSaltedSubCategories.contains(categoryName)) {
           roastedAndSaltedSubCategories.add(categoryName);
         }
@@ -195,7 +223,7 @@ class AppController extends GetxController {
       final data = ProductModel.fromJson(response.data);
       valueAdded.value = data;
       for (int i = 0; i < data.count; i++) {
-        final categoryName = data.results[i].product.category.name;
+        final categoryName = data.results![i].product.category.name;
         if (!valueAddedSubCategories.contains(categoryName)) {
           valueAddedSubCategories.add(categoryName);
         }
@@ -208,10 +236,21 @@ class AppController extends GetxController {
 
   searchProducts(String searchKey) async {
     isLoading.value = true;
-    final response = await ApiServices().searchProduct(searchKey,minSearchPrice.value,maxSearchPrice.value);
+    final response = await ApiServices().searchProduct(searchKey, minSearchPrice.value, maxSearchPrice.value);
     if (response != null) {
       final data = ProductModel.fromJson(response.data);
       searchResults.value = data;
+      List<Results> result = data.results!;
+
+      if (sortProduct.value) {
+        if (sortAscending.value) {
+          result.sort((a, b) => double.parse(a.sellingPrice).compareTo(double.parse(b.sellingPrice)));
+        } else {
+          result.sort((a, b) => double.parse(b.sellingPrice).compareTo(double.parse(a.sellingPrice)));
+        }
+        searchResults.value.results = result;
+      }
+
       haveSearchResult.value = true;
     } else {
       haveSearchResult.value = false;
@@ -298,20 +337,21 @@ class AppController extends GetxController {
   }
 
   getSimilarProducts(ProductModel currentCategoryProducts, int selectedIndex) {
-    print("list length before :${currentCategoryProducts.results.length}");
+    print("list length before :${currentCategoryProducts.results!.length}");
     // currentCategoryProducts.copyWith()
-    if (currentCategoryProducts.results.isNotEmpty) {
-      var temp = currentCategoryProducts.copyWith(results: List.from(currentCategoryProducts.results));
-      temp.results.removeAt(selectedIndex);
-      print("list length after :${temp.results.length}");
+    if (currentCategoryProducts.results!.isNotEmpty) {
+      var temp = currentCategoryProducts.copyWith(results: List.from(currentCategoryProducts.results!));
+      temp.results!.removeAt(selectedIndex);
+      print("list length after :${temp.results!.length}");
       similarProducts.value = temp;
     }
-    print("original list length after :${currentCategoryProducts.results.length}");
+    print("original list length after :${currentCategoryProducts.results!.length}");
   }
 
   getProfileDetails() async {
     isLoading.value = true;
     final response = await ApiServices().getProfileDetails();
+
     if (response != null) {
       userName = response.data['name'];
       email = response.data['email'];
@@ -324,6 +364,7 @@ class AppController extends GetxController {
 
   getCartList() async {
     // isLoading.value = true;
+
     final response = await ApiServices().getCartList();
     if (response != null) {
       final data = CartProductModel.fromJson(response.data);

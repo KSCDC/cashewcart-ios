@@ -31,7 +31,7 @@ class TrendingModelProductListingScreen extends StatelessWidget {
           child: Column(
             children: [
               SearchSectionTile(
-                heading: "${controller.productDisplayList2.value.count} Items ",
+                // heading: "${controller.productDisplayList2.value.count} Items ",
               ),
               Obx(() {
                 print("count :${controller.productDisplayList2.value.count}");

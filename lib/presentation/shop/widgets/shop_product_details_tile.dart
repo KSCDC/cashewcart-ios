@@ -72,16 +72,12 @@ class ShopProductDetailsTile extends StatelessWidget {
           ),
 
           // SizedBox(height: 10),
-          ValueListenableBuilder(
-              valueListenable: sizeSelectNotifier,
-              builder: (context, value, _) {
-                return CustomStarRatingTile(
-                  numberOfRatings:
-                      // "${controller.productDetails.value['category'][value]['rating']}",
-                      "4",
-                  iconAndTextSize: 18,
-                );
-              }),
+          Obx(() {
+            return CustomStarRatingTile(
+              numberOfRatings: controller.avgRating.value,
+              iconAndTextSize: 18,
+            );
+          }),
           ValueListenableBuilder(
               valueListenable: sizeSelectNotifier,
               builder: (context, value, _) {
@@ -106,8 +102,7 @@ class ShopProductDetailsTile extends StatelessWidget {
                     ),
                     kWidth,
                     CustomTextWidget(
-                      text:
-                          "${(double.parse(controller.productDetails.value!.productVariants[value].sellingPrice) * 100 / double.parse(controller.productDetails.value!.productVariants[value].actualPrice)).toStringAsFixed(2)}%",
+                      text: "${controller.productDetails.value!.productVariants[value].discountPercentage}%",
                       fontColor: Color(0xFFFE735C),
                       fontSize: 14,
                       fontweight: FontWeight.w400,

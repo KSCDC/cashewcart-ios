@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:internship_sample/controllers/app_controller.dart';
 import 'package:internship_sample/core/colors.dart';
+import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/presentation/authentication/forgot_password_screen.dart';
 import 'package:internship_sample/presentation/authentication/signup_screen.dart';
 import 'package:internship_sample/presentation/authentication/widgets/alternative_signin_options.dart.dart';
@@ -12,7 +13,10 @@ import 'package:internship_sample/presentation/main_page/main_page_screen.dart';
 import 'package:internship_sample/presentation/widgets/custom_elevated_button.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 import 'package:internship_sample/services/api_services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:validatorless/validatorless.dart';
+
+import 'package:encrypt/encrypt.dart' as enc;
 
 class SignInScreen extends StatelessWidget {
   SignInScreen({super.key});
@@ -96,6 +100,15 @@ class SignInScreen extends StatelessWidget {
                     ),
                   ),
                 ),
+                SizedBox(height: 30),
+                GestureDetector(
+                  onTap: () async {
+                    Get.to(() => MainPageScreen());
+                  },
+                  child: CustomElevatedButton(
+                    label: "Explore without Login",
+                  ),
+                ),
                 const AlternativeSigninOptionsWidget(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -117,7 +130,7 @@ class SignInScreen extends StatelessWidget {
                       ),
                     )
                   ],
-                )
+                ),
               ],
             ),
           ),

@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:internship_sample/core/constants.dart';
+import 'package:internship_sample/presentation/main_page/main_page_screen.dart';
 import 'package:internship_sample/presentation/onboarding/onboarding_screen.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -52,10 +56,21 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> gotoOnboardScreenAfterDelay(int delayInSeconds) async {
     await Future.delayed(Duration(seconds: delayInSeconds));
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (context) => OnboardingScreen(),
-      ),
-    );
+    SharedPreferences sharedPref = await SharedPreferences.getInstance();
+    final email = sharedPref.getString(EMAIL);
+    final encryptedPassword = sharedPref.getString(ENCRYPTEDPASSWORD);
+
+    if (email != null && encryptedPassword != null) {
+      print("have email and password");
+      Get.offAll(() => MainPageScreen());
+    } else {
+      print("dont have email and password");
+      Get.offAll(() => OnboardingScreen());
+    }
+    // Navigator.of(context).pushReplacement(
+    //   MaterialPageRoute(
+    //     builder: (context) => OnboardingScreen(),
+    //   ),
+    // );
   }
 }

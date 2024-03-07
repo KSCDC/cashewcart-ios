@@ -32,7 +32,7 @@ class SlidingProductTile extends StatelessWidget {
                 Stack(
                   children: [
                     SlideItem(
-                      imagePath: imageList.isEmpty ? '' : "$baseUrl${imageList[i]['product_image']}",
+                      imagePath: imageList.isEmpty ? '' : "$baseUrl${imageList[i].productImage}",
                     ),
                     Positioned(
                       top: 25,

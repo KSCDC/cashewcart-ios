@@ -31,7 +31,7 @@ class ProductListingScreen extends StatelessWidget {
             return Column(
               children: [
                 SearchSectionTile(
-                  heading: "${controller.productDisplayList.value.count} Items ",
+                  // heading: "${controller.productDisplayList.value.count} Items ",
                 ),
                 GridView.count(
                   physics: const NeverScrollableScrollPhysics(),
@@ -41,12 +41,12 @@ class ProductListingScreen extends StatelessWidget {
                   mainAxisSpacing: 5,
                   crossAxisSpacing: 5,
                   children: List.generate(controller.productDisplayList.value.count, (index) {
-                    final productDetails = controller.productDisplayList.value.results[index];
+                    final productDetails = controller.productDisplayList.value.results![index];
                     return GestureDetector(
                       onTap: () async {
                         // print(
                         //     "image list ${controller.productDisplayList.valueindex]}");
-                        final String productId = controller.productDisplayList.value.results[index].product.id.toString();
+                        final String productId = controller.productDisplayList.value.results![index].product.id.toString();
                         controller.getSimilarProducts(controller.plainCashews.value, index);
                         await controller.getProductDetails(productId);
                         controller.productDetails.value = controller.productDetails.value;

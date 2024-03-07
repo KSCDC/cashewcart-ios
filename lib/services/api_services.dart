@@ -1,22 +1,31 @@
 import 'dart:developer';
 import 'dart:io';
+import 'dart:typed_data';
+import 'package:encrypt/encrypt.dart' as enc;
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
+import 'package:internship_sample/controllers/app_controller.dart';
 
 import 'package:internship_sample/core/base_url.dart';
 import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/core/end_points.dart';
+import 'package:internship_sample/presentation/authentication/signin_screen.dart';
 import 'package:internship_sample/presentation/main_page/main_page_screen.dart';
 import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
 import 'package:internship_sample/services/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiServices {
+  AppController controller = Get.put(AppController());
+
+  bool isFailedLogin = false;
+
   registerUser(BuildContext context, String name, String email, String phoneNumber, String pasword) async {
-    final Map<String, dynamic> formData = {
+    final formData = {
       "name": name,
       "email": email,
       "phone_number": phoneNumber,
@@ -60,7 +69,7 @@ class ApiServices {
   }
 
   loginUser(BuildContext context, String email, String pasword) async {
-    final Map<String, dynamic> formData = {
+    final formData = {
       "email": email,
       "password": pasword,
     };
@@ -97,10 +106,40 @@ class ApiServices {
     }
   }
 
-  changePassword( String password, String confirmPassword) async {
+  sendVerificationMail(String mail) async {
+    final formData = {
+      "email": mail,
+    };
+
     try {
       final dio = Dio();
-      final Map<String, dynamic> formData = {
+
+      final response = await dio.post(
+        "$baseUrl${ApiEndPoints.sendVerificationMail}",
+        data: formData,
+        options: Options(
+          contentType: Headers.jsonContentType,
+        ),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        log(response.data.toString());
+        return response;
+      } else {
+        print("Unexpected status code: ${response.statusCode}");
+        return null;
+      }
+    } on DioException catch (e) {
+      print("Error :$e");
+
+      return null;
+    }
+  }
+
+  changePassword(String password, String confirmPassword) async {
+    try {
+      final dio = Dio();
+      final formData = {
         "password": password,
         "password2": confirmPassword,
       };
@@ -119,7 +158,7 @@ class ApiServices {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         log(response.data.toString());
-        
+
         return response;
       } else {
         print("Unexpected status code: ${response.statusCode}");
@@ -130,14 +169,20 @@ class ApiServices {
       print("Error :${e.response!.data}");
       if (e.response!.statusCode == 401) {
         print("refresh token");
-        refreshAccessToken();
-        changePassword(password, confirmPassword);
+        final refreshedToken = await refreshAccessToken();
+        if (refreshedToken != null) {
+          changePassword(password, confirmPassword);
+        }
       }
       return null;
     }
   }
 
   refreshAccessToken() async {
+    log("refreshing access token");
+
+    // if (email != null && encryptedPassword != null && !isFailedLogin) {
+    print("have email and password");
     try {
       print("refreshing token");
       final dio = Dio();
@@ -166,8 +211,65 @@ class ApiServices {
       }
     } on DioException catch (e) {
       print("Error :${e.response!.data}");
-
+      print("Error :${e.response!.statusCode}");
+      // print("Error :${e.response!.data['error']}");
+      // Services().showCustomSnackBar(context, e.response!.data['error']);
+      if (e.response!.statusCode == 400 || e.response!.statusCode == 401) {
+        log("Going to automatic relogin");
+        final autoRelogin = await automaticRelogin();
+        print(autoRelogin);
+        if (autoRelogin == null) {
+          log("failed trying of auto relogin");
+        }
+      }
       return null;
+    }
+    // } else {
+    //   return null;
+    // }
+  }
+
+  automaticRelogin() async {
+    print("Autologin\n.\n.");
+    String? email = '';
+    String? decrypted = '';
+    
+    try {
+      final dio = Dio();
+      SharedPreferences sharedPref = await SharedPreferences.getInstance();
+      email = sharedPref.getString(EMAIL);
+      final encryptedBase64 = sharedPref.getString(ENCRYPTEDPASSWORD);
+      log("encrypted :$encryptedBase64");
+      if (encryptedBase64 != null) {
+        final encrypted = enc.Encrypted.fromBase64(encryptedBase64);
+        final decrypter = enc.Encrypter(enc.AES(controller.key));
+        decrypted = decrypter.decrypt(encrypted, iv: controller.iv);
+        log("Decrypted :$decrypted");
+      }
+      final response = await dio.post(
+        "$baseUrl${ApiEndPoints.loginUser}",
+        data: {
+          "email": email,
+          "password": decrypted,
+        },
+        options: Options(
+          contentType: Headers.jsonContentType,
+        ),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        print("Login successful");
+      } else {
+        print("Unexpected status code: ${response.statusCode}");
+      }
+    } on DioException catch (e) {
+      print("Error :$e");
+      log("Auto login failed with mail:$email and password $decrypted");
+      isFailedLogin = true;
+      Get.to(() => SignInScreen());
+      return null;
+    } catch (e) {
+      print("Error:$e");
     }
   }
 
@@ -197,7 +299,7 @@ class ApiServices {
   }
 
   getProductByCategory(String categoryParent, String categoryName) async {
-    final params = <String, dynamic>{
+    final params = {
       "product__category__parent__name": categoryParent,
       "product__category__name": categoryName,
     };
@@ -302,8 +404,8 @@ class ApiServices {
     }
   }
 
-  searchProduct(String searchKey,int minPrice,int maxPrice) async {
-    final params = <String, dynamic>{
+  searchProduct(String searchKey, int minPrice, int maxPrice) async {
+    final params = {
       "search": searchKey,
       "min_price": minPrice,
       "max_price": maxPrice,
@@ -443,8 +545,10 @@ class ApiServices {
       Services().showCustomSnackBar(context, e.response!.data['error']);
       if (e.response!.statusCode == 401) {
         print("refresh token");
-        refreshAccessToken();
-        addProductReview(context, id, reviewText, numberOfStars);
+        final refreshedToken = await refreshAccessToken();
+        if (refreshedToken != null) {
+          addProductReview(context, id, reviewText, numberOfStars);
+        }
       }
       return null;
     }
@@ -476,18 +580,25 @@ class ApiServices {
       print("Error :$e");
       if (e.response!.statusCode == 401) {
         print("refresh token");
-        refreshAccessToken();
-        getProfileDetails();
+        final refreshedToken = await refreshAccessToken();
+        if (refreshedToken != null) {
+          getProfileDetails();
+        }
       }
       return null;
     }
   }
 
   getCartList() async {
+    SharedPreferences sharedPref = await SharedPreferences.getInstance();
+    final authToken = sharedPref.getString(ACCESSTOKEN);
+    final email = await sharedPref.getString(EMAIL);
+    final encryptedPassword = await sharedPref.getString(ENCRYPTEDPASSWORD);
+    // if (email != null && encryptedPassword != null) {
+    print("have email and password");
     try {
       final dio = Dio();
-      SharedPreferences sharedPref = await SharedPreferences.getInstance();
-      final authToken = sharedPref.getString(ACCESSTOKEN);
+
       final response = await dio.get(
         "$baseUrl${ApiEndPoints.listCart}",
         options: Options(
@@ -508,9 +619,12 @@ class ApiServices {
     } on DioException catch (e) {
       print("Error :$e");
       if (e.response!.statusCode == 401) {
-        print("refresh token");
-        refreshAccessToken();
-        getCartList();
+        print("refreshing token");
+        final refreshedToken = await refreshAccessToken();
+        if (refreshedToken != null) {
+          print(refreshedToken);
+          getCartList();
+        }
       }
       return null;
     }
@@ -545,8 +659,10 @@ class ApiServices {
       print("Error :${e.response!.data}");
       if (e.response!.statusCode == 401) {
         print("refresh token");
-        refreshAccessToken();
-        addProductToCart(context, productId);
+        final refreshedToken = await refreshAccessToken();
+        if (refreshedToken != null) {
+          addProductToCart(context, productId);
+        }
       } else {
         Services().showCustomSnackBar(context, e.response!.data['errors']['non_field_errors'][0]);
       }
@@ -583,8 +699,10 @@ class ApiServices {
       print("Error :${e.response!.data}");
       if (e.response!.statusCode == 401) {
         print("refresh token");
-        refreshAccessToken();
-        removeFromCart(context, productId);
+        final refreshedToken = await refreshAccessToken();
+        if (refreshedToken != null) {
+          removeFromCart(context, productId);
+        }
       }
       return null;
     }
@@ -624,8 +742,10 @@ class ApiServices {
       print("Error :${e.response!.data}");
       if (e.response!.statusCode == 401) {
         print("refresh token");
-        refreshAccessToken();
-        updateCartCount(productId, newCount);
+        final refreshedToken = await refreshAccessToken();
+        if (refreshedToken != null) {
+          updateCartCount(productId, newCount);
+        }
       }
       return null;
     }
@@ -659,7 +779,7 @@ class ApiServices {
         print("Address saved");
         // Services().showCustomSnackBar(context, "Login successful");
         print(response.data);
-        getUserAddresses();
+        // getUserAddresses();
         return response;
       } else {
         print("Unexpected status code: ${response.statusCode}");
@@ -670,8 +790,10 @@ class ApiServices {
       print("Error :$e");
       if (e.response!.statusCode == 401) {
         print("refresh token");
-        refreshAccessToken();
-        createUserAddress(context, streetAddress, city, state, postalCode, isDefaultAddress);
+        final refreshedToken = await refreshAccessToken();
+        if (refreshedToken != null) {
+          createUserAddress(context, streetAddress, city, state, postalCode, isDefaultAddress);
+        }
       }
       if (e.response!.statusCode == 400) {
         Services().showCustomSnackBar(context, "Please fill all the fields!");
@@ -706,8 +828,10 @@ class ApiServices {
       print("Error :$e");
       if (e.response!.statusCode == 401) {
         print("refresh token");
-        refreshAccessToken();
-        getUserAddresses();
+        final refreshedToken = await refreshAccessToken();
+        if (refreshedToken != null) {
+          getUserAddresses();
+        }
       }
       return null;
     }
@@ -748,8 +872,49 @@ class ApiServices {
       print("Error :$e");
       if (e.response!.statusCode == 401) {
         print("refresh token");
-        refreshAccessToken();
-        getUserAddresses();
+        final refreshedToken = await refreshAccessToken();
+        if (refreshedToken != null) {
+          getUserAddresses();
+        }
+      }
+      return null;
+    }
+  }
+
+  deleteUserAddress(String id) async {
+    try {
+      print("deleting address with id : $id");
+      print("$baseUrl${ApiEndPoints.address}$id");
+      final dio = Dio();
+      SharedPreferences sharedPref = await SharedPreferences.getInstance();
+      final authToken = sharedPref.getString(ACCESSTOKEN);
+      final response = await dio.delete(
+        "$baseUrl${ApiEndPoints.address}$id/",
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $authToken',
+            'Content-Type': Headers.jsonContentType,
+          },
+        ),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201 || response.statusCode == 204) {
+        log(response.data.toString());
+        print("deleted address");
+
+        return response;
+      } else {
+        print("Unexpected status code: ${response.statusCode}");
+        return null;
+      }
+    } on DioException catch (e) {
+      print("Error :$e");
+      if (e.response!.statusCode == 401) {
+        print("refresh token");
+        final refreshedToken = await refreshAccessToken();
+        if (refreshedToken != null) {
+          deleteUserAddress(id);
+        }
       }
       return null;
     }

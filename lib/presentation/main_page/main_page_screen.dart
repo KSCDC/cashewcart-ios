@@ -31,7 +31,7 @@ class MainPageScreen extends StatelessWidget {
   AppController controller = Get.put(AppController());
   @override
   Widget build(BuildContext context) {
-    controller.getCartList();
+    
     return Scaffold(
       // drawer: SideBar(),
       backgroundColor: appBackgroundColor,

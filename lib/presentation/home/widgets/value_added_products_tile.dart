@@ -24,8 +24,12 @@ class ValueAddedProductsTile extends StatelessWidget {
         ),
       ),
       child: Obx(() {
-        final productImage =
-            controller.valueAdded.value.results[0].product.productImages.isNotEmpty ? "$baseUrl${controller.valueAdded.value.results[0].product.productImages[0]['product_image']}" : "";
+        final productImage;
+        if (controller.valueAdded.value.results!.isNotEmpty) {
+          productImage = controller.valueAdded.value.results![0].product.productImages.isNotEmpty ? "$baseUrl${controller.valueAdded.value.results![0].product.productImages[0]['product_image']}" : "";
+        } else {
+          productImage = "";
+        }
 
         return controller.isValueAddedLoading.value
             ? Center(

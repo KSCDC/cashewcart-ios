@@ -9,14 +9,15 @@ class CustomStarRatingTile extends StatelessWidget {
     required this.numberOfRatings,
   });
 
-  final String numberOfRatings;
+  final double numberOfRatings;
   final double iconAndTextSize;
 
   @override
   Widget build(BuildContext context) {
+    int i;
     return Row(
       children: [
-        for (int i = 0; i < 4; i++)
+        for (i = 1; i <= 4.3; i++)
           Icon(
             Icons.star,
             color: Color(0xFFF7B305),
@@ -29,7 +30,7 @@ class CustomStarRatingTile extends StatelessWidget {
         ),
         kWidth,
         CustomTextWidget(
-          text: numberOfRatings,
+          text: numberOfRatings.toString(),
           fontColor: Color(0xFF828282),
           fontSize: iconAndTextSize,
         )

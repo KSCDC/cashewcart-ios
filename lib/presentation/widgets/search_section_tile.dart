@@ -10,11 +10,11 @@ import 'package:internship_sample/services/debouncer.dart';
 class SearchSectionTile extends StatelessWidget {
   SearchSectionTile({
     super.key,
-    required this.heading,
+    // required this.heading,
   });
 
   final searchController = TextEditingController();
-  final String heading;
+  // final String heading;
   final _debouncer = Debouncer(milliseconds: 1 * 1000);
   AppController controller = Get.put(AppController());
   @override
@@ -30,10 +30,9 @@ class SearchSectionTile extends StatelessWidget {
             onChanged: (value) {
               _debouncer.run(
                 () async {
-                  if (searchController.text.trim() != "") {
-                    controller.searchProducts(searchController.text);
+                  if (value.trim() != "") {
+                    controller.searchProducts(value);
                   } else {
-                    // controller.searchResults = ProductModel(count: 0, next: null, previous: null, results: []).obs;
                     controller.haveSearchResult.value = false;
                     print("${controller.searchResults.value.count}");
                   }
@@ -81,9 +80,7 @@ class SearchSectionTile extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 10),
-          SearchFilterBar(
-            heading: heading,
-          )
+          SearchFilterBar()
         ],
       ),
     );

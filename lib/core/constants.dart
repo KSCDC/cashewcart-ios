@@ -6,6 +6,8 @@ const Widget kProfileScreenGap = SizedBox(height: 20);
 
 const String ACCESSTOKEN = "accessToken";
 const String REFRESHTOKEN = "refreshToken";
+const String EMAIL = "email";
+const String ENCRYPTEDPASSWORD = "password";
 
 enum LoginWith {
   google,
@@ -23,8 +25,7 @@ const List<String> statesList = [
 const List avatarImage = [
   {
     'label': "Plain",
-    'imagePath':
-        "lib/core/assets/images/product_images/Plain Cashew/Plain Cashew (F) bgwhite.png",
+    'imagePath': "lib/core/assets/images/product_images/Plain Cashew/Plain Cashew (F) bgwhite.png",
   },
   {
     'label': "Roast",
@@ -32,28 +33,23 @@ const List avatarImage = [
   },
   {
     'label': "Jam",
-    'imagePath':
-        "lib/core/assets/images/product_images/Cashew Pine Jam/Cashew pine jam.jpg",
+    'imagePath': "lib/core/assets/images/product_images/Cashew Pine Jam/Cashew pine jam.jpg",
   },
   {
     'label': "Shakes",
-    'imagePath':
-        "lib/core/assets/images/product_images/Cashew Vanilla MilkShake/Cashew Vanilla Milk Shake Powder.jpg",
+    'imagePath': "lib/core/assets/images/product_images/Cashew Vanilla MilkShake/Cashew Vanilla Milk Shake Powder.jpg",
   },
   {
     'label': "Powder",
-    'imagePath':
-        "lib/core/assets/images/product_images/Cashew Powder/Cashew Powder 1.jpg",
+    'imagePath': "lib/core/assets/images/product_images/Cashew Powder/Cashew Powder 1.jpg",
   },
   {
     'label': "Soda",
-    'imagePath':
-        "lib/core/assets/images/product_images/Cashew Soda/Cashew soda.jpg",
+    'imagePath': "lib/core/assets/images/product_images/Cashew Soda/Cashew soda.jpg",
   },
   {
     'label': "Squash",
-    'imagePath':
-        "lib/core/assets/images/product_images/Cashew Apple Squash/Cashew apple squash.jpg",
+    'imagePath': "lib/core/assets/images/product_images/Cashew Apple Squash/Cashew apple squash.jpg",
   },
 ];
 
@@ -427,8 +423,7 @@ const List roastedCashewsList = [
   },
 ];
 
-List allFeaturedProductsList =
-    cashewsPlaneList + roastedCashewsList + valueAddedProducts;
+List allFeaturedProductsList = cashewsPlaneList + roastedCashewsList + valueAddedProducts;
 
 const List productDetailsList1 = [
   {

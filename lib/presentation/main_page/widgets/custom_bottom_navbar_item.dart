@@ -23,6 +23,9 @@ class CustomBottomNavbarItem extends StatelessWidget {
             // previousPageIndex = index;
 
             //fetching items in cart when cart is selected from bottom navbar
+            if (index == 0 || index == 1) {
+              controller.haveSearchResult.value = false;
+            }
             if (index == 2) {
               controller.getCartList();
             }

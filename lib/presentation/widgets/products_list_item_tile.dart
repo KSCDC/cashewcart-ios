@@ -27,7 +27,7 @@ class ProductsListItemTile extends StatelessWidget {
     final String description = productDetails.product.description;
     final String originalPrice = productDetails.actualPrice;
     final String offerPrice = productDetails.sellingPrice;
-    final String numberOfRatings = "4";
+    final double numberOfRatings = 4.5;
 
     final screenSize = MediaQuery.of(context).size;
     return Container(

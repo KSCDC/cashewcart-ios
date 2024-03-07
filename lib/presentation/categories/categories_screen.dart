@@ -34,7 +34,7 @@ class CategoriesScreen extends StatelessWidget {
     if (!controller.isAlreadyLoadedAllProducts) {
       controller.getAllProducts();
     }
-    
+
     controller.getAllProducts();
     return Scaffold(
       backgroundColor: appBackgroundColor,
@@ -45,7 +45,7 @@ class CategoriesScreen extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: SearchSectionTile(heading: "All Featured Products"),
+              child: SearchSectionTile(),
             ),
             Obx(() {
               if (controller.isLoading.value) {
@@ -54,321 +54,332 @@ class CategoriesScreen extends StatelessWidget {
                 );
               } else {
                 print("count : ${controller.searchResults.value.count}");
-                return !controller.haveSearchResult.value
-                    ? Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: CustomTextWidget(
-                              text: "PLAIN CASHEWS",
-                              fontSize: 18,
-                              fontweight: FontWeight.w600,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: Obx(
-                              () {
-                                return DropdownButton<String>(
-                                  value: controller.selectedPlainCashewCategory.value,
-                                  onChanged: (String? newValue) {
-                                    print(newValue);
-                                    if (newValue == "All") {
-                                      controller.getProductsByCategory("Plain Cashews", '');
-                                      controller.selectedPlainCashewCategory.value = newValue!;
-                                    } else {
-                                      controller.getProductsByCategory("Plain Cashews", newValue!);
-                                      controller.selectedPlainCashewCategory.value = newValue;
-                                    }
-                                  },
-                                  items: controller.plainCashewSubCategories.map<DropdownMenuItem<String>>((String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: CustomTextWidget(
-                                        text: value,
-                                        fontweight: FontWeight.w600,
-                                        fontColor: kMainThemeColor,
-                                      ),
-                                    );
-                                  }).toList(),
-                                );
-                              },
-                            ),
-                          ),
-                          Container(
-                            height: 250,
-                            child: Obx(
-                              () {
-                                if (controller.plainCashews.value.count != 0) {
-                                  return controller.isPlainCashewLoading.value
-                                      ? Center(
-                                          child: CircularProgressIndicator(),
-                                        )
-                                      : ListView.builder(
-                                          itemBuilder: (context, index) {
-                                            final productDetails = controller.plainCashews.value.results[index];
-
-                                            return GestureDetector(
-                                              onTap: () async {
-                                                final String productId = controller.plainCashews.value.results[index].product.id.toString();
-                                                // final currentCategoryProducts = controller.plainCashews.value;
-                                                controller.getSimilarProducts(controller.plainCashews.value, index);
-                                                controller.productDetails.value = controller.productDetails.value;
-                                                // print(controller.productDetails.value!.name);
-                                                print(productId);
-                                                previousPageIndexes.add(bottomNavbarIndexNotifier.value);
-                                                bottomNavbarIndexNotifier.value = 4;
-                                                controller.getProductDetails(productId);
-                                                controller.getProductReviews(productId);
-                                              },
-                                              child: ProductsListItemTile(
-                                                productDetails: productDetails,
-                                              ),
-                                            );
-                                          },
-                                          itemCount: controller.plainCashews.value.count,
-                                          scrollDirection: Axis.horizontal,
-                                        );
+                if (!controller.haveSearchResult.value) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: CustomTextWidget(
+                          text: "PLAIN CASHEWS",
+                          fontSize: 18,
+                          fontweight: FontWeight.w600,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Obx(
+                          () {
+                            return DropdownButton<String>(
+                              value: controller.selectedPlainCashewCategory.value,
+                              onChanged: (String? newValue) {
+                                print(newValue);
+                                if (newValue == "All") {
+                                  controller.getProductsByCategory("Plain Cashews", '');
+                                  controller.selectedPlainCashewCategory.value = newValue!;
                                 } else {
-                                  return Center(
-                                    child: CustomTextWidget(text: "Plain cashews products not available right now."),
-                                  );
+                                  controller.getProductsByCategory("Plain Cashews", newValue!);
+                                  controller.selectedPlainCashewCategory.value = newValue;
                                 }
                               },
-                            ),
-                          ),
-                          SizedBox(height: 20),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: CustomTextWidget(
-                              text: "ROASTED & SALTED CASHEWS",
-                              fontSize: 18,
-                              fontweight: FontWeight.w600,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: Obx(
-                              () {
-                                return DropdownButton<String>(
-                                  value: controller.selectedRoastedAndSaltedCategory.value,
-                                  onChanged: (String? newValue) {
-                                    print(newValue);
-                                    if (newValue == "All") {
-                                      controller.getProductsByCategory("Roasted and salted", '');
-                                      controller.selectedRoastedAndSaltedCategory.value = newValue!;
-                                    } else {
-                                      controller.getProductsByCategory("Roasted and salted", newValue!);
-                                      controller.selectedRoastedAndSaltedCategory.value = newValue;
-                                    }
-                                  },
-                                  items: controller.roastedAndSaltedSubCategories.map<DropdownMenuItem<String>>((String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: CustomTextWidget(
-                                        text: value,
-                                        fontweight: FontWeight.w600,
-                                        fontColor: kMainThemeColor,
-                                      ),
-                                    );
-                                  }).toList(),
+                              items: controller.plainCashewSubCategories.map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: CustomTextWidget(
+                                    text: value,
+                                    fontweight: FontWeight.w600,
+                                    fontColor: kMainThemeColor,
+                                  ),
                                 );
-                              },
-                            ),
-                          ),
-                          Container(
-                            height: 250,
-                            child: Obx(
-                              () {
-                                if (controller.roastedAndSalted.value.count != 0) {
-                                  return controller.isRoastedAndSaltedLoading.value
-                                      ? Center(
-                                          child: CircularProgressIndicator(),
-                                        )
-                                      : ListView.builder(
-                                          itemBuilder: (context, index) {
-                                            final productDetails = controller.roastedAndSalted.value.results[index];
-
-                                            return GestureDetector(
-                                              onTap: () async {
-                                                final String productId = controller.roastedAndSalted.value.results[index].product.id.toString();
-                                                // final currentCategoryProducts = controller.roastedAndSalted.value;
-                                                controller.getSimilarProducts(controller.roastedAndSalted.value, index);
-                                                // controller.productDetails.value = controller.productDetails.value;
-                                                // print(controller.productDetails.value!.name);
-                                                print(productId);
-                                                previousPageIndexes.add(bottomNavbarIndexNotifier.value);
-                                                bottomNavbarIndexNotifier.value = 4;
-                                                controller.getProductDetails(productId);
-                                                controller.getProductReviews(productId);
-                                              },
-                                              child: ProductsListItemTile(
-                                                productDetails: productDetails,
-                                              ),
-                                            );
-                                          },
-                                          itemCount: controller.roastedAndSalted.value.count,
-                                          scrollDirection: Axis.horizontal,
-                                        );
-                                } else {
-                                  return Center(
-                                    child: CustomTextWidget(text: "Roasted and salted products not available right now."),
-                                  );
-                                }
-                              },
-                            ),
-                          ),
-                          SizedBox(height: 20),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: CustomTextWidget(
-                              text: "VALUE ADDED PRODUCTS",
-                              fontSize: 18,
-                              fontweight: FontWeight.w600,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: Obx(
-                              () {
-                                return DropdownButton<String>(
-                                  value: controller.selectedValueAddedCategory.value,
-                                  onChanged: (String? newValue) {
-                                    print(newValue);
-                                    if (newValue == "All") {
-                                      controller.getProductsByCategory("Value Added", '');
-                                      controller.selectedValueAddedCategory.value = newValue!;
-                                    } else {
-                                      controller.getProductsByCategory("Value Added", newValue!);
-                                      controller.selectedValueAddedCategory.value = newValue;
-                                    }
-                                  },
-                                  items: controller.valueAddedSubCategories.map<DropdownMenuItem<String>>((String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: CustomTextWidget(
-                                        text: value,
-                                        fontweight: FontWeight.w600,
-                                        fontColor: kMainThemeColor,
-                                      ),
-                                    );
-                                  }).toList(),
-                                );
-                              },
-                            ),
-                          ),
-                          Container(
-                            height: 250,
-                            child: Obx(
-                              () {
-                                if (controller.valueAdded.value.count != 0) {
-                                  return controller.isValueAddedLoading.value
-                                      ? Center(
-                                          child: CircularProgressIndicator(),
-                                        )
-                                      : ListView.builder(
-                                          itemBuilder: (context, index) {
-                                            final productDetails = controller.valueAdded.value.results[index];
-
-                                            return GestureDetector(
-                                              onTap: () async {
-                                                final String productId = controller.valueAdded.value.results[index].product.id.toString();
-                                                // currentCategoryProducts = controller.roastedAndSalted.value;
-                                                // controller.productDetails.value = controller.productDetails.value;
-                                                // print(controller.productDetails.value!.name);
-
-                                                previousPageIndexes.add(bottomNavbarIndexNotifier.value);
-                                                bottomNavbarIndexNotifier.value = 4;
-                                                controller.getProductDetails(productId);
-                                                controller.getProductReviews(productId);
-                                              },
-                                              child: ProductsListItemTile(
-                                                productDetails: productDetails,
-                                              ),
-                                            );
-                                          },
-                                          itemCount: controller.valueAdded.value.count,
-                                          scrollDirection: Axis.horizontal,
-                                        );
-                                } else {
-                                  return Center(
-                                    child: CustomTextWidget(text: "Value added products not available right now."),
-                                  );
-                                }
-                              },
-                            ),
-                          ),
-                          SizedBox(height: 20),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: CustomTextWidget(
-                              text: "ALL FEATURED PRODUCTS",
-                              fontSize: 18,
-                              fontweight: FontWeight.w600,
-                            ),
-                          ),
-                          Container(
-                            height: 250,
-                            child: Obx(
-                              () => controller.isAllProductsLoading.value
+                              }).toList(),
+                            );
+                          },
+                        ),
+                      ),
+                      Container(
+                        height: 250,
+                        child: Obx(
+                          () {
+                            if (controller.plainCashews.value.count != 0) {
+                              return controller.isPlainCashewLoading.value
                                   ? Center(
                                       child: CircularProgressIndicator(),
                                     )
                                   : ListView.builder(
                                       itemBuilder: (context, index) {
-                                        final productDetails = controller.allProducts.value.results[index];
+                                        final productDetails = controller.plainCashews.value.results![index];
 
                                         return GestureDetector(
                                           onTap: () async {
-                                            final String productId = controller.allProducts.value.results[index].product.id.toString();
-
-                                            controller.getProductDetails(productId);
-                                            controller.getProductReviews(productId);
+                                            final String productId = controller.plainCashews.value.results![index].product.id.toString();
+                                            // final currentCategoryProducts = controller.plainCashews.value;
+                                            controller.getSimilarProducts(controller.plainCashews.value, index);
                                             controller.productDetails.value = controller.productDetails.value;
-                                            print(controller.productDetails.value!.name);
-
+                                            // print(controller.productDetails.value!.name);
+                                            print(productId);
                                             previousPageIndexes.add(bottomNavbarIndexNotifier.value);
                                             bottomNavbarIndexNotifier.value = 4;
+                                            controller.getProductDetails(productId);
+                                            controller.getProductReviews(productId);
                                           },
                                           child: ProductsListItemTile(
                                             productDetails: productDetails,
                                           ),
                                         );
                                       },
-                                      itemCount: controller.allProducts.value.count,
+                                      itemCount: controller.plainCashews.value.count,
                                       scrollDirection: Axis.horizontal,
-                                    ),
-                            ),
+                                    );
+                            } else {
+                              return Center(
+                                child: CustomTextWidget(text: "Plain cashews products not available right now."),
+                              );
+                            }
+                          },
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: CustomTextWidget(
+                          text: "ROASTED & SALTED CASHEWS",
+                          fontSize: 18,
+                          fontweight: FontWeight.w600,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Obx(
+                          () {
+                            return DropdownButton<String>(
+                              value: controller.selectedRoastedAndSaltedCategory.value,
+                              onChanged: (String? newValue) {
+                                print(newValue);
+                                if (newValue == "All") {
+                                  controller.getProductsByCategory("Roasted and salted", '');
+                                  controller.selectedRoastedAndSaltedCategory.value = newValue!;
+                                } else {
+                                  controller.getProductsByCategory("Roasted and salted", newValue!);
+                                  controller.selectedRoastedAndSaltedCategory.value = newValue;
+                                }
+                              },
+                              items: controller.roastedAndSaltedSubCategories.map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: CustomTextWidget(
+                                    text: value,
+                                    fontweight: FontWeight.w600,
+                                    fontColor: kMainThemeColor,
+                                  ),
+                                );
+                              }).toList(),
+                            );
+                          },
+                        ),
+                      ),
+                      Container(
+                        height: 250,
+                        child: Obx(
+                          () {
+                            if (controller.roastedAndSalted.value.count != 0) {
+                              return controller.isRoastedAndSaltedLoading.value
+                                  ? Center(
+                                      child: CircularProgressIndicator(),
+                                    )
+                                  : ListView.builder(
+                                      itemBuilder: (context, index) {
+                                        final productDetails = controller.roastedAndSalted.value.results![index];
+
+                                        return GestureDetector(
+                                          onTap: () async {
+                                            final String productId = controller.roastedAndSalted.value.results![index].product.id.toString();
+                                            // final currentCategoryProducts = controller.roastedAndSalted.value;
+                                            controller.getSimilarProducts(controller.roastedAndSalted.value, index);
+                                            // controller.productDetails.value = controller.productDetails.value;
+                                            // print(controller.productDetails.value!.name);
+                                            print(productId);
+                                            previousPageIndexes.add(bottomNavbarIndexNotifier.value);
+                                            bottomNavbarIndexNotifier.value = 4;
+                                            controller.getProductDetails(productId);
+                                            controller.getProductReviews(productId);
+                                          },
+                                          child: ProductsListItemTile(
+                                            productDetails: productDetails,
+                                          ),
+                                        );
+                                      },
+                                      itemCount: controller.roastedAndSalted.value.count,
+                                      scrollDirection: Axis.horizontal,
+                                    );
+                            } else {
+                              return Center(
+                                child: CustomTextWidget(text: "Roasted and salted products not available right now."),
+                              );
+                            }
+                          },
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: CustomTextWidget(
+                          text: "VALUE ADDED PRODUCTS",
+                          fontSize: 18,
+                          fontweight: FontWeight.w600,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Obx(
+                          () {
+                            return DropdownButton<String>(
+                              value: controller.selectedValueAddedCategory.value,
+                              onChanged: (String? newValue) {
+                                print(newValue);
+                                if (newValue == "All") {
+                                  controller.getProductsByCategory("Value Added", '');
+                                  controller.selectedValueAddedCategory.value = newValue!;
+                                } else {
+                                  controller.getProductsByCategory("Value Added", newValue!);
+                                  controller.selectedValueAddedCategory.value = newValue;
+                                }
+                              },
+                              items: controller.valueAddedSubCategories.map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: CustomTextWidget(
+                                    text: value,
+                                    fontweight: FontWeight.w600,
+                                    fontColor: kMainThemeColor,
+                                  ),
+                                );
+                              }).toList(),
+                            );
+                          },
+                        ),
+                      ),
+                      Container(
+                        height: 250,
+                        child: Obx(
+                          () {
+                            if (controller.valueAdded.value.count != 0) {
+                              return controller.isValueAddedLoading.value
+                                  ? Center(
+                                      child: CircularProgressIndicator(),
+                                    )
+                                  : ListView.builder(
+                                      itemBuilder: (context, index) {
+                                        final productDetails = controller.valueAdded.value.results![index];
+
+                                        return GestureDetector(
+                                          onTap: () async {
+                                            final String productId = controller.valueAdded.value.results![index].product.id.toString();
+                                            // currentCategoryProducts = controller.roastedAndSalted.value;
+                                            // controller.productDetails.value = controller.productDetails.value;
+                                            // print(controller.productDetails.value!.name);
+                                            controller.getSimilarProducts(controller.valueAdded.value, index);
+
+                                            previousPageIndexes.add(bottomNavbarIndexNotifier.value);
+                                            bottomNavbarIndexNotifier.value = 4;
+                                            controller.getProductDetails(productId);
+                                            controller.getProductReviews(productId);
+                                          },
+                                          child: ProductsListItemTile(
+                                            productDetails: productDetails,
+                                          ),
+                                        );
+                                      },
+                                      itemCount: controller.valueAdded.value.count,
+                                      scrollDirection: Axis.horizontal,
+                                    );
+                            } else {
+                              return Center(
+                                child: CustomTextWidget(text: "Value added products not available right now."),
+                              );
+                            }
+                          },
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: CustomTextWidget(
+                          text: "ALL FEATURED PRODUCTS",
+                          fontSize: 18,
+                          fontweight: FontWeight.w600,
+                        ),
+                      ),
+                      Container(
+                        height: 250,
+                        child: Obx(
+                          () => controller.isAllProductsLoading.value
+                              ? Center(
+                                  child: CircularProgressIndicator(),
+                                )
+                              : ListView.builder(
+                                  itemBuilder: (context, index) {
+                                    final productDetails = controller.allProducts.value.results![index];
+
+                                    return GestureDetector(
+                                      onTap: () async {
+                                        final String productId = controller.allProducts.value.results![index].product.id.toString();
+                                        controller.getSimilarProducts(controller.allProducts.value, index);
+                                        controller.getProductDetails(productId);
+                                        controller.getProductReviews(productId);
+                                        controller.productDetails.value = controller.productDetails.value;
+                                        print(controller.productDetails.value!.name);
+
+                                        previousPageIndexes.add(bottomNavbarIndexNotifier.value);
+                                        bottomNavbarIndexNotifier.value = 4;
+                                      },
+                                      child: ProductsListItemTile(
+                                        productDetails: productDetails,
+                                      ),
+                                    );
+                                  },
+                                  itemCount: controller.allProducts.value.count,
+                                  scrollDirection: Axis.horizontal,
+                                ),
+                        ),
+                      ),
+                    ],
+                  );
+                } else {
+                  return controller.searchResults.value.count == 0
+                      ? Center(
+                          child: CustomTextWidget(
+                            text: "Product not found",
+                            fontSize: 16,
                           ),
-                        ],
-                      )
-                    : GridView.count(
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        childAspectRatio: (20 / 30),
-                        crossAxisCount: 2,
-                        mainAxisSpacing: 5,
-                        crossAxisSpacing: 5,
-                        children: List.generate(controller.searchResults.value.count, (index) {
-                          final productDetails = controller.searchResults.value.results[index];
-                          return GestureDetector(
-                            onTap: () async {
-                              // print(
-                              //     "image list ${controller.productDisplayList.valueindex]}");
-                              final String productId = controller.searchResults.value.results[index].product.id.toString();
-                              controller.getSimilarProducts(controller.searchResults.value, index);
-                              await controller.getProductDetails(productId);
-                              // controller.productDetails.value = controller.productDetails.value;
-                              previousPageIndexes.add(bottomNavbarIndexNotifier.value);
-                              bottomNavbarIndexNotifier.value = 4;
-                            },
-                            child: ProductsListItemTile(
-                              productDetails: productDetails,
-                            ),
-                          );
-                        }),
-                      );
+                        )
+                      : GridView.count(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          childAspectRatio: (20 / 30),
+                          crossAxisCount: 2,
+                          mainAxisSpacing: 5,
+                          crossAxisSpacing: 5,
+                          children: List.generate(controller.searchResults.value.count, (index) {
+                            final productDetails = controller.searchResults.value.results![index];
+
+                            return GestureDetector(
+                              onTap: () async {
+                                // print(
+                                //     "image list ${controller.productDisplayList.valueindex]}");
+                                final String productId = controller.searchResults.value.results![index].product.id.toString();
+                                controller.getSimilarProducts(controller.searchResults.value, index);
+                                await controller.getProductDetails(productId);
+                                // controller.productDetails.value = controller.productDetails.value;
+                                previousPageIndexes.add(bottomNavbarIndexNotifier.value);
+                                bottomNavbarIndexNotifier.value = 4;
+                              },
+                              child: ProductsListItemTile(
+                                productDetails: productDetails,
+                              ),
+                            );
+                          }),
+                        );
+                }
               }
             }),
           ],

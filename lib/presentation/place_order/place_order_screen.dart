@@ -42,7 +42,7 @@ class PlaceOrderScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // final int category = productDetails['category'];
-    final String imagePath = productDetails.productImages.isNotEmpty ? "$baseUrl${productDetails.productImages[0]['product_image']}" : "";
+    final String imagePath = productDetails.productImages.isNotEmpty ? "$baseUrl${productDetails.productImages[0].productImage}" : "";
     final String name = productDetails.name;
     final String description = productDetails.description;
     final String price = productDetails.productVariants[sizeSelectNotifier.value].sellingPrice;
@@ -145,7 +145,7 @@ class PlaceOrderScreen extends StatelessWidget {
                   // add new address button
                   CustomTextIconButton(
                     onPressed: () async {
-                      TextEditingController _newAddressController = TextEditingController();
+                      // TextEditingController _newAddressController = TextEditingController();
 
                       Services().showAddressPopup(context);
                     },

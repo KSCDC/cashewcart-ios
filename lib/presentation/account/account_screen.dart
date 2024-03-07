@@ -11,6 +11,7 @@ import 'package:internship_sample/presentation/profile/profile_screen.dart';
 import 'package:internship_sample/presentation/widgets/custom_elevated_button.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 import 'package:internship_sample/services/api_services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AccountScreen extends StatelessWidget {
   AccountScreen({super.key});
@@ -81,7 +82,6 @@ class AccountScreen extends StatelessWidget {
                   bottomNavbarIndexNotifier.value = 6;
                 },
               ),
-              
             ],
           ),
           SizedBox(height: 20),
@@ -100,7 +100,9 @@ class AccountScreen extends StatelessWidget {
               kWidth,
               CustomTextButton(
                 label: "Logout",
-                onPressed: () {
+                onPressed: () async {
+                  SharedPreferences sharedPref = await SharedPreferences.getInstance();
+                  await sharedPref.clear();
                   Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(builder: (context) => SignInScreen()),
                     (route) => false, // Remove all previous routes

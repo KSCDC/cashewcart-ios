@@ -8,7 +8,7 @@ class ProductModel {
   late final int count;
   late final Null next;
   late final Null previous;
-  late final List<Results> results;
+  List<Results>? results;
 
   ProductModel.fromJson(Map<String, dynamic> json) {
     count = json['count'];
@@ -22,7 +22,7 @@ class ProductModel {
     _data['count'] = count;
     _data['next'] = next;
     _data['previous'] = previous;
-    _data['results'] = results.map((e) => e.toJson()).toList();
+    _data['results'] = results!.map((e) => e.toJson()).toList();
     return _data;
   }
 
@@ -36,7 +36,7 @@ class ProductModel {
       count: count ?? this.count,
       next: next ?? this.next,
       previous: previous ?? this.previous,
-      results: results ?? List.from(this.results),
+      results: results ?? List.from(this.results!),
     );
   }
 }

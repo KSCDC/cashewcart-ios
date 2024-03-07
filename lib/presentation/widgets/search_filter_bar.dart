@@ -1,41 +1,61 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:internship_sample/controllers/app_controller.dart';
+import 'package:internship_sample/presentation/widgets/custom_elevated_button.dart';
 import 'package:internship_sample/presentation/widgets/custom_search_filtering_button.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
+import 'package:internship_sample/presentation/widgets/search_section_tile.dart';
 
 class SearchFilterBar extends StatelessWidget {
   SearchFilterBar({
     super.key,
-    required this.heading,
   });
-  final String heading;
+
   AppController controller = Get.put(AppController());
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        CustomTextWidget(
-          text: heading,
-          fontSize: 18,
-          fontweight: FontWeight.w600,
-        ),
-        Row(
-          children: [
-            CustomSearchFilteringButton(
-              onTap: () {},
-              label: "Sort",
-              icon: Icons.swap_vert,
-            ),
-            CustomSearchFilteringButton(
-              onTap: () {
-                showPriceFilterBottomSheet(context);
-              },
-              label: "Filter",
-              icon: Icons.filter_alt,
-            ),
-          ],
+        Obx(() {
+          return DropdownButton<String>(
+            value: controller.dropdownValue.value,
+            onChanged: (String? newValue) {
+              controller.dropdownValue.value = newValue!;
+              // Here you can add code to sort the list based on the selected option
+              if (newValue == 'Price Ascending') {
+                controller.sortProduct.value = true;
+                controller.sortAscending.value = true;
+                controller.searchProducts(SearchSectionTile().searchController.text);
+                // result.sort((a, b) => double.parse(a.sellingPrice).compareTo(double.parse(b.sellingPrice)));
+              } else if (newValue == 'Price Descending') {
+                controller.sortProduct.value = true;
+                controller.sortAscending.value = false;
+                controller.searchProducts(SearchSectionTile().searchController.text);
+                // result.sort((a, b) => double.parse(b.sellingPrice).compareTo(double.parse(a.sellingPrice)));
+              } else {
+                controller.sortProduct.value = false;
+                controller.searchProducts(SearchSectionTile().searchController.text);
+              }
+            },
+            items: <String>['All Featured Products', 'Price Ascending', 'Price Descending'].map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: CustomTextWidget(
+                  text: value,
+                  fontSize: 20,
+                  fontweight: FontWeight.w600,
+                ),
+              );
+            }).toList(),
+          );
+        }),
+        CustomSearchFilteringButton(
+          onTap: () {
+            showPriceFilterBottomSheet(context);
+          },
+          label: "Price Filter",
+          icon: Icons.filter_alt,
         )
       ],
     );
@@ -82,15 +102,18 @@ class SearchFilterBar extends StatelessWidget {
                       },
                     ),
                     SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: () {
+                    GestureDetector(
+                      onTap: () {
                         print('Minimum Price: ₹${_currentRangeValues.start.toStringAsFixed(2)}');
                         print('Maximum Price: ₹${_currentRangeValues.end.toStringAsFixed(2)}');
                         controller.minSearchPrice.value = _currentRangeValues.start.round();
                         controller.maxSearchPrice.value = _currentRangeValues.end.round();
+                        controller.searchProducts(SearchSectionTile().searchController.text);
                         Navigator.pop(context);
                       },
-                      child: CustomTextWidget(text: 'Apply'),
+                      child: CustomElevatedButton(
+                        label: 'Apply',
+                      ),
                     ),
                   ],
                 ),
