@@ -103,7 +103,7 @@ class SignInScreen extends StatelessWidget {
                 SizedBox(height: 30),
                 GestureDetector(
                   onTap: () async {
-                    Get.to(() => MainPageScreen());
+                    Get.offAll(() => MainPageScreen());
                   },
                   child: CustomElevatedButton(
                     label: "Explore without Login",

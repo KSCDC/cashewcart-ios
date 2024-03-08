@@ -33,6 +33,7 @@ class AppController extends GetxController {
   RxInt maxSearchPrice = 5000.obs;
   // String selectedProductId = "";
   RxBool isLoading = false.obs;
+  RxBool isError = false.obs;
   RxBool isAllProductsLoading = false.obs;
   RxBool isPlainCashewLoading = false.obs;
   RxBool isRoastedAndSaltedLoading = false.obs;
@@ -44,10 +45,24 @@ class AppController extends GetxController {
   RxBool isTrendingLoading = false.obs;
   RxBool isReviewsLoading = false.obs;
   RxBool isDisplayingTrendingModelList = false.obs;
+  RxBool isLoadingAddress = false.obs;
+  RxBool isAllProductsLoadingError = false.obs;
+  RxBool isPlainCashewLoadingError = false.obs;
+  RxBool isRoastedAndSaltedLoadingError = false.obs;
+  RxBool isValueAddedLoadingError = false.obs;
+  RxBool isSimilarProductsLoadingError = false.obs;
+  RxBool isRelatedProductsLoadingError = false.obs;
+  RxBool isBestSellersLoadingError = false.obs;
+  RxBool isSponserdLoadingError = false.obs;
+  RxBool isTrendingLoadingError = false.obs;
+  RxBool isReviewsLoadingError = false.obs;
+  RxBool isDisplayingTrendingModelListError = false.obs;
+  RxBool isLoadingAddressError = false.obs;
+  RxBool isSearchProductError = false.obs;
   RxBool sortProduct = false.obs;
   RxBool sortAscending = false.obs;
 
-  RxString dropdownValue = 'All Featured Products'.obs;
+  RxString dropdownValue = 'Default'.obs;
 
   Rx<ProductModel> allProducts = ProductModel(count: 0, next: null, previous: null, results: []).obs;
   Rx<ProductModel> plainCashews = ProductModel(count: 0, next: null, previous: null, results: []).obs;
@@ -121,6 +136,8 @@ class AppController extends GetxController {
       final refreshToken = response.data['token']['refresh'];
       print("access token :$accessToken\nrefresh token :$refreshToken");
       SharedPreferences sharedPref = await SharedPreferences.getInstance();
+      sharedPref.setString(ACCESSTOKEN, accessToken);
+      sharedPref.setString(REFRESHTOKEN, refreshToken);
 
       final encrypter = enc.Encrypter(enc.AES(key));
       final encrypted = encrypter.encrypt(password, iv: iv);
@@ -143,6 +160,8 @@ class AppController extends GetxController {
       final data = ProductModel.fromJson(response.data);
       allProducts.value = data;
       isAlreadyLoadedAllProducts = true;
+    } else {
+      isAllProductsLoadingError.value = true;
     }
 
     isAllProductsLoading.value = false;
@@ -150,11 +169,14 @@ class AppController extends GetxController {
 
   getTrendingProducts() async {
     isTrendingLoading.value = true;
+    isTrendingLoadingError.value = false;
     final response = await ApiServices().getTrendingProducts();
     if (response != null) {
       final data = TrendingProductModel.fromJson(response.data);
       trending.value = data;
       isAlreadyLoadedTrending = true;
+    } else {
+      isTrendingLoadingError.value = true;
     }
 
     isTrendingLoading.value = false;
@@ -162,11 +184,14 @@ class AppController extends GetxController {
 
   getBestSellerProducts() async {
     isBestSellersLoading.value = true;
+    isBestSellersLoading.value = false;
     final response = await ApiServices().getBestSellerProducts();
     if (response != null) {
       final data = TrendingProductModel.fromJson(response.data);
       bestSellers.value = data;
       isAlreadyLoadedBestsellers = true;
+    } else {
+      isBestSellersLoadingError.value = true;
     }
     print("best sellers :${bestSellers}");
     isBestSellersLoading.value = false;
@@ -174,11 +199,14 @@ class AppController extends GetxController {
 
   getSponserdProducts() async {
     isSponserdLoading.value = true;
+    isSponserdLoadingError.value = false;
     final response = await ApiServices().getSponserdProducts();
     if (response != null) {
       final data = TrendingProductModel.fromJson(response.data);
       sponserd.value = data;
       isAlreadyLoadedSponserd = true;
+    } else {
+      isSearchProductError.value = true;
     }
 
     isSponserdLoading.value = false;
@@ -189,47 +217,62 @@ class AppController extends GetxController {
     // print(data.count);
     if (category == "Plain Cashews") {
       isPlainCashewLoading.value = true;
+      isPlainCashewLoadingError.value = false;
       final response = await ApiServices().getProductByCategory(category, categoryName);
-      final data = ProductModel.fromJson(response.data);
-      plainCashews.value = data;
-      for (int i = 0; i < data.count; i++) {
-        final categoryName = data.results![i].product.category.name;
-        if (!plainCashewSubCategories.contains(categoryName)) {
-          plainCashewSubCategories.add(categoryName);
+      if (response != null) {
+        final data = ProductModel.fromJson(response.data);
+        plainCashews.value = data;
+        for (int i = 0; i < data.count; i++) {
+          final categoryName = data.results![i].product.category.name;
+          if (!plainCashewSubCategories.contains(categoryName)) {
+            plainCashewSubCategories.add(categoryName);
+          }
         }
+        print("Categories in plain :$plainCashewSubCategories");
+        isAlreadyLoadedPlainCashews = true;
+      } else {
+        isPlainCashewLoadingError.value = true;
       }
-      print("Categories in plain :$plainCashewSubCategories");
-      isAlreadyLoadedPlainCashews = true;
       isPlainCashewLoading.value = false;
     } else if (category == "Roasted and salted") {
       print("storing roasted");
       isRoastedAndSaltedLoading.value = true;
+      isRoastedAndSaltedLoadingError.value = true;
       final response = await ApiServices().getProductByCategory(category, categoryName);
       // print(response.data);
-      final data = ProductModel.fromJson(response.data);
-      roastedAndSalted.value = data;
-      for (int i = 0; i < data.count; i++) {
-        final categoryName = data.results![i].product.category.name;
-        if (!roastedAndSaltedSubCategories.contains(categoryName)) {
-          roastedAndSaltedSubCategories.add(categoryName);
+      if (response != null) {
+        final data = ProductModel.fromJson(response.data);
+        roastedAndSalted.value = data;
+        for (int i = 0; i < data.count; i++) {
+          final categoryName = data.results![i].product.category.name;
+          if (!roastedAndSaltedSubCategories.contains(categoryName)) {
+            roastedAndSaltedSubCategories.add(categoryName);
+          }
         }
+        print("Categories in roasted :$roastedAndSaltedSubCategories");
+        isAlreadyLoadedRoastedAndSaltedCashews = true;
+      } else {
+        isRoastedAndSaltedLoadingError.value = true;
       }
-      print("Categories in roasted :$roastedAndSaltedSubCategories");
-      isAlreadyLoadedRoastedAndSaltedCashews = true;
       isRoastedAndSaltedLoading.value = false;
     } else if (category == "Value Added") {
       isValueAddedLoading.value = true;
+      isValueAddedLoadingError.value = false;
       final response = await ApiServices().getProductByCategory(category, categoryName);
-      final data = ProductModel.fromJson(response.data);
-      valueAdded.value = data;
-      for (int i = 0; i < data.count; i++) {
-        final categoryName = data.results![i].product.category.name;
-        if (!valueAddedSubCategories.contains(categoryName)) {
-          valueAddedSubCategories.add(categoryName);
+      if (response != null) {
+        final data = ProductModel.fromJson(response.data);
+        valueAdded.value = data;
+        for (int i = 0; i < data.count; i++) {
+          final categoryName = data.results![i].product.category.name;
+          if (!valueAddedSubCategories.contains(categoryName)) {
+            valueAddedSubCategories.add(categoryName);
+          }
         }
+        print("Categories in roasted :$valueAddedSubCategories");
+        isAlreadyLoadedValueAdded = true;
+      } else {
+        isValueAddedLoadingError.value = true;
       }
-      print("Categories in roasted :$valueAddedSubCategories");
-      isAlreadyLoadedValueAdded = true;
       isValueAddedLoading.value = false;
     }
   }
@@ -261,11 +304,14 @@ class AppController extends GetxController {
 
   getProductDetails(String id) async {
     isLoading.value = true;
+    isError.value = false;
     final response = await ApiServices().getProductDetails(id);
     if (response != null) {
       final data = await ProductDetailsModel.fromJson(response.data);
       productDetails.value = data;
       isAlreadyLoadedAllProducts = true;
+    } else {
+      isError.value = true;
     }
 
     isLoading.value = false;
@@ -273,6 +319,7 @@ class AppController extends GetxController {
 
   getProductReviews(String productId) async {
     isReviewsLoading.value = true;
+    isReviewsLoadingError.value = false;
     productReviewsList.clear();
     final List<ProductReviewsModel> tempList = [];
     final response = await ApiServices().getProductReviews(productId);
@@ -315,6 +362,8 @@ class AppController extends GetxController {
       productReviewsList.value = tempList;
 
       // productReviews.value = productReviewsList;
+    } else {
+      isReviewsLoadingError.value = true;
     }
 
     isReviewsLoading.value = false;
@@ -328,17 +377,12 @@ class AppController extends GetxController {
       // final review = ProductReviewsModel.fromJson(item);
       final data = await ProductReviewsModel.fromJson(response.data);
       productReviewsList.add(data);
-      // }
-
-      // productReviewsList = productReviewsList + tempList;
-
-      // productReviews.value = productReviewsList;
     }
   }
 
   getSimilarProducts(ProductModel currentCategoryProducts, int selectedIndex) {
     print("list length before :${currentCategoryProducts.results!.length}");
-    // currentCategoryProducts.copyWith()
+
     if (currentCategoryProducts.results!.isNotEmpty) {
       var temp = currentCategoryProducts.copyWith(results: List.from(currentCategoryProducts.results!));
       temp.results!.removeAt(selectedIndex);
@@ -350,12 +394,15 @@ class AppController extends GetxController {
 
   getProfileDetails() async {
     isLoading.value = true;
+    isError.value = false;
     final response = await ApiServices().getProfileDetails();
 
     if (response != null) {
       userName = response.data['name'];
       email = response.data['email'];
       phoneNo = response.data['phone_number'];
+    } else {
+      isError.value = true;
     }
 
     print(userName);
@@ -363,31 +410,48 @@ class AppController extends GetxController {
   }
 
   getCartList() async {
-    // isLoading.value = true;
-
+    isLoading.value = true;
+    isError.value = false;
     final response = await ApiServices().getCartList();
     if (response != null) {
       final data = CartProductModel.fromJson(response.data);
       log(response.data.toString());
       cartProducts.value = data;
       cartCountNotifier.value = data.count;
+    } else {
+      isError.value = true;
     }
 
-    // isLoading.value = false;
+    isLoading.value = false;
   }
 
   addProductToCart(BuildContext context, String productId) async {
-    await ApiServices().addProductToCart(context, productId);
+    isLoading.value = true;
+    isError.value = false;
+    final response = await ApiServices().addProductToCart(context, productId);
+    if (response == null) {
+      isError.value = true;
+    }
   }
 
   removeProductFromCart(BuildContext context, String productId) async {
-    await ApiServices().removeFromCart(context, productId);
+    isLoading.value = true;
+    isError.value = false;
+   final response= await ApiServices().removeFromCart(context, productId);
+    if (response == null) {
+      isError.value = true;
+    }else{
+
     getCartList();
+    }
+    isLoading.value = false;
+    
   }
 
   getUserAddresses() async {
     print("getting addresses");
-    isLoading.value = true;
+    isLoadingAddress.value = true;
+    isLoadingAddressError.value = false;
     productReviewsList.clear();
     final List<UserAddressModel> tempList = [];
     final response = await ApiServices().getUserAddresses();
@@ -403,9 +467,12 @@ class AppController extends GetxController {
       addressList.value = tempList;
 
       // productReviews.value = productReviewsList;
+    }else{
+      isLoadingAddressError.value = true;
+  
     }
-    print("city----${addressList.value[0].city}");
+    
 
-    isLoading.value = false;
+    isLoadingAddress.value = false;
   }
 }

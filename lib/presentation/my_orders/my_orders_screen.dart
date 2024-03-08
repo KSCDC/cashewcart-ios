@@ -15,6 +15,7 @@ import 'package:internship_sample/presentation/widgets/products_list_item_tile.d
 
 List recentOrdersList = [];
 List productCountsList = [];
+List productDetailsList1 = [];
 
 class MyOrdersScreen extends StatelessWidget {
   MyOrdersScreen({super.key});

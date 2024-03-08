@@ -35,7 +35,7 @@ class ApiServices {
 
     try {
       final dio = Dio();
-
+      dio.options.connectTimeout = connectionTimeoutDuration;
       final response = await dio.post(
         "$baseUrl${ApiEndPoints.registerUser}",
         data: formData,
@@ -53,16 +53,21 @@ class ApiServices {
         return null;
       }
     } on DioException catch (e) {
-      final errorData = e.response!.data['errors'];
-      // print("Error :$e");
-      print("Error: ${errorData}");
-      if (errorData['phone_number'] != null) {
-        // print(errorData['phone_number'][0]);
-        Services().showCustomSnackBar(context, errorData['phone_number'][0]);
-      }
-      if (errorData['email'] != null) {
-        // print(errorData['email'][0]);
-        Services().showCustomSnackBar(context, errorData['email'][0]);
+      if (e.type == DioExceptionType.connectionTimeout) {
+        print("Connection timeout");
+        Services().showCustomSnackBar(context, "Connection timeout. Please check your internet connection");
+      } else {
+        final errorData = e.response!.data['errors'];
+        // print("Error :$e");
+        print("Error: ${errorData}");
+        if (errorData['phone_number'] != null) {
+          // print(errorData['phone_number'][0]);
+          Services().showCustomSnackBar(context, errorData['phone_number'][0]);
+        }
+        if (errorData['email'] != null) {
+          // print(errorData['email'][0]);
+          Services().showCustomSnackBar(context, errorData['email'][0]);
+        }
       }
       return null;
     }
@@ -76,7 +81,7 @@ class ApiServices {
 
     try {
       final dio = Dio();
-
+      dio.options.connectTimeout = connectionTimeoutDuration;
       final response = await dio.post(
         "$baseUrl${ApiEndPoints.loginUser}",
         data: formData,
@@ -95,25 +100,31 @@ class ApiServices {
         return null;
       }
     } on DioException catch (e) {
-      final errorData = e.response!.data['errors'];
-      // print("Error :$e");
-      print("Error: ${errorData}");
-      if (errorData['non_field_errors'] != null) {
-        print(errorData['non_field_errors'][0]);
-        Services().showCustomSnackBar(context, errorData['non_field_errors'][0]);
+      print(e.type);
+      if (e.type == DioExceptionType.connectionTimeout) {
+        print("Connection timeout");
+        Services().showCustomSnackBar(context, "Connection timeout. Please check your internet connection");
+      } else {
+        final errorData = e.response!.data['errors'];
+        print("Status code: ${e.response!.statusCode}");
+        print("Error: $errorData");
+        if (errorData['non_field_errors'] != null) {
+          print(errorData['non_field_errors'][0]);
+          Services().showCustomSnackBar(context, errorData['non_field_errors'][0]);
+        }
       }
       return null;
     }
   }
 
-  sendVerificationMail(String mail) async {
+  sendVerificationMail(BuildContext context, String mail) async {
     final formData = {
       "email": mail,
     };
 
     try {
       final dio = Dio();
-
+      dio.options.connectTimeout = connectionTimeoutDuration;
       final response = await dio.post(
         "$baseUrl${ApiEndPoints.sendVerificationMail}",
         data: formData,
@@ -131,14 +142,18 @@ class ApiServices {
       }
     } on DioException catch (e) {
       print("Error :$e");
-
+      if (e.type == DioExceptionType.connectionTimeout) {
+        print("Connection timeout");
+        Services().showCustomSnackBar(context, "Connection timeout. Please check your internet connection");
+      }
       return null;
     }
   }
 
-  changePassword(String password, String confirmPassword) async {
+  changePassword(BuildContext context, String password, String confirmPassword) async {
     try {
       final dio = Dio();
+      dio.options.connectTimeout = connectionTimeoutDuration;
       final formData = {
         "password": password,
         "password2": confirmPassword,
@@ -165,13 +180,17 @@ class ApiServices {
         return null;
       }
     } on DioException catch (e) {
-      print(e.response!.statusCode);
+      // print(e.response!.statusCode);
+      if (e.type == DioExceptionType.connectionTimeout) {
+        print("Connection timeout");
+        Services().showCustomSnackBar(context, "Connection timeout. Please check your internet connection");
+      }
       print("Error :${e.response!.data}");
       if (e.response!.statusCode == 401) {
         print("refresh token");
         final refreshedToken = await refreshAccessToken();
         if (refreshedToken != null) {
-          changePassword(password, confirmPassword);
+          changePassword(context, password, confirmPassword);
         }
       }
       return null;
@@ -186,6 +205,7 @@ class ApiServices {
     try {
       print("refreshing token");
       final dio = Dio();
+      dio.options.connectTimeout = connectionTimeoutDuration;
       SharedPreferences sharedPref = await SharedPreferences.getInstance();
       final refreshToken = sharedPref.getString(REFRESHTOKEN);
       final response = await dio.post(
@@ -210,16 +230,18 @@ class ApiServices {
         return null;
       }
     } on DioException catch (e) {
-      print("Error :${e.response!.data}");
-      print("Error :${e.response!.statusCode}");
-      // print("Error :${e.response!.data['error']}");
-      // Services().showCustomSnackBar(context, e.response!.data['error']);
-      if (e.response!.statusCode == 400 || e.response!.statusCode == 401) {
-        log("Going to automatic relogin");
-        final autoRelogin = await automaticRelogin();
-        print(autoRelogin);
-        if (autoRelogin == null) {
-          log("failed trying of auto relogin");
+      if (e.type == DioExceptionType.connectionTimeout) {
+        print("Connection timeout");
+      } else {
+        print("Error :${e.response!.data}");
+        print("Error :${e.response!.statusCode}");
+        if (e.response!.statusCode == 400 || e.response!.statusCode == 401) {
+          log("Going to automatic relogin");
+          final autoRelogin = await automaticRelogin();
+          print(autoRelogin);
+          if (autoRelogin == null) {
+            log("failed trying of auto relogin");
+          }
         }
       }
       return null;
@@ -233,9 +255,10 @@ class ApiServices {
     print("Autologin\n.\n.");
     String? email = '';
     String? decrypted = '';
-    
+
     try {
       final dio = Dio();
+      dio.options.connectTimeout = connectionTimeoutDuration;
       SharedPreferences sharedPref = await SharedPreferences.getInstance();
       email = sharedPref.getString(EMAIL);
       final encryptedBase64 = sharedPref.getString(ENCRYPTEDPASSWORD);
@@ -275,8 +298,10 @@ class ApiServices {
 
   getAllProducts() async {
     try {
+      controller.isAllProductsLoadingError.value = false;
+      print("Getting products from api");
       final dio = Dio();
-
+      dio.options.connectTimeout = connectionTimeoutDuration;
       final response = await dio.get(
         "$baseUrl${ApiEndPoints.getAllProducts}",
         options: Options(
@@ -285,7 +310,8 @@ class ApiServices {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        // log(response.data.toString());
+        print("Staus 200");
+        log(response.data.toString());
         return response;
       } else {
         print("Unexpected status code: ${response.statusCode}");
@@ -293,7 +319,10 @@ class ApiServices {
       }
     } on DioException catch (e) {
       print("Error :$e");
-
+      if (e.type == DioExceptionType.connectionTimeout) {
+        print("Connection timeout");
+        controller.isAllProductsLoadingError.value = true;
+      }
       return null;
     }
   }
@@ -306,7 +335,7 @@ class ApiServices {
 
     try {
       final dio = Dio();
-
+      dio.options.connectTimeout = connectionTimeoutDuration;
       final response = await dio.get(
         "$baseUrl${ApiEndPoints.filterProduct}",
         queryParameters: params,
@@ -324,7 +353,9 @@ class ApiServices {
       }
     } on DioException catch (e) {
       print("Error :$e");
-
+      if (e.type == DioExceptionType.connectionTimeout) {
+        print("Connection timeout");
+      }
       return null;
     }
   }
@@ -332,7 +363,7 @@ class ApiServices {
   getSponserdProducts() async {
     try {
       final dio = Dio();
-
+      dio.options.connectTimeout = connectionTimeoutDuration;
       final response = await dio.get(
         "$baseUrl${ApiEndPoints.getSponserdProducts}",
         options: Options(
@@ -357,7 +388,7 @@ class ApiServices {
   getTrendingProducts() async {
     try {
       final dio = Dio();
-
+      dio.options.connectTimeout = connectionTimeoutDuration;
       final response = await dio.get(
         "$baseUrl${ApiEndPoints.getTrendingProducts}",
         options: Options(
@@ -382,7 +413,7 @@ class ApiServices {
   getBestSellerProducts() async {
     try {
       final dio = Dio();
-
+      dio.options.connectTimeout = connectionTimeoutDuration;
       final response = await dio.get(
         "$baseUrl${ApiEndPoints.getBestSellerProducts}",
         options: Options(
@@ -413,7 +444,7 @@ class ApiServices {
 
     try {
       final dio = Dio();
-
+      dio.options.connectTimeout = connectionTimeoutDuration;
       final response = await dio.get(
         "$baseUrl${ApiEndPoints.filterProduct}",
         queryParameters: params,
@@ -431,7 +462,10 @@ class ApiServices {
       }
     } on DioException catch (e) {
       print("Error :$e");
-
+      if (e.type == DioExceptionType.connectionTimeout) {
+        print("Connection timeout");
+        controller.isSearchProductError.value = true;
+      }
       return null;
     }
   }
@@ -439,6 +473,7 @@ class ApiServices {
   getProductDetails(String id) async {
     try {
       final dio = Dio();
+      dio.options.connectTimeout = connectionTimeoutDuration;
       print("Url : $baseUrl${ApiEndPoints.getProductDetails}$id");
       final response = await dio.get(
         "$baseUrl${ApiEndPoints.getProductDetails}$id",
@@ -456,7 +491,9 @@ class ApiServices {
       }
     } on DioException catch (e) {
       print("Error :${e.response}");
-
+      if (e.type == DioExceptionType.connectionTimeout) {
+        print("Connection timeout");
+      }
       return null;
     }
   }
@@ -464,7 +501,7 @@ class ApiServices {
   getProductReviews(String id) async {
     try {
       final dio = Dio();
-
+      dio.options.connectTimeout = connectionTimeoutDuration;
       final response = await dio.get(
         "$baseUrl${ApiEndPoints.reviews}$id/list/",
         options: Options(
@@ -489,7 +526,7 @@ class ApiServices {
   getAverageStarRatings(String id) async {
     try {
       final dio = Dio();
-
+      dio.options.connectTimeout = connectionTimeoutDuration;
       final response = await dio.get(
         "$baseUrl${ApiEndPoints.reviews}$id/average-rating/",
         options: Options(
@@ -520,7 +557,7 @@ class ApiServices {
     };
     try {
       final dio = Dio();
-
+      dio.options.connectTimeout = connectionTimeoutDuration;
       final response = await dio.post(
         "$baseUrl${ApiEndPoints.reviews}$id/add-review/",
         data: formData,
@@ -540,6 +577,10 @@ class ApiServices {
         return null;
       }
     } on DioException catch (e) {
+      if (e.type == DioExceptionType.connectionTimeout) {
+        print("Connection timeout");
+        Services().showCustomSnackBar(context, "Connection timeout. Please check your network connection");
+      }
       print("Error :${e.response!.data}");
       // print("Error :${e.response!.data['error']}");
       Services().showCustomSnackBar(context, e.response!.data['error']);
@@ -557,6 +598,7 @@ class ApiServices {
   getProfileDetails() async {
     try {
       final dio = Dio();
+      dio.options.connectTimeout = connectionTimeoutDuration;
       SharedPreferences sharedPref = await SharedPreferences.getInstance();
       final authToken = sharedPref.getString(ACCESSTOKEN);
       final response = await dio.get(
@@ -598,7 +640,7 @@ class ApiServices {
     print("have email and password");
     try {
       final dio = Dio();
-
+      dio.options.connectTimeout = connectionTimeoutDuration;
       final response = await dio.get(
         "$baseUrl${ApiEndPoints.listCart}",
         options: Options(
@@ -633,6 +675,7 @@ class ApiServices {
   addProductToCart(BuildContext context, String productId) async {
     try {
       final dio = Dio();
+      dio.options.connectTimeout = connectionTimeoutDuration;
       SharedPreferences sharedPref = await SharedPreferences.getInstance();
       final authToken = sharedPref.getString(ACCESSTOKEN);
       final response = await dio.post(
@@ -674,6 +717,7 @@ class ApiServices {
     try {
       print("Trying to remove from cart:{$baseUrl${ApiEndPoints.addOrRemoveFromCart}$productId/}");
       final dio = Dio();
+      dio.options.connectTimeout = connectionTimeoutDuration;
       SharedPreferences sharedPref = await SharedPreferences.getInstance();
       final authToken = sharedPref.getString(ACCESSTOKEN);
       final response = await dio.delete(
@@ -712,6 +756,7 @@ class ApiServices {
     try {
       print("Trying to remove from cart:{$baseUrl${ApiEndPoints.updateCartCount}$productId/}");
       final dio = Dio();
+      dio.options.connectTimeout = connectionTimeoutDuration;
       final Map<String, dynamic> formData = {
         "purchase_count": newCount,
       };
@@ -762,6 +807,7 @@ class ApiServices {
 
     try {
       final dio = Dio();
+      dio.options.connectTimeout = connectionTimeoutDuration;
       SharedPreferences sharedPref = await SharedPreferences.getInstance();
       final authToken = sharedPref.getString(ACCESSTOKEN);
       final response = await dio.post(
@@ -805,6 +851,7 @@ class ApiServices {
   getUserAddresses() async {
     try {
       final dio = Dio();
+      dio.options.connectTimeout = connectionTimeoutDuration;
       SharedPreferences sharedPref = await SharedPreferences.getInstance();
       final authToken = sharedPref.getString(ACCESSTOKEN);
       final response = await dio.get(
@@ -840,6 +887,7 @@ class ApiServices {
   editUserAddress(BuildContext context, String id, String streetAddress, String city, String state, String postalCode, bool isDefaultAddress) async {
     try {
       final dio = Dio();
+      dio.options.connectTimeout = connectionTimeoutDuration;
       final Map<String, dynamic> formData = {
         "street_address": streetAddress,
         "city": city,
@@ -886,6 +934,7 @@ class ApiServices {
       print("deleting address with id : $id");
       print("$baseUrl${ApiEndPoints.address}$id");
       final dio = Dio();
+      dio.options.connectTimeout = connectionTimeoutDuration;
       SharedPreferences sharedPref = await SharedPreferences.getInstance();
       final authToken = sharedPref.getString(ACCESSTOKEN);
       final response = await dio.delete(

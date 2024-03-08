@@ -60,32 +60,38 @@ class CartScreen extends StatelessWidget {
               ),
               kHeight,
               Obx(() {
-                return controller.cartProducts.value.count == 0
-                    ? Center(
-                        child: CustomTextWidget(
-                          text: "You dont have any items in your cart",
-                          fontSize: 16,
-                        ),
-                      )
-                    : Container(
-                        child: ListView.builder(
-                          itemBuilder: (context, index) {
-                            print("\n\n\n");
-                            print("product name :::::${controller.cartProducts.value.results[index].product.product.name}");
-                            return Column(
-                              children: [
-                                kHeight,
-                                CartProductsListTile(
-                                  productDetails: controller.cartProducts.value.results[index],
-                                ),
-                              ],
-                            );
-                          },
-                          itemCount: controller.cartProducts.value.count,
-                          physics: NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                        ),
-                      );
+                if (controller.isLoading.value) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else {
+                  return controller.cartProducts.value.count == 0
+                      ? Center(
+                          child: CustomTextWidget(
+                            text: "You dont have any items in your cart",
+                            fontSize: 16,
+                          ),
+                        )
+                      : Container(
+                          child: ListView.builder(
+                            itemBuilder: (context, index) {
+                              print("\n\n\n");
+                              print("product name :::::${controller.cartProducts.value.results[index].product.product.name}");
+                              return Column(
+                                children: [
+                                  kHeight,
+                                  CartProductsListTile(
+                                    productDetails: controller.cartProducts.value.results[index],
+                                  ),
+                                ],
+                              );
+                            },
+                            itemCount: controller.cartProducts.value.count,
+                            physics: NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                          ),
+                        );
+                }
               }),
               kHeight,
               Obx(() {

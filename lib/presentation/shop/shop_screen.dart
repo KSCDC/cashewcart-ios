@@ -23,8 +23,9 @@ import 'package:internship_sample/presentation/widgets/products_list_item_tile.d
 import 'package:internship_sample/presentation/widgets/search_filter_bar.dart';
 import 'package:internship_sample/presentation/widgets/sliding_product_tile.dart';
 import 'package:internship_sample/services/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-ValueNotifier<int> customerRatingNotifier = ValueNotifier(0);
+ValueNotifier<int> customerRatingNotifier = ValueNotifier(5);
 
 class ShopScreen extends StatefulWidget {
   ShopScreen({
@@ -41,7 +42,6 @@ class _ShopScreenState extends State<ShopScreen> {
   AppController controller = Get.put(AppController());
   @override
   Widget build(BuildContext context) {
-    
     final screenSize = MediaQuery.of(context).size;
 
     TextEditingController reviewController = TextEditingController();
@@ -88,12 +88,22 @@ class _ShopScreenState extends State<ShopScreen> {
                               children: [
                                 // add to cart button
                                 GestureDetector(
-                                  onTap: () {
-                                    int stock = controller.productDetails.value!.productVariants[value].stockQty;
-                                    if (stock > 0) {
-                                      print("id for adding cart${controller.productDetails.value!.productVariants[value].id.toString()}");
-                                      // controller.addProductToCart(controller.productDetails.value!.category.id.toString());
-                                      controller.addProductToCart(context, controller.productDetails.value!.productVariants[value].id.toString());
+                                  onTap: () async {
+                                    SharedPreferences sharedPref = await SharedPreferences.getInstance();
+                                    String? email = sharedPref.getString(EMAIL);
+                                    String? password = sharedPref.getString(ENCRYPTEDPASSWORD);
+
+                                    if (email != null && password != null) {
+                                      int stock = controller.productDetails.value!.productVariants[value].stockQty;
+                                      if (stock > 0) {
+                                        print("id for adding cart${controller.productDetails.value!.productVariants[value].id.toString()}");
+                                        // controller.addProductToCart(controller.productDetails.value!.category.id.toString());
+                                        controller.addProductToCart(context, controller.productDetails.value!.productVariants[value].id.toString());
+                                      } else {
+                                        Services().showCustomSnackBar(context, "This item is currently unavailable");
+                                      }
+                                    } else {
+                                      Services().showLoginAlert(context, "Please login for adding product to your cart");
                                     }
                                   },
                                   child: const CustomStyledShopPageButton(
@@ -109,19 +119,30 @@ class _ShopScreenState extends State<ShopScreen> {
 
                                 // buy now button
                                 GestureDetector(
-                                  onTap: () {
-                                    productCountNotifier.value = 1;
-                                    // int stock = controller.productDetails.value!.productVariants[i].stockQty;
-                                    int stock = 1;
-                                    if (stock > 0) {
-                                      controller.getUserAddresses();
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) => PlaceOrderScreen(
-                                            productDetails: controller.productDetails.value!,
+                                  onTap: () async {
+                                    print("buy now");
+                                    SharedPreferences sharedPref = await SharedPreferences.getInstance();
+                                    String? email = sharedPref.getString(EMAIL);
+                                    String? password = sharedPref.getString(ENCRYPTEDPASSWORD);
+
+                                    if (email != null && password != null) {
+                                      productCountNotifier.value = 1;
+                                      // int stock = controller.productDetails.value!.productVariants[i].stockQty;
+                                      int stock = 1;
+                                      if (stock > 0) {
+                                        controller.getUserAddresses();
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (context) => PlaceOrderScreen(
+                                              productDetails: controller.productDetails.value!,
+                                            ),
                                           ),
-                                        ),
-                                      );
+                                        );
+                                      } else {
+                                        Services().showCustomSnackBar(context, "This item is currently unavailable");
+                                      }
+                                    } else {
+                                      Services().showLoginAlert(context, "Please login for for purchasing this product");
                                     }
                                   },
                                   child: const CustomStyledShopPageButton(
@@ -231,60 +252,67 @@ class _ShopScreenState extends State<ShopScreen> {
                                           child: Center(
                                             child: GestureDetector(
                                               onTap: () async {
-                                                await showDialog(
-                                                  context: context,
-                                                  builder: (BuildContext context) {
-                                                    return Dialog(
-                                                      insetAnimationDuration: Duration(milliseconds: 1000),
-                                                      child: Container(
-                                                        decoration: BoxDecoration(
-                                                          color: Colors.white,
-                                                          borderRadius: BorderRadius.circular(6),
-                                                        ),
-                                                        width: screenSize.width * 0.9,
-                                                        height: screenSize.width * 0.8,
-                                                        child: Padding(
-                                                          padding: const EdgeInsets.all(15),
-                                                          child: Column(
-                                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                                            children: [
-                                                              ValueListenableBuilder(
-                                                                  valueListenable: customerRatingNotifier,
-                                                                  builder: (context, value, _) {
-                                                                    return RatingStars();
-                                                                  }),
-                                                              kHeight,
-                                                              CustomTextWidget(text: "Enter your review here"),
-                                                              TextField(
-                                                                controller: reviewController,
-                                                                maxLines: 4, // Set to null for an unlimited number of lines
-                                                                decoration: InputDecoration(
-                                                                  border: OutlineInputBorder(),
-                                                                ),
-                                                              ),
-                                                              SizedBox(height: 20),
-                                                              GestureDetector(
-                                                                onTap: () {
-                                                                  Navigator.of(context).pop();
-                                                                },
-                                                                child: GestureDetector(
-                                                                  onTap: () {
-                                                                    controller.addProductReview(
-                                                                        context, controller.productDetails.value!.id.toString(), reviewController.text, customerRatingNotifier.value);
-                                                                  },
-                                                                  child: CustomElevatedButton(
-                                                                    label: "Submit",
-                                                                    fontSize: 16,
+                                                SharedPreferences sharedPref = await SharedPreferences.getInstance();
+                                                final email = sharedPref.getString(EMAIL);
+                                                final password = sharedPref.getString(ENCRYPTEDPASSWORD);
+                                                if (email != null && password != null) {
+                                                  await showDialog(
+                                                    context: context,
+                                                    builder: (BuildContext context) {
+                                                      return Dialog(
+                                                        insetAnimationDuration: Duration(milliseconds: 1000),
+                                                        child: Container(
+                                                          decoration: BoxDecoration(
+                                                            color: Colors.white,
+                                                            borderRadius: BorderRadius.circular(6),
+                                                          ),
+                                                          width: screenSize.width * 0.9,
+                                                          height: screenSize.width * 0.8,
+                                                          child: Padding(
+                                                            padding: const EdgeInsets.all(15),
+                                                            child: Column(
+                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                              children: [
+                                                                ValueListenableBuilder(
+                                                                    valueListenable: customerRatingNotifier,
+                                                                    builder: (context, value, _) {
+                                                                      return RatingStars();
+                                                                    }),
+                                                                kHeight,
+                                                                CustomTextWidget(text: "Enter your review here"),
+                                                                TextField(
+                                                                  controller: reviewController,
+                                                                  maxLines: 4, // Set to null for an unlimited number of lines
+                                                                  decoration: InputDecoration(
+                                                                    border: OutlineInputBorder(),
                                                                   ),
                                                                 ),
-                                                              )
-                                                            ],
+                                                                SizedBox(height: 20),
+                                                                GestureDetector(
+                                                                  onTap: () {
+                                                                    Navigator.of(context).pop();
+                                                                  },
+                                                                  child: GestureDetector(
+                                                                    onTap: () {
+                                                                      controller.addProductReview(
+                                                                          context, controller.productDetails.value!.id.toString(), reviewController.text, customerRatingNotifier.value);
+                                                                    },
+                                                                    child: CustomElevatedButton(
+                                                                      label: "Submit",
+                                                                      fontSize: 16,
+                                                                    ),
+                                                                  ),
+                                                                )
+                                                              ],
+                                                            ),
                                                           ),
                                                         ),
-                                                      ),
-                                                    );
-                                                  },
-                                                );
+                                                      );
+                                                    },
+                                                  );
+                                                } else {
+                                                  Services().showLoginAlert(context, "Please login to add product review");
+                                                }
                                               },
                                               child: CustomTextWidget(text: "Rate Product"),
                                             ),

@@ -13,18 +13,22 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
-  @override
-  void initState() {
-    // TODO: implement initState
-    gotoOnboardScreenAfterDelay(2);
-    super.initState();
-  }
+class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
 
   @override
-  void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
-    super.didChangeDependencies();
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 1000), // Adjust animation duration as needed
+    );
+    _animation = Tween<double>(begin: 0.8, end: 1.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    );
+    _controller.repeat(reverse: true); // Repeat the animation with reverse
+    gotoOnboardScreenAfterDelay(2);
   }
 
   @override
@@ -32,17 +36,20 @@ class _SplashScreenState extends State<SplashScreen> {
     final screenSize = MediaQuery.of(context).size;
     return Scaffold(
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: EdgeInsets.all(20),
-              child: Image(
-                image: AssetImage("lib/core/assets/images/logos/app_logo.png"),
-                width: screenSize.width * 0.8,
-              ),
-            )
-          ],
+        child: ScaleTransition(
+          scale: _animation,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: EdgeInsets.all(20),
+                child: Image(
+                  image: AssetImage("lib/core/assets/images/logos/app_logo.png"),
+                  width: screenSize.width * 0.85,
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -50,7 +57,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
+    _controller.dispose(); // Dispose the animation controller
     super.dispose();
   }
 
@@ -67,10 +74,5 @@ class _SplashScreenState extends State<SplashScreen> {
       print("dont have email and password");
       Get.offAll(() => OnboardingScreen());
     }
-    // Navigator.of(context).pushReplacement(
-    //   MaterialPageRoute(
-    //     builder: (context) => OnboardingScreen(),
-    //   ),
-    // );
   }
 }

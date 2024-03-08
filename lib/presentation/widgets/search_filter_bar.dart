@@ -23,12 +23,12 @@ class SearchFilterBar extends StatelessWidget {
             onChanged: (String? newValue) {
               controller.dropdownValue.value = newValue!;
               // Here you can add code to sort the list based on the selected option
-              if (newValue == 'Price Ascending') {
+              if (newValue == 'Price Low to High') {
                 controller.sortProduct.value = true;
                 controller.sortAscending.value = true;
                 controller.searchProducts(SearchSectionTile().searchController.text);
                 // result.sort((a, b) => double.parse(a.sellingPrice).compareTo(double.parse(b.sellingPrice)));
-              } else if (newValue == 'Price Descending') {
+              } else if (newValue == 'Price High to Low') {
                 controller.sortProduct.value = true;
                 controller.sortAscending.value = false;
                 controller.searchProducts(SearchSectionTile().searchController.text);
@@ -38,12 +38,12 @@ class SearchFilterBar extends StatelessWidget {
                 controller.searchProducts(SearchSectionTile().searchController.text);
               }
             },
-            items: <String>['All Featured Products', 'Price Ascending', 'Price Descending'].map<DropdownMenuItem<String>>((String value) {
+            items: <String>['Default', 'Price Low to High', 'Price High to Low'].map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem<String>(
                 value: value,
                 child: CustomTextWidget(
                   text: value,
-                  fontSize: 20,
+                  fontSize: 16,
                   fontweight: FontWeight.w600,
                 ),
               );

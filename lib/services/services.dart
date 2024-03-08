@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:internship_sample/core/colors.dart';
+import 'package:internship_sample/presentation/authentication/signin_screen.dart';
 import 'package:internship_sample/services/api_services.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class Services {
   void showCustomSnackBar(BuildContext context, String message) {
@@ -12,71 +16,89 @@ class Services {
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
-  void showAddressPopup(BuildContext context) {
-    final TextEditingController streetController = TextEditingController();
-    final TextEditingController cityController = TextEditingController();
-    final TextEditingController stateController = TextEditingController();
-    final TextEditingController postalCodeController = TextEditingController();
-    // final TextEditingController countryController = TextEditingController();
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return SizedBox(
-          // width: MediaQuery.of(context).size.width * 0.9,
-          child: AlertDialog(
-            title: Text('Add Address'),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(
-                  controller: streetController,
-                  decoration: InputDecoration(hintText: 'Street Address'),
-                ),
-                TextField(
-                  controller: cityController,
-                  decoration: InputDecoration(hintText: 'City'),
-                ),
-                TextField(
-                  controller: stateController,
-                  decoration: InputDecoration(hintText: 'State'),
-                ),
-                TextField(
-                  controller: postalCodeController,
-                  decoration: InputDecoration(hintText: 'Postal Code'),
-                ),
-                // TextField(
-                //   controller: countryController,
-                //   decoration: InputDecoration(hintText: 'Country'),
-                // ),
-                TextButton(
-                  onPressed: () {
-                    // Save the values from text controllers
-                    String street = streetController.text;
-                    String city = cityController.text;
-                    String state = stateController.text;
-                    String postalCode = postalCodeController.text;
-                    // String country = countryController.text;
-
-                    // Do something with the values
-                    print('Street: $street');
-                    print('City: $city');
-                    print('State: $state');
-                    print('Postal Code: $postalCode');
-                    // print('Country: $country');
-                    final response = ApiServices().createUserAddress(context, street, city, state, postalCode, false);
-                    // Close the dialog
-                    if (response != null) {
-                      Navigator.pop(context);
-                    }
-                  },
-                  child: Text('Add'),
-                ),
-              ],
+  showAddressEditPopup(bool addNewAddress, BuildContext context, String id, String heading, String buttonLabel, TextEditingController streetAddressConrller, TextEditingController cityController,
+      TextEditingController postalcodeController, TextEditingController stateController) {
+    return Alert(
+        context: context,
+        title: heading,
+        content: Column(
+          children: <Widget>[
+            TextField(
+              controller: streetAddressConrller,
+              decoration: InputDecoration(
+                labelText: 'Street Address',
+              ),
             ),
+            TextField(
+              controller: cityController,
+              decoration: InputDecoration(
+                labelText: 'City',
+              ),
+            ),
+            TextField(
+              controller: postalcodeController,
+              decoration: InputDecoration(
+                labelText: 'Postal Code',
+              ),
+            ),
+            TextField(
+              controller: stateController,
+              decoration: InputDecoration(
+                labelText: 'State',
+              ),
+            ),
+          ],
+        ),
+        buttons: [
+          DialogButton(
+            onPressed: () async {
+              final response;
+              if (addNewAddress) {
+                response = ApiServices().createUserAddress(context, streetAddressConrller.text, cityController.text, stateController.text, postalcodeController.text, false);
+              } else {
+                response = await ApiServices().editUserAddress(context, id, streetAddressConrller.text, cityController.text, stateController.text, postalcodeController.text, false);
+              }
+              // Close the dialog
+              if (response != null) {
+                Navigator.pop(context);
+              }
+            },
+            color: kMainThemeColor,
+            child: Text(
+              buttonLabel,
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+          )
+        ]).show();
+  }
+
+  showLoginAlert(BuildContext context, String description) {
+    Alert(
+      context: context,
+      type: AlertType.warning,
+      title: "NO ACCESS",
+      desc: description,
+      buttons: [
+        DialogButton(
+          child: Text(
+            "Cancel",
+            style: TextStyle(color: Colors.white, fontSize: 18),
           ),
-        );
-      },
-    );
+          onPressed: () => Navigator.pop(context),
+          color: Color.fromRGBO(0, 179, 134, 1.0),
+        ),
+        DialogButton(
+          child: Text(
+            "Login",
+            style: TextStyle(color: Colors.white, fontSize: 18),
+          ),
+          onPressed: () => Get.to(() => SignInScreen()),
+          gradient: LinearGradient(colors: [
+            Color.fromRGBO(116, 116, 191, 1.0),
+            Color.fromRGBO(52, 138, 199, 1.0),
+          ]),
+        )
+      ],
+    ).show();
   }
 }

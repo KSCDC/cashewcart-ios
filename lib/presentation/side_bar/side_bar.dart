@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/main.dart';
+import 'package:internship_sample/presentation/about/about_screen.dart';
 import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
 import 'package:internship_sample/presentation/profile/profile_screen.dart';
 import 'package:internship_sample/presentation/side_bar/widgets/expandable_side_bar_item.dart';
 import 'package:internship_sample/presentation/side_bar/widgets/side_bar_item_tile.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
+import 'package:internship_sample/services/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SideBar extends StatelessWidget {
   SideBar({super.key});
@@ -36,9 +40,17 @@ class SideBar extends StatelessWidget {
               color: Colors.grey,
             ),
             GestureDetector(
-              onTap: () {
-                previousPageIndexes.add(3);
-                bottomNavbarIndexNotifier.value = 6;
+              onTap: () async {
+                SharedPreferences sharedPref = await SharedPreferences.getInstance();
+                String? email = sharedPref.getString(EMAIL);
+                String? password = sharedPref.getString(ENCRYPTEDPASSWORD);
+
+                if (email != null && password != null) {
+                  previousPageIndexes.add(3);
+                  bottomNavbarIndexNotifier.value = 6;
+                } else {
+                  Services().showLoginAlert(context, "Please login to see your orders");
+                }
               },
               child: SideBarItemTile(
                 icon: Icons.local_shipping_outlined,
@@ -46,9 +58,14 @@ class SideBar extends StatelessWidget {
               ),
             ),
             ExpandableProductsSideBarItem(),
-            SideBarItemTile(
-              icon: Icons.info_outline,
-              label: "About KSCDC",
+            GestureDetector(
+              onTap: () {
+                Get.to(() => AboutUsScreen());
+              },
+              child: SideBarItemTile(
+                icon: Icons.info_outline,
+                label: "About KSCDC",
+              ),
             ),
             SideBarItemTile(
               icon: Icons.star_rate_outlined,

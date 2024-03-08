@@ -109,7 +109,7 @@ class SignUpScreen extends StatelessWidget {
                         child: GestureDetector(
                           onTap: () {
                             if (_formKey.currentState!.validate()) {
-                              ApiServices().sendVerificationMail(_emailController.text);
+                              ApiServices().sendVerificationMail(context,_emailController.text);
                               // Get.to(() => OtpVerificationScreen(isNewUser: true,));
                             }
                           },

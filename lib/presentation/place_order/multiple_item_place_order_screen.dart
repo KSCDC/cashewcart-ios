@@ -24,6 +24,7 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
   MultipleItemPlaceOrderScreen({super.key, required this.productList});
   final List<Result> productList;
   AppController controller = Get.put(AppController());
+
   @override
   Widget build(BuildContext context) {
     double grandTotal = getGrandTotal();
@@ -85,7 +86,11 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
                   // add new address button
                   CustomTextIconButton(
                     onPressed: () async {
-                      Services().showAddressPopup(context);
+                      TextEditingController _streetAddressConrller = TextEditingController();
+                      TextEditingController _cityController = TextEditingController();
+                      TextEditingController _postalcodeController = TextEditingController();
+                      TextEditingController _stateController = TextEditingController();
+                      Services().showAddressEditPopup(true, context, "", "ADD ADDRESS", "ADD", _streetAddressConrller, _cityController, _postalcodeController, _stateController);
                     },
                     icon: Icons.add,
                     label: "Add address",

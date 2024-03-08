@@ -86,10 +86,13 @@ class ProfileScreen extends StatelessWidget {
                 _emailController.text = controller.email;
                 _accountHolderNameController.text = controller.userName;
                 _passwordController.text = "**********";
-                _pinCodeController.text = controller.addressList.value[0].postalCode;
-                _addressController.text = controller.addressList.value[0].streetAddress;
-                _cityController.text = controller.addressList.value[0].city;
-                _countryController.text = controller.addressList.value[0].country;
+                if (controller.addressList.value.isNotEmpty) {
+                  _pinCodeController.text = controller.addressList.value[0].postalCode;
+                  _addressController.text = controller.addressList.value[0].streetAddress;
+                  _cityController.text = controller.addressList.value[0].city;
+                  _countryController.text = controller.addressList.value[0].country;
+                }
+
                 return controller.isLoading.value
                     ? Center(
                         child: CircularProgressIndicator(),
@@ -268,7 +271,7 @@ class ProfileScreen extends StatelessWidget {
                   } else if (_newPasswordController.text.length < 6) {
                     Services().showCustomSnackBar(context, "Password must contain atleast 6 characters");
                   } else {
-                    final response = ApiServices().changePassword(_newPasswordController.text, _confirmNewPasswordController.text);
+                    final response = ApiServices().changePassword(context, _newPasswordController.text, _confirmNewPasswordController.text);
                     if (response != null) {
                       Services().showCustomSnackBar(context, "Password changed successfully");
                     }

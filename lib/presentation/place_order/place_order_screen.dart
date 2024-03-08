@@ -10,9 +10,7 @@ import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/models/product_details_model.dart';
 import 'package:internship_sample/presentation/cart/cart_screen.dart';
 import 'package:internship_sample/presentation/checkout/checkout_screen.dart';
-import 'package:internship_sample/presentation/cart/widgets/cart_product_list_tile.dart';
-import 'package:internship_sample/presentation/home/home_screen.dart';
-import 'package:internship_sample/presentation/place_order/place_order_dropdown.dart';
+
 import 'package:internship_sample/presentation/place_order/widgets/address_section.dart';
 import 'package:internship_sample/presentation/place_order/widgets/address_tile.dart';
 import 'package:internship_sample/presentation/shop/widgets/custom_text_icon_button.dart';
@@ -39,6 +37,10 @@ class PlaceOrderScreen extends StatelessWidget {
   final ProductDetailsModel productDetails;
   // TextEditingController _textEditingController = TextEditingController(text: "216 St Paul's Rd, London N1 2LL, UK, \nContact :  +44-784232 ");
   AppController controller = Get.put(AppController());
+  TextEditingController _streetAddressConrller = TextEditingController();
+  TextEditingController _cityController = TextEditingController();
+  TextEditingController _postalcodeController = TextEditingController();
+  TextEditingController _stateController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     // final int category = productDetails['category'];
@@ -147,7 +149,7 @@ class PlaceOrderScreen extends StatelessWidget {
                     onPressed: () async {
                       // TextEditingController _newAddressController = TextEditingController();
 
-                      Services().showAddressPopup(context);
+                      Services().showAddressEditPopup(true,context,"","ADD ADDRESS","ADD", _streetAddressConrller, _cityController, _postalcodeController, _stateController);
                     },
                     icon: Icons.add,
                     label: "Add address",
