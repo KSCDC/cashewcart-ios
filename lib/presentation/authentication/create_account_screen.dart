@@ -16,8 +16,8 @@ import 'package:internship_sample/services/api_services.dart';
 import 'package:validatorless/validatorless.dart';
 
 class CreateAccountScreen extends StatelessWidget {
-  CreateAccountScreen({super.key});
-
+  CreateAccountScreen({super.key, required this.token});
+  final String token;
   TextEditingController usernameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController phoneNumberController = TextEditingController();
@@ -161,8 +161,8 @@ class CreateAccountScreen extends StatelessWidget {
                                 print("Trying to register user");
                                 controller.registerNewUser(
                                   context,
+                                  token,
                                   usernameController.text,
-                                  emailController.text,
                                   phoneNumberController.text,
                                   passwordController.text,
                                 );

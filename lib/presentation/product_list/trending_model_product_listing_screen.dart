@@ -50,12 +50,16 @@ class TrendingModelProductListingScreen extends StatelessWidget {
                                   crossAxisCount: 2,
                                   mainAxisSpacing: 5,
                                   crossAxisSpacing: 5,
-                                  children: List.generate(controller.productDisplayList2.value.count, (index) {
+                                  children: List.generate(controller.productDisplayList2.value.results.length, (index) {
+                                    String imagePath;
+                                    List imageList = controller.productDisplayList2.value.results[index].product.product.productImages;
+                                    imagePath = imageList.isNotEmpty ? "$baseUrl${imageList[0].productImage}" : "";
                                     final productDetails = controller.productDisplayList2.value.results[index].product;
                                     return GestureDetector(
                                       onTap: () async {
                                         // print(
                                         //     "image list ${controller.productDisplayList.valueindex]}");
+
                                         final String productId = controller.productDisplayList2.value.results[index].product.product.id.toString();
                                         controller.getSimilarProducts(controller.plainCashews.value, index);
                                         await controller.getProductDetails(productId);
@@ -65,7 +69,7 @@ class TrendingModelProductListingScreen extends StatelessWidget {
                                       },
                                       child: ProductsListItemTile(
                                         productDetails: productDetails,
-                                        imagePath: "$baseUrl${controller.productDisplayList2.value.results[index].product.product.productImages[0].productImage}",
+                                        imagePath: imagePath,
                                       ),
                                     );
                                   }),

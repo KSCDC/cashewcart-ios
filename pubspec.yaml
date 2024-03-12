@@ -98,24 +98,9 @@ flutter:
     - lib/core/assets/images/home/starbg.jpg
     - lib/core/assets/images/home/star_bg.svg
 
-    - lib/core/assets/images/product_images/Plain Cashew/Plain cashew (B).png
-    - lib/core/assets/images/product_images/Plain Cashew/Plain Cashew (F).png
-    - lib/core/assets/images/product_images/Plain Cashew/Plain cashew (B)
-      bgwhite.png
-    - lib/core/assets/images/product_images/Plain Cashew/Plain Cashew (F)
-      bgwhite.png
-    - lib/core/assets/images/product_images/Plain Cashew/Plain Cashew (F)
-      nobg.png
-
-    - lib/core/assets/images/product_images/Roasted and Salted Cashew/Roasted
-      and salted Cashew.png
-    - lib/core/assets/images/product_images/Roasted and Salted Cashew/Roasted
-      and salted Cashew bgwhite.png
-
-    - lib/core/assets/images/product_images/Cashew Plain2-600x600.jpg
     - lib/core/assets/images/home_icon.svg
 
-    - lib/core/assets/images/product_images/Roasted.jpg
+    
 
   # An image asset can refer to one or more resolution-specific "variants",
   # https://flutter.dev/assets-and-images/#resolution-aware

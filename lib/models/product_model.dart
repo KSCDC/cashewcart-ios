@@ -124,7 +124,7 @@ class Category {
   });
   late final int id;
   late final String name;
-  late final String parentName;
+  late final String? parentName;
   late final List<dynamic> children;
 
   Category.fromJson(Map<String, dynamic> json) {

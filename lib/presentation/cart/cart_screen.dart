@@ -60,7 +60,8 @@ class CartScreen extends StatelessWidget {
               ),
               kHeight,
               Obx(() {
-                if (controller.isLoading.value) {
+                print("cart count ${controller.cartProducts.value.count}");
+                if (controller.isLoadingCart.value) {
                   return Center(
                     child: CircularProgressIndicator(),
                   );

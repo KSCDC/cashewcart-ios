@@ -70,20 +70,17 @@ class OnboardingScreen extends StatelessWidget {
               OnboardingTile(
                 imagePath: "lib/core/assets/images/onboard_choose_products.png",
                 heading: "Choose Products",
-                description:
-                    "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit.",
+                description: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit.",
               ),
               OnboardingTile(
                 imagePath: "lib/core/assets/images/onboard_make_payment.png",
                 heading: "Make Payment",
-                description:
-                    "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit.",
+                description: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit.",
               ),
               OnboardingTile(
                 imagePath: "lib/core/assets/images/onboard_get_your_order.png",
                 heading: "Get Your Order",
-                description:
-                    "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit.",
+                description: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit.",
               ),
             ],
           ),
@@ -107,8 +104,7 @@ class OnboardingScreen extends StatelessWidget {
                                 duration: const Duration(milliseconds: 500),
                                 curve: Curves.easeIn,
                               );
-                              pageNumberNotifier.value =
-                                  controller.page!.toInt() + 1;
+                              pageNumberNotifier.value = controller.page!.toInt() + 1;
                             },
                             child: const CustomTextWidget(
                               text: "Prev",
@@ -121,26 +117,26 @@ class OnboardingScreen extends StatelessWidget {
                   }),
             ),
             SmoothPageIndicator(
-                controller: controller,
-                count: 3,
-                effect: const WormEffect(
-                  dotHeight: 10,
-                  dotWidth: 10,
-                  spacing: 15,
-                ),
-                onDotClicked: (index) {
-                  controller.animateToPage(
-                    index,
-                    duration: const Duration(milliseconds: 500),
-                    curve: Curves.easeIn,
-                  );
-                  pageNumberNotifier.value = index + 1;
-                }),
+              controller: controller,
+              count: 3,
+              effect: const WormEffect(
+                dotHeight: 10,
+                dotWidth: 10,
+                spacing: 15,
+              ),
+              onDotClicked: (index) {
+                controller.animateToPage(
+                  index,
+                  duration: const Duration(milliseconds: 500),
+                  curve: Curves.easeIn,
+                );
+                pageNumberNotifier.value = index + 1;
+              },
+            ),
             TextButton(
               onPressed: () async {
                 if (controller.page == 2) {
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (context) => const GetStartedScreen()));
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const GetStartedScreen()));
                 } else {
                   await controller.nextPage(
                     duration: const Duration(milliseconds: 500),

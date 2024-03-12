@@ -1,5 +1,3 @@
-
-
 import 'dart:convert';
 
 CartProductModel cartProductModelFromJson(String str) => CartProductModel.fromJson(json.decode(str));
@@ -157,7 +155,7 @@ class ProductProduct {
 class Category {
   int id;
   String name;
-  String parentName;
+  String? parentName;
   List<dynamic> children;
 
   Category({

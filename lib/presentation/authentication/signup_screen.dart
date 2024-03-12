@@ -5,6 +5,7 @@ import 'package:internship_sample/controllers/app_controller.dart';
 import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/presentation/authentication/otp_verification.dart';
+import 'package:internship_sample/presentation/authentication/token_verification_screen.dart';
 
 import 'package:internship_sample/presentation/authentication/widgets/alternative_signin_options.dart.dart';
 import 'package:internship_sample/presentation/authentication/widgets/authentication_page_title.dart';
@@ -109,8 +110,12 @@ class SignUpScreen extends StatelessWidget {
                         child: GestureDetector(
                           onTap: () {
                             if (_formKey.currentState!.validate()) {
-                              ApiServices().sendVerificationMail(context,_emailController.text);
-                              // Get.to(() => OtpVerificationScreen(isNewUser: true,));
+                              ApiServices().sendVerificationMail(context, _emailController.text);
+                              Get.to(
+                                () => TokenVerificationScreen(
+                                  isNewUser: true,
+                                ),
+                              );
                             }
                           },
                           child: CustomElevatedButton(

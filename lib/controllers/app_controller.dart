@@ -34,6 +34,7 @@ class AppController extends GetxController {
   // String selectedProductId = "";
   RxBool isLoading = false.obs;
   RxBool isError = false.obs;
+  RxBool isLoadingCart = false.obs;
   RxBool isAllProductsLoading = false.obs;
   RxBool isPlainCashewLoading = false.obs;
   RxBool isRoastedAndSaltedLoading = false.obs;
@@ -100,9 +101,9 @@ class AppController extends GetxController {
   List<String> valueAddedSubCategories = ["All"];
   RxString selectedValueAddedCategory = "All".obs;
 
-  registerNewUser(BuildContext context, String name, String email, String phoneNumber, String password) async {
+  registerNewUser(BuildContext context, String token, String name, String phoneNumber, String password) async {
     isLoading.value = true;
-    final response = await ApiServices().registerUser(context, name, email, phoneNumber, password);
+    final response = await ApiServices().registerUser(context, token, name, phoneNumber, password);
     if (response == null) {
       isLoading.value = false;
     } else {
@@ -326,7 +327,7 @@ class AppController extends GetxController {
     final avgRatingResponse = await ApiServices().getAverageStarRatings(productId);
     if (avgRatingResponse != null) {
       print("avg ratings :${avgRatingResponse.data['average_rating']}");
-      avgRating.value = avgRatingResponse.data['average_rating'];
+      avgRating.value = avgRatingResponse.data['average_rating'].toDouble();
     }
     if (response != null) {
       final List<dynamic> responseData = response.data;
@@ -410,7 +411,7 @@ class AppController extends GetxController {
   }
 
   getCartList() async {
-    isLoading.value = true;
+    isLoadingCart.value = true;
     isError.value = false;
     final response = await ApiServices().getCartList();
     if (response != null) {
@@ -422,7 +423,7 @@ class AppController extends GetxController {
       isError.value = true;
     }
 
-    isLoading.value = false;
+    isLoadingCart.value = false;
   }
 
   addProductToCart(BuildContext context, String productId) async {
@@ -437,15 +438,13 @@ class AppController extends GetxController {
   removeProductFromCart(BuildContext context, String productId) async {
     isLoading.value = true;
     isError.value = false;
-   final response= await ApiServices().removeFromCart(context, productId);
+    final response = await ApiServices().removeFromCart(context, productId);
     if (response == null) {
       isError.value = true;
-    }else{
-
-    getCartList();
+    } else {
+      getCartList();
     }
     isLoading.value = false;
-    
   }
 
   getUserAddresses() async {
@@ -467,11 +466,9 @@ class AppController extends GetxController {
       addressList.value = tempList;
 
       // productReviews.value = productReviewsList;
-    }else{
+    } else {
       isLoadingAddressError.value = true;
-  
     }
-    
 
     isLoadingAddress.value = false;
   }

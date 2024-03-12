@@ -151,7 +151,7 @@ class ProductProduct {
 class Category {
   int id;
   String name;
-  String parentName;
+  String? parentName;
   List<dynamic> children;
 
   Category({

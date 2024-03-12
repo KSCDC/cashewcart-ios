@@ -61,7 +61,7 @@ class OtpVerificationScreen extends StatelessWidget {
                 SizedBox(height: 10),
                 GestureDetector(
                   onTap: () {
-                    isNewUser ? Get.offAll(() => CreateAccountScreen()) : Get.offAll(() => ResetPasswordScreen());
+                    // isNewUser ? Get.offAll(() => CreateAccountScreen()) : Get.offAll(() => ResetPasswordScreen());
                   },
                   child: CustomElevatedButton(
                     label: "Verify",

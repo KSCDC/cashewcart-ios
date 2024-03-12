@@ -374,7 +374,7 @@ class _ShopScreenState extends State<ShopScreen> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: CustomTextWidget(
-                        text: "${(controller.similarProducts.value.count - 1).toString()}+",
+                        text: "${(controller.similarProducts.value.results!.length - 1).toString()}+",
                         fontSize: 20,
                         fontweight: FontWeight.w600,
                       ),
@@ -409,7 +409,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                         ),
                                       );
                                     },
-                                    itemCount: controller.similarProducts.value.count - 1,
+                                    itemCount: controller.similarProducts.value.results!.length - 1,
                                     scrollDirection: Axis.horizontal,
                                   );
                           } else {
@@ -446,7 +446,7 @@ class _ShopScreenState extends State<ShopScreen> {
                       child: Obx(
                         () {
                           // for showing shuffled list of all products as related products
-                          List numbers = List.generate(controller.allProducts.value.count, (index) => index);
+                          List numbers = List.generate(controller.allProducts.value.results!.length, (index) => index);
                           print('Original list: $numbers');
 
                           numbers.shuffle();
@@ -476,7 +476,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                         ),
                                       );
                                     },
-                                    itemCount: controller.allProducts.value.count,
+                                    itemCount: controller.allProducts.value.results!.length,
                                     scrollDirection: Axis.horizontal,
                                   );
                           } else {
@@ -523,7 +523,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                     ),
                                   );
                                 },
-                                itemCount: controller.allProducts.value.count,
+                                itemCount: controller.allProducts.value.results!.length,
                                 scrollDirection: Axis.horizontal,
                               );
                       }),

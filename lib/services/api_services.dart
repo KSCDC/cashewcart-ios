@@ -24,20 +24,28 @@ class ApiServices {
 
   bool isFailedLogin = false;
 
-  registerUser(BuildContext context, String name, String email, String phoneNumber, String pasword) async {
+  registerUser(BuildContext context, String token, String name, String phoneNumber, String password) async {
+    print(token);
+
+    final dio = Dio();
+    final params = {
+      "token": token,
+    };
     final formData = {
       "name": name,
-      "email": email,
       "phone_number": phoneNumber,
-      "password": pasword,
-      "password2": pasword,
+      "password": password,
+      "password2": password,
     };
+    print(params);
+    print(formData);
+
+    dio.options.connectTimeout = connectionTimeoutDuration;
 
     try {
-      final dio = Dio();
-      dio.options.connectTimeout = connectionTimeoutDuration;
       final response = await dio.post(
         "$baseUrl${ApiEndPoints.registerUser}",
+        queryParameters: params,
         data: formData,
         options: Options(
           contentType: Headers.jsonContentType,
@@ -53,21 +61,23 @@ class ApiServices {
         return null;
       }
     } on DioException catch (e) {
+      print("Reg error :$e");
+      print("Reg error :${e.response}");
       if (e.type == DioExceptionType.connectionTimeout) {
         print("Connection timeout");
         Services().showCustomSnackBar(context, "Connection timeout. Please check your internet connection");
       } else {
-        final errorData = e.response!.data['errors'];
+        // final errorData = e.response!.data['errors'];
         // print("Error :$e");
-        print("Error: ${errorData}");
-        if (errorData['phone_number'] != null) {
-          // print(errorData['phone_number'][0]);
-          Services().showCustomSnackBar(context, errorData['phone_number'][0]);
-        }
-        if (errorData['email'] != null) {
-          // print(errorData['email'][0]);
-          Services().showCustomSnackBar(context, errorData['email'][0]);
-        }
+        // print("Error: ${errorData}");
+        // if (errorData['phone_number'] != null) {
+        //   // print(errorData['phone_number'][0]);
+        //   Services().showCustomSnackBar(context, errorData['phone_number'][0]);
+        // }
+        // if (errorData['email'] != null) {
+        //   // print(errorData['email'][0]);
+        //   Services().showCustomSnackBar(context, errorData['email'][0]);
+        // }
       }
       return null;
     }
@@ -150,6 +160,38 @@ class ApiServices {
     }
   }
 
+  verifyMail(String token) async {
+    final params = {
+      "token": token,
+    };
+
+    try {
+      final dio = Dio();
+      dio.options.connectTimeout = connectionTimeoutDuration;
+      final response = await dio.post(
+        "$baseUrl${ApiEndPoints.verifyMail}",
+        queryParameters: params,
+        options: Options(
+          contentType: Headers.jsonContentType,
+        ),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        log(response.data.toString());
+        return response;
+      } else {
+        print("Unexpected status code: ${response.statusCode}");
+        return null;
+      }
+    } on DioException catch (e) {
+      print("Error :$e");
+      if (e.type == DioExceptionType.connectionTimeout) {
+        print("Connection timeout");
+      }
+      return null;
+    }
+  }
+
   changePassword(BuildContext context, String password, String confirmPassword) async {
     try {
       final dio = Dio();
@@ -199,51 +241,54 @@ class ApiServices {
 
   refreshAccessToken() async {
     log("refreshing access token");
+    SharedPreferences sharedPref = await SharedPreferences.getInstance();
+    final refreshToken = sharedPref.getString(REFRESHTOKEN);
+    if (refreshToken != null) {
+      print("have email and password");
+      try {
+        print("refreshing token");
+        final dio = Dio();
+        dio.options.connectTimeout = connectionTimeoutDuration;
 
-    // if (email != null && encryptedPassword != null && !isFailedLogin) {
-    print("have email and password");
-    try {
-      print("refreshing token");
-      final dio = Dio();
-      dio.options.connectTimeout = connectionTimeoutDuration;
-      SharedPreferences sharedPref = await SharedPreferences.getInstance();
-      final refreshToken = sharedPref.getString(REFRESHTOKEN);
-      final response = await dio.post(
-        "$baseUrl${ApiEndPoints.refreshAccessToken}",
-        options: Options(
-          headers: {
-            'Content-Type': Headers.jsonContentType,
-          },
-        ),
-        data: {"refresh": refreshToken},
-      );
+        final response = await dio.post(
+          "$baseUrl${ApiEndPoints.refreshAccessToken}",
+          options: Options(
+            headers: {
+              'Content-Type': Headers.jsonContentType,
+            },
+          ),
+          data: {"refresh": refreshToken},
+        );
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        log(response.data.toString());
-        final accessToken = response.data['access'];
+        if (response.statusCode == 200 || response.statusCode == 201) {
+          log(response.data.toString());
+          final accessToken = response.data['access'];
 
-        sharedPref.setString(ACCESSTOKEN, accessToken);
-        print("new token:${accessToken}");
-        return response;
-      } else {
-        print("Unexpected status code: ${response.statusCode}");
-        return null;
-      }
-    } on DioException catch (e) {
-      if (e.type == DioExceptionType.connectionTimeout) {
-        print("Connection timeout");
-      } else {
-        print("Error :${e.response!.data}");
-        print("Error :${e.response!.statusCode}");
-        if (e.response!.statusCode == 400 || e.response!.statusCode == 401) {
-          log("Going to automatic relogin");
-          final autoRelogin = await automaticRelogin();
-          print(autoRelogin);
-          if (autoRelogin == null) {
-            log("failed trying of auto relogin");
+          sharedPref.setString(ACCESSTOKEN, accessToken);
+          print("new token:${accessToken}");
+          return response;
+        } else {
+          print("Unexpected status code: ${response.statusCode}");
+          return null;
+        }
+      } on DioException catch (e) {
+        if (e.type == DioExceptionType.connectionTimeout) {
+          print("Connection timeout");
+        } else {
+          print("Error :${e.response!.data}");
+          print("Error :${e.response!.statusCode}");
+          if (e.response!.statusCode == 400 || e.response!.statusCode == 401) {
+            log("Going to automatic relogin");
+            final autoRelogin = await automaticRelogin();
+            print(autoRelogin);
+            if (autoRelogin == null) {
+              log("failed trying of auto relogin");
+            }
           }
         }
       }
+      // if (email != null && encryptedPassword != null && !isFailedLogin) {
+
       return null;
     }
     // } else {
@@ -298,6 +343,7 @@ class ApiServices {
 
   getAllProducts() async {
     try {
+      print("$baseUrl${ApiEndPoints.getAllProducts}");
       controller.isAllProductsLoadingError.value = false;
       print("Getting products from api");
       final dio = Dio();

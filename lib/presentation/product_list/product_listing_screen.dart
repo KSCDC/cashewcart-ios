@@ -40,7 +40,7 @@ class ProductListingScreen extends StatelessWidget {
                         crossAxisCount: 2,
                         mainAxisSpacing: 5,
                         crossAxisSpacing: 5,
-                        children: List.generate(controller.productDisplayList.value.count, (index) {
+                        children: List.generate(controller.productDisplayList.value.results!.length, (index) {
                           final productDetails = controller.productDisplayList.value.results![index];
                           return GestureDetector(
                             onTap: () async {

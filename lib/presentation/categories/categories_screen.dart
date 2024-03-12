@@ -127,7 +127,7 @@ class CategoriesScreen extends StatelessWidget {
                                           ),
                                         );
                                       },
-                                      itemCount: controller.plainCashews.value.count,
+                                      itemCount: controller.plainCashews.value.results!.length,
                                       scrollDirection: Axis.horizontal,
                                     );
                             } else {
@@ -208,7 +208,7 @@ class CategoriesScreen extends StatelessWidget {
                                           ),
                                         );
                                       },
-                                      itemCount: controller.roastedAndSalted.value.count,
+                                      itemCount: controller.roastedAndSalted.value.results!.length,
                                       scrollDirection: Axis.horizontal,
                                     );
                             } else {
@@ -289,7 +289,7 @@ class CategoriesScreen extends StatelessWidget {
                                           ),
                                         );
                                       },
-                                      itemCount: controller.valueAdded.value.count,
+                                      itemCount: controller.valueAdded.value.results!.length,
                                       scrollDirection: Axis.horizontal,
                                     );
                             } else {
@@ -337,7 +337,7 @@ class CategoriesScreen extends StatelessWidget {
                                       ),
                                     );
                                   },
-                                  itemCount: controller.allProducts.value.count,
+                                  itemCount: controller.allProducts.value.results!.length,
                                   scrollDirection: Axis.horizontal,
                                 ),
                         ),
@@ -359,7 +359,7 @@ class CategoriesScreen extends StatelessWidget {
                           crossAxisCount: 2,
                           mainAxisSpacing: 5,
                           crossAxisSpacing: 5,
-                          children: List.generate(controller.searchResults.value.count, (index) {
+                          children: List.generate(controller.searchResults.value.results!.length, (index) {
                             final productDetails = controller.searchResults.value.results![index];
 
                             return GestureDetector(
