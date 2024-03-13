@@ -381,6 +381,7 @@ class HomeScreen extends StatelessWidget {
                         fontweight: FontWeight.w600,
                       ),
                       Obx(() {
+                        print("next :::: ${controller.allProducts.value.next}");
                         return controller.isAllProductsLoading.value
                             ? SizedBox(
                                 width: screenSize.width * 0.4,
@@ -389,33 +390,47 @@ class HomeScreen extends StatelessWidget {
                                   child: CircularProgressIndicator(),
                                 ),
                               )
-                            : GridView.count(
-                                physics: const NeverScrollableScrollPhysics(),
-                                shrinkWrap: true,
-                                childAspectRatio: (20 / 30),
-                                crossAxisCount: 2,
-                                mainAxisSpacing: 5,
-                                crossAxisSpacing: 5,
-                                children: List.generate(controller.allProducts.value.results!.length, (index) {
-                                  final productDetails = controller.allProducts.value.results![index];
-                                  return GestureDetector(
-                                    onTap: () async {
-                                      final String productId = controller.allProducts.value.results![index].product.id.toString();
+                            : Column(
+                                children: [
+                                  GridView.count(
+                                    physics: const NeverScrollableScrollPhysics(),
+                                    shrinkWrap: true,
+                                    childAspectRatio: (20 / 30),
+                                    crossAxisCount: 2,
+                                    mainAxisSpacing: 5,
+                                    crossAxisSpacing: 5,
+                                    children: List.generate(controller.allProducts.value.results!.length, (index) {
+                                      final productDetails = controller.allProducts.value.results![index];
+                                      return GestureDetector(
+                                        onTap: () async {
+                                          final String productId = controller.allProducts.value.results![index].product.id.toString();
 
-                                      controller.getSimilarProducts(controller.allProducts.value, index);
-                                      // controller.productDetails.value = controller.productDetails.value;
-                                      // print(controller.productDetails.value!.name);
+                                          controller.getSimilarProducts(controller.allProducts.value, index);
+                                          // controller.productDetails.value = controller.productDetails.value;
+                                          // print(controller.productDetails.value!.name);
 
-                                      previousPageIndexes.add(bottomNavbarIndexNotifier.value);
-                                      bottomNavbarIndexNotifier.value = 4;
-                                      controller.getProductDetails(productId);
-                                      controller.getProductReviews(productId);
-                                    },
-                                    child: ProductsListItemTile(
-                                      productDetails: productDetails,
+                                          previousPageIndexes.add(bottomNavbarIndexNotifier.value);
+                                          bottomNavbarIndexNotifier.value = 4;
+                                          controller.getProductDetails(productId);
+                                          controller.getProductReviews(productId);
+                                        },
+                                        child: ProductsListItemTile(
+                                          productDetails: productDetails,
+                                        ),
+                                      );
+                                    }),
+                                  ),
+                                  kHeight,
+                                  if (controller.allProducts.value.next != null)
+                                    GestureDetector(
+                                      onTap: () {
+                                        controller.allProductsPageNo++;
+                                        controller.getAllProducts();
+                                      },
+                                      child: CustomTextWidget(text: "Load More"),
                                     ),
-                                  );
-                                }),
+                                  kHeight,
+                                ],
                               );
                       })
                     ],

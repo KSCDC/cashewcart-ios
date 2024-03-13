@@ -5,9 +5,9 @@ class ProductModel {
     this.previous,
     required this.results,
   });
-  late final int count;
-  late final Null next;
-  late final Null previous;
+    int? count;
+  String? next;
+  String? previous;
   List<Results>? results;
 
   ProductModel.fromJson(Map<String, dynamic> json) {

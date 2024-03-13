@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 const Widget kWidth = SizedBox(width: 10);
 const Widget kHeight = SizedBox(height: 10);
 const Widget kProfileScreenGap = SizedBox(height: 20);
-const Duration connectionTimeoutDuration = Duration(seconds: 5);
+const Duration connectionTimeoutDuration = Duration(seconds: 30);
 
 const String ACCESSTOKEN = "accessToken";
 const String REFRESHTOKEN = "refreshToken";

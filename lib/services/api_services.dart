@@ -341,15 +341,19 @@ class ApiServices {
     }
   }
 
-  getAllProducts() async {
+  getAllProducts(String pageNo) async {
     try {
       print("$baseUrl${ApiEndPoints.getAllProducts}");
       controller.isAllProductsLoadingError.value = false;
       print("Getting products from api");
       final dio = Dio();
+      final params = {
+        "page": pageNo,
+      };
       dio.options.connectTimeout = connectionTimeoutDuration;
       final response = await dio.get(
         "$baseUrl${ApiEndPoints.getAllProducts}",
+        queryParameters: params,
         options: Options(
           contentType: Headers.jsonContentType,
         ),

@@ -9,7 +9,7 @@ import 'package:internship_sample/models/cart_product_model.dart';
 import 'package:internship_sample/models/product_details_model.dart';
 import 'package:internship_sample/models/product_model.dart';
 import 'package:internship_sample/models/product_reviews_model.dart';
-import 'package:internship_sample/models/trending_product_model.dart';
+import 'package:internship_sample/models/trending_product_model.dart' as trendingModel;
 import 'package:internship_sample/models/user_address_model.dart';
 import 'package:internship_sample/presentation/main_page/main_page_screen.dart';
 import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
@@ -68,14 +68,14 @@ class AppController extends GetxController {
   Rx<ProductModel> allProducts = ProductModel(count: 0, next: null, previous: null, results: []).obs;
   Rx<ProductModel> plainCashews = ProductModel(count: 0, next: null, previous: null, results: []).obs;
   Rx<ProductModel> roastedAndSalted = ProductModel(count: 0, next: null, previous: null, results: []).obs;
-  Rx<TrendingProductModel> trending = TrendingProductModel(count: 0, next: null, previous: null, results: []).obs;
-  Rx<TrendingProductModel> bestSellers = TrendingProductModel(count: 0, next: null, previous: null, results: []).obs;
-  Rx<TrendingProductModel> sponserd = TrendingProductModel(count: 0, next: null, previous: null, results: []).obs;
+  Rx<trendingModel.TrendingProductModel> trending = trendingModel.TrendingProductModel(count: 0, next: null, previous: null, results: []).obs;
+  Rx<trendingModel.TrendingProductModel> bestSellers = trendingModel.TrendingProductModel(count: 0, next: null, previous: null, results: []).obs;
+  Rx<trendingModel.TrendingProductModel> sponserd = trendingModel.TrendingProductModel(count: 0, next: null, previous: null, results: []).obs;
   Rx<ProductModel> valueAdded = ProductModel(count: 0, next: null, previous: null, results: []).obs;
   Rx<ProductModel> similarProducts = ProductModel(count: 0, next: null, previous: null, results: []).obs;
   Rx<ProductModel> relatedProducts = ProductModel(count: 0, next: null, previous: null, results: []).obs;
   Rx<ProductModel> productDisplayList = ProductModel(count: 0, next: null, previous: null, results: []).obs;
-  Rx<TrendingProductModel> productDisplayList2 = TrendingProductModel(count: 0, next: null, previous: null, results: []).obs;
+  Rx<trendingModel.TrendingProductModel> productDisplayList2 = trendingModel.TrendingProductModel(count: 0, next: null, previous: null, results: []).obs;
   Rx<CartProductModel> cartProducts = CartProductModel(count: 0, next: null, previous: null, results: []).obs;
   Rx<ProductModel> searchResults = ProductModel(count: 0, next: null, previous: null, results: []).obs;
   var sortedSearchList;
@@ -100,6 +100,8 @@ class AppController extends GetxController {
   RxString selectedRoastedAndSaltedCategory = "All".obs;
   List<String> valueAddedSubCategories = ["All"];
   RxString selectedValueAddedCategory = "All".obs;
+
+  int allProductsPageNo = 1;
 
   registerNewUser(BuildContext context, String token, String name, String phoneNumber, String password) async {
     isLoading.value = true;
@@ -156,11 +158,42 @@ class AppController extends GetxController {
 
   getAllProducts() async {
     isAllProductsLoading.value = true;
-    final response = await ApiServices().getAllProducts();
+    final response = await ApiServices().getAllProducts(allProductsPageNo.toString());
     if (response != null) {
       final data = ProductModel.fromJson(response.data);
-      allProducts.value = data;
+      // allProducts.value = data;
+
+      print("results ${response.data['results']}");
+      List<Results>? results = data.results;
+      if (results != null) {
+        // Create a new list to hold the combined results
+        List<Results> combinedResults = [];
+
+        // Append existing results to the new list
+        combinedResults.addAll(allProducts.value.results ?? []);
+
+        // Append new results to the new list
+        combinedResults.addAll(results);
+
+        // Assign the new list back to the original list
+        allProducts.value.results = combinedResults;
+
+        // Update other fields of allProducts if needed
+        allProducts.update((val) {
+          val!.count = data.count;
+          val.next = data.next;
+          val.previous = data.previous;
+        });
+        allProducts.value.next = response.data['next'];
+        allProducts.value.previous = response.data['previous'];
+      }
+
       isAlreadyLoadedAllProducts = true;
+      // log("All products:${data.toString()}");
+      log("All products count:${allProducts.value.count.toString()}");
+
+      log("All products next:${response.data['next'].toString()}");
+      // log("All products:${response.data.toString()}");
     } else {
       isAllProductsLoadingError.value = true;
     }
@@ -173,7 +206,7 @@ class AppController extends GetxController {
     isTrendingLoadingError.value = false;
     final response = await ApiServices().getTrendingProducts();
     if (response != null) {
-      final data = TrendingProductModel.fromJson(response.data);
+      final data = trendingModel.TrendingProductModel.fromJson(response.data);
       trending.value = data;
       isAlreadyLoadedTrending = true;
     } else {
@@ -188,8 +221,22 @@ class AppController extends GetxController {
     isBestSellersLoading.value = false;
     final response = await ApiServices().getBestSellerProducts();
     if (response != null) {
-      final data = TrendingProductModel.fromJson(response.data);
-      bestSellers.value = data;
+      final data = trendingModel.TrendingProductModel.fromJson(response.data);
+
+      List<trendingModel.Result>? results = data.results;
+
+      if (results != null) {
+        List<trendingModel.Result> combinedResults = [];
+        combinedResults.addAll(bestSellers.value.results ?? []);
+        combinedResults.addAll(results);
+        bestSellers.value.results = combinedResults;
+        bestSellers.update((val) {
+          val!.count = data.count;
+          val.next = data.next;
+          val.previous = data.previous;
+        });
+      }
+
       isAlreadyLoadedBestsellers = true;
     } else {
       isBestSellersLoadingError.value = true;
@@ -203,7 +250,7 @@ class AppController extends GetxController {
     isSponserdLoadingError.value = false;
     final response = await ApiServices().getSponserdProducts();
     if (response != null) {
-      final data = TrendingProductModel.fromJson(response.data);
+      final data = trendingModel.TrendingProductModel.fromJson(response.data);
       sponserd.value = data;
       isAlreadyLoadedSponserd = true;
     } else {
@@ -214,6 +261,7 @@ class AppController extends GetxController {
   }
 
   getProductsByCategory(String category, String categoryName) async {
+    int count;
     // print(response.data);
     // print(data.count);
     if (category == "Plain Cashews") {
@@ -223,7 +271,12 @@ class AppController extends GetxController {
       if (response != null) {
         final data = ProductModel.fromJson(response.data);
         plainCashews.value = data;
-        for (int i = 0; i < data.count; i++) {
+        if (data.count == null) {
+          count = 0;
+        } else {
+          count = data.count!;
+        }
+        for (int i = 0; i < count; i++) {
           final categoryName = data.results![i].product.category.name;
           if (!plainCashewSubCategories.contains(categoryName)) {
             plainCashewSubCategories.add(categoryName);
@@ -244,7 +297,7 @@ class AppController extends GetxController {
       if (response != null) {
         final data = ProductModel.fromJson(response.data);
         roastedAndSalted.value = data;
-        for (int i = 0; i < data.count; i++) {
+        for (int i = 0; i < data.count!; i++) {
           final categoryName = data.results![i].product.category.name;
           if (!roastedAndSaltedSubCategories.contains(categoryName)) {
             roastedAndSaltedSubCategories.add(categoryName);
@@ -263,7 +316,7 @@ class AppController extends GetxController {
       if (response != null) {
         final data = ProductModel.fromJson(response.data);
         valueAdded.value = data;
-        for (int i = 0; i < data.count; i++) {
+        for (int i = 0; i < data.count!; i++) {
           final categoryName = data.results![i].product.category.name;
           if (!valueAddedSubCategories.contains(categoryName)) {
             valueAddedSubCategories.add(categoryName);
