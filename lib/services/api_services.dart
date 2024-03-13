@@ -410,12 +410,16 @@ class ApiServices {
     }
   }
 
-  getSponserdProducts() async {
+  getSponserdProducts(String pageNo) async {
     try {
       final dio = Dio();
+       final params = {
+        "page": pageNo,
+      };
       dio.options.connectTimeout = connectionTimeoutDuration;
       final response = await dio.get(
         "$baseUrl${ApiEndPoints.getSponserdProducts}",
+        queryParameters: params,
         options: Options(
           contentType: Headers.jsonContentType,
         ),
@@ -435,12 +439,16 @@ class ApiServices {
     }
   }
 
-  getTrendingProducts() async {
+  getTrendingProducts(String pageNo) async {
     try {
       final dio = Dio();
+      final params = {
+        "page": pageNo,
+      };
       dio.options.connectTimeout = connectionTimeoutDuration;
       final response = await dio.get(
         "$baseUrl${ApiEndPoints.getTrendingProducts}",
+        queryParameters: params,
         options: Options(
           contentType: Headers.jsonContentType,
         ),
@@ -460,12 +468,16 @@ class ApiServices {
     }
   }
 
-  getBestSellerProducts() async {
+  getBestSellerProducts(String pageNo) async {
     try {
       final dio = Dio();
+      final params = {
+        "page": pageNo,
+      };
       dio.options.connectTimeout = connectionTimeoutDuration;
       final response = await dio.get(
         "$baseUrl${ApiEndPoints.getBestSellerProducts}",
+        queryParameters: params,
         options: Options(
           contentType: Headers.jsonContentType,
         ),

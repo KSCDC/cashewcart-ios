@@ -18,11 +18,12 @@ class TrendingModelProductListingScreen extends StatelessWidget {
   TrendingModelProductListingScreen({
     super.key,
   });
-
+  // final
   AppController controller = Get.put(AppController());
 
   @override
   Widget build(BuildContext context) {
+    print("Trending model products next:${controller.productDisplayList2.value.next}");
     return Scaffold(
       appBar: MainAppBar(),
       drawer: SideBar(),
@@ -30,10 +31,14 @@ class TrendingModelProductListingScreen extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(8),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SearchSectionTile(
-                  // heading: "${controller.productDisplayList2.value.count} Items ",
-                  ),
+              // SearchSectionTile(),
+              CustomTextWidget(
+                text: "${currentDisplayProductCategory} Products" ?? "Products",
+                fontSize: 24,
+                fontweight: FontWeight.w600,
+              ),
               Obx(() {
                 print("count :${controller.productDisplayList2.value.count}");
                 return controller.isTrendingLoading.value || controller.isSponserdLoading.value
@@ -76,7 +81,27 @@ class TrendingModelProductListingScreen extends StatelessWidget {
                                 )
                               : Center(
                                   child: CustomTextWidget(text: "No products found"),
-                                )
+                                ),
+                          kHeight,
+                          if (controller.productDisplayList2.value.next != null)
+                            GestureDetector(
+                              onTap: () {
+                                if (currentDisplayProductCategory == "Sponserd") {
+                                  controller.sponserdProductsPageNo++;
+                                  controller.getSponserdProducts();
+                                }
+                                if (currentDisplayProductCategory == "Trending") {
+                                  controller.trendingProductsPageNo++;
+                                  controller.getTrendingProducts();
+                                }
+                                if (currentDisplayProductCategory == "Best Sellers") {
+                                  controller.bestSellersPageNo++;
+                                  controller.getBestSellerProducts();
+                                }
+                              },
+                              child: CustomTextWidget(text: "Load More"),
+                            ),
+                          kHeight,
                         ],
                       );
               }),

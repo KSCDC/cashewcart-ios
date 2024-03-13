@@ -22,6 +22,7 @@ class ProductListingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: MainAppBar(),
       drawer: SideBar(),
@@ -30,8 +31,14 @@ class ProductListingScreen extends StatelessWidget {
           padding: const EdgeInsets.all(8),
           child: Obx(() {
             return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SearchSectionTile(),
+                // SearchSectionTile(),
+                CustomTextWidget(
+                  text: "${currentDisplayProductCategory}" ?? "Products",
+                  fontSize: 24,
+                  fontweight: FontWeight.w600,
+                ),
                 controller.productDisplayList.value.count != 0
                     ? GridView.count(
                         physics: const NeverScrollableScrollPhysics(),
@@ -59,9 +66,23 @@ class ProductListingScreen extends StatelessWidget {
                           );
                         }),
                       )
-                    : Center(
-                        child: CustomTextWidget(text: "No products found"),
-                      )
+                    : Container(
+                        height: screenSize.height * 0.7,
+                        child: Center(
+                          child: CustomTextWidget(text: "No products found"),
+                        ),
+                      ),
+                if (controller.productDisplayList.value.next != null)
+                  GestureDetector(
+                    onTap: () {
+                      controller.trendingProductsPageNo++;
+                      if (currentDisplayProductCategory == "Sponserd") {
+                        controller.getSponserdProducts();
+                      }
+                    },
+                    child: CustomTextWidget(text: "Load More"),
+                  ),
+                kHeight,
               ],
             );
           }),

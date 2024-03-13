@@ -4,6 +4,7 @@ import 'package:internship_sample/controllers/app_controller.dart';
 import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/main.dart';
+import 'package:internship_sample/presentation/home/home_screen.dart';
 import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
 import 'package:internship_sample/presentation/product_list/product_listing_screen.dart';
 import 'package:internship_sample/presentation/side_bar/widgets/side_bar_item_tile.dart';
@@ -63,25 +64,28 @@ class ExpandableProductsSideBarItem extends StatelessWidget {
                       GestureDetector(
                         onTap: () {
                           controller.productDisplayList = controller.plainCashews;
+                          currentDisplayProductCategory = "Plain Cashews";
                           previousPageIndexes.add(0);
 
                           bottomNavbarIndexNotifier.value = 5;
                           Navigator.of(context).pop();
                         },
-                        child: ExpandableSideBarInnerItem(label: "Cashews Plane Premium"),
+                        child: ExpandableSideBarInnerItem(label: "Plain Cashews"),
                       ),
                       GestureDetector(
                         onTap: () {
-                          controller.productDisplayList  = controller.roastedAndSalted;
+                          controller.productDisplayList = controller.roastedAndSalted;
+                          currentDisplayProductCategory = "Roasted And Salted Cashews";
                           previousPageIndexes.add(0);
                           bottomNavbarIndexNotifier.value = 7;
                           Navigator.of(context).pop();
                         },
-                        child: ExpandableSideBarInnerItem(label: "Roasted And Salted"),
+                        child: ExpandableSideBarInnerItem(label: "Roasted And Salted Cashews"),
                       ),
                       GestureDetector(
                         onTap: () {
-                          controller.productDisplayList  = controller.valueAdded;
+                          controller.productDisplayList = controller.valueAdded;
+                          currentDisplayProductCategory = "Value Added Products";
                           previousPageIndexes.add(0);
                           bottomNavbarIndexNotifier.value = 8;
                           Navigator.of(context).pop();
