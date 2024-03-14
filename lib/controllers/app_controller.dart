@@ -119,6 +119,10 @@ class AppController extends GetxController {
       sharedPref.setString(ACCESSTOKEN, accessToken);
       sharedPref.setString(REFRESHTOKEN, refreshToken);
 
+      final keyString = base64.encode(key.bytes);
+      final ivString = base64.encode(iv.bytes);
+      await sharedPref.setString('ENCRYPTION_KEY', keyString);
+      await sharedPref.setString('ENCRYPTION_IV', ivString);
       final encrypter = enc.Encrypter(enc.AES(key));
       final encrypted = encrypter.encrypt(password, iv: iv);
 
@@ -145,11 +149,15 @@ class AppController extends GetxController {
       sharedPref.setString(ACCESSTOKEN, accessToken);
       sharedPref.setString(REFRESHTOKEN, refreshToken);
 
+      //converting key and iv to string for storingg in shared preferences
+      final keyString = base64.encode(key.bytes);
+      final ivString = base64.encode(iv.bytes);
+      await sharedPref.setString('ENCRYPTION_KEY', keyString);
+      await sharedPref.setString('ENCRYPTION_IV', ivString);
       final encrypter = enc.Encrypter(enc.AES(key));
       final encrypted = encrypter.encrypt(password, iv: iv);
 
       final encryptedBase64 = base64.encode(encrypted.bytes);
-
       await sharedPref.setString(EMAIL, email);
       await sharedPref.setString(ENCRYPTEDPASSWORD, encryptedBase64);
       print("Encrypted:$encryptedBase64");

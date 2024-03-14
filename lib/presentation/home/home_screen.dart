@@ -386,7 +386,7 @@ class HomeScreen extends StatelessWidget {
                         print("next :::: ${controller.allProducts.value.next}");
                         return controller.isAllProductsLoading.value
                             ? SizedBox(
-                                width: screenSize.width * 0.4,
+                                width: screenSize.width,
                                 height: 300,
                                 child: Center(
                                   child: CircularProgressIndicator(),

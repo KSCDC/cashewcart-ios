@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
@@ -305,15 +306,26 @@ class ApiServices {
       final dio = Dio();
       dio.options.connectTimeout = connectionTimeoutDuration;
       SharedPreferences sharedPref = await SharedPreferences.getInstance();
+
       email = sharedPref.getString(EMAIL);
       final encryptedBase64 = sharedPref.getString(ENCRYPTEDPASSWORD);
+      final keyString = sharedPref.getString('ENCRYPTION_KEY');
+      final ivString = sharedPref.getString('ENCRYPTION_IV');
+
+      // decoding the stored key for decrypting password
+      final keyBytes = base64.decode(keyString!);
+      final ivBytes = base64.decode(ivString!);
+      final key = enc.Key(keyBytes);
+      final iv = enc.IV(ivBytes);
       log("encrypted :$encryptedBase64");
       if (encryptedBase64 != null) {
         final encrypted = enc.Encrypted.fromBase64(encryptedBase64);
-        final decrypter = enc.Encrypter(enc.AES(controller.key));
-        decrypted = decrypter.decrypt(encrypted, iv: controller.iv);
+        final decrypter = enc.Encrypter(enc.AES(key));
+        log("decrypting");
+        decrypted = decrypter.decrypt(encrypted, iv: iv);
         log("Decrypted :$decrypted");
       }
+      print("Email : $email, password: $decrypted");
       final response = await dio.post(
         "$baseUrl${ApiEndPoints.loginUser}",
         data: {
@@ -413,7 +425,7 @@ class ApiServices {
   getSponserdProducts(String pageNo) async {
     try {
       final dio = Dio();
-       final params = {
+      final params = {
         "page": pageNo,
       };
       dio.options.connectTimeout = connectionTimeoutDuration;

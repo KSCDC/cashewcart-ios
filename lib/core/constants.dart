@@ -9,6 +9,8 @@ const String ACCESSTOKEN = "accessToken";
 const String REFRESHTOKEN = "refreshToken";
 const String EMAIL = "email";
 const String ENCRYPTEDPASSWORD = "password";
+const String ENCKEY = "encryptionKey";
+const String ENCIV = "encryptionIv";
 
 enum LoginWith {
   google,

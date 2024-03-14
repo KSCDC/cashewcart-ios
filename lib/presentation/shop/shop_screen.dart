@@ -294,8 +294,15 @@ class _ShopScreenState extends State<ShopScreen> {
                                                                   },
                                                                   child: GestureDetector(
                                                                     onTap: () {
-                                                                      controller.addProductReview(
-                                                                          context, controller.productDetails.value!.id.toString(), reviewController.text, customerRatingNotifier.value);
+                                                                      if (reviewController.text.trim() != "") {
+                                                                        controller.addProductReview(
+                                                                          context,
+                                                                          controller.productDetails.value!.id.toString(),
+                                                                          reviewController.text,
+                                                                          customerRatingNotifier.value,
+                                                                        );
+                                                                        Get.back();
+                                                                      }
                                                                     },
                                                                     child: CustomElevatedButton(
                                                                       label: "Submit",
@@ -374,7 +381,7 @@ class _ShopScreenState extends State<ShopScreen> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: CustomTextWidget(
-                        text: "${(controller.similarProducts.value.results!.length - 1).toString()}+",
+                        text: (controller.similarProducts.value.results!.length - 1) < 0 ? "0" : "${(controller.similarProducts.value.results!.length - 1).toString()}+",
                         fontSize: 20,
                         fontweight: FontWeight.w600,
                       ),
@@ -534,38 +541,6 @@ class _ShopScreenState extends State<ShopScreen> {
       ),
     );
   }
-
-  // List getSimilarProductsList() {
-  //   if (cashewsPlaneList.contains(controller.productDetails.value)) {
-  //     List productsList = List.from(cashewsPlaneList);
-  //     productsList.remove(controller.productDetails.value);
-  //     return productsList + roastedCashewsList + valueAddedProducts;
-  //   } else if (roastedCashewsList.contains(controller.productDetails.value)) {
-  //     List productsList = List.from(roastedCashewsList);
-  //     productsList.remove(controller.productDetails.value);
-  //     return productsList + cashewsPlaneList + valueAddedProducts;
-  //   } else {
-  //     List productsList = List.from(valueAddedProducts);
-  //     productsList.remove(controller.productDetails.value);
-  //     return productsList + cashewsPlaneList + roastedCashewsList;
-  //   }
-  // }
-
-  // List getRelatedProductsList() {
-  //   if (cashewsPlaneList.contains(controller.productDetails.value)) {
-  //     List relatedProductsList = allFeaturedProductsList.where((element) => !cashewsPlaneList.contains(element)).toList();
-
-  //     return relatedProductsList;
-  //   } else if (roastedCashewsList.contains(controller.productDetails.value)) {
-  //     List relatedProductsList = allFeaturedProductsList.where((element) => !roastedCashewsList.contains(element)).toList();
-
-  //     return relatedProductsList;
-  //   } else {
-  //     List relatedProductsList = allFeaturedProductsList.where((element) => !valueAddedProducts.contains(element)).toList();
-
-  //     return relatedProductsList;
-  //   }
-  // }
 }
 
 class RatingStars extends StatelessWidget {
