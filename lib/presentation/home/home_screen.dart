@@ -39,15 +39,15 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!controller.isAlreadyLoadedPlainCashews) {
-      controller.getProductsByCategory("Plain Cashews", "");
-    }
-    if (!controller.isAlreadyLoadedRoastedAndSaltedCashews) {
-      controller.getProductsByCategory("Roasted and salted", "");
-    }
-    if (!controller.isAlreadyLoadedValueAdded) {
-      controller.getProductsByCategory("Value Added", "");
-    }
+    // if (!controller.isAlreadyLoadedPlainCashews) {
+    //   controller.getProductsByCategory("Plain Cashews", "");
+    // }
+    // if (!controller.isAlreadyLoadedRoastedAndSaltedCashews) {
+    //   controller.getProductsByCategory("Roasted and Salted Cashews", "");
+    // }
+    // if (!controller.isAlreadyLoadedValueAdded) {
+    //   controller.getProductsByCategory("Value Added", "");
+    // }
     if (!controller.isAlreadyLoadedAllProducts) {
       log("getting all products");
       controller.getAllProducts();
@@ -84,34 +84,32 @@ class HomeScreen extends StatelessWidget {
                     children: [
                       // circular list
                       Container(
-                        height: 95,
+                        height: 110,
                         child: Obx(
                           () {
-                            return
-                                // controller.isAllProductsLoading.value
-                                // ? Center(
-                                //     child: CircularProgressIndicator(),
-                                //   )
-                                // :
-                                ListView.builder(
-                              itemBuilder: (context, index) {
-                                String productImageUrl = '';
-                                // final productImageUrl = controller.allProducts.value.results[index].product.productImages[0]['product_image'];
-                                if (controller.allProducts.value.results!.isNotEmpty) {
-                                  final productImageUrl = controller.allProducts.value.results![index].product.productImages.isNotEmpty
-                                      ? "${controller.allProducts.value.results![index].product.productImages[0]['product_image']}"
-                                      : "";
-                                }
+                            return controller.isAllProductsLoading.value
+                                ? Center(
+                                    child: CircularProgressIndicator(),
+                                  )
+                                : ListView.builder(
+                                    itemBuilder: (context, index) {
+                                      print("Product image --: ${"$baseUrl${controller.sponserd.value.results[0].product.product.productImages[0].productImage}"}");
+                                      String productImageUrl = '';
+                                      if (controller.allProducts.value.results!.isNotEmpty) {
+                                        productImageUrl = controller.allProducts.value.results![index].product.productImages.isNotEmpty
+                                            ? "$baseUrl${controller.allProducts.value.results![index].product.productImages[0]['product_image']}"
+                                            : "https://t3.ftcdn.net/jpg/05/04/28/96/240_F_504289605_zehJiK0tCuZLP2MdfFBpcJdOVxKLnXg1.jpg";
+                                      }
 
-                                final productName = controller.allProducts.value.results![index].product.name;
-                                return CircleAvatarListItem(
-                                  imagePath: productImageUrl,
-                                  label: productName,
-                                );
-                              },
-                              itemCount: controller.allProducts.value.results!.length,
-                              scrollDirection: Axis.horizontal,
-                            );
+                                      final productName = controller.allProducts.value.results![index].product.name;
+                                      return CircleAvatarListItem(
+                                        imagePath: productImageUrl,
+                                        label: productName,
+                                      );
+                                    },
+                                    itemCount: controller.allProducts.value.results!.length,
+                                    scrollDirection: Axis.horizontal,
+                                  );
                           },
                         ),
                       ),
@@ -224,7 +222,9 @@ class HomeScreen extends StatelessWidget {
                                                   },
                                                   child: ProductsListItemTile(
                                                     productDetails: productDetails,
-                                                    imagePath: productDetails.product.productImages.isNotEmpty ? "$baseUrl${productDetails.product.productImages[0].productImage}" : "",
+                                                    imagePath: productDetails.product.productImages.isNotEmpty
+                                                        ? "$baseUrl${productDetails.product.productImages[0].productImage}"
+                                                        : "https://t3.ftcdn.net/jpg/05/04/28/96/240_F_504289605_zehJiK0tCuZLP2MdfFBpcJdOVxKLnXg1.jpg",
                                                   ),
                                                 );
                                               },
@@ -236,6 +236,7 @@ class HomeScreen extends StatelessWidget {
                         ],
                       ),
                       kHeight,
+
                       //special offers
 
                       Container(
@@ -272,7 +273,7 @@ class HomeScreen extends StatelessWidget {
                                 child: CircularProgressIndicator(),
                               )
                             : BuyNowTile(
-                                productDetails: controller.plainCashews.value,
+                                productDetails: controller.allProducts.value,
                               );
                       }),
 
@@ -363,7 +364,7 @@ class HomeScreen extends StatelessWidget {
                             log(controller.sponserd.value.results.toString());
                             final String imagePath = controller.sponserd.value.results[0].product.product.productImages.isNotEmpty
                                 ? "$baseUrl${controller.sponserd.value.results[0].product.product.productImages[0].productImage}"
-                                : "";
+                                : "https://t3.ftcdn.net/jpg/05/04/28/96/240_F_504289605_zehJiK0tCuZLP2MdfFBpcJdOVxKLnXg1.jpg";
                             return controller.isSponserdLoading.value
                                 ? Center(
                                     child: CircularProgressIndicator(),

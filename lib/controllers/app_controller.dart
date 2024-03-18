@@ -105,6 +105,10 @@ class AppController extends GetxController {
   int trendingProductsPageNo = 1;
   int sponserdProductsPageNo = 1;
   int bestSellersPageNo = 1;
+  int plainCashewsPageNo = 1;
+  int roastedAndSaltedPageNo = 1;
+  int valueAddedPageNo = 1;
+  int searchResultPageNo = 1;
 
   registerNewUser(BuildContext context, String token, String name, String phoneNumber, String password) async {
     isLoading.value = true;
@@ -290,13 +294,15 @@ class AppController extends GetxController {
   }
 
   getProductsByCategory(String category, String categoryName) async {
-    int count;
+    // int count;
     // print(response.data);
     // print(data.count);
+
     if (category == "Plain Cashews") {
       isPlainCashewLoading.value = true;
       isPlainCashewLoadingError.value = false;
-      final response = await ApiServices().getProductByCategory(category, categoryName);
+      final response = await ApiServices().getProductByCategory(category, categoryName, plainCashewsPageNo.toString());
+
       if (response != null) {
         final data = ProductModel.fromJson(response.data);
 
@@ -315,6 +321,13 @@ class AppController extends GetxController {
           plainCashews.value.next = response.data['next'];
           plainCashews.value.previous = response.data['previous'];
         }
+        for (int i = 0; i < data.count!; i++) {
+          final categoryName = data.results![i].product.category.name;
+
+          if (!plainCashewSubCategories.contains(categoryName)) {
+            plainCashewSubCategories.add(categoryName);
+          }
+        }
 
         isAlreadyLoadedPlainCashews = true;
         print("Plain products count: ${plainCashews.value.count}");
@@ -325,11 +338,11 @@ class AppController extends GetxController {
       }
 
       isPlainCashewLoading.value = false;
-    } else if (category == "Roasted and salted") {
-      print("storing roasted");
+    } else if (category == "Roasted and Salted Cashews") {
       isRoastedAndSaltedLoading.value = true;
       isRoastedAndSaltedLoadingError.value = false;
-      final response = await ApiServices().getProductByCategory(category, categoryName);
+      final response = await ApiServices().getProductByCategory(category, categoryName, roastedAndSaltedPageNo.toString());
+      print("storing roasted");
 // print(response.data);
       if (response != null) {
         final data = ProductModel.fromJson(response.data);
@@ -364,7 +377,7 @@ class AppController extends GetxController {
     } else if (category == "Value Added") {
       isValueAddedLoading.value = true;
       isValueAddedLoadingError.value = false;
-      final response = await ApiServices().getProductByCategory(category, categoryName);
+      final response = await ApiServices().getProductByCategory(category, categoryName, valueAddedPageNo.toString());
       if (response != null) {
         final data = ProductModel.fromJson(response.data);
 
@@ -400,22 +413,43 @@ class AppController extends GetxController {
 
   searchProducts(String searchKey) async {
     isLoading.value = true;
-    final response = await ApiServices().searchProduct(searchKey, minSearchPrice.value, maxSearchPrice.value);
+
+    final response = await ApiServices().searchProduct(searchKey, minSearchPrice.value, maxSearchPrice.value, searchResultPageNo.toString());
+
     if (response != null) {
       final data = ProductModel.fromJson(response.data);
-      searchResults.value = data;
-      List<Results> result = data.results!;
-
-      if (sortProduct.value) {
-        if (sortAscending.value) {
-          result.sort((a, b) => double.parse(a.sellingPrice).compareTo(double.parse(b.sellingPrice)));
-        } else {
-          result.sort((a, b) => double.parse(b.sellingPrice).compareTo(double.parse(a.sellingPrice)));
+      // searchResults.value = data;
+      List<Results>? results = data.results;
+      List<Results> combinedResults = [];
+      if (results != null && results.isNotEmpty) {
+        combinedResults.addAll(searchResults.value.results ?? []);
+        combinedResults.addAll(results);
+        searchResults.value.results = combinedResults;
+        searchResults.update((val) {
+          val!.count = data.count!;
+          val.next = response.data['next'];
+          val.previous = response.data['previous'];
+        });
+        if (sortProduct.value) {
+          if (sortAscending.value) {
+            searchResults.value.results!.sort((a, b) => double.parse(a.sellingPrice).compareTo(double.parse(b.sellingPrice)));
+          } else {
+            searchResults.value.results!.sort((a, b) => double.parse(b.sellingPrice).compareTo(double.parse(a.sellingPrice)));
+          }
         }
-        searchResults.value.results = result;
+        List<Results> updatedResults = List.from(searchResults.value.results ?? []);
+
+        updatedResults.addAll(results);
+        searchResults.value.results = updatedResults;
+
+        haveSearchResult.value = true;
+      } else {
+        haveSearchResult.value = false;
       }
 
-      haveSearchResult.value = true;
+      searchResults.update((val) {
+        val!.next = response.data['next'];
+      });
     } else {
       haveSearchResult.value = false;
     }

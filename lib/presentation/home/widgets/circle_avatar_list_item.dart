@@ -15,18 +15,21 @@ class CircleAvatarListItem extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: SizedBox(
-        height: 90,
+        height: 110,
+        width: 90,
         child: Column(
           children: [
             CircleAvatar(
               radius: 30,
-              backgroundImage: NetworkImage("$baseUrl${imagePath}"),
+              backgroundColor: Colors.white,
+              backgroundImage: NetworkImage(imagePath),
             ),
             CustomTextWidget(
               text: label,
               fontSize: 10,
               fontweight: FontWeight.w400,
               fontColor: Color(0xFF21003D),
+              textAlign: TextAlign.center,
             )
           ],
         ),

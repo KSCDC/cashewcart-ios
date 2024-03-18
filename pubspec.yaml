@@ -44,6 +44,7 @@ dependencies:
   shared_preferences: ^2.2.2
   smooth_page_indicator: ^1.1.0
   timeline_tile: ^2.0.0
+  url_launcher: ^6.2.5
   validatorless: ^1.2.3
 
 dev_dependencies:
@@ -99,8 +100,6 @@ flutter:
     - lib/core/assets/images/home/star_bg.svg
 
     - lib/core/assets/images/home_icon.svg
-
-    
 
   # An image asset can refer to one or more resolution-specific "variants",
   # https://flutter.dev/assets-and-images/#resolution-aware

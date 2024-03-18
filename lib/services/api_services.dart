@@ -282,9 +282,9 @@ class ApiServices {
             log("Going to automatic relogin");
             final autoRelogin = await automaticRelogin();
             print(autoRelogin);
-            if (autoRelogin == null) {
-              log("failed trying of auto relogin");
-            }
+            // if (autoRelogin == null) {
+            //   log("failed trying of auto relogin");
+            // }
           }
         }
       }
@@ -339,12 +339,18 @@ class ApiServices {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         print("Login successful");
+        final accessToken = response.data['token']['access'];
+        final refreshToken = response.data['token']['refresh'];
+        print("access token :$accessToken\nrefresh token :$refreshToken");
+        SharedPreferences sharedPref = await SharedPreferences.getInstance();
+        sharedPref.setString(ACCESSTOKEN, accessToken);
+        sharedPref.setString(REFRESHTOKEN, refreshToken);
       } else {
         print("Unexpected status code: ${response.statusCode}");
       }
     } on DioException catch (e) {
       print("Error :$e");
-      log("Auto login failed with mail:$email and password $decrypted");
+      log("Auto login failed with mail:$email");
       isFailedLogin = true;
       Get.to(() => SignInScreen());
       return null;
@@ -389,10 +395,11 @@ class ApiServices {
     }
   }
 
-  getProductByCategory(String categoryParent, String categoryName) async {
+  getProductByCategory(String categoryParent, String categoryName, String pageNo) async {
     final params = {
       "product__category__parent__name": categoryParent,
       "product__category__name": categoryName,
+      "page": pageNo,
     };
 
     try {
@@ -509,11 +516,12 @@ class ApiServices {
     }
   }
 
-  searchProduct(String searchKey, int minPrice, int maxPrice) async {
+  searchProduct(String searchKey, int minPrice, int maxPrice,String pageNo) async {
     final params = {
       "search": searchKey,
       "min_price": minPrice,
       "max_price": maxPrice,
+      "page": pageNo,
     };
 
     try {

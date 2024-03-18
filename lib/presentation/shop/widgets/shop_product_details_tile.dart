@@ -41,7 +41,7 @@ class ShopProductDetailsTile extends StatelessWidget {
                     for (int i = 0; i < controller.productDetails.value!.productVariants.length; i++)
                       if (value == i)
                         CustomTextWidget(
-                          text: controller.productDetails.value!.productVariants[i].weightInGrams,
+                          text: "${controller.productDetails.value!.productVariants[i].weightInGrams} GM",
                           fontweight: FontWeight.w600,
                         ),
                   ],
@@ -57,7 +57,7 @@ class ShopProductDetailsTile extends StatelessWidget {
                     for (int i = 0; i < controller.productDetails.value!.productVariants.length; i++)
                       SizeSelectorWidget(
                         index: i,
-                        label: controller.productDetails.value!.productVariants[i].weightInGrams,
+                        label: "${controller.productDetails.value!.productVariants[i].weightInGrams} GM",
                         fontColor: sizeSelectNotifier.value == i ? Colors.white : Color(0xFFFA7189),
                         backgroundColor: sizeSelectNotifier.value == i ? Color(0xFFFA7189) : Colors.white,
                       ),

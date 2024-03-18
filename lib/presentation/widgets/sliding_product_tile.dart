@@ -32,7 +32,7 @@ class SlidingProductTile extends StatelessWidget {
                 Stack(
                   children: [
                     SlideItem(
-                      imagePath: imageList.isEmpty ? '' : "$baseUrl${imageList[i].productImage}",
+                      imagePath: imageList.isNotEmpty ? "$baseUrl${imageList[i].productImage}" : "https://t3.ftcdn.net/jpg/05/04/28/96/240_F_504289605_zehJiK0tCuZLP2MdfFBpcJdOVxKLnXg1.jpg",
                     ),
                     Positioned(
                       top: 25,
@@ -107,7 +107,7 @@ class SlideItem extends StatelessWidget {
                 decoration: BoxDecoration(
                   image: DecorationImage(
                     image: NetworkImage(imagePath),
-                    fit: BoxFit.cover,
+                    fit: BoxFit.fitHeight,
                   ),
                   borderRadius: BorderRadius.all(
                     Radius.circular(10),

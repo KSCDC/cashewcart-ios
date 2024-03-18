@@ -20,7 +20,9 @@ class ProductsListItemTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (imagePath == '') {
-      imagePath = productDetails.product.productImages.isNotEmpty ? "$baseUrl${productDetails.product.productImages[0]['product_image']}" : "";
+      imagePath = productDetails.product.productImages.isNotEmpty
+          ? "$baseUrl${productDetails.product.productImages[0]['product_image']}"
+          : "https://t3.ftcdn.net/jpg/05/04/28/96/240_F_504289605_zehJiK0tCuZLP2MdfFBpcJdOVxKLnXg1.jpg";
     }
 
     final String productName = productDetails.product.name;
@@ -91,28 +93,32 @@ class ProductsListItemTile extends StatelessWidget {
                       fontSize: 12,
                       fontweight: FontWeight.w500,
                     ),
-                    Row(
-                      children: [
-                        Text(
-                          "₹${originalPrice}",
-                          style: TextStyle(
-                            fontFamily: "Montserrat",
-                            fontSize: 15,
-                            color: Color(0xFF808488),
-                            fontWeight: FontWeight.w500,
-                            decoration: TextDecoration.lineThrough,
-                            decorationColor: Color(0xFF808488),
+
+                    //here from the api, if actual price and selling price are same, the discount percentage is coming as 100 (But actually it is zero)
+                    //so if there is no offer, the discount percentage is coming as 100. at that time dont need to display the offer percentage
+                    if (((double.parse(offerPrice) * 100 / double.parse(originalPrice))) != 100)
+                      Row(
+                        children: [
+                          Text(
+                            "₹${originalPrice}",
+                            style: TextStyle(
+                              fontFamily: "Montserrat",
+                              fontSize: 15,
+                              color: Color(0xFF808488),
+                              fontWeight: FontWeight.w500,
+                              decoration: TextDecoration.lineThrough,
+                              decorationColor: Color(0xFF808488),
+                            ),
                           ),
-                        ),
-                        SizedBox(width: 10),
-                        CustomTextWidget(
-                          text: "${((double.parse(offerPrice) * 100 / double.parse(originalPrice))).toStringAsFixed(2)}%",
-                          fontColor: Color(0xFFFE735C),
-                          fontSize: 10,
-                          fontweight: FontWeight.w400,
-                        )
-                      ],
-                    ),
+                          SizedBox(width: 10),
+                          CustomTextWidget(
+                            text: "${((double.parse(offerPrice) * 100 / double.parse(originalPrice))).toStringAsFixed(2)}%",
+                            fontColor: Color(0xFFFE735C),
+                            fontSize: 10,
+                            fontweight: FontWeight.w400,
+                          )
+                        ],
+                      ),
                     CustomStarRatingTile(
                       numberOfRatings: numberOfRatings,
                       iconAndTextSize: 10,

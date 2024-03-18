@@ -10,6 +10,7 @@ import 'package:internship_sample/presentation/side_bar/widgets/side_bar_item_ti
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 import 'package:internship_sample/services/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SideBar extends StatelessWidget {
   SideBar({super.key});
@@ -65,6 +66,23 @@ class SideBar extends StatelessWidget {
               child: SideBarItemTile(
                 icon: Icons.info_outline,
                 label: "About KSCDC",
+              ),
+            ),
+            GestureDetector(
+              onTap: () async {
+                final url = Uri.parse("https://www.cashewcart.com");
+                if (await canLaunchUrl(url)) {
+                  await launchUrl(
+                    url,
+                    mode: LaunchMode.externalApplication,
+                  );
+                } else {
+                  throw 'Could not launch "https://www.cashewcart.com/"';
+                }
+              },
+              child: SideBarItemTile(
+                icon: Icons.language,
+                label: "Visit our website",
               ),
             ),
             SideBarItemTile(

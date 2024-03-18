@@ -44,7 +44,7 @@ class SponseredProductTile extends StatelessWidget {
                 decoration: BoxDecoration(
                   image: DecorationImage(
                     image: NetworkImage(imagePath),
-                    fit: BoxFit.cover,
+                    fit: BoxFit.fitHeight,
                   ),
                   borderRadius: BorderRadius.all(
                     Radius.circular(10),

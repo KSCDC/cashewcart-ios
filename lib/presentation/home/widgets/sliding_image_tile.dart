@@ -21,7 +21,9 @@ class SlidingImageTile extends StatelessWidget {
   Widget build(BuildContext context) {
     String imagePath = "";
     if (productDetails.results.isNotEmpty) {
-      imagePath = productDetails.results[0].product.productImages[0]['product_image'];
+      imagePath = productDetails.results[0].product.productImages.isNotEmpty
+          ? "$baseUrl${productDetails.results[0].product.productImages[0]['product_image']}"
+          : "https://t3.ftcdn.net/jpg/05/04/28/96/240_F_504289605_zehJiK0tCuZLP2MdfFBpcJdOVxKLnXg1.jpg";
     }
 
     final screenSize = MediaQuery.of(context).size;
@@ -34,8 +36,8 @@ class SlidingImageTile extends StatelessWidget {
             height: screenSize.width * 0.8,
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: NetworkImage("$baseUrl${imagePath}"),
-                fit: BoxFit.fitWidth,
+                image: NetworkImage(imagePath),
+                fit: BoxFit.fitHeight,
               ),
               borderRadius: BorderRadius.all(
                 Radius.circular(10),

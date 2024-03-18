@@ -5,7 +5,7 @@ class ProductModel {
     this.previous,
     required this.results,
   });
-    int? count;
+  int? count;
   String? next;
   String? previous;
   List<Results>? results;
