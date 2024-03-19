@@ -53,7 +53,7 @@ class CartProductsListTile extends StatelessWidget {
                   decoration: BoxDecoration(
                     image: DecorationImage(
                       image: NetworkImage("$baseUrl$imagePath"),
-                      fit: BoxFit.cover,
+                      fit: BoxFit.fitHeight,
                     ),
                     borderRadius: BorderRadius.all(
                       Radius.circular(4),
@@ -175,6 +175,11 @@ class CartProductsListTile extends StatelessWidget {
                             cartCountNotifier.value--;
                             currentProductCountNotifier.value--;
                             ApiServices().updateCartCount(productDetails.id.toString(), currentProductCountNotifier.value);
+                            for (int i = 0; i < controller.cartProducts.value.count; i++) {
+                              if (controller.cartProducts.value.results[i].id == productDetails.id) {
+                                controller.cartProducts.value.results[i].purchaseCount = controller.cartProducts.value.results[i].purchaseCount - 1;
+                              }
+                            }
                             CartScreen().getGrandTotal();
                           }
                         },
@@ -186,6 +191,11 @@ class CartProductsListTile extends StatelessWidget {
                           cartCountNotifier.value++;
                           currentProductCountNotifier.value++;
                           ApiServices().updateCartCount(productDetails.id.toString(), currentProductCountNotifier.value);
+                          for (int i = 0; i < controller.cartProducts.value.count; i++) {
+                            if (controller.cartProducts.value.results[i].id == productDetails.id) {
+                              controller.cartProducts.value.results[i].purchaseCount = controller.cartProducts.value.results[i].purchaseCount + 1;
+                            }
+                          }
                           CartScreen().getGrandTotal();
                         },
                         child: Icon(Icons.add),

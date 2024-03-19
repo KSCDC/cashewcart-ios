@@ -150,8 +150,10 @@ class CartScreen extends StatelessWidget {
   }
 
   getGrandTotal() {
-    // double grandTotal = 0;
+    // controller.getCartList();
+    grantTotalNotifier.value = 0;
     print("grand total fn");
+    print(controller.cartProducts.value);
     for (int i = 0; i < controller.cartProducts.value.count; i++) {
       // final int selectedCategory = cartProductsList[i]['category'];
       final String price = controller.cartProducts.value.results[i].product.sellingPrice;

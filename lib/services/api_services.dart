@@ -401,7 +401,10 @@ class ApiServices {
       "product__category__name": categoryName,
       "page": pageNo,
     };
-
+    print("calling $baseUrl${ApiEndPoints.filterProduct}");
+    print(categoryParent);
+    print(categoryName);
+    print(pageNo);
     try {
       final dio = Dio();
       dio.options.connectTimeout = connectionTimeoutDuration;
@@ -516,7 +519,7 @@ class ApiServices {
     }
   }
 
-  searchProduct(String searchKey, int minPrice, int maxPrice,String pageNo) async {
+  searchProduct(String searchKey, int minPrice, int maxPrice, String pageNo) async {
     final params = {
       "search": searchKey,
       "min_price": minPrice,

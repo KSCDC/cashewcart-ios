@@ -94,11 +94,11 @@ class AppController extends GetxController {
   bool isAlreadyLoadedBestsellers = false;
   bool isAlreadyLoadedSponserd = false;
 
-  List<String> plainCashewSubCategories = ["All"];
+  RxList<String> plainCashewSubCategories = ["All"].obs;
   RxString selectedPlainCashewCategory = "All".obs;
-  List<String> roastedAndSaltedSubCategories = ["All"];
+  RxList<String> roastedAndSaltedSubCategories = ["All"].obs;
   RxString selectedRoastedAndSaltedCategory = "All".obs;
-  List<String> valueAddedSubCategories = ["All"];
+  RxList<String> valueAddedSubCategories = ["All"].obs;
   RxString selectedValueAddedCategory = "All".obs;
 
   int allProductsPageNo = 1;
@@ -302,7 +302,8 @@ class AppController extends GetxController {
       isPlainCashewLoading.value = true;
       isPlainCashewLoadingError.value = false;
       final response = await ApiServices().getProductByCategory(category, categoryName, plainCashewsPageNo.toString());
-
+      print("storing plained");
+// print(response.data);
       if (response != null) {
         final data = ProductModel.fromJson(response.data);
 
@@ -318,21 +319,16 @@ class AppController extends GetxController {
             val.next = response.data['next'];
             val.previous = response.data['previous'];
           });
-          plainCashews.value.next = response.data['next'];
-          plainCashews.value.previous = response.data['previous'];
-        }
-        for (int i = 0; i < data.count!; i++) {
-          final categoryName = data.results![i].product.category.name;
-
-          if (!plainCashewSubCategories.contains(categoryName)) {
-            plainCashewSubCategories.add(categoryName);
+          for (int i = 0; i < data.results!.length; i++) {
+            final categoryName = data.results![i].product.category.name;
+            if (!plainCashewSubCategories.contains(categoryName)) {
+              plainCashewSubCategories.add(categoryName);
+            }
           }
         }
 
+        print("Categories in roasted :$plainCashewSubCategories");
         isAlreadyLoadedPlainCashews = true;
-        print("Plain products count: ${plainCashews.value.count}");
-
-        print("Plain products next: ${response.data['next']}");
       } else {
         isPlainCashewLoadingError.value = true;
       }
@@ -359,14 +355,14 @@ class AppController extends GetxController {
             val.next = response.data['next'];
             val.previous = response.data['previous'];
           });
-        }
-
-        for (int i = 0; i < data.count!; i++) {
-          final categoryName = data.results![i].product.category.name;
-          if (!roastedAndSaltedSubCategories.contains(categoryName)) {
-            roastedAndSaltedSubCategories.add(categoryName);
+          for (int i = 0; i < data.results!.length; i++) {
+            final categoryName = data.results![i].product.category.name;
+            if (!roastedAndSaltedSubCategories.contains(categoryName)) {
+              roastedAndSaltedSubCategories.add(categoryName);
+            }
           }
         }
+
         print("Categories in roasted :$roastedAndSaltedSubCategories");
         isAlreadyLoadedRoastedAndSaltedCashews = true;
       } else {
@@ -393,14 +389,14 @@ class AppController extends GetxController {
             val.next = response.data['next'];
             val.previous = response.data['previous'];
           });
-        }
-
-        for (int i = 0; i < data.count!; i++) {
-          final categoryName = data.results![i].product.category.name;
-          if (!valueAddedSubCategories.contains(categoryName)) {
-            valueAddedSubCategories.add(categoryName);
+          for (int i = 0; i < data.results!.length; i++) {
+            final categoryName = data.results![i].product.category.name;
+            if (!valueAddedSubCategories.contains(categoryName)) {
+              valueAddedSubCategories.add(categoryName);
+            }
           }
         }
+
         print("Categories in roasted :$valueAddedSubCategories");
         isAlreadyLoadedValueAdded = true;
       } else {
@@ -581,12 +577,13 @@ class AppController extends GetxController {
   }
 
   addProductToCart(BuildContext context, String productId) async {
-    isLoading.value = true;
+    // isLoading.value = true;
     isError.value = false;
     final response = await ApiServices().addProductToCart(context, productId);
     if (response == null) {
       isError.value = true;
     }
+    // isLoading.value = true;
   }
 
   removeProductFromCart(BuildContext context, String productId) async {

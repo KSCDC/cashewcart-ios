@@ -121,7 +121,7 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
                   CustomTextWidget(
                     text: "Order Payment Details",
                     fontSize: 17,
-                    fontweight: FontWeight.w500,
+                    fontweight: FontWeight.w600,
                   ),
                   Container(
                     child: ListView.builder(
@@ -138,10 +138,13 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
                               Row(
                                 // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  CustomTextWidget(
-                                    text: productList[index].product.product.name,
-                                    fontSize: 11,
-                                    fontweight: FontWeight.w400,
+                                  Container(
+                                    width: screenSize.width * 0.6,
+                                    child: CustomTextWidget(
+                                      text: productList[index].product.product.name,
+                                      fontSize: 16,
+                                      fontweight: FontWeight.w400,
+                                    ),
                                   ),
                                   Spacer(),
                                   CustomTextWidget(
@@ -260,7 +263,7 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  SizedBox(height: 50),
+                  SizedBox(height: 100),
                 ],
               ),
             )
@@ -286,20 +289,22 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
               width: 250,
               child: GestureDetector(
                 onTap: () {
-                  List orderingProductsList = [];
-                  for (var product in productList) {
-                    // final product = item['product'];
-                    orderingProductsList.add(product);
-                  }
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => CheckoutScreen(
+                  if (controller.addressList.isEmpty) {
+                    Services().showCustomSnackBar(context, "No address found. Add an address to continue");
+                  } else {
+                    List orderingProductsList = [];
+                    for (var product in productList) {
+                      // final product = item['product'];
+                      orderingProductsList.add(product);
+                    }
+                    Get.to(
+                      () => CheckoutScreen(
                         price: grandTotal,
                         shippingCost: 30,
                         orderingProductsList: productList,
                       ),
-                    ),
-                  );
+                    );
+                  }
                 },
                 child: CustomElevatedButton(label: "Proceed to Payment"),
               ),

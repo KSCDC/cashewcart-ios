@@ -75,7 +75,7 @@ class PlaceOrderScreen extends StatelessWidget {
                           decoration: BoxDecoration(
                             image: DecorationImage(
                               image: NetworkImage(imagePath),
-                              fit: BoxFit.fitWidth,
+                              fit: BoxFit.fitHeight,
                             ),
                             borderRadius: BorderRadius.all(
                               Radius.circular(4),
@@ -149,7 +149,7 @@ class PlaceOrderScreen extends StatelessWidget {
                     onPressed: () async {
                       // TextEditingController _newAddressController = TextEditingController();
 
-                      Services().showAddressEditPopup(true,context,"","ADD ADDRESS","ADD", _streetAddressConrller, _cityController, _postalcodeController, _stateController);
+                      Services().showAddressEditPopup(true, context, "", "ADD ADDRESS", "ADD", _streetAddressConrller, _cityController, _postalcodeController, _stateController);
                     },
                     icon: Icons.add,
                     label: "Add address",
@@ -304,17 +304,14 @@ class PlaceOrderScreen extends StatelessWidget {
                   final double total = double.parse(price) * productCountNotifier.value;
                   if (total <= 500) {
                     Services().showCustomSnackBar(context, "Minimum order amount is Rs 500 and above");
+                  } else if (controller.addressList.isEmpty) {
+                    Services().showCustomSnackBar(context, "No address found. Add an address to continue");
                   } else {
-                    if (controller.addressList.isEmpty) {
-                      Services().showCustomSnackBar(context, "Add atleast one address");
-                    }
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => CheckoutScreen(
-                          price: total,
-                          shippingCost: 30,
-                          orderingProductsList: [productDetails],
-                        ),
+                    Get.to(
+                      () => CheckoutScreen(
+                        price: total,
+                        shippingCost: 30,
+                        orderingProductsList: [productDetails],
                       ),
                     );
                   }

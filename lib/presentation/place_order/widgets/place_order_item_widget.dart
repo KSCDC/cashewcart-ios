@@ -29,7 +29,7 @@ class PlaceOrderItemWidget extends StatelessWidget {
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: NetworkImage("$baseUrl$imagePath"),
-                fit: BoxFit.fitWidth,
+                fit: BoxFit.fitHeight,
               ),
               borderRadius: BorderRadius.all(
                 Radius.circular(4),

@@ -35,7 +35,7 @@ class CategoriesScreen extends StatelessWidget {
       controller.getAllProducts();
     }
 
-    // controller.getAllProducts();
+    controller.getAllProducts();
     return Scaffold(
       backgroundColor: appBackgroundColor,
       appBar: MainAppBar(),
@@ -134,7 +134,13 @@ class CategoriesScreen extends StatelessWidget {
                                           return GestureDetector(
                                             onTap: () {
                                               controller.plainCashewsPageNo++;
-                                              controller.getProductsByCategory("Plain Cashews", controller.selectedPlainCashewCategory.value);
+                                              String subCategory;
+                                              if (controller.selectedPlainCashewCategory.value == "All") {
+                                                subCategory = "";
+                                              } else {
+                                                subCategory = controller.selectedPlainCashewCategory.value;
+                                              }
+                                              controller.getProductsByCategory("Plain Cashews", subCategory);
                                             },
                                             child: Row(
                                               children: [
