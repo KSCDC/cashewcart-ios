@@ -60,7 +60,7 @@ class Results {
   late final int stockQty;
 
   Results.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
+    id = json['product_variant_id'];
     product = Product.fromJson(json['product']);
     weightInGrams = json['weight_in_grams'];
     actualPrice = json['actual_price'];
@@ -97,7 +97,7 @@ class Product {
   late final List<dynamic> productImages;
 
   Product.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
+    id = json['product_id'];
     name = json['name'];
     description = json['description'];
     category = Category.fromJson(json['category']);

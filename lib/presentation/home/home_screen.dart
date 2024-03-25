@@ -93,7 +93,6 @@ class HomeScreen extends StatelessWidget {
                                   )
                                 : ListView.builder(
                                     itemBuilder: (context, index) {
-                                      print("Product image --: ${"$baseUrl${controller.sponserd.value.results[0].product.product.productImages[0].productImage}"}");
                                       String productImageUrl = '';
                                       if (controller.allProducts.value.results!.isNotEmpty) {
                                         productImageUrl = controller.allProducts.value.results![index].product.productImages.isNotEmpty

@@ -38,9 +38,10 @@ class PlaceOrderScreen extends StatelessWidget {
   // TextEditingController _textEditingController = TextEditingController(text: "216 St Paul's Rd, London N1 2LL, UK, \nContact :  +44-784232 ");
   AppController controller = Get.put(AppController());
   TextEditingController _streetAddressConrller = TextEditingController();
-  TextEditingController _cityController = TextEditingController();
-  TextEditingController _postalcodeController = TextEditingController();
+  TextEditingController _regionController = TextEditingController();
+  TextEditingController _districtController = TextEditingController();
   TextEditingController _stateController = TextEditingController();
+  TextEditingController _postalcodeController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     // final int category = productDetails['category'];
@@ -149,7 +150,18 @@ class PlaceOrderScreen extends StatelessWidget {
                     onPressed: () async {
                       // TextEditingController _newAddressController = TextEditingController();
 
-                      Services().showAddressEditPopup(true, context, "", "ADD ADDRESS", "ADD", _streetAddressConrller, _cityController, _postalcodeController, _stateController);
+                      Services().showAddressEditPopup(
+                        true,
+                        context,
+                        "",
+                        "ADD ADDRESS",
+                        "ADD",
+                        _streetAddressConrller,
+                        _regionController,
+                        _districtController,
+                        _stateController,
+                        _postalcodeController,
+                      );
                     },
                     icon: Icons.add,
                     label: "Add address",

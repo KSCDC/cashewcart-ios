@@ -94,7 +94,7 @@ class ResultProduct {
   });
 
   factory ResultProduct.fromJson(Map<String, dynamic> json) => ResultProduct(
-        id: json["id"],
+        id: json["product_variant_id"],
         product: ProductProduct.fromJson(json["product"]),
         weightInGrams: json["weight_in_grams"],
         actualPrice: json["actual_price"],
@@ -136,7 +136,7 @@ class ProductProduct {
   });
 
   factory ProductProduct.fromJson(Map<String, dynamic> json) => ProductProduct(
-        id: json["id"],
+        id: json["product_id"],
         name: json["name"],
         description: json["description"],
         category: Category.fromJson(json["category"]),

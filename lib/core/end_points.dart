@@ -18,4 +18,8 @@ class ApiEndPoints {
   static String changePassword = "/api/user/changepassword/";
   static String sendVerificationMail = "/api/user/sentverification/";
   static String verifyMail = "/api/user/verify/";
+  static String placeOrder = "/api/order/placeorder/";
+  static String payment = "/api/payment/ordernumber/";
+  static String verifyPayment = "/api/payment/verify-payment/";
+  static String ordersList = "/api/order/listallorder/";
 }

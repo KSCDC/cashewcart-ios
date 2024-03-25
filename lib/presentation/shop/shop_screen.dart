@@ -99,6 +99,9 @@ class _ShopScreenState extends State<ShopScreen> {
                                         print("id for adding cart${controller.productDetails.value!.productVariants[value].id.toString()}");
                                         // controller.addProductToCart(controller.productDetails.value!.category.id.toString());
                                         controller.addProductToCart(context, controller.productDetails.value!.productVariants[value].id.toString());
+                                        double parsedPrice = double.tryParse(controller.productDetails.value!.productVariants[value].sellingPrice ?? '')?.toDouble() ?? 0.0;
+
+                                        grantTotalNotifier.value = grantTotalNotifier.value + parsedPrice;
                                       } else {
                                         Services().showCustomSnackBar(context, "This item is currently unavailable");
                                       }
@@ -131,13 +134,10 @@ class _ShopScreenState extends State<ShopScreen> {
                                       int stock = 1;
                                       if (stock > 0) {
                                         controller.getUserAddresses();
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                            builder: (context) => PlaceOrderScreen(
-                                              productDetails: controller.productDetails.value!,
-                                            ),
-                                          ),
-                                        );
+                                        await controller.addProductToCart(context, controller.productDetails.value!.productVariants[value].id.toString());
+                                        controller.getCartList();
+                                        
+                                        Get.to(() => CartScreen());
                                       } else {
                                         Services().showCustomSnackBar(context, "This item is currently unavailable");
                                       }

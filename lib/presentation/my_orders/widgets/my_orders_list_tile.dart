@@ -13,6 +13,7 @@ class MyOrdersListTile extends StatelessWidget {
     required this.rating,
     required this.count,
     required this.weight,
+    required this.paymentStatus,
   });
   final String imagePath;
   final String name;
@@ -20,14 +21,27 @@ class MyOrdersListTile extends StatelessWidget {
   final String rating;
   final String weight;
   final int count;
+  final String paymentStatus;
 
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
+    Color paymentStatusColor = Colors.black;
+    String status;
+    if (paymentStatus == "SUCCESS") {
+      paymentStatusColor = Colors.green;
+      status = "SUCCESS";
+    } else if (paymentStatus == "PAYMENT_NOT_STARTED") {
+      paymentStatusColor = Colors.red;
+      status = "NOT STARTED";
+    } else {
+      paymentStatusColor = Colors.red;
+      status = "FAILED";
+    }
     return Container(
       // width: screenSize.width * 0.95,
       width: double.infinity,
-      height: 250,
+      // height: 250,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
@@ -43,8 +57,8 @@ class MyOrdersListTile extends StatelessWidget {
                   width: 130,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage(imagePath),
-                      fit: BoxFit.cover,
+                      image: NetworkImage(imagePath),
+                      fit: BoxFit.fitHeight,
                     ),
                     borderRadius: BorderRadius.all(
                       Radius.circular(4),
@@ -120,6 +134,15 @@ class MyOrdersListTile extends StatelessWidget {
                 )
               ],
             ),
+            Row(
+              children: [
+                CustomTextWidget(text: "Payment status : "),
+                CustomTextWidget(
+                  text: status,
+                  fontColor: paymentStatusColor,
+                ),
+              ],
+            ),
             kHeight,
             Divider(),
             Row(
@@ -138,21 +161,22 @@ class MyOrdersListTile extends StatelessWidget {
               ],
             ),
             SizedBox(height: 5),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const CustomTextWidget(
-                  text: "Delivery Expected By :",
-                  fontSize: 12,
-                  fontweight: FontWeight.w500,
-                ),
-                CustomTextWidget(
-                  text: "18/01/2024",
-                  fontSize: 12,
-                  fontweight: FontWeight.w600,
-                )
-              ],
-            ),
+            if (paymentStatusColor == Colors.green)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const CustomTextWidget(
+                    text: "Delivery Expected By :",
+                    fontSize: 12,
+                    fontweight: FontWeight.w500,
+                  ),
+                  CustomTextWidget(
+                    text: "28/03/2024",
+                    fontSize: 12,
+                    fontweight: FontWeight.w600,
+                  )
+                ],
+              ),
           ],
         ),
       ),

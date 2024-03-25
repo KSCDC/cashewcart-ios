@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:internship_sample/controllers/app_controller.dart';
 import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/presentation/authentication/signin_screen.dart';
 import 'package:internship_sample/services/api_services.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
 class Services {
+  AppController controller = Get.put(AppController());
   void showCustomSnackBar(BuildContext context, String message) {
     final snackBar = SnackBar(
       content: Text(message),
@@ -16,8 +18,8 @@ class Services {
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
-  showAddressEditPopup(bool addNewAddress, BuildContext context, String id, String heading, String buttonLabel, TextEditingController streetAddressConrller, TextEditingController cityController,
-      TextEditingController postalcodeController, TextEditingController stateController) {
+  showAddressEditPopup(bool addNewAddress, BuildContext context, String id, String heading, String buttonLabel, TextEditingController streetAddressConrller, TextEditingController regionController,
+     TextEditingController districtController , TextEditingController stateController,TextEditingController postalcodeController) {
     return Alert(
         context: context,
         title: heading,
@@ -30,21 +32,27 @@ class Services {
               ),
             ),
             TextField(
-              controller: cityController,
+              controller: regionController,
               decoration: InputDecoration(
-                labelText: 'City',
+                labelText: 'Region',
               ),
             ),
             TextField(
-              controller: postalcodeController,
+              controller: districtController,
               decoration: InputDecoration(
-                labelText: 'Postal Code',
+                labelText: 'District',
               ),
             ),
             TextField(
               controller: stateController,
               decoration: InputDecoration(
                 labelText: 'State',
+              ),
+            ),
+            TextField(
+              controller: postalcodeController,
+              decoration: InputDecoration(
+                labelText: 'Postal Code',
               ),
             ),
           ],
@@ -54,12 +62,13 @@ class Services {
             onPressed: () async {
               final response;
               if (addNewAddress) {
-                response = ApiServices().createUserAddress(context, streetAddressConrller.text, cityController.text, stateController.text, postalcodeController.text, false);
+                response = ApiServices().createUserAddress(context, streetAddressConrller.text, regionController.text, districtController.text,stateController.text, postalcodeController.text, false);
               } else {
-                response = await ApiServices().editUserAddress(context, id, streetAddressConrller.text, cityController.text, stateController.text, postalcodeController.text, false);
+                response = await ApiServices().editUserAddress(context, id, streetAddressConrller.text, regionController.text, stateController.text, postalcodeController.text, false);
               }
               // Close the dialog
               if (response != null) {
+                controller.getUserAddresses();
                 Navigator.pop(context);
               }
             },

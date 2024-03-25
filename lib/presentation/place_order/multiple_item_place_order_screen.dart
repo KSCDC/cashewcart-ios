@@ -2,6 +2,8 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:internship_sample/controllers/app_controller.dart';
 import 'package:internship_sample/core/colors.dart';
@@ -10,6 +12,9 @@ import 'package:internship_sample/models/cart_product_model.dart';
 import 'package:internship_sample/presentation/cart/cart_screen.dart';
 import 'package:internship_sample/presentation/checkout/checkout_screen.dart';
 import 'package:internship_sample/presentation/cart/widgets/cart_product_list_tile.dart';
+import 'package:internship_sample/presentation/main_page/main_page_screen.dart';
+import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
+import 'package:internship_sample/presentation/my_orders/my_orders_screen.dart';
 import 'package:internship_sample/presentation/place_order/place_order_dropdown.dart';
 import 'package:internship_sample/presentation/place_order/widgets/address_section.dart';
 import 'package:internship_sample/presentation/place_order/widgets/place_order_item_widget.dart';
@@ -19,17 +24,80 @@ import 'package:internship_sample/presentation/widgets/custom_elevated_button.da
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 import 'package:internship_sample/services/api_services.dart';
 import 'package:internship_sample/services/services.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
-class MultipleItemPlaceOrderScreen extends StatelessWidget {
-  MultipleItemPlaceOrderScreen({super.key, required this.productList});
+class MultipleItemPlaceOrderScreen extends StatefulWidget {
+  MultipleItemPlaceOrderScreen({super.key, required this.productList, required this.grandTotal});
   final List<Result> productList;
+  final double grandTotal;
+  @override
+  State<MultipleItemPlaceOrderScreen> createState() => _MultipleItemPlaceOrderScreenState();
+}
+
+class _MultipleItemPlaceOrderScreenState extends State<MultipleItemPlaceOrderScreen> {
   AppController controller = Get.put(AppController());
+  late Razorpay _razorpay;
+
+  @override
+  void initState() {
+    super.initState();
+    // if (controller.addressList.isNotEmpty) {
+    //   controller.createOrder(controller.addressList[0].id.toString());
+    // }
+    // Initialize Razorpay instance
+    _razorpay = Razorpay();
+
+    // Define event listeners
+    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
+  }
+
+  void _handlePaymentSuccess(PaymentSuccessResponse response) {
+    print('Payment Successful: ${response.paymentId}');
+    Fluttertoast.showToast(msg: "Payment success");
+
+    log(response.data.toString());
+    String _signature = response.data!['razorpay_signature'];
+    String _orderId = response.data!['razorpay_order_id'];
+    String _paymentId = response.data!['razorpay_payment_id'];
+    ApiServices().verifyPayment(_signature, _orderId, _paymentId);
+    showSuccessPopup(context);
+    // Handle payment success
+  }
+
+  void _handlePaymentError(PaymentFailureResponse response) {
+    log('Payment Error: ${response.code} - ${response.message}');
+    showFailurePopup();
+    // Fluttertoast.showToast(msg: "Payment error: ${response.code} - ${response.message}");
+  }
+
+  void _handleExternalWallet(ExternalWalletResponse response) {
+    print('External Wallet: ${response.walletName}');
+    // Handle external wallet
+  }
+
+  @override
+  void dispose() {
+    // Clear event listeners and dispose Razorpay instance
+    _razorpay.clear();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    double grandTotal = getGrandTotal();
-    controller.getUserAddresses();
+    double totalProductPrice = 0;
+    double gTotal = 0;
+    double cgstTotal = 0;
+    double sgstTotal = 0;
     final screenSize = MediaQuery.of(context).size;
+    for (int i = 0; i < widget.productList.length; i++) {
+      cgstTotal += double.parse(widget.productList[i].cgstPrice);
+      sgstTotal += double.parse(widget.productList[i].sgstPrice);
+      totalProductPrice += double.parse(widget.productList[i].product.sellingPrice);
+    }
+    gTotal = totalProductPrice + cgstTotal + sgstTotal;
     return Scaffold(
       appBar: CustomAppBar(
         title: "Place Order",
@@ -49,16 +117,16 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
                       itemBuilder: (context, index) {
                         // final int selectedCategory = productList[index]['category'];
 
-                        final int count = productList[index].purchaseCount;
+                        final int count = widget.productList[index].purchaseCount;
 
                         return Column(
                           children: [
                             kHeight,
                             if (count != 0)
                               PlaceOrderItemWidget(
-                                imagePath: productList[index].product.product.productImages.isNotEmpty ? productList[index].product.product.productImages[0].productImage : '',
-                                productName: productList[index].product.product.name,
-                                productDescription: productList[index].product.product.description,
+                                imagePath: widget.productList[index].product.product.productImages.isNotEmpty ? widget.productList[index].product.product.productImages[0].productImage : '',
+                                productName: widget.productList[index].product.product.name,
+                                productDescription: widget.productList[index].product.product.description,
                                 count: count,
                               ),
                             Divider(
@@ -67,7 +135,7 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
                           ],
                         );
                       },
-                      itemCount: productList.length,
+                      itemCount: widget.productList.length,
                       physics: NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                     ),
@@ -87,10 +155,22 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
                   CustomTextIconButton(
                     onPressed: () async {
                       TextEditingController _streetAddressConrller = TextEditingController();
-                      TextEditingController _cityController = TextEditingController();
-                      TextEditingController _postalcodeController = TextEditingController();
+                      TextEditingController _regionController = TextEditingController();
+                      TextEditingController _districtController = TextEditingController();
                       TextEditingController _stateController = TextEditingController();
-                      Services().showAddressEditPopup(true, context, "", "ADD ADDRESS", "ADD", _streetAddressConrller, _cityController, _postalcodeController, _stateController);
+                      TextEditingController _postalcodeController = TextEditingController();
+                      Services().showAddressEditPopup(
+                        true,
+                        context,
+                        "",
+                        "ADD ADDRESS",
+                        "ADD",
+                        _streetAddressConrller,
+                        _regionController,
+                        _districtController,
+                        _stateController,
+                        _postalcodeController,
+                      );
                     },
                     icon: Icons.add,
                     label: "Add address",
@@ -127,8 +207,8 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
                     child: ListView.builder(
                       itemBuilder: (context, index) {
                         // final int selectedCategory = productList[index]['category'];
-                        final String price = productList[index].product.sellingPrice;
-                        final int count = productList[index].purchaseCount;
+                        final String price = widget.productList[index].product.sellingPrice;
+                        final int count = widget.productList[index].purchaseCount;
                         final double total = double.parse(price) * count;
                         // grantTotalNotifier.value = grantTotalNotifier.value + total;
                         return Column(
@@ -139,9 +219,9 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
                                 // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Container(
-                                    width: screenSize.width * 0.6,
+                                    width: screenSize.width * 0.56,
                                     child: CustomTextWidget(
-                                      text: productList[index].product.product.name,
+                                      text: widget.productList[index].product.product.name,
                                       fontSize: 16,
                                       fontweight: FontWeight.w400,
                                     ),
@@ -169,7 +249,7 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
                           ],
                         );
                       },
-                      itemCount: productList.length,
+                      itemCount: widget.productList.length,
                       physics: NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                     ),
@@ -183,11 +263,15 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
                         fontSize: 16,
                         fontweight: FontWeight.w400,
                       ),
-                      CustomTextWidget(
-                        text: "₹ ${grandTotal.toStringAsFixed(2)}",
-                        fontSize: 16,
-                        fontweight: FontWeight.w600,
-                      )
+                      ValueListenableBuilder(
+                          valueListenable: grantTotalNotifier,
+                          builder: (context, total, _) {
+                            return CustomTextWidget(
+                              text: "₹ ${total.toStringAsFixed(2)}",
+                              fontSize: 16,
+                              fontweight: FontWeight.w600,
+                            );
+                          })
                     ],
                   ),
                   kHeight,
@@ -195,21 +279,18 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       CustomTextWidget(
-                        text: "Convenience",
+                        text: "Total CGST",
                         fontSize: 16,
                         fontweight: FontWeight.w400,
-                      ),
-                      SizedBox(width: 20),
-                      CustomTextWidget(
-                        text: "Know More",
-                        fontColor: kMainThemeColor,
-                        fontweight: FontWeight.w600,
                       ),
                       Spacer(),
-                      CustomTextWidget(
-                        text: "Apply Coupon",
-                        fontColor: kMainThemeColor,
-                        fontweight: FontWeight.w600,
+                      Column(
+                        children: [
+                          CustomTextWidget(
+                            text: "₹ ${cgstTotal.toStringAsFixed(2)}",
+                            fontweight: FontWeight.w600,
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -218,13 +299,12 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       CustomTextWidget(
-                        text: "Delivery Fee",
+                        text: "Total SGST",
                         fontSize: 16,
                         fontweight: FontWeight.w400,
                       ),
                       CustomTextWidget(
-                        text: "Free",
-                        fontColor: kMainThemeColor,
+                        text: "₹ ${sgstTotal.toStringAsFixed(2)}",
                         fontweight: FontWeight.w600,
                       ),
                     ],
@@ -241,7 +321,7 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
                         fontweight: FontWeight.w600,
                       ),
                       CustomTextWidget(
-                        text: "₹ ${grandTotal.toStringAsFixed(2)}",
+                        text: "₹ ${gTotal.toStringAsFixed(2)}",
                         fontSize: 16,
                         fontweight: FontWeight.w600,
                       )
@@ -279,7 +359,7 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
           children: [
             Center(
               child: CustomTextWidget(
-                text: "₹ ${grandTotal.toStringAsFixed(2)}",
+                text: "₹ ${gTotal.toStringAsFixed(2)}",
                 fontSize: 16,
                 fontweight: FontWeight.w600,
               ),
@@ -288,22 +368,11 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
               height: 55,
               width: 250,
               child: GestureDetector(
-                onTap: () {
+                onTap: () async {
                   if (controller.addressList.isEmpty) {
                     Services().showCustomSnackBar(context, "No address found. Add an address to continue");
                   } else {
-                    List orderingProductsList = [];
-                    for (var product in productList) {
-                      // final product = item['product'];
-                      orderingProductsList.add(product);
-                    }
-                    Get.to(
-                      () => CheckoutScreen(
-                        price: grandTotal,
-                        shippingCost: 30,
-                        orderingProductsList: productList,
-                      ),
-                    );
+                    proceedToPayment();
                   }
                 },
                 child: CustomElevatedButton(label: "Proceed to Payment"),
@@ -315,18 +384,100 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
     );
   }
 
-  getGrandTotal() {
-    // grantTotalNotifier.value = 0;
-    log("grand total fn");
-    for (int i = 0; i < cartProductsList.length; i++) {
-      final int selectedCategory = cartProductsList[i]['category'];
-      final String price = cartProductsList[i]['product']['category'][selectedCategory]['offerPrice'];
-      final int count = cartProductsList[i]['count'];
-      final double total = double.parse(price) * count;
-      print("prices are ${price} * ${count}== ${total}");
-      grantTotalNotifier.value = grantTotalNotifier.value + total;
+  proceedToPayment() async {
+    List orderingProductsList = [];
+    print("List length = ${widget.productList}");
+    for (var product in widget.productList) {
+      print("Working loop");
+      // final product = item['product'];
+      orderingProductsList.add(product);
     }
-    log("GTOT:${grantTotalNotifier.value}");
-    return grantTotalNotifier.value;
+    print(controller.addressList[selectedRadioNotifier.value].id);
+    final response = await ApiServices().placeOrder(controller.addressList[selectedRadioNotifier.value].id.toString());
+    if (response != null) {
+      String _orderId = response.data['order_id'].toString();
+      print(_orderId);
+      final newResponse = await ApiServices().payment(_orderId);
+      String paymentOrderId = newResponse.data['response']['id'].toString();
+      print("Order id = $paymentOrderId");
+      final options = {
+        'key': 'rzp_test_0Bm1lMEg56tINT',
+        'amount': newResponse.data['response']['amount'].toString(),
+        'name': 'KSCDC',
+        'order_id': newResponse.data['response']['id'].toString(),
+        'description': newResponse.data['response']['items'].toString(),
+        'prefill': {
+          'contact': '7858985698',
+          'email': newResponse.data['response']['notes']['email'],
+        }
+      };
+
+      try {
+        _razorpay.open(options);
+      } catch (e) {
+        print('Error: $e');
+      }
+    }
+    // Get.to(
+    //   () => CheckoutScreen(
+    //     price: grandTotal,
+    //     shippingCost: 30,
+    //     orderingProductsList: productList,
+    //   ),
+    // );
+  }
+
+  showSuccessPopup(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        final screenSize = MediaQuery.of(context).size;
+        return Dialog(
+          insetAnimationDuration: Duration(milliseconds: 1000),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(6),
+            ),
+            width: screenSize.width * 0.9,
+            height: screenSize.width * 0.65,
+            child: Column(
+              children: [
+                SvgPicture.asset("lib/core/assets/images/other/payment_success.svg"),
+                CustomTextWidget(
+                  text: "Payment done successfully.",
+                  fontweight: FontWeight.w600,
+                )
+              ],
+            ),
+          ),
+        );
+      },
+    ).then((value) {
+      bottomNavbarIndexNotifier.value = 6;
+      Get.offAll(() => MainPageScreen());
+    });
+  }
+
+  showFailurePopup() {
+    Alert(
+      context: context,
+      type: AlertType.error,
+      title: "PAYMENT FAILED",
+      desc: "Your payment is failed. You can retry payment from My Orders section.",
+      buttons: [
+        DialogButton(
+          child: Text(
+            "Ok",
+            style: TextStyle(color: Colors.white, fontSize: 18),
+          ),
+          onPressed: () => Navigator.pop(context),
+          color: Color.fromRGBO(0, 179, 134, 1.0),
+        ),
+      ],
+    ).show().then((value) {
+      bottomNavbarIndexNotifier.value = 6;
+      Get.offAll(() => MainPageScreen());
+    });
   }
 }

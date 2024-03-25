@@ -103,6 +103,8 @@ class AccountScreen extends StatelessWidget {
                 onPressed: () async {
                   SharedPreferences sharedPref = await SharedPreferences.getInstance();
                   await sharedPref.clear();
+                  cartCountNotifier.value = 0;
+                  bottomNavbarIndexNotifier.value = 0;
                   Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(builder: (context) => SignInScreen()),
                     (route) => false, // Remove all previous routes

@@ -159,7 +159,10 @@ class CategoriesScreen extends StatelessWidget {
                               );
                             } else {
                               return Center(
-                                child: CustomTextWidget(text: "Plain cashews products not available right now."),
+                                child: CustomTextWidget(
+                                  text: "Plain cashews products not available right now.",
+                                  textAlign: TextAlign.center,
+                                ),
                               );
                             }
                           },
@@ -258,7 +261,10 @@ class CategoriesScreen extends StatelessWidget {
                               );
                             } else {
                               return Center(
-                                child: CustomTextWidget(text: "Roasted and Salted Cashews products not available right now."),
+                                child: CustomTextWidget(
+                                  text: "Roasted and Salted Cashews products not available right now.",
+                                  textAlign: TextAlign.center,
+                                ),
                               );
                             }
                           },
@@ -357,7 +363,10 @@ class CategoriesScreen extends StatelessWidget {
                               );
                             } else {
                               return Center(
-                                child: CustomTextWidget(text: "Value Added products not available right now."),
+                                child: CustomTextWidget(
+                                  text: "Value Added products not available right now.",
+                                  textAlign: TextAlign.center,
+                                ),
                               );
                             }
                           },

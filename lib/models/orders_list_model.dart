@@ -1,27 +1,27 @@
 // To parse this JSON data, do
 //
-//     final trendingProductModel = trendingProductModelFromJson(jsonString);
+//     final ordersListModel = ordersListModelFromJson(jsonString);
 
 import 'dart:convert';
 
-TrendingProductModel trendingProductModelFromJson(String str) => TrendingProductModel.fromJson(json.decode(str));
+OrdersListModel ordersListModelFromJson(String str) => OrdersListModel.fromJson(json.decode(str));
 
-String trendingProductModelToJson(TrendingProductModel data) => json.encode(data.toJson());
+String ordersListModelToJson(OrdersListModel data) => json.encode(data.toJson());
 
-class TrendingProductModel {
+class OrdersListModel {
   int count;
   dynamic next;
   dynamic previous;
   List<Result> results;
 
-  TrendingProductModel({
+  OrdersListModel({
     required this.count,
     required this.next,
     required this.previous,
     required this.results,
   });
 
-  factory TrendingProductModel.fromJson(Map<String, dynamic> json) => TrendingProductModel(
+  factory OrdersListModel.fromJson(Map<String, dynamic> json) => OrdersListModel(
         count: json["count"],
         next: json["next"],
         previous: json["previous"],
@@ -37,35 +37,111 @@ class TrendingProductModel {
 }
 
 class Result {
-  int id;
-  ResultProduct product;
+  int orderId;
+  int user;
+  String streetAddress;
+  String region;
+  String district;
+  String state;
+  String postalCode;
+  String paymentMethod;
+  String paymentStatus;
   DateTime createdAt;
-  DateTime updatedAt;
+  String subTotalAmount;
+  String deliveryAdditionalAmount;
+  String totalAmount;
+  String status;
+  List<Item> items;
 
   Result({
-    required this.id,
-    required this.product,
+    required this.orderId,
+    required this.user,
+    required this.streetAddress,
+    required this.region,
+    required this.district,
+    required this.state,
+    required this.postalCode,
+    required this.paymentMethod,
+    required this.paymentStatus,
     required this.createdAt,
-    required this.updatedAt,
+    required this.subTotalAmount,
+    required this.deliveryAdditionalAmount,
+    required this.totalAmount,
+    required this.status,
+    required this.items,
   });
 
   factory Result.fromJson(Map<String, dynamic> json) => Result(
-        id: json["id"],
-        product: ResultProduct.fromJson(json["product"]),
+        orderId: json["order_id"],
+        user: json["user"],
+        streetAddress: json["street_address"],
+        region: json["region"],
+        district: json["district"],
+        state: json["state"],
+        postalCode: json["postal_code"],
+        paymentMethod: json["payment_method"],
+        paymentStatus: json["payment_status"],
         createdAt: DateTime.parse(json["created_at"]),
-        updatedAt: DateTime.parse(json["updated_at"]),
+        subTotalAmount: json["sub_total_amount"],
+        deliveryAdditionalAmount: json["delivery_additional_amount"],
+        totalAmount: json["total_amount"],
+        status: json["status"],
+        items: List<Item>.from(json["items"].map((x) => Item.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "product": product.toJson(),
+        "order_id": orderId,
+        "user": user,
+        "street_address": streetAddress,
+        "region": region,
+        "district": district,
+        "state": state,
+        "postal_code": postalCode,
+        "payment_method": paymentMethod,
+        "payment_status": paymentStatus,
         "created_at": createdAt.toIso8601String(),
-        "updated_at": updatedAt.toIso8601String(),
+        "sub_total_amount": subTotalAmount,
+        "delivery_additional_amount": deliveryAdditionalAmount,
+        "total_amount": totalAmount,
+        "status": status,
+        "items": List<dynamic>.from(items.map((x) => x.toJson())),
       };
 }
 
-class ResultProduct {
-  int id;
+class Item {
+  ItemProduct product;
+  int purchaseCount;
+  String cgstPrice;
+  String sgstPrice;
+  String total;
+
+  Item({
+    required this.product,
+    required this.purchaseCount,
+    required this.cgstPrice,
+    required this.sgstPrice,
+    required this.total,
+  });
+
+  factory Item.fromJson(Map<String, dynamic> json) => Item(
+        product: ItemProduct.fromJson(json["product"]),
+        purchaseCount: json["purchase_count"],
+        cgstPrice: json["cgst_price"],
+        sgstPrice: json["sgst_price"],
+        total: json["total"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "product": product.toJson(),
+        "purchase_count": purchaseCount,
+        "cgst_price": cgstPrice,
+        "sgst_price": sgstPrice,
+        "total": total,
+      };
+}
+
+class ItemProduct {
+  int productVariantId;
   ProductProduct product;
   String weightInGrams;
   String actualPrice;
@@ -76,8 +152,8 @@ class ResultProduct {
   int stockQty;
   double discountPercentage;
 
-  ResultProduct({
-    required this.id,
+  ItemProduct({
+    required this.productVariantId,
     required this.product,
     required this.weightInGrams,
     required this.actualPrice,
@@ -89,8 +165,8 @@ class ResultProduct {
     required this.discountPercentage,
   });
 
-  factory ResultProduct.fromJson(Map<String, dynamic> json) => ResultProduct(
-        id: json["product_variant_id"],
+  factory ItemProduct.fromJson(Map<String, dynamic> json) => ItemProduct(
+        productVariantId: json["product_variant_id"],
         product: ProductProduct.fromJson(json["product"]),
         weightInGrams: json["weight_in_grams"],
         actualPrice: json["actual_price"],
@@ -103,7 +179,7 @@ class ResultProduct {
       );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
+        "product_variant_id": productVariantId,
         "product": product.toJson(),
         "weight_in_grams": weightInGrams,
         "actual_price": actualPrice,
@@ -117,14 +193,14 @@ class ResultProduct {
 }
 
 class ProductProduct {
-  int id;
+  int productId;
   String name;
   String description;
   Category category;
   List<ProductImage> productImages;
 
   ProductProduct({
-    required this.id,
+    required this.productId,
     required this.name,
     required this.description,
     required this.category,
@@ -132,7 +208,7 @@ class ProductProduct {
   });
 
   factory ProductProduct.fromJson(Map<String, dynamic> json) => ProductProduct(
-        id: json["product_id"],
+        productId: json["product_id"],
         name: json["name"],
         description: json["description"],
         category: Category.fromJson(json["category"]),
@@ -140,7 +216,7 @@ class ProductProduct {
       );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
+        "product_id": productId,
         "name": name,
         "description": description,
         "category": category.toJson(),
@@ -151,7 +227,7 @@ class ProductProduct {
 class Category {
   int id;
   String name;
-  String? parentName;
+  String parentName;
   List<dynamic> children;
 
   Category({

@@ -87,10 +87,10 @@ class ProfileScreen extends StatelessWidget {
                 _accountHolderNameController.text = controller.userName;
                 _passwordController.text = "**********";
                 if (controller.addressList.value.isNotEmpty) {
-                  _pinCodeController.text = controller.addressList.value[0].postalCode;
-                  _addressController.text = controller.addressList.value[0].streetAddress;
-                  _cityController.text = controller.addressList.value[0].city;
-                  _countryController.text = controller.addressList.value[0].country;
+                  _pinCodeController.text = controller.addressList[0].postalCode;
+                  _addressController.text = controller.addressList[0].streetAddress;
+                  _cityController.text = controller.addressList[0].region;
+                  // _countryController.text = controller.addressList.value[0].country;
                 }
 
                 return controller.isLoading.value

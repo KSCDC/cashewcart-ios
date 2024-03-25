@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/core/constants.dart';
+import 'package:internship_sample/models/orders_list_model.dart';
 import 'package:internship_sample/presentation/checkout/checkout_screen.dart';
 import 'package:internship_sample/presentation/cart/widgets/cart_product_list_tile.dart';
 import 'package:internship_sample/presentation/order_tracking/widgets/custom_timeline_tile.dart';
@@ -9,23 +10,24 @@ import 'package:internship_sample/presentation/place_order/place_order_dropdown.
 import 'package:internship_sample/presentation/widgets/custom_appbar.dart';
 import 'package:internship_sample/presentation/widgets/custom_elevated_button.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
+import 'package:intl/intl.dart';
 
 class OrderTrackingScreen extends StatelessWidget {
   const OrderTrackingScreen({
     super.key,
-    required this.imagePath,
-    required this.productName,
-    required this.productDescription,
-    required this.price,
+    required this.productDetails,
   });
-  final String imagePath;
-  final String productName;
-  final String productDescription;
-  final String price;
+  final Result productDetails;
 
   @override
   Widget build(BuildContext context) {
+    final String imagePath = "https://backend.cashewcart.com:8443${productDetails.items[0].product.product.productImages[0].productImage}";
+    final String deliveryFee = productDetails.deliveryAdditionalAmount;
+    final String cgst = productDetails.items[0].cgstPrice;
+    final String sgst = productDetails.items[0].sgstPrice;
+    final DateTime createdAt = productDetails.createdAt;
     final screenSize = MediaQuery.of(context).size;
+    String formattedDateTime = DateFormat("dd/MM/yyyy - hh a").format(createdAt.toLocal());
     return Scaffold(
       appBar: CustomAppBar(
         title: "Product Details",
@@ -50,8 +52,8 @@ class OrderTrackingScreen extends StatelessWidget {
                           width: screenSize.width * 0.25,
                           decoration: BoxDecoration(
                             image: DecorationImage(
-                              image: AssetImage(imagePath),
-                              fit: BoxFit.fitWidth,
+                              image: NetworkImage(imagePath),
+                              fit: BoxFit.fitHeight,
                             ),
                             borderRadius: BorderRadius.all(
                               Radius.circular(4),
@@ -67,7 +69,7 @@ class OrderTrackingScreen extends StatelessWidget {
                             Container(
                               width: 250,
                               child: CustomTextWidget(
-                                text: productName,
+                                text: productDetails.items[0].product.product.name,
                                 fontweight: FontWeight.w600,
                               ),
                             ),
@@ -75,7 +77,7 @@ class OrderTrackingScreen extends StatelessWidget {
                             Container(
                               width: screenSize.width * 0.6,
                               child: CustomTextWidget(
-                                text: productDescription,
+                                text: productDetails.items[0].product.product.description,
                                 fontSize: 13,
                                 fontweight: FontWeight.w400,
                               ),
@@ -155,7 +157,7 @@ class OrderTrackingScreen extends StatelessWidget {
                         fontweight: FontWeight.w400,
                       ),
                       CustomTextWidget(
-                        text: "₹ $price",
+                        text: "₹ ${productDetails.items[0].product.sellingPrice}",
                         fontSize: 16,
                         fontweight: FontWeight.w600,
                       )
@@ -167,13 +169,42 @@ class OrderTrackingScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       CustomTextWidget(
+                        text: "CGST",
+                        fontSize: 16,
+                        fontweight: FontWeight.w400,
+                      ),
+                      CustomTextWidget(
+                        text: cgst,
+                        fontweight: FontWeight.w600,
+                      ),
+                    ],
+                  ),
+                  kHeight,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      CustomTextWidget(
+                        text: "SGST",
+                        fontSize: 16,
+                        fontweight: FontWeight.w400,
+                      ),
+                      CustomTextWidget(
+                        text: sgst,
+                        fontweight: FontWeight.w600,
+                      ),
+                    ],
+                  ),
+                  kHeight,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      CustomTextWidget(
                         text: "Delivery Fee",
                         fontSize: 16,
                         fontweight: FontWeight.w400,
                       ),
                       CustomTextWidget(
-                        text: "Free",
-                        fontColor: kMainThemeColor,
+                        text: deliveryFee,
                         fontweight: FontWeight.w600,
                       ),
                     ],
@@ -190,7 +221,7 @@ class OrderTrackingScreen extends StatelessWidget {
                         fontweight: FontWeight.w600,
                       ),
                       CustomTextWidget(
-                        text: "₹ $price",
+                        text: "₹ ${productDetails.items[0].total}",
                         fontSize: 16,
                         fontweight: FontWeight.w600,
                       )
@@ -201,7 +232,7 @@ class OrderTrackingScreen extends StatelessWidget {
                     isFirst: true,
                     isCompleted: true,
                     cardTitle: "Order Placed",
-                    dateAndTime: "Completed on 15/01/2024 - 10AM",
+                    dateAndTime: "Completed on $formattedDateTime",
                   ),
                   CustomTimelineTile(
                     isCompleted: true,

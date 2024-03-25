@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/models/cart_product_model.dart';
+import 'package:internship_sample/models/orders_list_model.dart' as ordersModel;
 import 'package:internship_sample/models/product_details_model.dart';
 import 'package:internship_sample/models/product_model.dart';
 import 'package:internship_sample/models/product_reviews_model.dart';
@@ -78,6 +79,7 @@ class AppController extends GetxController {
   Rx<trendingModel.TrendingProductModel> productDisplayList2 = trendingModel.TrendingProductModel(count: 0, next: null, previous: null, results: []).obs;
   Rx<CartProductModel> cartProducts = CartProductModel(count: 0, next: null, previous: null, results: []).obs;
   Rx<ProductModel> searchResults = ProductModel(count: 0, next: null, previous: null, results: []).obs;
+  Rx<ordersModel.OrdersListModel> ordersList = ordersModel.OrdersListModel(count: 0, next: null, previous: null, results: []).obs;
   var sortedSearchList;
   RxBool haveSearchResult = false.obs;
 
@@ -109,6 +111,7 @@ class AppController extends GetxController {
   int roastedAndSaltedPageNo = 1;
   int valueAddedPageNo = 1;
   int searchResultPageNo = 1;
+  int ordersListPageNo = 1;
 
   registerNewUser(BuildContext context, String token, String name, String phoneNumber, String password) async {
     isLoading.value = true;
@@ -622,5 +625,42 @@ class AppController extends GetxController {
     }
 
     isLoadingAddress.value = false;
+  }
+
+  createOrder(String addressId) async {
+    final response = await ApiServices().placeOrder(addressId);
+    print(response.data.toString());
+  }
+
+  getOrdersList() async {
+    isLoading.value = true;
+    isError.value = true;
+    final response = await ApiServices().getOrdersList(ordersListPageNo.toString());
+    if (response != null) {
+      final data = ordersModel.OrdersListModel.fromJson(response.data);
+
+      print("results ${response.data['results']}");
+      List<ordersModel.Result>? results = data.results;
+      List<ordersModel.Result> combinedResults = [];
+      if (results != null) {
+        ordersList.value.results = [];
+        combinedResults.addAll(ordersList.value.results ?? []);
+        combinedResults.addAll(results);
+        ordersList.value.results = combinedResults;
+        ordersList.update((val) {
+          val!.count = data.count;
+          val.next = response.data['next'];
+          val.previous = response.data['previous'];
+        });
+      }
+
+      log("Orders count:${allProducts.value.count.toString()}");
+
+      log("Orders next:${response.data['next'].toString()}");
+    } else {
+      isError.value = true;
+    }
+
+    isLoading.value = false;
   }
 }

@@ -21,9 +21,11 @@ class AddressSection extends StatelessWidget {
   final Size screenSize;
   AppController controller = Get.put(AppController());
   TextEditingController _streetAddressConrller = TextEditingController();
-  TextEditingController _cityController = TextEditingController();
-  TextEditingController _postalcodeController = TextEditingController();
+  TextEditingController _regionController = TextEditingController();
+  TextEditingController _districtController = TextEditingController();
   TextEditingController _stateController = TextEditingController();
+  TextEditingController _postalcodeController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -43,131 +45,119 @@ class AddressSection extends StatelessWidget {
                 text: "Delivery Address",
                 fontweight: FontWeight.w600,
               ),
-              // SizedBox(width: 20),
-              // Spacer(),
-              // ValueListenableBuilder(
-              //     valueListenable: isAddressEditableNotifier,
-              //     builder: (context, value, _) {
-              //       return value
-              //           ? GestureDetector(
-              //               onTap: () {
-              //                 isAddressEditableNotifier.value = false;
-              //               },
-              //               child: Icon(
-              //                 Icons.done_rounded,
-              //                 color: kMainThemeColor,
-              //               ),
-              //             )
-              //           : GestureDetector(
-              //               onTap: () {
-              //                 isAddressEditableNotifier.value = true;
-              //               },
-              //               child: Icon(
-              //                 Icons.edit_note_rounded,
-              //                 color: kMainThemeColor,
-              //               ),
-              //             );
-              //     }),
             ],
           ),
         ),
-        Column(
-          children: List.generate(
-            controller.addressList.length,
-            (index) {
-              final currentAddress = controller.addressList[index];
+        Obx(() {
+          return Column(
+            children: List.generate(
+              controller.addressList.length,
+              (index) {
+                final currentAddress = controller.addressList[index];
 
-              return Padding(
-                padding: const EdgeInsets.only(top: 5),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      // height: screenSize.width * 0.32,
-                      padding: EdgeInsets.all(10),
-                      width: screenSize.width * 0.8,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(height: 5),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                CustomTextWidget(
-                                  text: "Address :${index + 1}",
-                                  fontSize: 12,
-                                  fontweight: FontWeight.w600,
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    final adderssId = controller.addressList[index].id.toString();
-                                    ApiServices().deleteUserAddress(adderssId);
-                                    // ApiServices().getUserAddresses();
-                                    controller.getUserAddresses();
-                                  },
-                                  child: Icon(
-                                    Icons.delete,
-                                    color: Colors.red,
+                return Padding(
+                  padding: const EdgeInsets.only(top: 5),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        // height: screenSize.width * 0.32,
+                        padding: EdgeInsets.all(10),
+                        width: screenSize.width * 0.8,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: 5),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  CustomTextWidget(
+                                    text: "Address :${index + 1}",
+                                    fontSize: 12,
+                                    fontweight: FontWeight.w600,
                                   ),
-                                )
-                              ],
-                            ),
-                            kHeight,
-                            GestureDetector(
-                              onTap: () {
-                                _streetAddressConrller.text = currentAddress.streetAddress;
-                                _cityController.text = currentAddress.city;
-                                _postalcodeController.text = currentAddress.postalCode;
-                                _stateController.text = currentAddress.state;
-                                Services().showAddressEditPopup(
-                                    false, context, currentAddress.id.toString(), "EDIT ADDRESS", "EDIT", _streetAddressConrller, _cityController, _postalcodeController, _stateController);
-                              },
-                              child: CustomTextWidget(
-                                text: "${currentAddress.streetAddress}, ${currentAddress.city}, ${currentAddress.postalCode}, ${currentAddress.state}, ${currentAddress.country}",
+                                  GestureDetector(
+                                    onTap: () {
+                                      final adderssId = controller.addressList[index].id.toString();
+                                      ApiServices().deleteUserAddress(adderssId);
+                                      // ApiServices().getUserAddresses();
+                                      controller.getUserAddresses();
+                                    },
+                                    child: Icon(
+                                      Icons.delete,
+                                      color: Colors.red,
+                                    ),
+                                  )
+                                ],
                               ),
-                            ),
-                            kHeight,
-                          ],
+                              kHeight,
+                              GestureDetector(
+                                onTap: () {
+                                  _streetAddressConrller.text = currentAddress.streetAddress;
+                                  _regionController.text = currentAddress.region;
+                                  _districtController.text = currentAddress.district;
+                                  _stateController.text = currentAddress.state;
+                                  _postalcodeController.text = currentAddress.postalCode;
+                                  Services().showAddressEditPopup(
+                                    false,
+                                    context,
+                                    currentAddress.id.toString(),
+                                    "EDIT ADDRESS",
+                                    "EDIT",
+                                    _streetAddressConrller,
+                                    _regionController,
+                                    _districtController,
+                                    _stateController,
+                                    _postalcodeController,
+                                  );
+                                },
+                                child: CustomTextWidget(
+                                  text: "${currentAddress.streetAddress}, ${currentAddress.region}, ${currentAddress.district}, ${currentAddress.state}, ${currentAddress.postalCode}",
+                                ),
+                              ),
+                              kHeight,
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    // Checkbox
-                    ValueListenableBuilder(
-                      valueListenable: selectedRadioNotifier,
-                      builder: (context, checkboxValue, _) {
-                        return Container(
-                          height: 20,
-                          width: 20,
-                          child: Radio(
-                            value: index,
-                            groupValue: checkboxValue,
-                            onChanged: (int? newValue) {
-                              if (newValue != null) {
-                                checkboxValue = newValue;
+                      // Checkbox
+                      ValueListenableBuilder(
+                        valueListenable: selectedRadioNotifier,
+                        builder: (context, checkboxValue, _) {
+                          return Container(
+                            height: 20,
+                            width: 20,
+                            child: Radio(
+                              value: index,
+                              groupValue: checkboxValue,
+                              onChanged: (int? newValue) {
+                                if (newValue != null) {
+                                  checkboxValue = newValue;
 
-                                selectedRadioNotifier.value = newValue;
-                              } else {
-                                checkboxValue = -1;
-                                selectedRadioNotifier.value = 0;
-                                // isAddressEditableNotifier.value = false;
-                              }
-                            },
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-        ),
+                                  selectedRadioNotifier.value = newValue;
+                                } else {
+                                  checkboxValue = -1;
+                                  selectedRadioNotifier.value = 0;
+                                  // isAddressEditableNotifier.value = false;
+                                }
+                              },
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          );
+        }),
       ],
     );
   }

@@ -26,7 +26,7 @@ class ProductDetailsModel {
   });
 
   factory ProductDetailsModel.fromJson(Map<String, dynamic> json) => ProductDetailsModel(
-        id: json["id"],
+        id: json["product_id"],
         name: json["name"],
         description: json["description"],
         category: Category.fromJson(json["category"]),
@@ -122,7 +122,7 @@ class ProductVariant {
   });
 
   factory ProductVariant.fromJson(Map<String, dynamic> json) => ProductVariant(
-        id: json["id"],
+        id: json["product_variant_id"],
         weightInGrams: json["weight_in_grams"],
         actualPrice: json["actual_price"],
         sellingPrice: json["selling_price"],

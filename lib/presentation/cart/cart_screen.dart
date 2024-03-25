@@ -12,6 +12,7 @@ import 'package:internship_sample/presentation/place_order/multiple_item_place_o
 import 'package:internship_sample/presentation/widgets/custom_appbar.dart';
 import 'package:internship_sample/presentation/widgets/custom_elevated_button.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
+import 'package:internship_sample/services/api_services.dart';
 
 List cartProductsList = [];
 ValueNotifier<double> grantTotalNotifier = ValueNotifier(0);
@@ -22,7 +23,7 @@ class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     grantTotalNotifier.value = 0;
-    getGrandTotal();
+
     final screenSize = MediaQuery.of(context).size;
     // grantTotalNotifier.value = 0;
 
@@ -60,6 +61,7 @@ class CartScreen extends StatelessWidget {
               ),
               kHeight,
               Obx(() {
+                getGrandTotal();
                 print("cart count ${controller.cartProducts.value.count}");
                 if (controller.isLoadingCart.value) {
                   return Center(
@@ -118,7 +120,7 @@ class CartScreen extends StatelessWidget {
                           ),
                           kHeight,
                           GestureDetector(
-                            onTap: () {
+                            onTap: () async {
                               if (grantTotalNotifier.value <= 500) {
                                 const snackBar = SnackBar(
                                   content: Text('Minimum order amount is Rs 500 and above'),
@@ -128,8 +130,12 @@ class CartScreen extends StatelessWidget {
                                 );
                                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
                               } else {
+                                await controller.getUserAddresses();
                                 Get.to(
-                                  () => MultipleItemPlaceOrderScreen(productList: controller.cartProducts.value.results),
+                                  () => MultipleItemPlaceOrderScreen(
+                                    productList: controller.cartProducts.value.results,
+                                    grandTotal: grantTotalNotifier.value,
+                                  ),
                                 );
                               }
                             },
@@ -151,7 +157,7 @@ class CartScreen extends StatelessWidget {
 
   getGrandTotal() {
     // controller.getCartList();
-    grantTotalNotifier.value = 0;
+    double grandTotal = 0;
     print("grand total fn");
     print(controller.cartProducts.value);
     for (int i = 0; i < controller.cartProducts.value.count; i++) {
@@ -160,9 +166,11 @@ class CartScreen extends StatelessWidget {
       final int count = controller.cartProducts.value.results[i].purchaseCount;
       final double total = double.parse(price) * count;
       print("prices are ${price} * ${count}== ${total}");
-      grantTotalNotifier.value = grantTotalNotifier.value + total;
-      log(grantTotalNotifier.value.toString());
+      grandTotal += total;
+      // grantTotalNotifier.value = grantTotalNotifier.value + total;
+      // log(grantTotalNotifier.value.toString());
     }
-    // return grandTotal;
+    grantTotalNotifier.value = grandTotal;
+    return grandTotal;
   }
 }

@@ -152,7 +152,7 @@ class ApiServices {
         return null;
       }
     } on DioException catch (e) {
-      print("Error :$e");
+      print("Error :${e.response!.data}");
       if (e.type == DioExceptionType.connectionTimeout) {
         print("Connection timeout");
         Services().showCustomSnackBar(context, "Connection timeout. Please check your internet connection");
@@ -185,7 +185,7 @@ class ApiServices {
         return null;
       }
     } on DioException catch (e) {
-      print("Error :$e");
+      print("Error :${e.response!.data}");
       if (e.type == DioExceptionType.connectionTimeout) {
         print("Connection timeout");
       }
@@ -881,14 +881,16 @@ class ApiServices {
     }
   }
 
-  createUserAddress(BuildContext context, String streetAddress, String city, String state, String postalCode, bool isDefaultAddress) async {
+  createUserAddress(BuildContext context, String streetAddress, String region, String district, String state, String postalCode, bool isDefaultAddress) async {
     final Map<String, dynamic> formData = {
       "street_address": streetAddress,
-      "city": city,
+      "region": region,
+      "district": district,
       "state": state,
       "postal_code": postalCode,
       "is_default": isDefaultAddress,
     };
+    print("\n$streetAddress\n$region\n$district\n$state\n$state\n$postalCode\n");
 
     try {
       final dio = Dio();
@@ -918,12 +920,12 @@ class ApiServices {
       }
     } on DioException catch (e) {
       // final errorData = e.response!.data['errors'];
-      print("Error :$e");
+      print("Error :${e.response!.data}");
       if (e.response!.statusCode == 401) {
         print("refresh token");
         final refreshedToken = await refreshAccessToken();
         if (refreshedToken != null) {
-          createUserAddress(context, streetAddress, city, state, postalCode, isDefaultAddress);
+          createUserAddress(context, streetAddress, region, district, state, postalCode, isDefaultAddress);
         }
       }
       if (e.response!.statusCode == 400) {
@@ -975,7 +977,8 @@ class ApiServices {
       dio.options.connectTimeout = connectionTimeoutDuration;
       final Map<String, dynamic> formData = {
         "street_address": streetAddress,
-        "city": city,
+        "region": city,
+        "district": "Ernakulam",
         "state": state,
         "postal_code": postalCode,
         "is_default": isDefaultAddress,
@@ -1048,6 +1051,161 @@ class ApiServices {
         final refreshedToken = await refreshAccessToken();
         if (refreshedToken != null) {
           deleteUserAddress(id);
+        }
+      }
+      return null;
+    }
+  }
+
+  placeOrder(String addressId) async {
+    try {
+      final dio = Dio();
+      dio.options.connectTimeout = connectionTimeoutDuration;
+      SharedPreferences sharedPref = await SharedPreferences.getInstance();
+      final authToken = sharedPref.getString(ACCESSTOKEN);
+      final params = {
+        "address": addressId,
+      };
+      final response = await dio.post(
+        "$baseUrl${ApiEndPoints.placeOrder}",
+        queryParameters: params,
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $authToken',
+            'Content-Type': Headers.jsonContentType,
+          },
+        ),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201 || response.statusCode == 204) {
+        log(response.data.toString());
+
+        return response;
+      } else {
+        print("Unexpected status code: ${response.statusCode}");
+        return null;
+      }
+    } on DioException catch (e) {
+      print("Error :$e");
+      if (e.response!.statusCode == 401) {
+        print("refresh token");
+        final refreshedToken = await refreshAccessToken();
+        if (refreshedToken != null) {
+          placeOrder(addressId);
+        }
+      }
+      return null;
+    }
+  }
+
+  payment(String orderId) async {
+    try {
+      final dio = Dio();
+      dio.options.connectTimeout = connectionTimeoutDuration;
+      SharedPreferences sharedPref = await SharedPreferences.getInstance();
+      final authToken = sharedPref.getString(ACCESSTOKEN);
+
+      final response = await dio.post(
+        "$baseUrl${ApiEndPoints.payment}$orderId/",
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $authToken',
+            'Content-Type': Headers.jsonContentType,
+          },
+        ),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201 || response.statusCode == 204) {
+        log(response.data.toString());
+
+        return response;
+      } else {
+        print("Unexpected status code: ${response.statusCode}");
+        return null;
+      }
+    } on DioException catch (e) {
+      print("Error :$e");
+      if (e.response!.statusCode == 401) {
+        print("refresh token");
+        final refreshedToken = await refreshAccessToken();
+        if (refreshedToken != null) {
+          payment(orderId);
+        }
+      }
+      return null;
+    }
+  }
+
+  verifyPayment(String signature, String orderId, String paymentId) async {
+    final Map<String, dynamic> formData = {
+      "razorpay_signature": signature,
+      "razorpay_order_id": orderId,
+      "razorpay_payment_id": paymentId,
+    };
+
+    try {
+      final dio = Dio();
+      dio.options.connectTimeout = connectionTimeoutDuration;
+
+      final response = await dio.post(
+        "$baseUrl${ApiEndPoints.verifyPayment}",
+        data: formData,
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        log(response.data.toString());
+        return response;
+      } else {
+        print("Unexpected status code: ${response.statusCode}");
+        return null;
+      }
+    } on DioException catch (e) {
+      print("Error :${e.response}");
+
+      return null;
+    }
+  }
+
+  getOrdersList(String pageNo) async {
+    try {
+      controller.isError.value = false;
+
+      final dio = Dio();
+      final params = {
+        "page": pageNo,
+      };
+      dio.options.connectTimeout = connectionTimeoutDuration;
+      SharedPreferences sharedPref = await SharedPreferences.getInstance();
+      final authToken = sharedPref.getString(ACCESSTOKEN);
+      final response = await dio.get(
+        "$baseUrl${ApiEndPoints.ordersList}",
+        queryParameters: params,
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $authToken',
+            'Content-Type': Headers.jsonContentType,
+          },
+        ),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        log(response.data.toString());
+        return response;
+      } else {
+        print("Unexpected status code: ${response.statusCode}");
+        return null;
+      }
+    } on DioException catch (e) {
+      print("Error :$e");
+      if (e.type == DioExceptionType.connectionTimeout) {
+        print("Connection timeout");
+        controller.isError.value = true;
+      }
+      if (e.response!.statusCode == 401) {
+        print("refresh token");
+        final refreshedToken = await refreshAccessToken();
+        if (refreshedToken != null) {
+          getOrdersList(pageNo);
         }
       }
       return null;

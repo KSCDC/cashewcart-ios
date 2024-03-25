@@ -2,9 +2,12 @@ import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:internship_sample/controllers/app_controller.dart';
 import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/main.dart';
+import 'package:internship_sample/models/orders_list_model.dart';
 import 'package:internship_sample/presentation/cart/widgets/cart_product_list_tile.dart';
 import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
 import 'package:internship_sample/presentation/my_orders/widgets/my_orders_list_tile.dart';
@@ -20,9 +23,10 @@ List productDetailsList1 = [];
 class MyOrdersScreen extends StatelessWidget {
   MyOrdersScreen({super.key});
   int numberOfRecentOrders = recentOrdersList.length;
-
+  AppController controller = Get.put(AppController());
   @override
   Widget build(BuildContext context) {
+    controller.getOrdersList();
     final recentOrdersListRev = recentOrdersList.reversed.toList();
     print(numberOfRecentOrders);
     log("Recent orders List :${recentOrdersList.toString()}");
@@ -57,55 +61,59 @@ class MyOrdersScreen extends StatelessWidget {
                 fontweight: FontWeight.w600,
               ),
               kHeight,
-              Container(
-                // color: Colors.white,
-                child: ListView.builder(
-                  itemBuilder: (context, index) {
-                    print("values ${productDetailsList1[index]['imagePath'][0]}");
-                    final int category = recentOrdersListRev[index]['category'];
-                    final String imagePath = recentOrdersListRev[index]['product']['imagePath'][0];
-                    final String name = recentOrdersListRev[index]['product']['name'];
-                    final String description = recentOrdersListRev[index]['product']['category'][category]['description'];
-                    final String price = recentOrdersListRev[index]['product']['category'][category]['offerPrice'];
-                    final String rating = recentOrdersListRev[index]['product']['category'][category]['rating'];
-                    final String weight = recentOrdersListRev[index]['product']['category'][category]['weight'];
+              Obx(() {
+                if (controller.isLoading.value) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else {
+                  return Container(
+                    // color: Colors.white,
+                    child: ListView.builder(
+                      itemBuilder: (context, index) {
+                        final Result currentItem = controller.ordersList.value.results[index];
+                        final String imagePath = "https://backend.cashewcart.com:8443${currentItem.items[0].product.product.productImages[0].productImage}";
+                        final String name = currentItem.items[0].product.product.name;
+                        final String description = currentItem.items[0].product.product.description;
+                        final String price = currentItem.items[0].product.sellingPrice;
+                        final String rating = "4.5";
+                        final String weight = currentItem.items[0].product.weightInGrams;
+                        final String paymentStatus = controller.ordersList.value.results[index].paymentStatus;
+                        final int count = currentItem.items[0].purchaseCount;
 
-                    final int count = recentOrdersListRev[index]['count'];
-                    log("count :$count");
-
-                    return Column(
-                      children: [
-                        kHeight,
-                        GestureDetector(
-                          onTap: () => Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) {
-                                return OrderTrackingScreen(
-                                  imagePath: imagePath,
-                                  productName: name,
-                                  productDescription: description,
-                                  price: price,
-                                );
-                              },
+                        return Column(
+                          children: [
+                            kHeight,
+                            GestureDetector(
+                              onTap: () => Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) {
+                                    return OrderTrackingScreen(
+                                      productDetails: currentItem,
+                                    );
+                                  },
+                                ),
+                              ),
+                              child: MyOrdersListTile(
+                                imagePath: imagePath,
+                                name: name,
+                                price: price,
+                                rating: rating,
+                                count: count,
+                                weight: weight,
+                                paymentStatus: paymentStatus,
+                              ),
                             ),
-                          ),
-                          child: MyOrdersListTile(
-                            imagePath: imagePath,
-                            name: name,
-                            price: price,
-                            rating: rating,
-                            count: count,
-                            weight: weight,
-                          ),
-                        ),
-                      ],
-                    );
-                  },
-                  itemCount: numberOfRecentOrders,
-                  physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                ),
-              ),
+                          ],
+                        );
+                      },
+                      itemCount: controller.ordersList.value.results.length,
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                    ),
+                  );
+                }
+              }),
             ],
           ),
         ),
