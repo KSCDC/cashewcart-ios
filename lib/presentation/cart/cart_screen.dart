@@ -162,7 +162,7 @@ class CartScreen extends StatelessWidget {
     print(controller.cartProducts.value);
     for (int i = 0; i < controller.cartProducts.value.count; i++) {
       // final int selectedCategory = cartProductsList[i]['category'];
-      final String price = controller.cartProducts.value.results[i].product.sellingPrice;
+      final String price = controller.cartProducts.value.results[i].product.sellingPrice.toString();
       final int count = controller.cartProducts.value.results[i].purchaseCount;
       final double total = double.parse(price) * count;
       print("prices are ${price} * ${count}== ${total}");

@@ -8,6 +8,7 @@ const Duration connectionTimeoutDuration = Duration(seconds: 60);
 const String ACCESSTOKEN = "accessToken";
 const String REFRESHTOKEN = "refreshToken";
 const String EMAIL = "email";
+const String PHONE = "phoneNo";
 const String ENCRYPTEDPASSWORD = "password";
 const String ENCKEY = "encryptionKey";
 const String ENCIV = "encryptionIv";

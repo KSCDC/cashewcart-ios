@@ -881,13 +881,15 @@ class ApiServices {
     }
   }
 
-  createUserAddress(BuildContext context, String streetAddress, String region, String district, String state, String postalCode, bool isDefaultAddress) async {
+  createUserAddress(BuildContext context, String name, String streetAddress, String region, String district, String state, String postalCode, String phoneNumber, bool isDefaultAddress) async {
     final Map<String, dynamic> formData = {
+      "name": name,
       "street_address": streetAddress,
       "region": region,
       "district": district,
       "state": state,
       "postal_code": postalCode,
+      "phone_number": phoneNumber,
       "is_default": isDefaultAddress,
     };
     print("\n$streetAddress\n$region\n$district\n$state\n$state\n$postalCode\n");
@@ -925,7 +927,7 @@ class ApiServices {
         print("refresh token");
         final refreshedToken = await refreshAccessToken();
         if (refreshedToken != null) {
-          createUserAddress(context, streetAddress, region, district, state, postalCode, isDefaultAddress);
+          createUserAddress(context, name, streetAddress, region, district, state, postalCode, phoneNumber, isDefaultAddress);
         }
       }
       if (e.response!.statusCode == 400) {
@@ -971,16 +973,20 @@ class ApiServices {
     }
   }
 
-  editUserAddress(BuildContext context, String id, String streetAddress, String city, String state, String postalCode, bool isDefaultAddress) async {
+  editUserAddress(
+      BuildContext context, String id, String name, String streetAddress, String region, String district, String state, String postalCode, String phoneNumber, bool isDefaultAddress) async {
     try {
+      log("Editing address id $id");
       final dio = Dio();
       dio.options.connectTimeout = connectionTimeoutDuration;
       final Map<String, dynamic> formData = {
+        "name": name,
         "street_address": streetAddress,
-        "region": city,
-        "district": "Ernakulam",
+        "region": region,
+        "district": district,
         "state": state,
         "postal_code": postalCode,
+        "phone_number": phoneNumber,
         "is_default": isDefaultAddress,
       };
       SharedPreferences sharedPref = await SharedPreferences.getInstance();
@@ -1057,14 +1063,15 @@ class ApiServices {
     }
   }
 
-  placeOrder(String addressId) async {
+  placeOrder(String shippingAddressId, String billingAddressId) async {
     try {
       final dio = Dio();
       dio.options.connectTimeout = connectionTimeoutDuration;
       SharedPreferences sharedPref = await SharedPreferences.getInstance();
       final authToken = sharedPref.getString(ACCESSTOKEN);
       final params = {
-        "address": addressId,
+        "shipping_address": shippingAddressId,
+        "billing_address": billingAddressId,
       };
       final response = await dio.post(
         "$baseUrl${ApiEndPoints.placeOrder}",
@@ -1091,7 +1098,7 @@ class ApiServices {
         print("refresh token");
         final refreshedToken = await refreshAccessToken();
         if (refreshedToken != null) {
-          placeOrder(addressId);
+          placeOrder(shippingAddressId, billingAddressId);
         }
       }
       return null;

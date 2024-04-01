@@ -16,12 +16,6 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       centerTitle: true,
-      // leading: IconButton(
-      //   onPressed: () {
-      //     SideBar();
-      //   },
-      //   icon: Icon(Icons.menu),
-      // ),
       title: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -50,8 +44,11 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
               }
             },
             child: CircleAvatar(
-              child: Image.asset("lib/core/assets/images/avatar.jpeg"),
-            ),
+                backgroundColor: Colors.white.withOpacity(0),
+                child: Icon(
+                  Icons.person,
+                  size: 40,
+                )),
           ),
         )
       ],

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:internship_sample/controllers/app_controller.dart';
 import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/core/constants.dart';
+import 'package:internship_sample/models/user_address_model.dart';
 import 'package:internship_sample/presentation/profile/widgets/profile_editing_textfield.dart';
 import 'package:internship_sample/presentation/widgets/custom_appbar.dart';
 import 'package:internship_sample/presentation/widgets/custom_elevated_button.dart';
@@ -13,20 +14,25 @@ import 'package:internship_sample/services/services.dart';
 class ProfileScreen extends StatelessWidget {
   ProfileScreen({super.key});
 
-  // ValueNotifier dropdownItemNotifier = ValueNotifier("N1 2LL");
-
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
-  TextEditingController _pinCodeController = TextEditingController();
-  TextEditingController _addressController = TextEditingController();
-  TextEditingController _cityController = TextEditingController();
-  TextEditingController _countryController = TextEditingController();
+  TextEditingController _postalCodeController = TextEditingController();
+  TextEditingController _nameController = TextEditingController();
+  TextEditingController _streetAddressContrller = TextEditingController();
+  TextEditingController _regionController = TextEditingController();
+  TextEditingController _districtController = TextEditingController();
+  TextEditingController _stateController = TextEditingController();
+  TextEditingController _phoneNumberController = TextEditingController();
   TextEditingController _bankAccountNoController = TextEditingController();
   TextEditingController _accountHolderNameController = TextEditingController();
   TextEditingController _ifscCodeController = TextEditingController();
+
+  // String? id;
   AppController controller = Get.put(AppController());
   @override
   Widget build(BuildContext context) {
+    // just setting the first address in the list as default address for using if there is no default address
+    UserAddressModel defaultAddress = controller.addressList[0];
     _bankAccountNoController.text = "204356XXXXXXX";
 
     _ifscCodeController.text = "SBIN00428";
@@ -46,11 +52,15 @@ class ProfileScreen extends StatelessWidget {
                 child: Container(
                   child: Stack(
                     children: [
-                      const Padding(
+                      Padding(
                         padding: const EdgeInsets.only(right: 10),
                         child: CircleAvatar(
                           radius: 50,
-                          backgroundImage: AssetImage("lib/core/assets/images/avatar.jpeg"),
+                          backgroundColor: Colors.white.withOpacity(0),
+                          child: const Icon(
+                            Icons.person,
+                            size: 100,
+                          ),
                         ),
                       ),
                       Positioned(
@@ -87,14 +97,25 @@ class ProfileScreen extends StatelessWidget {
                 _accountHolderNameController.text = controller.userName;
                 _passwordController.text = "**********";
                 if (controller.addressList.value.isNotEmpty) {
-                  _pinCodeController.text = controller.addressList[0].postalCode;
-                  _addressController.text = controller.addressList[0].streetAddress;
-                  _cityController.text = controller.addressList[0].region;
-                  // _countryController.text = controller.addressList.value[0].country;
+                  // id = controller.addressList[0].id.toString();
+
+                  for (var address in controller.addressList) {
+                    if (address.isDefault) {
+                      defaultAddress = address;
+                    }
+                  }
+
+                  _nameController.text = defaultAddress.name;
+                  _streetAddressContrller.text = defaultAddress.streetAddress;
+                  _regionController.text = defaultAddress.region;
+                  _districtController.text = defaultAddress.district;
+                  _stateController.text = defaultAddress.state;
+                  _postalCodeController.text = defaultAddress.postalCode;
+                  _phoneNumberController.text = defaultAddress.phoneNumber;
                 }
 
                 return controller.isLoading.value
-                    ? Center(
+                    ? const Center(
                         child: CircularProgressIndicator(),
                       )
                     : Column(
@@ -120,7 +141,7 @@ class ProfileScreen extends StatelessWidget {
                                 onTap: () {
                                   showPasswordEditingPopup(context);
                                 },
-                                child: CustomTextWidget(
+                                child: const CustomTextWidget(
                                   text: "Change Password",
                                   fontSize: 12,
                                   fontColor: kMainThemeColor,
@@ -136,58 +157,42 @@ class ProfileScreen extends StatelessWidget {
 
                           //Buisiness address details section
 
-                          ProfileScreenSubHeading(text: "Business Address Details"),
+                          ProfileScreenSubHeading(text: "Address Details"),
                           kProfileScreenGap,
                           ProfileEditingTextField(
-                            hintText: "Pincode",
-                            controller: _pinCodeController,
-                          ),
-                          kProfileScreenGap,
-                          ProfileEditingTextField(
-                            hintText: "Address",
-                            controller: _addressController,
+                            hintText: "Name",
+                            controller: _nameController,
                           ),
                           kProfileScreenGap,
                           ProfileEditingTextField(
-                            hintText: "City",
-                            controller: _cityController,
-                          ),
-                          kProfileScreenGap,
-                          const CustomTextWidget(
-                            text: "States",
-                            fontweight: FontWeight.w400,
-                          ),
-                          kHeight,
-                          DropdownButtonFormField(
-                            items: statesList.map((String state) {
-                              return new DropdownMenuItem(
-                                value: state,
-                                child: Text(state),
-                              );
-                            }).toList(),
-                            onChanged: (newValue) {},
-                            value: "N1 2LL",
-                            decoration: const InputDecoration(
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(10)),
-                                borderSide: BorderSide(
-                                  color: Color(0xffA8A8A9),
-                                  width: 1,
-                                ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(10)),
-                                borderSide: BorderSide(
-                                  width: 1,
-                                ),
-                              ),
-                            ),
-                            icon: Icon(Icons.keyboard_arrow_down_sharp),
+                            hintText: "Street Address",
+                            controller: _streetAddressContrller,
                           ),
                           kProfileScreenGap,
                           ProfileEditingTextField(
-                            hintText: "Country",
-                            controller: _countryController,
+                            hintText: "Region",
+                            controller: _regionController,
+                          ),
+                          kProfileScreenGap,
+                          ProfileEditingTextField(
+                            hintText: "District",
+                            controller: _districtController,
+                          ),
+                          kProfileScreenGap,
+                          ProfileEditingTextField(
+                            hintText: "State",
+                            controller: _stateController,
+                          ),
+                          kProfileScreenGap,
+                          ProfileEditingTextField(
+                            hintText: "Postal Code",
+                            controller: _postalCodeController,
+                          ),
+
+                          kProfileScreenGap,
+                          ProfileEditingTextField(
+                            hintText: "Phone Number",
+                            controller: _phoneNumberController,
                           ),
                         ],
                       );
@@ -221,7 +226,8 @@ class ProfileScreen extends StatelessWidget {
                 width: double.infinity,
                 child: GestureDetector(
                   onTap: () async {
-                    ApiServices().editUserAddress(context, controller.addressList[0].id.toString(), _addressController.text, _cityController.text, "kerala", _pinCodeController.text, true);
+                    await ApiServices().editUserAddress(context, defaultAddress.id.toString(), _nameController.text, _streetAddressContrller.text, _regionController.text, _districtController.text,
+                        _stateController.text, _postalCodeController.text, _phoneNumberController.text, true);
                     controller.getUserAddresses();
                   },
                   child: CustomElevatedButton(label: "Save"),

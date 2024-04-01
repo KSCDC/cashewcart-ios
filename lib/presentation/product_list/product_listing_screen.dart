@@ -56,7 +56,7 @@ class ProductListingScreen extends StatelessWidget {
                               final String productId = controller.productDisplayList.value.results![index].product.id.toString();
                               controller.getSimilarProducts(controller.plainCashews.value, index);
                               await controller.getProductDetails(productId);
-                              controller.productDetails.value = controller.productDetails.value;
+                              controller.productDetailsList.add(controller.productDetails.value!);
                               previousPageIndexes.add(bottomNavbarIndexNotifier.value);
                               bottomNavbarIndexNotifier.value = 4;
                             },

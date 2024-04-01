@@ -70,19 +70,7 @@ class ValueAddedProductsTile extends StatelessWidget {
                       ),
                       TextButton(
                         onPressed: () async {
-                          // Navigator.of(context).push(
-                          //   MaterialPageRoute(
-                          // builder: (context) => ProductListingScreen(productDetailsList: valueAddedProducts),
-                          //   ),
-                          // );
-                          // final String productId = controller.valueAdded.value.results[0].product.id.toString();
-                          // final currentCategoryProducts = controller.valueAdded.value;
-                          // controller.getSimilarProducts(controller.valueAdded.value, 0);
-                          // await controller.getProductDetails(productId);
-                          // controller.productDetails.value = controller.productDetails.value;
                           controller.productDisplayList = controller.valueAdded;
-                          // print(controller.productDetails.value!.name);
-                          // print(controller.productDisplayList .toString());
 
                           previousPageIndexes.add(bottomNavbarIndexNotifier.value);
                           bottomNavbarIndexNotifier.value = 5;

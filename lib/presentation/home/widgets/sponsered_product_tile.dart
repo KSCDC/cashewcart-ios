@@ -51,73 +51,28 @@ class SponseredProductTile extends StatelessWidget {
                   ),
                 ),
               ),
-              Column(
-                children: [
-                  kHeight,
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Divider(
-                          color: kMainThemeColor.withOpacity(0.6),
-                          thickness: 2,
-                          indent: 90,
-                          endIndent: 5,
-                        ),
-                      ),
-                      CustomTextWidget(
-                        text: "UP TO",
-                        fontSize: 22,
-                        fontColor: kMainThemeColor.withOpacity(0.6),
-                        fontweight: FontWeight.w600,
-                        height: 1,
-                      ),
-                      Expanded(
-                        child: Divider(
-                          color: kMainThemeColor.withOpacity(0.6),
-                          thickness: 2,
-                          indent: 5,
-                          endIndent: 90,
-                        ),
-                      ),
-                    ],
-                  ),
-                  CustomTextWidget(
-                    text: "50% OFF",
-                    fontSize: 40,
-                    fontColor: kMainThemeColor.withOpacity(0.6),
-                    fontweight: FontWeight.w600,
-                    height: 1,
-                  ),
-                  Divider(
-                    color: kMainThemeColor.withOpacity(0.6),
-                    thickness: 2,
-                    indent: 150,
-                    endIndent: 150,
-                  ),
-                ],
-              ),
             ],
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              CustomTextWidget(
-                text: "up to 50% Off",
-                fontSize: 16,
-                fontweight: FontWeight.w700,
-              ),
-              IconButton(
-                onPressed: () {
-                  controller.productDisplayList2 = controller.sponserd;
-                  currentDisplayProductCategory = "Sponserd";
-                  print("sponserd : ${controller.productDisplayList2.value.count}");
-                  previousPageIndexes.add(bottomNavbarIndexNotifier.value);
-                  bottomNavbarIndexNotifier.value = 9;
-                },
-                icon: Icon(Icons.arrow_forward_ios),
-              )
-            ],
-          )
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //   children: [
+          //     CustomTextWidget(
+          //       text: "up to 50% Off",
+          //       fontSize: 16,
+          //       fontweight: FontWeight.w700,
+          //     ),
+          //     IconButton(
+          //       onPressed: () {
+          //         controller.productDisplayList2 = controller.sponserd;
+          //         currentDisplayProductCategory = "Sponserd";
+          //         print("sponserd : ${controller.productDisplayList2.value.count}");
+          //         previousPageIndexes.add(bottomNavbarIndexNotifier.value);
+          //         bottomNavbarIndexNotifier.value = 9;
+          //       },
+          //       icon: Icon(Icons.arrow_forward_ios),
+          //     )
+          //   ],
+          // )
         ],
       ),
     );

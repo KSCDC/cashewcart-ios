@@ -104,9 +104,9 @@ class BuyNowTile extends StatelessWidget {
                 child: TextButton(
                   onPressed: () async {
                     final String productId = productDetails.results[0].product.id.toString();
-                    controller.getProductDetails(productId);
+                   await controller.getProductDetails(productId);
                     controller.getProductReviews(productId);
-                    // controller.productDetails.value = productDetails.results[0];
+                    controller.productDetailsList.add(controller.productDetails.value!);
                     previousPageIndexes.add(bottomNavbarIndexNotifier.value);
                     bottomNavbarIndexNotifier.value = 4;
                   },

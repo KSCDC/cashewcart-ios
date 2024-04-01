@@ -37,6 +37,7 @@ class AppController extends GetxController {
   RxBool isError = false.obs;
   RxBool isLoadingCart = false.obs;
   RxBool isAllProductsLoading = false.obs;
+  RxBool isCircleAvatarProductsLoading = false.obs;
   RxBool isPlainCashewLoading = false.obs;
   RxBool isRoastedAndSaltedLoading = false.obs;
   RxBool isValueAddedLoading = false.obs;
@@ -67,6 +68,7 @@ class AppController extends GetxController {
   RxString dropdownValue = 'Default'.obs;
 
   Rx<ProductModel> allProducts = ProductModel(count: 0, next: null, previous: null, results: []).obs;
+  Rx<ProductModel> circleAvatarProductsList = ProductModel(count: 0, next: null, previous: null, results: []).obs;
   Rx<ProductModel> plainCashews = ProductModel(count: 0, next: null, previous: null, results: []).obs;
   Rx<ProductModel> roastedAndSalted = ProductModel(count: 0, next: null, previous: null, results: []).obs;
   Rx<trendingModel.TrendingProductModel> trending = trendingModel.TrendingProductModel(count: 0, next: null, previous: null, results: []).obs;
@@ -88,7 +90,10 @@ class AppController extends GetxController {
   RxList<ProductReviewsModel> productReviewsList = <ProductReviewsModel>[].obs;
   RxList<UserAddressModel> addressList = <UserAddressModel>[].obs;
 
+  RxList<ProductDetailsModel> productDetailsList = <ProductDetailsModel>[].obs;
+
   bool isAlreadyLoadedAllProducts = false;
+  bool isAlreadyLoadedcircleAvatarProducts = false;
   bool isAlreadyLoadedPlainCashews = false;
   bool isAlreadyLoadedRoastedAndSaltedCashews = false;
   bool isAlreadyLoadedValueAdded = false;
@@ -208,6 +213,40 @@ class AppController extends GetxController {
     isAllProductsLoading.value = false;
   }
 
+  getCircleAvatarProducts(int pageNo) async {
+    isCircleAvatarProductsLoading.value = true;
+    final response = await ApiServices().getAllProducts(pageNo.toString());
+    if (response != null) {
+      final data = ProductModel.fromJson(response.data);
+
+      print("results ${response.data['results']}");
+      List<Results>? results = data.results;
+      if (results != null) {
+        List<Results> combinedResults = [];
+        combinedResults.addAll(circleAvatarProductsList.value.results ?? []);
+
+        combinedResults.addAll(results);
+        circleAvatarProductsList.value.results = combinedResults;
+        circleAvatarProductsList.update((val) {
+          val!.count = data.count;
+          val.next = response.data['next'];
+          val.previous = response.data['previous'];
+        });
+        if (response.data['next'] != null) {
+          getCircleAvatarProducts(pageNo + 1);
+        }
+      }
+      circleAvatarProductsList.value.results!.shuffle();
+
+      isAlreadyLoadedcircleAvatarProducts = true;
+      isCircleAvatarProductsLoading.value = false;
+
+      log("Circle avatar list count:${circleAvatarProductsList.value.results!.length.toString()}");
+
+      log("All products next:${response.data['next'].toString()}");
+    } else {}
+  }
+
   getTrendingProducts() async {
     isBestSellersLoading.value = true;
     isBestSellersLoadingError.value = false;
@@ -253,12 +292,14 @@ class AppController extends GetxController {
       combinedResults.addAll(results);
 
       bestSellers.value.results = combinedResults;
-      bestSellers.update((val) {
-        val!.count = data.count;
-        val.next = response.data['next'];
-        val.previous = response.data['previous'];
-      });
-
+      bestSellers.update(
+        (val) {
+          val!.count = data.count;
+          val.next = response.data['next'];
+          val.previous = response.data['previous'];
+        },
+      );
+      bestSellers.value.results.shuffle();
       isAlreadyLoadedBestsellers = true;
     } else {
       isBestSellersLoadingError.value = true;
@@ -287,6 +328,7 @@ class AppController extends GetxController {
         val.next = response.data['next'];
         val.previous = response.data['previous'];
       });
+      sponserd.value.results.shuffle();
       print("Sponserd next from model :${sponserd.value.next}");
       isAlreadyLoadedSponserd = true;
     } else {
@@ -550,11 +592,12 @@ class AppController extends GetxController {
     isLoading.value = true;
     isError.value = false;
     final response = await ApiServices().getProfileDetails();
-
+    SharedPreferences sharedPref = await SharedPreferences.getInstance();
     if (response != null) {
       userName = response.data['name'];
       email = response.data['email'];
       phoneNo = response.data['phone_number'];
+      sharedPref.setString(PHONE, phoneNo);
     } else {
       isError.value = true;
     }
@@ -627,8 +670,8 @@ class AppController extends GetxController {
     isLoadingAddress.value = false;
   }
 
-  createOrder(String addressId) async {
-    final response = await ApiServices().placeOrder(addressId);
+  createOrder(String shippingAddressId, String billingAddressId) async {
+    final response = await ApiServices().placeOrder(shippingAddressId, billingAddressId);
     print(response.data.toString());
   }
 

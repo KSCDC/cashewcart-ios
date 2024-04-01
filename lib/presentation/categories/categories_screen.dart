@@ -120,11 +120,11 @@ class CategoriesScreen extends StatelessWidget {
                                             onTap: () async {
                                               final String productId = controller.plainCashews.value.results![index].product.id.toString();
                                               controller.getSimilarProducts(controller.plainCashews.value, index);
-                                              controller.productDetails.value = controller.productDetails.value;
+                                              await controller.getProductDetails(productId);
+                                              controller.getProductReviews(productId);
+                                              controller.productDetailsList.add(controller.productDetails.value!);
                                               previousPageIndexes.add(bottomNavbarIndexNotifier.value);
                                               bottomNavbarIndexNotifier.value = 4;
-                                              controller.getProductDetails(productId);
-                                              controller.getProductReviews(productId);
                                             },
                                             child: ProductsListItemTile(
                                               productDetails: productDetails,
@@ -228,11 +228,11 @@ class CategoriesScreen extends StatelessWidget {
                                             onTap: () async {
                                               final String productId = controller.roastedAndSalted.value.results![index].product.id.toString();
                                               controller.getSimilarProducts(controller.roastedAndSalted.value, index);
-                                              controller.productDetails.value = controller.productDetails.value;
+                                              await controller.getProductDetails(productId);
+                                              controller.getProductReviews(productId);
+                                              controller.productDetailsList.add(controller.productDetails.value!);
                                               previousPageIndexes.add(bottomNavbarIndexNotifier.value);
                                               bottomNavbarIndexNotifier.value = 4;
-                                              controller.getProductDetails(productId);
-                                              controller.getProductReviews(productId);
                                             },
                                             child: ProductsListItemTile(
                                               productDetails: productDetails,
@@ -330,11 +330,11 @@ class CategoriesScreen extends StatelessWidget {
                                             onTap: () async {
                                               final String productId = controller.valueAdded.value.results![index].product.id.toString();
                                               controller.getSimilarProducts(controller.valueAdded.value, index);
-                                              controller.productDetails.value = controller.productDetails.value;
+                                              await controller.getProductDetails(productId);
+                                              controller.getProductReviews(productId);
+                                              controller.productDetailsList.add(controller.productDetails.value!);
                                               previousPageIndexes.add(bottomNavbarIndexNotifier.value);
                                               bottomNavbarIndexNotifier.value = 4;
-                                              controller.getProductDetails(productId);
-                                              controller.getProductReviews(productId);
                                             },
                                             child: ProductsListItemTile(
                                               productDetails: productDetails,
@@ -402,11 +402,11 @@ class CategoriesScreen extends StatelessWidget {
                                             onTap: () async {
                                               final String productId = controller.allProducts.value.results![index].product.id.toString();
                                               controller.getSimilarProducts(controller.allProducts.value, index);
-                                              controller.productDetails.value = controller.productDetails.value;
+                                              await controller.getProductDetails(productId);
+                                              controller.getProductReviews(productId);
+                                              controller.productDetailsList.add(controller.productDetails.value!);
                                               previousPageIndexes.add(bottomNavbarIndexNotifier.value);
                                               bottomNavbarIndexNotifier.value = 4;
-                                              controller.getProductDetails(productId);
-                                              controller.getProductReviews(productId);
                                             },
                                             child: ProductsListItemTile(
                                               productDetails: productDetails,
@@ -472,7 +472,7 @@ class CategoriesScreen extends StatelessWidget {
                                       final String productId = controller.searchResults.value.results![index].product.id.toString();
                                       controller.getSimilarProducts(controller.searchResults.value, index);
                                       await controller.getProductDetails(productId);
-                                      // controller.productDetails.value = controller.productDetails.value;
+                                      controller.productDetailsList.add(controller.productDetails.value!);
                                       previousPageIndexes.add(bottomNavbarIndexNotifier.value);
                                       bottomNavbarIndexNotifier.value = 4;
                                     },

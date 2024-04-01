@@ -26,7 +26,12 @@ class AccountScreen extends StatelessWidget {
           Center(
             child: CircleAvatar(
               radius: 50,
-              backgroundImage: AssetImage("lib/core/assets/images/avatar.jpeg"),
+              backgroundColor: Colors.white.withOpacity(0),
+              // backgroundImage: AssetImage("lib/core/assets/images/avatar.jpeg"),
+              child: Icon(
+                Icons.person,
+                size: 100,
+              ),
             ),
           ),
           SizedBox(height: 20),
@@ -77,6 +82,7 @@ class AccountScreen extends StatelessWidget {
               CustomTextButton(
                 label: "Buy Again",
                 onPressed: () {
+                  
                   previousPageIndexes.add(3);
 
                   bottomNavbarIndexNotifier.value = 6;

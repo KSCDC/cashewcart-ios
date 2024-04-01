@@ -37,10 +37,10 @@ class SignInScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 AuthenticationPageTitle(
-                  heading: "Welcome",
+                  heading: "Welcome to",
                 ),
                 AuthenticationPageTitle(
-                  heading: "Back!",
+                  heading: "KSCDC Cashewcart",
                 ),
                 const SizedBox(height: 10),
                 Form(

@@ -32,7 +32,11 @@ class SideBar extends StatelessWidget {
               ),
               child: CircleAvatar(
                 radius: 60,
-                child: Image.asset("lib/core/assets/images/avatar.jpeg"),
+                backgroundColor: Colors.white.withOpacity(0),
+                child: Icon(
+                  Icons.person,
+                  size: 120,
+                ),
               ),
             ),
             SizedBox(height: 20),

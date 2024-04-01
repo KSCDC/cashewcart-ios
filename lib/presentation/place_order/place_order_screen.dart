@@ -139,9 +139,9 @@ class PlaceOrderScreen extends StatelessWidget {
 
                   //delivery addresses
 
-                  Obx(() {
-                    return controller.addressList.isEmpty ? CustomTextWidget(text: "No saved addresses!") : AddressSection(screenSize: screenSize);
-                  }),
+                  // Obx(() {
+                  //   // return controller.addressList.isEmpty ? CustomTextWidget(text: "No saved addresses!") : AddressSection(screenSize: screenSize,heading: "Delivery Address");
+                  // }),
 
                   SizedBox(height: 5),
 
@@ -150,18 +150,18 @@ class PlaceOrderScreen extends StatelessWidget {
                     onPressed: () async {
                       // TextEditingController _newAddressController = TextEditingController();
 
-                      Services().showAddressEditPopup(
-                        true,
-                        context,
-                        "",
-                        "ADD ADDRESS",
-                        "ADD",
-                        _streetAddressConrller,
-                        _regionController,
-                        _districtController,
-                        _stateController,
-                        _postalcodeController,
-                      );
+                      // Services().showAddressEditPopup(
+                      //   true,
+                      //   context,
+                      //   "",
+                      //   "ADD ADDRESS",
+                      //   "ADD",
+                      //   _streetAddressConrller,
+                      //   _regionController,
+                      //   _districtController,
+                      //   _stateController,
+                      //   _postalcodeController,
+                      // );
                     },
                     icon: Icons.add,
                     label: "Add address",

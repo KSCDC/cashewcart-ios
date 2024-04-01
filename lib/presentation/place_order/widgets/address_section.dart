@@ -10,21 +10,25 @@ import 'package:internship_sample/services/api_services.dart';
 import 'package:internship_sample/services/services.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
-ValueNotifier<int> selectedRadioNotifier = ValueNotifier(0);
-
 class AddressSection extends StatelessWidget {
   AddressSection({
     super.key,
     required this.screenSize,
+    required this.heading,
+    required this.selectedRadioNotifier,
   });
 
   final Size screenSize;
+  final String heading;
+  final ValueNotifier<int> selectedRadioNotifier;
   AppController controller = Get.put(AppController());
-  TextEditingController _streetAddressConrller = TextEditingController();
+  TextEditingController _nameController = TextEditingController();
+  TextEditingController _streetAddressController = TextEditingController();
   TextEditingController _regionController = TextEditingController();
   TextEditingController _districtController = TextEditingController();
   TextEditingController _stateController = TextEditingController();
   TextEditingController _postalcodeController = TextEditingController();
+  TextEditingController _phoneNumberController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +46,7 @@ class AddressSection extends StatelessWidget {
               ),
               kWidth,
               CustomTextWidget(
-                text: "Delivery Address",
+                text: heading,
                 fontweight: FontWeight.w600,
               ),
             ],
@@ -83,10 +87,9 @@ class AddressSection extends StatelessWidget {
                                     fontweight: FontWeight.w600,
                                   ),
                                   GestureDetector(
-                                    onTap: () {
+                                    onTap: () async {
                                       final adderssId = controller.addressList[index].id.toString();
-                                      ApiServices().deleteUserAddress(adderssId);
-                                      // ApiServices().getUserAddresses();
+                                      await ApiServices().deleteUserAddress(adderssId);
                                       controller.getUserAddresses();
                                     },
                                     child: Icon(
@@ -99,22 +102,26 @@ class AddressSection extends StatelessWidget {
                               kHeight,
                               GestureDetector(
                                 onTap: () {
-                                  _streetAddressConrller.text = currentAddress.streetAddress;
+                                  _nameController.text = currentAddress.name;
+                                  _streetAddressController.text = currentAddress.streetAddress;
                                   _regionController.text = currentAddress.region;
                                   _districtController.text = currentAddress.district;
                                   _stateController.text = currentAddress.state;
                                   _postalcodeController.text = currentAddress.postalCode;
+                                  _phoneNumberController.text = currentAddress.phoneNumber;
                                   Services().showAddressEditPopup(
                                     false,
                                     context,
                                     currentAddress.id.toString(),
                                     "EDIT ADDRESS",
                                     "EDIT",
-                                    _streetAddressConrller,
+                                    _nameController,
+                                    _streetAddressController,
                                     _regionController,
                                     _districtController,
                                     _stateController,
                                     _postalcodeController,
+                                    _phoneNumberController,
                                   );
                                 },
                                 child: CustomTextWidget(
@@ -126,7 +133,7 @@ class AddressSection extends StatelessWidget {
                           ),
                         ),
                       ),
-                      // Checkbox
+                      // Radio button
                       ValueListenableBuilder(
                         valueListenable: selectedRadioNotifier,
                         builder: (context, checkboxValue, _) {
@@ -144,7 +151,6 @@ class AddressSection extends StatelessWidget {
                                 } else {
                                   checkboxValue = -1;
                                   selectedRadioNotifier.value = 0;
-                                  // isAddressEditableNotifier.value = false;
                                 }
                               },
                             ),

@@ -39,11 +39,20 @@ class OrdersListModel {
 class Result {
   int orderId;
   int user;
-  String streetAddress;
-  String region;
-  String district;
-  String state;
-  String postalCode;
+  String shippingName;
+  String shippingPhoneNumber;
+  String shippingStreetAddress;
+  String shippingRegion;
+  String shippingDistrict;
+  String shippingState;
+  String shippingPostalCode;
+  String billingName;
+  String billingStreetAddress;
+  String billingRegion;
+  String billingDistrict;
+  String billingState;
+  String billingPostalCode;
+  String billingPhoneNumber;
   String paymentMethod;
   String paymentStatus;
   DateTime createdAt;
@@ -56,11 +65,20 @@ class Result {
   Result({
     required this.orderId,
     required this.user,
-    required this.streetAddress,
-    required this.region,
-    required this.district,
-    required this.state,
-    required this.postalCode,
+    required this.shippingName,
+    required this.shippingPhoneNumber,
+    required this.shippingStreetAddress,
+    required this.shippingRegion,
+    required this.shippingDistrict,
+    required this.shippingState,
+    required this.shippingPostalCode,
+    required this.billingName,
+    required this.billingStreetAddress,
+    required this.billingRegion,
+    required this.billingDistrict,
+    required this.billingState,
+    required this.billingPostalCode,
+    required this.billingPhoneNumber,
     required this.paymentMethod,
     required this.paymentStatus,
     required this.createdAt,
@@ -74,11 +92,20 @@ class Result {
   factory Result.fromJson(Map<String, dynamic> json) => Result(
         orderId: json["order_id"],
         user: json["user"],
-        streetAddress: json["street_address"],
-        region: json["region"],
-        district: json["district"],
-        state: json["state"],
-        postalCode: json["postal_code"],
+        shippingName: json["shipping_name"],
+        shippingPhoneNumber: json["shipping_phone_number"],
+        shippingStreetAddress: json["shipping_street_address"],
+        shippingRegion: json["shipping_region"],
+        shippingDistrict: json["shipping_district"],
+        shippingState: json["shipping_state"],
+        shippingPostalCode: json["shipping_postal_code"],
+        billingName: json["billing_name"],
+        billingStreetAddress: json["billing_street_address"],
+        billingRegion: json["billing_region"],
+        billingDistrict: json["billing_district"],
+        billingState: json["billing_state"],
+        billingPostalCode: json["billing_postal_code"],
+        billingPhoneNumber: json["billing_phone_number"],
         paymentMethod: json["payment_method"],
         paymentStatus: json["payment_status"],
         createdAt: DateTime.parse(json["created_at"]),
@@ -92,11 +119,20 @@ class Result {
   Map<String, dynamic> toJson() => {
         "order_id": orderId,
         "user": user,
-        "street_address": streetAddress,
-        "region": region,
-        "district": district,
-        "state": state,
-        "postal_code": postalCode,
+        "shipping_name": shippingName,
+        "shipping_phone_number": shippingPhoneNumber,
+        "shipping_street_address": shippingStreetAddress,
+        "shipping_region": shippingRegion,
+        "shipping_district": shippingDistrict,
+        "shipping_state": shippingState,
+        "shipping_postal_code": shippingPostalCode,
+        "billing_name": billingName,
+        "billing_street_address": billingStreetAddress,
+        "billing_region": billingRegion,
+        "billing_district": billingDistrict,
+        "billing_state": billingState,
+        "billing_postal_code": billingPostalCode,
+        "billing_phone_number": billingPhoneNumber,
         "payment_method": paymentMethod,
         "payment_status": paymentStatus,
         "created_at": createdAt.toIso8601String(),

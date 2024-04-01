@@ -24,8 +24,10 @@ import 'package:internship_sample/presentation/widgets/custom_elevated_button.da
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 import 'package:internship_sample/services/api_services.dart';
 import 'package:internship_sample/services/services.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MultipleItemPlaceOrderScreen extends StatefulWidget {
   MultipleItemPlaceOrderScreen({super.key, required this.productList, required this.grandTotal});
@@ -38,7 +40,9 @@ class MultipleItemPlaceOrderScreen extends StatefulWidget {
 class _MultipleItemPlaceOrderScreenState extends State<MultipleItemPlaceOrderScreen> {
   AppController controller = Get.put(AppController());
   late Razorpay _razorpay;
-
+  ValueNotifier<bool> useSameAddressNotifier = ValueNotifier(true);
+  ValueNotifier<int> deliveryAddressRadioNotifier = ValueNotifier(0);
+  ValueNotifier<int> billingAddressRadioNotifier = ValueNotifier(0);
   @override
   void initState() {
     super.initState();
@@ -46,6 +50,7 @@ class _MultipleItemPlaceOrderScreenState extends State<MultipleItemPlaceOrderScr
     //   controller.createOrder(controller.addressList[0].id.toString());
     // }
     // Initialize Razorpay instance
+    // context.loaderOverlay.hide();
     _razorpay = Razorpay();
 
     // Define event listeners
@@ -64,7 +69,6 @@ class _MultipleItemPlaceOrderScreenState extends State<MultipleItemPlaceOrderScr
     String _paymentId = response.data!['razorpay_payment_id'];
     ApiServices().verifyPayment(_signature, _orderId, _paymentId);
     showSuccessPopup(context);
-    // Handle payment success
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
@@ -88,266 +92,325 @@ class _MultipleItemPlaceOrderScreenState extends State<MultipleItemPlaceOrderScr
   @override
   Widget build(BuildContext context) {
     double totalProductPrice = 0;
-    double gTotal = 0;
+
     double cgstTotal = 0;
     double sgstTotal = 0;
+    double totalPriceWithoutGst = 0;
+
     final screenSize = MediaQuery.of(context).size;
     for (int i = 0; i < widget.productList.length; i++) {
-      cgstTotal += double.parse(widget.productList[i].cgstPrice);
-      sgstTotal += double.parse(widget.productList[i].sgstPrice);
-      totalProductPrice += double.parse(widget.productList[i].product.sellingPrice);
+      double sellingPrice = double.parse(widget.productList[i].product.sellingPrice);
+      double cgstPercentage = double.parse(widget.productList[i].product.cgstRate);
+      double sgstPercentage = double.parse(widget.productList[i].product.sgstRate);
+      double cgstPrice = sellingPrice - sellingPrice / (1 + (cgstPercentage / 100));
+      double sgstPrice = sellingPrice - sellingPrice / (1 + (sgstPercentage / 100));
+      double originalProductPriceWithoutGst = (sellingPrice - cgstPrice - sgstPrice) * widget.productList[i].purchaseCount;
+      cgstTotal += cgstPrice * widget.productList[i].purchaseCount;
+      sgstTotal += sgstPrice * widget.productList[i].purchaseCount;
+      totalPriceWithoutGst += originalProductPriceWithoutGst;
+      totalProductPrice += sellingPrice * widget.productList[i].purchaseCount;
     }
-    gTotal = totalProductPrice + cgstTotal + sgstTotal;
+
     return Scaffold(
       appBar: CustomAppBar(
         title: "Place Order",
       ),
       backgroundColor: appBackgroundColor,
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    child: ListView.builder(
-                      itemBuilder: (context, index) {
-                        // final int selectedCategory = productList[index]['category'];
+      body: LoaderOverlay(
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      child: ListView.builder(
+                        itemBuilder: (context, index) {
+                          // final int selectedCategory = productList[index]['category'];
 
-                        final int count = widget.productList[index].purchaseCount;
+                          final int count = widget.productList[index].purchaseCount;
 
-                        return Column(
-                          children: [
-                            kHeight,
-                            if (count != 0)
-                              PlaceOrderItemWidget(
-                                imagePath: widget.productList[index].product.product.productImages.isNotEmpty ? widget.productList[index].product.product.productImages[0].productImage : '',
-                                productName: widget.productList[index].product.product.name,
-                                productDescription: widget.productList[index].product.product.description,
-                                count: count,
-                              ),
-                            Divider(
-                              thickness: 0.3,
-                            )
-                          ],
-                        );
-                      },
-                      itemCount: widget.productList.length,
-                      physics: NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
+                          return Column(
+                            children: [
+                              kHeight,
+                              if (count != 0)
+                                PlaceOrderItemWidget(
+                                  imagePath: widget.productList[index].product.product.productImages.isNotEmpty ? widget.productList[index].product.product.productImages[0].productImage : '',
+                                  productName: widget.productList[index].product.product.name,
+                                  productDescription: widget.productList[index].product.product.description,
+                                  count: count,
+                                ),
+                              Divider(
+                                thickness: 0.3,
+                              )
+                            ],
+                          );
+                        },
+                        itemCount: widget.productList.length,
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                      ),
                     ),
-                  ),
-                  kHeight,
-                  //delivery addresses
-
-                  kHeight,
-
-                  Obx(() {
-                    return controller.addressList.isEmpty ? CustomTextWidget(text: "No saved addresses!") : AddressSection(screenSize: screenSize);
-                  }),
-
-                  SizedBox(height: 5),
-
-                  // add new address button
-                  CustomTextIconButton(
-                    onPressed: () async {
-                      TextEditingController _streetAddressConrller = TextEditingController();
-                      TextEditingController _regionController = TextEditingController();
-                      TextEditingController _districtController = TextEditingController();
-                      TextEditingController _stateController = TextEditingController();
-                      TextEditingController _postalcodeController = TextEditingController();
-                      Services().showAddressEditPopup(
-                        true,
-                        context,
-                        "",
-                        "ADD ADDRESS",
-                        "ADD",
-                        _streetAddressConrller,
-                        _regionController,
-                        _districtController,
-                        _stateController,
-                        _postalcodeController,
-                      );
-                    },
-                    icon: Icons.add,
-                    label: "Add address",
-                    textAndIconColor: Colors.black,
-                    textAndIconSize: 12,
-                  ),
-                  SizedBox(height: 20),
-                  Row(
-                    children: [
-                      Icon(CupertinoIcons.ticket),
-                      kWidth,
-                      CustomTextWidget(
-                        text: "Apply Coupons",
-                        fontSize: 16,
-                        fontweight: FontWeight.w500,
-                      ),
-                      Spacer(),
-                      CustomTextWidget(
-                        text: "Select",
-                        fontColor: kMainThemeColor,
-                        fontweight: FontWeight.w600,
-                      )
-                    ],
-                  ),
-                  kHeight,
-                  Divider(),
-                  SizedBox(height: 20),
-                  CustomTextWidget(
-                    text: "Order Payment Details",
-                    fontSize: 17,
-                    fontweight: FontWeight.w600,
-                  ),
-                  Container(
-                    child: ListView.builder(
-                      itemBuilder: (context, index) {
-                        // final int selectedCategory = productList[index]['category'];
-                        final String price = widget.productList[index].product.sellingPrice;
-                        final int count = widget.productList[index].purchaseCount;
-                        final double total = double.parse(price) * count;
-                        // grantTotalNotifier.value = grantTotalNotifier.value + total;
-                        return Column(
-                          children: [
-                            kHeight,
-                            if (count != 0)
-                              Row(
-                                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Container(
-                                    width: screenSize.width * 0.56,
-                                    child: CustomTextWidget(
-                                      text: widget.productList[index].product.product.name,
-                                      fontSize: 16,
-                                      fontweight: FontWeight.w400,
-                                    ),
-                                  ),
-                                  Spacer(),
-                                  CustomTextWidget(
-                                    text: price,
-                                    // fontColor: kMainThemeColor,
-                                    fontweight: FontWeight.w600,
-                                  ),
-                                  CustomTextWidget(text: " * "),
-                                  CustomTextWidget(
-                                    text: "${count}  : ",
-                                    // fontColor: kMainThemeColor,
-                                    fontweight: FontWeight.w600,
-                                  ),
-                                  // Spacer(),
-                                  CustomTextWidget(
-                                    text: total.toString(),
-                                    // fontColor: kMainThemeColor,
-                                    fontweight: FontWeight.w600,
-                                  ),
-                                ],
-                              ),
-                          ],
-                        );
-                      },
-                      itemCount: widget.productList.length,
-                      physics: NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      CustomTextWidget(
-                        text: "Order Amounts",
-                        fontSize: 16,
-                        fontweight: FontWeight.w400,
-                      ),
-                      ValueListenableBuilder(
-                          valueListenable: grantTotalNotifier,
-                          builder: (context, total, _) {
-                            return CustomTextWidget(
-                              text: "₹ ${total.toStringAsFixed(2)}",
-                              fontSize: 16,
-                              fontweight: FontWeight.w600,
-                            );
-                          })
-                    ],
-                  ),
-                  kHeight,
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      CustomTextWidget(
-                        text: "Total CGST",
-                        fontSize: 16,
-                        fontweight: FontWeight.w400,
-                      ),
-                      Spacer(),
-                      Column(
+                    kHeight,
+                    //delivery addresses
+                    if (controller.addressList.isNotEmpty)
+                      Row(
                         children: [
-                          CustomTextWidget(
-                            text: "₹ ${cgstTotal.toStringAsFixed(2)}",
-                            fontweight: FontWeight.w600,
+                          SizedBox(
+                            width: screenSize.width * 0.8,
+                            child: CustomTextWidget(
+                              text: "Use Delivery Address as Billing Address :",
+                              fontweight: FontWeight.w600,
+                            ),
                           ),
+                          // Default value
+                          Spacer(),
+
+                          Checkbox(
+                            value: useSameAddressNotifier.value,
+                            onChanged: (bool? value) {
+                              setState(() {
+                                useSameAddressNotifier.value = value ?? true; // Update the isChecked variable
+                              });
+                            },
+                          )
                         ],
                       ),
-                    ],
-                  ),
-                  kHeight,
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      CustomTextWidget(
-                        text: "Total SGST",
-                        fontSize: 16,
-                        fontweight: FontWeight.w400,
+
+                    Obx(() {
+                      if (controller.addressList.isEmpty) {
+                        useSameAddressNotifier.value = false;
+                        return CustomTextWidget(text: "No saved addresses!");
+                      } else {
+                        return AddressSection(
+                          screenSize: screenSize,
+                          heading: "Delivery Address",
+                          selectedRadioNotifier: deliveryAddressRadioNotifier,
+                        );
+                      }
+                    }),
+                    kHeight,
+                    ValueListenableBuilder(
+                        valueListenable: useSameAddressNotifier,
+                        builder: (context, hide, _) {
+                          if (hide) {
+                            return SizedBox();
+                          } else {
+                            return AddressSection(
+                              screenSize: screenSize,
+                              heading: "Billing Address",
+                              selectedRadioNotifier: billingAddressRadioNotifier,
+                            );
+                          }
+                        }),
+                    SizedBox(height: 5),
+
+                    // add new address button
+                    CustomTextIconButton(
+                      onPressed: () async {
+                        TextEditingController _nameContrller = TextEditingController();
+                        TextEditingController _streetAddressContrller = TextEditingController();
+                        TextEditingController _regionController = TextEditingController();
+                        TextEditingController _districtController = TextEditingController();
+                        TextEditingController _stateController = TextEditingController();
+                        TextEditingController _postalcodeController = TextEditingController();
+                        TextEditingController _phoneNumberController = TextEditingController();
+                        await Services().showAddressEditPopup(
+                          true,
+                          context,
+                          "",
+                          "ADD ADDRESS",
+                          "ADD",
+                          _nameContrller,
+                          _streetAddressContrller,
+                          _regionController,
+                          _districtController,
+                          _stateController,
+                          _postalcodeController,
+                          _phoneNumberController,
+                        );
+                        controller.getUserAddresses();
+                      },
+                      icon: Icons.add,
+                      label: "Add address",
+                      textAndIconColor: Colors.black,
+                      textAndIconSize: 12,
+                    ),
+                    SizedBox(height: 20),
+                    Row(
+                      children: [
+                        Icon(CupertinoIcons.ticket),
+                        kWidth,
+                        CustomTextWidget(
+                          text: "Apply Coupons",
+                          fontSize: 16,
+                          fontweight: FontWeight.w500,
+                        ),
+                        Spacer(),
+                        CustomTextWidget(
+                          text: "Select",
+                          fontColor: kMainThemeColor,
+                          fontweight: FontWeight.w600,
+                        )
+                      ],
+                    ),
+                    kHeight,
+                    Divider(),
+                    SizedBox(height: 20),
+                    CustomTextWidget(
+                      text: "Order Payment Details",
+                      fontSize: 17,
+                      fontweight: FontWeight.w600,
+                    ),
+                    Container(
+                      child: ListView.builder(
+                        itemBuilder: (context, index) {
+                          // final int selectedCategory = productList[index]['category'];
+                          final String price = widget.productList[index].product.sellingPrice.toString();
+                          final int count = widget.productList[index].purchaseCount;
+                          final double total = double.parse(price) * count;
+                          // grantTotalNotifier.value = grantTotalNotifier.value + total;
+                          return Column(
+                            children: [
+                              kHeight,
+                              if (count != 0)
+                                Row(
+                                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      width: screenSize.width * 0.56,
+                                      child: CustomTextWidget(
+                                        text: widget.productList[index].product.product.name,
+                                        fontSize: 16,
+                                        fontweight: FontWeight.w400,
+                                      ),
+                                    ),
+                                    Spacer(),
+                                    CustomTextWidget(
+                                      text: price,
+                                      // fontColor: kMainThemeColor,
+                                      fontweight: FontWeight.w600,
+                                    ),
+                                    CustomTextWidget(text: " * "),
+                                    CustomTextWidget(
+                                      text: "${count}  : ",
+                                      // fontColor: kMainThemeColor,
+                                      fontweight: FontWeight.w600,
+                                    ),
+                                    // Spacer(),
+                                    CustomTextWidget(
+                                      text: total.toString(),
+                                      // fontColor: kMainThemeColor,
+                                      fontweight: FontWeight.w600,
+                                    ),
+                                  ],
+                                ),
+                            ],
+                          );
+                        },
+                        itemCount: widget.productList.length,
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
                       ),
-                      CustomTextWidget(
-                        text: "₹ ${sgstTotal.toStringAsFixed(2)}",
-                        fontweight: FontWeight.w600,
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 20),
-                  Divider(),
-                  SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      CustomTextWidget(
-                        text: "Order Total",
-                        fontSize: 17,
-                        fontweight: FontWeight.w600,
-                      ),
-                      CustomTextWidget(
-                        text: "₹ ${gTotal.toStringAsFixed(2)}",
-                        fontSize: 16,
-                        fontweight: FontWeight.w600,
-                      )
-                    ],
-                  ),
-                  kHeight,
-                  Row(
-                    children: [
-                      CustomTextWidget(
-                        text: "EMI Available",
-                        fontSize: 16,
-                        fontweight: FontWeight.w400,
-                      ),
-                      SizedBox(width: 20),
-                      CustomTextWidget(
-                        text: "Details",
-                        fontColor: kMainThemeColor,
-                        fontweight: FontWeight.w600,
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 100),
-                ],
-              ),
-            )
-          ],
+                    ),
+                    SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        CustomTextWidget(
+                          text: "Order Amounts",
+                          fontSize: 16,
+                          fontweight: FontWeight.w400,
+                        ),
+                        ValueListenableBuilder(
+                            valueListenable: grantTotalNotifier,
+                            builder: (context, total, _) {
+                              return CustomTextWidget(
+                                text: "₹ ${totalPriceWithoutGst.toStringAsFixed(2)}",
+                                fontSize: 16,
+                                fontweight: FontWeight.w600,
+                              );
+                            })
+                      ],
+                    ),
+                    kHeight,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        CustomTextWidget(
+                          text: "Total CGST",
+                          fontSize: 16,
+                          fontweight: FontWeight.w400,
+                        ),
+                        Spacer(),
+                        Column(
+                          children: [
+                            CustomTextWidget(
+                              text: "₹ ${cgstTotal.toStringAsFixed(2)}",
+                              fontweight: FontWeight.w600,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    kHeight,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        CustomTextWidget(
+                          text: "Total SGST",
+                          fontSize: 16,
+                          fontweight: FontWeight.w400,
+                        ),
+                        CustomTextWidget(
+                          text: "₹ ${sgstTotal.toStringAsFixed(2)}",
+                          fontweight: FontWeight.w600,
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 20),
+                    Divider(),
+                    SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        CustomTextWidget(
+                          text: "Order Total",
+                          fontSize: 17,
+                          fontweight: FontWeight.w600,
+                        ),
+                        CustomTextWidget(
+                          text: "₹ ${totalProductPrice.toStringAsFixed(2)}",
+                          fontSize: 16,
+                          fontweight: FontWeight.w600,
+                        )
+                      ],
+                    ),
+                    kHeight,
+                    // Row(
+                    //   children: [
+                    //     CustomTextWidget(
+                    //       text: "EMI Available",
+                    //       fontSize: 16,
+                    //       fontweight: FontWeight.w400,
+                    //     ),
+                    //     SizedBox(width: 20),
+                    //     CustomTextWidget(
+                    //       text: "Details",
+                    //       fontColor: kMainThemeColor,
+                    //       fontweight: FontWeight.w600,
+                    //     ),
+                    //   ],
+                    // ),
+                    SizedBox(height: 100),
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
       bottomSheet: Container(
@@ -357,25 +420,34 @@ class _MultipleItemPlaceOrderScreenState extends State<MultipleItemPlaceOrderScr
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Center(
-              child: CustomTextWidget(
-                text: "₹ ${gTotal.toStringAsFixed(2)}",
-                fontSize: 16,
-                fontweight: FontWeight.w600,
-              ),
+            Column(
+              children: [
+                Center(
+                  child: CustomTextWidget(
+                    text: "₹ ${totalProductPrice.toStringAsFixed(2)} +",
+                    fontSize: 16,
+                    fontweight: FontWeight.w600,
+                  ),
+                ),
+                CustomTextWidget(text: "Delivery charges")
+              ],
             ),
             Container(
               height: 55,
-              width: 250,
+              width: screenSize.width * 0.5,
               child: GestureDetector(
                 onTap: () async {
                   if (controller.addressList.isEmpty) {
                     Services().showCustomSnackBar(context, "No address found. Add an address to continue");
                   } else {
+                    context.loaderOverlay.show();
                     proceedToPayment();
                   }
                 },
-                child: CustomElevatedButton(label: "Proceed to Payment"),
+                child: CustomElevatedButton(
+                  label: "Proceed to Payment",
+                  fontSize: 18,
+                ),
               ),
             )
           ],
@@ -386,14 +458,18 @@ class _MultipleItemPlaceOrderScreenState extends State<MultipleItemPlaceOrderScr
 
   proceedToPayment() async {
     List orderingProductsList = [];
+    await controller.getProfileDetails();
+    SharedPreferences sharedPref = await SharedPreferences.getInstance();
+    final String phoneNo = sharedPref.getString(PHONE)!;
     print("List length = ${widget.productList}");
     for (var product in widget.productList) {
       print("Working loop");
       // final product = item['product'];
       orderingProductsList.add(product);
     }
-    print(controller.addressList[selectedRadioNotifier.value].id);
-    final response = await ApiServices().placeOrder(controller.addressList[selectedRadioNotifier.value].id.toString());
+    print("delivery ${controller.addressList[deliveryAddressRadioNotifier.value].id}");
+    print("bill ${controller.addressList[billingAddressRadioNotifier.value].id}");
+    final response = await ApiServices().placeOrder(controller.addressList[deliveryAddressRadioNotifier.value].id.toString(), controller.addressList[billingAddressRadioNotifier.value].id.toString());
     if (response != null) {
       String _orderId = response.data['order_id'].toString();
       print(_orderId);
@@ -407,10 +483,11 @@ class _MultipleItemPlaceOrderScreenState extends State<MultipleItemPlaceOrderScr
         'order_id': newResponse.data['response']['id'].toString(),
         'description': newResponse.data['response']['items'].toString(),
         'prefill': {
-          'contact': '7858985698',
+          'contact': phoneNo,
           'email': newResponse.data['response']['notes']['email'],
         }
       };
+      context.loaderOverlay.hide();
 
       try {
         _razorpay.open(options);
@@ -418,13 +495,6 @@ class _MultipleItemPlaceOrderScreenState extends State<MultipleItemPlaceOrderScr
         print('Error: $e');
       }
     }
-    // Get.to(
-    //   () => CheckoutScreen(
-    //     price: grandTotal,
-    //     shippingCost: 30,
-    //     orderingProductsList: productList,
-    //   ),
-    // );
   }
 
   showSuccessPopup(BuildContext context) {

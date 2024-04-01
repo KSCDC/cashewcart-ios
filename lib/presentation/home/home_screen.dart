@@ -39,15 +39,18 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // if (!controller.isAlreadyLoadedPlainCashews) {
-    //   controller.getProductsByCategory("Plain Cashews", "");
-    // }
-    // if (!controller.isAlreadyLoadedRoastedAndSaltedCashews) {
-    //   controller.getProductsByCategory("Roasted and Salted Cashews", "");
-    // }
-    // if (!controller.isAlreadyLoadedValueAdded) {
-    //   controller.getProductsByCategory("Value Added", "");
-    // }
+    if (!controller.isAlreadyLoadedcircleAvatarProducts) {
+      controller.getCircleAvatarProducts(1);
+    }
+    if (!controller.isAlreadyLoadedPlainCashews) {
+      controller.getProductsByCategory("Plain Cashews", "");
+    }
+    if (!controller.isAlreadyLoadedRoastedAndSaltedCashews) {
+      controller.getProductsByCategory("Roasted and Salted Cashews", "");
+    }
+    if (!controller.isAlreadyLoadedValueAdded) {
+      controller.getProductsByCategory("Value Added", "");
+    }
     if (!controller.isAlreadyLoadedAllProducts) {
       log("getting all products");
       controller.getAllProducts();
@@ -87,32 +90,33 @@ class HomeScreen extends StatelessWidget {
                         height: 110,
                         child: Obx(
                           () {
-                            return controller.isAllProductsLoading.value
+                            return controller.isCircleAvatarProductsLoading.value
                                 ? Center(
                                     child: CircularProgressIndicator(),
                                   )
                                 : ListView.builder(
                                     itemBuilder: (context, index) {
                                       String productImageUrl = '';
-                                      if (controller.allProducts.value.results!.isNotEmpty) {
-                                        productImageUrl = controller.allProducts.value.results![index].product.productImages.isNotEmpty
-                                            ? "$baseUrl${controller.allProducts.value.results![index].product.productImages[0]['product_image']}"
+                                      if (controller.circleAvatarProductsList.value.results!.isNotEmpty) {
+                                        productImageUrl = controller.circleAvatarProductsList.value.results![index].product.productImages.isNotEmpty
+                                            ? "$baseUrl${controller.circleAvatarProductsList.value.results![index].product.productImages[0]['product_image']}"
                                             : "https://t3.ftcdn.net/jpg/05/04/28/96/240_F_504289605_zehJiK0tCuZLP2MdfFBpcJdOVxKLnXg1.jpg";
                                       }
 
-                                      final productName = controller.allProducts.value.results![index].product.name;
+                                      final productName = controller.circleAvatarProductsList.value.results![index].product.name;
                                       return CircleAvatarListItem(
                                         imagePath: productImageUrl,
                                         label: productName,
                                       );
                                     },
-                                    itemCount: controller.allProducts.value.results!.length,
+                                    itemCount: controller.circleAvatarProductsList.value.results!.length,
                                     scrollDirection: Axis.horizontal,
                                   );
                           },
                         ),
                       ),
 
+                      kHeight,
                       //sliding windows
                       Obx(() {
                         return controller.isPlainCashewLoading.value || controller.isRoastedAndSaltedLoading.value
@@ -128,7 +132,10 @@ class HomeScreen extends StatelessWidget {
                                 width: screenSize.width * 0.9,
                                 child: controller.isPlainCashewLoadingError.value
                                     ? Center(
-                                        child: CustomTextWidget(text: "Loading failed. Please check your internet connection"),
+                                        child: CustomTextWidget(
+                                          text: "Loading failed. Please check your internet connection",
+                                          textAlign: TextAlign.center,
+                                        ),
                                       )
                                     : PageView(
                                         controller: pageController,
@@ -167,6 +174,13 @@ class HomeScreen extends StatelessWidget {
                           },
                         ),
                       ),
+
+                      // SizedBox(
+                      //   width: double.infinity,
+                      //   child: Image(
+                      //     image: AssetImage("lib/core/assets/images/home/banners/Premium_cashew_kernels.jpg"),
+                      //   ),
+                      // ),
                       SizedBox(height: 10),
                       ViewOfferTile(
                         color: Color(0xFF4392F9),
@@ -213,9 +227,10 @@ class HomeScreen extends StatelessWidget {
                                                 return GestureDetector(
                                                   onTap: () async {
                                                     final String productId = controller.bestSellers.value.results[index].product.product.id.toString();
+                                                    await controller.getProductDetails(productId);
+                                                    controller.productDetailsList.add(controller.productDetails.value!);
                                                     previousPageIndexes.add(bottomNavbarIndexNotifier.value);
                                                     bottomNavbarIndexNotifier.value = 4;
-                                                    controller.getProductDetails(productId);
                                                     controller.getProductReviews(productId);
                                                     controller.getSimilarProducts(controller.plainCashews.value, index);
                                                   },
@@ -268,7 +283,7 @@ class HomeScreen extends StatelessWidget {
 
                       Obx(() {
                         return controller.isPlainCashewLoading.value
-                            ? Center(
+                            ? const Center(
                                 child: CircularProgressIndicator(),
                               )
                             : BuyNowTile(
@@ -278,11 +293,11 @@ class HomeScreen extends StatelessWidget {
 
                       Obx(() {
                         return controller.isTrendingLoading.value
-                            ? Center(
+                            ? const Center(
                                 child: CircularProgressIndicator(),
                               )
                             : controller.isTrendingLoadingError.value
-                                ? Center(
+                                ? const Center(
                                     child: CustomTextWidget(text: "Loading trending products failed. Please check your internet connection"),
                                   )
                                 : ViewOfferTile(
@@ -305,14 +320,14 @@ class HomeScreen extends StatelessWidget {
 
                       // products list
 
-                      Container(
+                      SizedBox(
                         height: 250,
                         child: Obx(
                           () => controller.isAllProductsLoading.value
                               ? SizedBox(
                                   width: screenSize.width * 0.4,
                                   height: 300,
-                                  child: Center(
+                                  child: const Center(
                                     child: CircularProgressIndicator(),
                                   ),
                                 )
@@ -324,12 +339,10 @@ class HomeScreen extends StatelessWidget {
                                       onTap: () async {
                                         final String productId = controller.allProducts.value.results!.isNotEmpty ? controller.allProducts.value.results![index].product.id.toString() : "";
 
-                                        // controller.productDetails.value = controller.productDetails.value;
-                                        // print(controller.productDetails.value!.name);
-
+                                       await controller.getProductDetails(productId);
+                                        controller.productDetailsList.add(controller.productDetails.value!);
                                         previousPageIndexes.add(bottomNavbarIndexNotifier.value);
                                         bottomNavbarIndexNotifier.value = 4;
-                                        controller.getProductDetails(productId);
                                         controller.getProductReviews(productId);
                                         controller.getSimilarProducts(controller.allProducts.value, index);
                                       },
@@ -357,7 +370,7 @@ class HomeScreen extends StatelessWidget {
                             return SizedBox(
                               width: screenSize.width * 0.95,
                               height: screenSize.width * 0.8,
-                              child: Center(child: CustomTextWidget(text: "No sponserd products right now")),
+                              child: const Center(child: CustomTextWidget(text: "No sponserd products right now")),
                             );
                           } else {
                             log(controller.sponserd.value.results.toString());
@@ -365,7 +378,7 @@ class HomeScreen extends StatelessWidget {
                                 ? "$baseUrl${controller.sponserd.value.results[0].product.product.productImages[0].productImage}"
                                 : "https://t3.ftcdn.net/jpg/05/04/28/96/240_F_504289605_zehJiK0tCuZLP2MdfFBpcJdOVxKLnXg1.jpg";
                             return controller.isSponserdLoading.value
-                                ? Center(
+                                ? const Center(
                                     child: CircularProgressIndicator(),
                                   )
                                 : GestureDetector(
@@ -377,7 +390,7 @@ class HomeScreen extends StatelessWidget {
                         },
                       ),
                       kHeight,
-                      CustomTextWidget(
+                      const CustomTextWidget(
                         text: "All Featured Products",
                         fontSize: 18,
                         fontweight: FontWeight.w600,
@@ -388,7 +401,7 @@ class HomeScreen extends StatelessWidget {
                             ? SizedBox(
                                 width: screenSize.width,
                                 height: 300,
-                                child: Center(
+                                child: const Center(
                                   child: CircularProgressIndicator(),
                                 ),
                               )
@@ -408,12 +421,11 @@ class HomeScreen extends StatelessWidget {
                                           final String productId = controller.allProducts.value.results![index].product.id.toString();
 
                                           controller.getSimilarProducts(controller.allProducts.value, index);
-                                          // controller.productDetails.value = controller.productDetails.value;
-                                          // print(controller.productDetails.value!.name);
 
+                                         await controller.getProductDetails(productId);
+                                          controller.productDetailsList.add(controller.productDetails.value!);
                                           previousPageIndexes.add(bottomNavbarIndexNotifier.value);
                                           bottomNavbarIndexNotifier.value = 4;
-                                          controller.getProductDetails(productId);
                                           controller.getProductReviews(productId);
                                         },
                                         child: ProductsListItemTile(
@@ -439,7 +451,7 @@ class HomeScreen extends StatelessWidget {
                   );
                 } else {
                   return controller.searchResults.value.count == 0
-                      ? Center(
+                      ? const Center(
                           child: CustomTextWidget(
                             text: "Product not found",
                             fontSize: 16,
@@ -457,12 +469,10 @@ class HomeScreen extends StatelessWidget {
 
                             return GestureDetector(
                               onTap: () async {
-                                // print(
-                                //     "image list ${controller.productDisplayList.valueindex]}");
                                 final String productId = controller.searchResults.value.results![index].product.id.toString();
                                 controller.getSimilarProducts(controller.searchResults.value, index);
                                 await controller.getProductDetails(productId);
-                                // controller.productDetails.value = controller.productDetails.value;
+                                controller.productDetailsList.add(controller.productDetails.value!);
                                 previousPageIndexes.add(bottomNavbarIndexNotifier.value);
                                 bottomNavbarIndexNotifier.value = 4;
                               },
