@@ -25,8 +25,8 @@ class ValueAddedProductsTile extends StatelessWidget {
       ),
       child: Obx(() {
         final productImage;
-        if (controller.valueAdded.value.results!.isNotEmpty) {
-          productImage = controller.valueAdded.value.results![0].product.productImages.isNotEmpty ? "$baseUrl${controller.valueAdded.value.results![0].product.productImages[0]['product_image']}" : "";
+        if (controller.valueAdded.value.isNotEmpty) {
+          productImage = controller.valueAdded.value[0].product.productImages.isNotEmpty ? "$baseUrl${controller.valueAdded.value[0].product.productImages[0].productImage}" : "";
         } else {
           productImage = "";
         }
@@ -62,7 +62,7 @@ class ValueAddedProductsTile extends StatelessWidget {
                             fontweight: FontWeight.w500,
                           ),
                           CustomTextWidget(
-                            text: "${controller.valueAdded.value.count}",
+                            text: "${controller.valueAdded.value.length}",
                             fontSize: 16,
                             fontweight: FontWeight.w400,
                           ),

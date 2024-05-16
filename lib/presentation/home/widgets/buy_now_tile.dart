@@ -6,6 +6,7 @@ import 'package:internship_sample/core/base_url.dart';
 import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/main.dart';
+import 'package:internship_sample/models/product_model.dart';
 import 'package:internship_sample/presentation/home/home_screen.dart';
 import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
 import 'package:internship_sample/presentation/shop/shop_screen.dart';
@@ -16,19 +17,19 @@ class BuyNowTile extends StatelessWidget {
     super.key,
     required this.productDetails,
   });
-  final productDetails;
+  final List<ProductModel> productDetails;
   AppController controller = Get.put(AppController());
   @override
   Widget build(BuildContext context) {
     String imagePath = '';
     String productName = '';
     String productDescription = '';
-    if (productDetails.results.isNotEmpty) {
-      imagePath = productDetails.results[0].product.productImages.isNotEmpty
-          ? "${productDetails.results[0].product.productImages[0]['product_image']}"
+    if (productDetails.isNotEmpty) {
+      imagePath = productDetails[0].product.productImages.isNotEmpty
+          ? "${productDetails[0].product.productImages[0].productImage}"
           : "https://t3.ftcdn.net/jpg/05/04/28/96/240_F_504289605_zehJiK0tCuZLP2MdfFBpcJdOVxKLnXg1.jpg";
-      productName = productDetails.results[0].product.name;
-      productDescription = productDetails.results[0].product.description;
+      productName = productDetails[0].product.name;
+      productDescription = productDetails[0].product.description;
     }
 
     return Container(
@@ -103,8 +104,8 @@ class BuyNowTile extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 10),
                 child: TextButton(
                   onPressed: () async {
-                    final String productId = productDetails.results[0].product.id.toString();
-                   await controller.getProductDetails(productId);
+                    final String productId = productDetails[0].product.productId.toString();
+                    await controller.getProductDetails(productId);
                     controller.getProductReviews(productId);
                     controller.productDetailsList.add(controller.productDetails.value!);
                     previousPageIndexes.add(bottomNavbarIndexNotifier.value);

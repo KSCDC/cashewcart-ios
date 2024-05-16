@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:internship_sample/controllers/app_controller.dart';
 import 'package:internship_sample/core/colors.dart';
+import 'package:internship_sample/main.dart';
 import 'package:internship_sample/presentation/authentication/signin_screen.dart';
+import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
 import 'package:internship_sample/services/api_services.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
@@ -18,8 +20,19 @@ class Services {
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
-  showAddressEditPopup(bool addNewAddress, BuildContext context, String id, String heading, String buttonLabel, TextEditingController nameController,TextEditingController streetAddressConrller, TextEditingController regionController,
-     TextEditingController districtController , TextEditingController stateController,TextEditingController postalcodeController,TextEditingController phoneNumberController) {
+  showAddressEditPopup(
+      bool addNewAddress,
+      BuildContext context,
+      String id,
+      String heading,
+      String buttonLabel,
+      TextEditingController nameController,
+      TextEditingController streetAddressConrller,
+      TextEditingController regionController,
+      TextEditingController districtController,
+      TextEditingController stateController,
+      TextEditingController postalcodeController,
+      TextEditingController phoneNumberController) {
     return Alert(
         context: context,
         title: heading,
@@ -74,9 +87,11 @@ class Services {
             onPressed: () async {
               final response;
               if (addNewAddress) {
-                response = ApiServices().createUserAddress(context,nameController.text, streetAddressConrller.text, regionController.text, districtController.text,stateController.text, postalcodeController.text,phoneNumberController.text, false);
+                response = ApiServices().createUserAddress(context, nameController.text, streetAddressConrller.text, regionController.text, districtController.text, stateController.text,
+                    postalcodeController.text, phoneNumberController.text, false);
               } else {
-                response = await ApiServices().editUserAddress(context, id, nameController.text, streetAddressConrller.text, regionController.text, districtController.text,stateController.text, postalcodeController.text,phoneNumberController.text, false);
+                response = await ApiServices().editUserAddress(context, id, nameController.text, streetAddressConrller.text, regionController.text, districtController.text, stateController.text,
+                    postalcodeController.text, phoneNumberController.text, false);
               }
               // Close the dialog
               if (response != null) {
@@ -121,5 +136,13 @@ class Services {
         )
       ],
     ).show();
+  }
+
+  getProductDetailsAndGotoShopScreen(String productId) async {
+    await controller.getProductDetails(productId);
+    controller.productDetailsList.add(controller.productDetails.value!);
+    previousPageIndexes.add(bottomNavbarIndexNotifier.value);
+    bottomNavbarIndexNotifier.value = 4;
+    controller.getProductReviews(productId);
   }
 }

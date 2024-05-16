@@ -1,145 +1,149 @@
+// To parse this JSON data, do
+//
+//     final productModel = productModelFromJson(jsonString);
+
+import 'dart:convert';
+
+List<ProductModel> productModelFromJson(String str) => List<ProductModel>.from(json.decode(str).map((x) => ProductModel.fromJson(x)));
+
+String productModelToJson(List<ProductModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+
 class ProductModel {
+  int productVariantId;
+  Product product;
+  String weightInGrams;
+  String actualPrice;
+  String sellingPrice;
+  String cgstRate;
+  String sgstRate;
+  String sku;
+  int stockQty;
+  double discountPercentage;
+
   ProductModel({
-    required this.count,
-    this.next,
-    this.previous,
-    required this.results,
-  });
-  int? count;
-  String? next;
-  String? previous;
-  List<Results>? results;
-
-  ProductModel.fromJson(Map<String, dynamic> json) {
-    count = json['count'];
-    next = null;
-    previous = null;
-    results = List.from(json['results']).map((e) => Results.fromJson(e)).toList();
-  }
-
-  Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
-    _data['count'] = count;
-    _data['next'] = next;
-    _data['previous'] = previous;
-    _data['results'] = results!.map((e) => e.toJson()).toList();
-    return _data;
-  }
-
-  ProductModel copyWith({
-    int? count,
-    dynamic next,
-    dynamic previous,
-    List<Results>? results,
-  }) {
-    return ProductModel(
-      count: count ?? this.count,
-      next: next ?? this.next,
-      previous: previous ?? this.previous,
-      results: results ?? List.from(this.results!),
-    );
-  }
-}
-
-class Results {
-  Results({
-    required this.id,
+    required this.productVariantId,
     required this.product,
     required this.weightInGrams,
     required this.actualPrice,
     required this.sellingPrice,
+    required this.cgstRate,
+    required this.sgstRate,
     required this.sku,
     required this.stockQty,
+    required this.discountPercentage,
   });
-  late final int id;
-  late final Product product;
-  late final String weightInGrams;
-  late final String actualPrice;
-  late final String sellingPrice;
-  late final String sku;
-  late final int stockQty;
 
-  Results.fromJson(Map<String, dynamic> json) {
-    id = json['product_variant_id'];
-    product = Product.fromJson(json['product']);
-    weightInGrams = json['weight_in_grams'];
-    actualPrice = json['actual_price'];
-    sellingPrice = json['selling_price'];
-    sku = json['sku'];
-    stockQty = json['stock_qty'];
-  }
+  factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(
+        productVariantId: json["product_variant_id"],
+        product: Product.fromJson(json["product"]),
+        weightInGrams: json["weight_in_grams"],
+        actualPrice: json["actual_price"],
+        sellingPrice: json["selling_price"],
+        cgstRate: json["cgst_rate"],
+        sgstRate: json["sgst_rate"],
+        sku: json["sku"],
+        stockQty: json["stock_qty"],
+        discountPercentage: json["discount_percentage"],
+      );
 
-  Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
-    _data['id'] = id;
-    _data['product'] = product.toJson();
-    _data['weight_in_grams'] = weightInGrams;
-    _data['actual_price'] = actualPrice;
-    _data['selling_price'] = sellingPrice;
-    _data['sku'] = sku;
-    _data['stock_qty'] = stockQty;
-    return _data;
-  }
+  Map<String, dynamic> toJson() => {
+        "product_variant_id": productVariantId,
+        "product": product.toJson(),
+        "weight_in_grams": weightInGrams,
+        "actual_price": actualPrice,
+        "selling_price": sellingPrice,
+        "cgst_rate": cgstRate,
+        "sgst_rate": sgstRate,
+        "sku": sku,
+        "stock_qty": stockQty,
+        "discount_percentage": discountPercentage,
+      };
 }
 
 class Product {
+  int productId;
+  String name;
+  String description;
+  Category category;
+  List<ProductImage> productImages;
+  num averageRating;
+
   Product({
-    required this.id,
+    required this.productId,
     required this.name,
     required this.description,
     required this.category,
     required this.productImages,
+    required this.averageRating,
   });
-  late final int id;
-  late final String name;
-  late final String description;
-  late final Category category;
-  late final List<dynamic> productImages;
 
-  Product.fromJson(Map<String, dynamic> json) {
-    id = json['product_id'];
-    name = json['name'];
-    description = json['description'];
-    category = Category.fromJson(json['category']);
-    productImages = List.castFrom<dynamic, dynamic>(json['product_images']);
-  }
+  factory Product.fromJson(Map<String, dynamic> json) => Product(
+        productId: json["product_id"],
+        name: json["name"],
+        description: json["description"],
+        category: Category.fromJson(json["category"]),
+        productImages: List<ProductImage>.from(json["product_images"].map((x) => ProductImage.fromJson(x))),
+        averageRating: json["average_rating"],
+      );
 
-  Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
-    _data['id'] = id;
-    _data['name'] = name;
-    _data['description'] = description;
-    _data['category'] = category.toJson();
-    _data['product_images'] = productImages;
-    return _data;
-  }
+  Map<String, dynamic> toJson() => {
+        "product_id": productId,
+        "name": name,
+        "description": description,
+        "category": category.toJson(),
+        "product_images": List<dynamic>.from(productImages.map((x) => x.toJson())),
+        "average_rating": averageRating,
+      };
 }
 
 class Category {
+  int id;
+  String name;
+  String parentName;
+  List<dynamic> children;
+
   Category({
     required this.id,
     required this.name,
     required this.parentName,
     required this.children,
   });
-  late final int id;
-  late final String name;
-  late final String? parentName;
-  late final List<dynamic> children;
 
-  Category.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    parentName = json['parent_name'];
-    children = List.castFrom<dynamic, dynamic>(json['children']);
-  }
+  factory Category.fromJson(Map<String, dynamic> json) => Category(
+        id: json["id"] ?? 0, // Use a default value if the id is null
+        name: json["name"] ?? "", // Use a default value if the name is null
+        parentName: json["parent_name"] ?? "", // Use a default value if the parentName is null
+        children: json["children"] != null ? List<dynamic>.from(json["children"]) : [], // Use an empty list if children is null
+      );
 
-  Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
-    _data['id'] = id;
-    _data['name'] = name;
-    _data['parent_name'] = parentName;
-    _data['children'] = children;
-    return _data;
-  }
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "name": name,
+        "parent_name": parentName,
+        "children": List<dynamic>.from(children.map((x) => x)),
+      };
+}
+
+class ProductImage {
+  String productImage;
+  int displayOrder;
+  bool isCoverImage;
+
+  ProductImage({
+    required this.productImage,
+    required this.displayOrder,
+    required this.isCoverImage,
+  });
+
+  factory ProductImage.fromJson(Map<String, dynamic> json) => ProductImage(
+        productImage: json["product_image"],
+        displayOrder: json["display_order"],
+        isCoverImage: json["is_cover_image"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "product_image": productImage,
+        "display_order": displayOrder,
+        "is_cover_image": isCoverImage,
+      };
 }

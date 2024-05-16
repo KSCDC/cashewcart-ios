@@ -39,7 +39,7 @@ class ProductListingScreen extends StatelessWidget {
                   fontSize: 24,
                   fontweight: FontWeight.w600,
                 ),
-                controller.productDisplayList.value.count != 0
+                controller.productDisplayList.value.length != 0
                     ? GridView.count(
                         physics: const NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
@@ -47,14 +47,14 @@ class ProductListingScreen extends StatelessWidget {
                         crossAxisCount: 2,
                         mainAxisSpacing: 5,
                         crossAxisSpacing: 5,
-                        children: List.generate(controller.productDisplayList.value.results!.length, (index) {
-                          final productDetails = controller.productDisplayList.value.results![index];
+                        children: List.generate(controller.productDisplayList.value.length, (index) {
+                          final productDetails = controller.productDisplayList.value[index];
                           return GestureDetector(
                             onTap: () async {
                               // print(
                               //     "image list ${controller.productDisplayList.valueindex]}");
-                              final String productId = controller.productDisplayList.value.results![index].product.id.toString();
-                              controller.getSimilarProducts(controller.plainCashews.value, index);
+                              final String productId = controller.productDisplayList.value[index].product.productId.toString();
+                              // controller.getSimilarProducts(controller.plainCashews.value, index);
                               await controller.getProductDetails(productId);
                               controller.productDetailsList.add(controller.productDetails.value!);
                               previousPageIndexes.add(bottomNavbarIndexNotifier.value);
@@ -72,16 +72,16 @@ class ProductListingScreen extends StatelessWidget {
                           child: CustomTextWidget(text: "No products found"),
                         ),
                       ),
-                if (controller.productDisplayList.value.next != null)
-                  GestureDetector(
-                    onTap: () {
-                      controller.trendingProductsPageNo++;
-                      if (currentDisplayProductCategory == "Sponserd") {
-                        controller.getSponserdProducts();
-                      }
-                    },
-                    child: CustomTextWidget(text: "Load More"),
-                  ),
+                // if (controller.productDisplayList.value.next != null)
+                //   GestureDetector(
+                //     onTap: () {
+                //       controller.trendingProductsPageNo++;
+                //       if (currentDisplayProductCategory == "Sponserd") {
+                //         controller.getSponserdProducts();
+                //       }
+                //     },
+                //     child: CustomTextWidget(text: "Load More"),
+                //   ),
                 kHeight,
               ],
             );

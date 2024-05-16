@@ -23,7 +23,6 @@ class TrendingModelProductListingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("Trending model products next:${controller.productDisplayList2.value.next}");
     return Scaffold(
       appBar: MainAppBar(),
       drawer: SideBar(),
@@ -40,14 +39,14 @@ class TrendingModelProductListingScreen extends StatelessWidget {
                 fontweight: FontWeight.w600,
               ),
               Obx(() {
-                print("count :${controller.productDisplayList2.value.count}");
+                print("count :${controller.productDisplayList2.value.length}");
                 return controller.isTrendingLoading.value || controller.isSponserdLoading.value
                     ? Center(
                         child: CircularProgressIndicator(),
                       )
                     : Column(
                         children: [
-                          controller.productDisplayList2.value.count != 0
+                          controller.productDisplayList2.value.length != 0
                               ? GridView.count(
                                   physics: const NeverScrollableScrollPhysics(),
                                   shrinkWrap: true,
@@ -55,18 +54,18 @@ class TrendingModelProductListingScreen extends StatelessWidget {
                                   crossAxisCount: 2,
                                   mainAxisSpacing: 5,
                                   crossAxisSpacing: 5,
-                                  children: List.generate(controller.productDisplayList2.value.results.length, (index) {
+                                  children: List.generate(controller.productDisplayList2.value.length, (index) {
                                     String imagePath;
-                                    List imageList = controller.productDisplayList2.value.results[index].product.product.productImages;
+                                    List imageList = controller.productDisplayList2.value[index].product.product.productImages;
                                     imagePath = imageList.isNotEmpty ? "$baseUrl${imageList[0].productImage}" : "";
-                                    final productDetails = controller.productDisplayList2.value.results[index].product;
+                                    final productDetails = controller.productDisplayList2.value[index].product;
                                     return GestureDetector(
                                       onTap: () async {
                                         // print(
                                         //     "image list ${controller.productDisplayList.valueindex]}");
 
-                                        final String productId = controller.productDisplayList2.value.results[index].product.product.id.toString();
-                                        controller.getSimilarProducts(controller.plainCashews.value, index);
+                                        final String productId = controller.productDisplayList2.value[index].product.product.productId.toString();
+                                        // controller.getSimilarProducts(controller.plainCashews.value, index);
                                         await controller.getProductDetails(productId);
                                         controller.productDetailsList.add(controller.productDetails.value!);
                                         previousPageIndexes.add(bottomNavbarIndexNotifier.value);
@@ -83,25 +82,25 @@ class TrendingModelProductListingScreen extends StatelessWidget {
                                   child: CustomTextWidget(text: "No products found"),
                                 ),
                           kHeight,
-                          if (controller.productDisplayList2.value.next != null)
-                            GestureDetector(
-                              onTap: () {
-                                if (currentDisplayProductCategory == "Sponserd") {
-                                  controller.sponserdProductsPageNo++;
-                                  controller.getSponserdProducts();
-                                }
-                                if (currentDisplayProductCategory == "Trending") {
-                                  controller.trendingProductsPageNo++;
-                                  controller.getTrendingProducts();
-                                }
-                                if (currentDisplayProductCategory == "Best Sellers") {
-                                  controller.bestSellersPageNo++;
-                                  controller.getBestSellerProducts();
-                                }
-                              },
-                              child: CustomTextWidget(text: "Load More"),
-                            ),
-                          kHeight,
+                          // if (controller.productDisplayList2.value.next != null)
+                          //   GestureDetector(
+                          //     onTap: () {
+                          //       if (currentDisplayProductCategory == "Sponserd") {
+                          //         controller.sponserdProductsPageNo++;
+                          //         controller.getSponserdProducts();
+                          //       }
+                          //       if (currentDisplayProductCategory == "Trending") {
+                          //         controller.trendingProductsPageNo++;
+                          //         controller.getTrendingProducts();
+                          //       }
+                          //       if (currentDisplayProductCategory == "Best Sellers") {
+                          //         controller.bestSellersPageNo++;
+                          //         controller.getBestSellerProducts();
+                          //       }
+                          //     },
+                          //     child: CustomTextWidget(text: "Load More"),
+                          //   ),
+                          // kHeight,
                         ],
                       );
               }),

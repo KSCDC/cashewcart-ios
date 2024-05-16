@@ -30,11 +30,12 @@ class SearchSectionTile extends StatelessWidget {
             onChanged: (value) {
               _debouncer.run(
                 () async {
+                  print("searching");
                   if (value.trim() != "") {
                     controller.searchProducts(value);
                   } else {
                     controller.haveSearchResult.value = false;
-                    print("${controller.searchResults.value.count}");
+                    print("${controller.searchResults.value.length}");
                   }
                 },
               );

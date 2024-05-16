@@ -21,12 +21,7 @@ import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 import 'package:internship_sample/services/services.dart';
 
 // int selectedAddressIndex = -1;
-var _oneValue = '';
 
-var _twoValue = '';
-
-var _threeValue = '';
-final List<String> three = ["1", "2", "3", "4", "5"];
 ValueNotifier<int> productCountNotifier = ValueNotifier(1);
 
 class PlaceOrderScreen extends StatelessWidget {

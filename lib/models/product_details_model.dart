@@ -9,36 +9,40 @@ ProductDetailsModel productDetailsModelFromJson(String str) => ProductDetailsMod
 String productDetailsModelToJson(ProductDetailsModel data) => json.encode(data.toJson());
 
 class ProductDetailsModel {
-  int id;
+  int productId;
   String name;
   String description;
   Category category;
+  num averageRating;
   List<ProductImage> productImages;
   List<ProductVariant> productVariants;
 
   ProductDetailsModel({
-    required this.id,
+    required this.productId,
     required this.name,
     required this.description,
     required this.category,
+    required this.averageRating,
     required this.productImages,
     required this.productVariants,
   });
 
   factory ProductDetailsModel.fromJson(Map<String, dynamic> json) => ProductDetailsModel(
-        id: json["product_id"],
+        productId: json["product_id"],
         name: json["name"],
         description: json["description"],
         category: Category.fromJson(json["category"]),
+        averageRating: json["average_rating"],
         productImages: List<ProductImage>.from(json["product_images"].map((x) => ProductImage.fromJson(x))),
         productVariants: List<ProductVariant>.from(json["product_variants"].map((x) => ProductVariant.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
+        "product_id": productId,
         "name": name,
         "description": description,
         "category": category.toJson(),
+        "average_rating": averageRating,
         "product_images": List<dynamic>.from(productImages.map((x) => x.toJson())),
         "product_variants": List<dynamic>.from(productVariants.map((x) => x.toJson())),
       };
@@ -47,7 +51,7 @@ class ProductDetailsModel {
 class Category {
   int id;
   String name;
-  String? parentName;
+  dynamic parentName;
   List<dynamic> children;
 
   Category({
@@ -97,7 +101,7 @@ class ProductImage {
 }
 
 class ProductVariant {
-  int id;
+  int productVariantId;
   String weightInGrams;
   String actualPrice;
   String sellingPrice;
@@ -106,10 +110,10 @@ class ProductVariant {
   String sku;
   int stockQty;
   bool isAvailable;
-  double discountPercentage;
+  num discountPercentage;
 
   ProductVariant({
-    required this.id,
+    required this.productVariantId,
     required this.weightInGrams,
     required this.actualPrice,
     required this.sellingPrice,
@@ -122,7 +126,7 @@ class ProductVariant {
   });
 
   factory ProductVariant.fromJson(Map<String, dynamic> json) => ProductVariant(
-        id: json["product_variant_id"],
+        productVariantId: json["product_variant_id"],
         weightInGrams: json["weight_in_grams"],
         actualPrice: json["actual_price"],
         sellingPrice: json["selling_price"],
@@ -131,11 +135,11 @@ class ProductVariant {
         sku: json["sku"],
         stockQty: json["stock_qty"],
         isAvailable: json["is_available"],
-        discountPercentage: json["discount_percentage"]?.toDouble(),
+        discountPercentage: json["discount_percentage"],
       );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
+        "product_variant_id": productVariantId,
         "weight_in_grams": weightInGrams,
         "actual_price": actualPrice,
         "selling_price": sellingPrice,

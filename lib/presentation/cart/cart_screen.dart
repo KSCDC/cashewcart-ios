@@ -75,79 +75,76 @@ class CartScreen extends StatelessWidget {
                             fontSize: 16,
                           ),
                         )
-                      : Container(
-                          child: ListView.builder(
-                            itemBuilder: (context, index) {
-                              print("\n\n\n");
-                              print("product name :::::${controller.cartProducts.value.results[index].product.product.name}");
-                              return Column(
-                                children: [
-                                  kHeight,
-                                  CartProductsListTile(
-                                    productDetails: controller.cartProducts.value.results[index],
+                      : controller.cartProducts.value.count != 0
+                          ? Column(
+                              children: [
+                                Container(
+                                  child: ListView.builder(
+                                    itemBuilder: (context, index) {
+                                      print("\n\n\n");
+                                      print("product name :::::${controller.cartProducts.value.results[index].product.product.name}");
+                                      return Column(
+                                        children: [
+                                          kHeight,
+                                          CartProductsListTile(
+                                            productDetails: controller.cartProducts.value.results[index],
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                    itemCount: controller.cartProducts.value.count,
+                                    physics: NeverScrollableScrollPhysics(),
+                                    shrinkWrap: true,
                                   ),
-                                ],
-                              );
-                            },
-                            itemCount: controller.cartProducts.value.count,
-                            physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                          ),
-                        );
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    CustomTextWidget(
+                                      text: "Grant Total : ",
+                                      fontweight: FontWeight.w600,
+                                    ),
+                                    ValueListenableBuilder(
+                                        valueListenable: grantTotalNotifier,
+                                        builder: (context, grandTotal, _) {
+                                          return CustomTextWidget(
+                                            text: grandTotal.toStringAsFixed(2),
+                                            fontweight: FontWeight.w600,
+                                          );
+                                        })
+                                  ],
+                                ),
+                                kHeight,
+                                GestureDetector(
+                                  onTap: () async {
+                                    if (grantTotalNotifier.value <= 500) {
+                                      const snackBar = SnackBar(
+                                        content: Text('Minimum order amount is Rs 500 and above'),
+                                        behavior: SnackBarBehavior.floating,
+                                        margin: EdgeInsets.all(10),
+                                        padding: EdgeInsets.all(20),
+                                      );
+                                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                    } else {
+                                      await controller.getUserAddresses();
+                                      Get.to(
+                                        () => MultipleItemPlaceOrderScreen(
+                                          productList: controller.cartProducts.value.results,
+                                          grandTotal: grantTotalNotifier.value,
+                                        ),
+                                      );
+                                    }
+                                  },
+                                  child: CustomElevatedButton(
+                                    label: "Buy Now",
+                                    fontSize: 16,
+                                  ),
+                                )
+                              ],
+                            )
+                          : SizedBox();
                 }
               }),
-              kHeight,
-              Obx(() {
-                return controller.cartProducts.value.count != 0
-                    ? Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              CustomTextWidget(
-                                text: "Grant Total : ",
-                                fontweight: FontWeight.w600,
-                              ),
-                              ValueListenableBuilder(
-                                  valueListenable: grantTotalNotifier,
-                                  builder: (context, grandTotal, _) {
-                                    return CustomTextWidget(
-                                      text: grandTotal.toStringAsFixed(2),
-                                      fontweight: FontWeight.w600,
-                                    );
-                                  })
-                            ],
-                          ),
-                          kHeight,
-                          GestureDetector(
-                            onTap: () async {
-                              if (grantTotalNotifier.value <= 500) {
-                                const snackBar = SnackBar(
-                                  content: Text('Minimum order amount is Rs 500 and above'),
-                                  behavior: SnackBarBehavior.floating,
-                                  margin: EdgeInsets.all(10),
-                                  padding: EdgeInsets.all(20),
-                                );
-                                ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                              } else {
-                                await controller.getUserAddresses();
-                                Get.to(
-                                  () => MultipleItemPlaceOrderScreen(
-                                    productList: controller.cartProducts.value.results,
-                                    grandTotal: grantTotalNotifier.value,
-                                  ),
-                                );
-                              }
-                            },
-                            child: CustomElevatedButton(
-                              label: "Buy Now",
-                              fontSize: 16,
-                            ),
-                          )
-                        ],
-                      )
-                    : SizedBox();
-              })
             ],
           ),
         ),

@@ -17,7 +17,7 @@ class OrderTrackingScreen extends StatelessWidget {
     super.key,
     required this.productDetails,
   });
-  final Result productDetails;
+  final OrdersListModel productDetails;
 
   @override
   Widget build(BuildContext context) {

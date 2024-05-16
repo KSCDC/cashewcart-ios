@@ -21,7 +21,7 @@ class ProductsListItemTile extends StatelessWidget {
   Widget build(BuildContext context) {
     if (imagePath == '') {
       imagePath = productDetails.product.productImages.isNotEmpty
-          ? "$baseUrl${productDetails.product.productImages[0]['product_image']}"
+          ? "$baseUrl${productDetails.product.productImages[0].productImage}"
           : "https://t3.ftcdn.net/jpg/05/04/28/96/240_F_504289605_zehJiK0tCuZLP2MdfFBpcJdOVxKLnXg1.jpg";
     }
 
@@ -48,6 +48,14 @@ class ProductsListItemTile extends StatelessWidget {
         borderRadius: BorderRadius.all(
           Radius.circular(10),
         ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey,
+            spreadRadius: 1,
+            blurRadius: 8,
+            offset: Offset(2, 4),
+          ),
+        ],
       ),
       child: Padding(
         padding: const EdgeInsets.all(8.0),

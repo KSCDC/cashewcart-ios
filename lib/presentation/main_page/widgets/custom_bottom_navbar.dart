@@ -20,74 +20,80 @@ class BottomNavigationWidget extends StatelessWidget {
         valueListenable: bottomNavbarIndexNotifier,
         builder: (BuildContext context, int newIndex, _) {
           int previousPageIndex = previousPageIndexes.last;
-          return Padding(
-            padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
-            child: Container(
-              height: 70,
-              decoration: BoxDecoration(
-                color: kMainThemeColor,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(25),
-                  topRight: Radius.circular(25),
-                  bottomLeft: Radius.circular(25),
-                  bottomRight: Radius.circular(25),
-                ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    CustomBottomNavbarItem(
-                      iconWidget: SvgPicture.asset(
-                        "lib/core/assets/images/home_icon.svg",
-                        color: bottomNavbarIndexNotifier.value == 0 || previousPageIndex == 0 ? Colors.white : Colors.white.withOpacity(0.5),
-                      ),
-                      label: "Home",
-                      index: 0,
-                      color: bottomNavbarIndexNotifier.value == 0 || previousPageIndex == 0 ? Colors.white : Colors.white.withOpacity(0.5),
+          return Container(
+            height: 70,
+            // decoration: BoxDecoration(
+            //   color: kMainThemeColor,
+            //   borderRadius: BorderRadius.only(
+            //     topLeft: Radius.circular(25),
+            //     topRight: Radius.circular(25),
+            //     bottomLeft: Radius.circular(25),
+            //     bottomRight: Radius.circular(25),
+            //   ),
+            // ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  CustomBottomNavbarItem(
+                    iconWidget: SvgPicture.asset(
+                      "lib/core/assets/images/home_icon.svg",
+                      color: bottomNavbarIndexNotifier.value == 0 || previousPageIndex == 0 ? kMainThemeColor : Colors.black,
                     ),
-                    CustomBottomNavbarItem(
-                      iconWidget: Icon(Icons.category_outlined),
-                      label: "Categories",
-                      index: 1,
-                      color: bottomNavbarIndexNotifier.value == 1 || previousPageIndex == 1 ? Colors.white : Colors.white.withOpacity(0.5),
+                    label: "Home",
+                    index: 0,
+                    color: bottomNavbarIndexNotifier.value == 0 || previousPageIndex == 0 ? kMainThemeColor : Colors.black,
+                  ),
+                  CustomBottomNavbarItem(
+                    iconWidget: Icon(
+                      Icons.category_outlined,
+                      color: bottomNavbarIndexNotifier.value == 1 || previousPageIndex == 1 ? kMainThemeColor : Colors.black,
                     ),
-                    Stack(
-                      children: [
-                        CustomBottomNavbarItem(
-                          iconWidget: Icon(Icons.shopping_cart_outlined),
-                          label: "Cart",
-                          index: 2,
-                          color: bottomNavbarIndexNotifier.value == 2 || previousPageIndex == 2 ? Colors.white : Colors.white.withOpacity(0.5),
+                    label: "Categories",
+                    index: 1,
+                    color: bottomNavbarIndexNotifier.value == 1 || previousPageIndex == 1 ? kMainThemeColor : Colors.black,
+                  ),
+                  Stack(
+                    children: [
+                      CustomBottomNavbarItem(
+                        iconWidget: Icon(
+                          Icons.shopping_cart_outlined,
+                          color: bottomNavbarIndexNotifier.value == 2 || previousPageIndex == 2 ? kMainThemeColor : Colors.black,
                         ),
-                        Positioned(
-                          top: 7,
-                          right: 10,
-                          child: CircleAvatar(
-                            radius: 7,
-                            child: ValueListenableBuilder(
-                                valueListenable: cartCountNotifier,
-                                builder: (context, value, _) {
-                                  return CustomTextWidget(
-                                    text: value.toString(),
-                                    fontSize: 10,
-                                    fontColor: kMainThemeColor,
-                                    fontweight: FontWeight.w600,
-                                  );
-                                }),
-                          ),
-                        )
-                      ],
+                        label: "Cart",
+                        index: 2,
+                        color: bottomNavbarIndexNotifier.value == 2 || previousPageIndex == 2 ? kMainThemeColor : Colors.black,
+                      ),
+                      Positioned(
+                        top: 7,
+                        right: 3,
+                        child: CircleAvatar(
+                          radius: 7,
+                          child: ValueListenableBuilder(
+                              valueListenable: cartCountNotifier,
+                              builder: (context, value, _) {
+                                return CustomTextWidget(
+                                  text: value.toString(),
+                                  fontSize: 10,
+                                  fontColor: kMainThemeColor,
+                                  fontweight: FontWeight.w600,
+                                );
+                              }),
+                        ),
+                      )
+                    ],
+                  ),
+                  CustomBottomNavbarItem(
+                    iconWidget: Icon(
+                      Icons.person_outlined,
+                      color: bottomNavbarIndexNotifier.value == 3 || previousPageIndex == 3 ? kMainThemeColor : Colors.black,
                     ),
-                    CustomBottomNavbarItem(
-                      iconWidget: Icon(Icons.person_outlined),
-                      label: "Account",
-                      index: 3,
-                      color: bottomNavbarIndexNotifier.value == 3 || previousPageIndex == 3 ? Colors.white : Colors.white.withOpacity(0.5),
-                    ),
-                  ],
-                ),
+                    label: "Account",
+                    index: 3,
+                    color: bottomNavbarIndexNotifier.value == 3 || previousPageIndex == 3 ? kMainThemeColor : Colors.black,
+                  ),
+                ],
               ),
             ),
           );

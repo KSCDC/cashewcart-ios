@@ -63,7 +63,7 @@ class _MultipleItemPlaceOrderScreenState extends State<MultipleItemPlaceOrderScr
     print('Payment Successful: ${response.paymentId}');
     Fluttertoast.showToast(msg: "Payment success");
 
-    log(response.data.toString());
+    // log(response.data.toString());
     String _signature = response.data!['razorpay_signature'];
     String _orderId = response.data!['razorpay_order_id'];
     String _paymentId = response.data!['razorpay_payment_id'];

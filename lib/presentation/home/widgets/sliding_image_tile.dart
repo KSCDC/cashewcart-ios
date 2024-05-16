@@ -21,9 +21,9 @@ class SlidingImageTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String imagePath = "";
-    if (productDetails.results!.isNotEmpty) {
-      imagePath = productDetails.results![0].product.productImages.isNotEmpty
-          ? "$baseUrl${productDetails.results![0].product.productImages[0]['product_image']}"
+    if (productDetails != null) {
+      imagePath = productDetails.product.productImages.isNotEmpty
+          ? "$baseUrl${productDetails.product.productImages[0].productImage}"
           : "https://t3.ftcdn.net/jpg/05/04/28/96/240_F_504289605_zehJiK0tCuZLP2MdfFBpcJdOVxKLnXg1.jpg";
     }
 
@@ -86,8 +86,8 @@ class SlidingImageTile extends StatelessWidget {
                       child: GestureDetector(
                         onTap: () async {
                           // controller.productDetails.results[0].value = await productDetails.results[0];
-                          final String productId = productDetails.results![0].product.id.toString();
-                        await  controller.getProductDetails(productId);
+                          final String productId = productDetails.product.productId.toString();
+                          await controller.getProductDetails(productId);
                           controller.getProductReviews(productId);
                           controller.getSimilarProducts(productDetails, 0);
                           controller.productDetailsList.add(controller.productDetails.value!);

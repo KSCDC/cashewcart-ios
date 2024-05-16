@@ -1,44 +1,13 @@
-// To parse this JSON data, do
-//
-//     final ordersListModel = ordersListModelFromJson(jsonString);
-
 import 'dart:convert';
 
-OrdersListModel ordersListModelFromJson(String str) => OrdersListModel.fromJson(json.decode(str));
+List<OrdersListModel> ordersListModelFromJson(String str) => List<OrdersListModel>.from(json.decode(str).map((x) => OrdersListModel.fromJson(x)));
 
-String ordersListModelToJson(OrdersListModel data) => json.encode(data.toJson());
+String ordersListModelToJson(List<OrdersListModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class OrdersListModel {
-  int count;
-  dynamic next;
-  dynamic previous;
-  List<Result> results;
-
-  OrdersListModel({
-    required this.count,
-    required this.next,
-    required this.previous,
-    required this.results,
-  });
-
-  factory OrdersListModel.fromJson(Map<String, dynamic> json) => OrdersListModel(
-        count: json["count"],
-        next: json["next"],
-        previous: json["previous"],
-        results: List<Result>.from(json["results"].map((x) => Result.fromJson(x))),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "count": count,
-        "next": next,
-        "previous": previous,
-        "results": List<dynamic>.from(results.map((x) => x.toJson())),
-      };
-}
-
-class Result {
   int orderId;
   int user;
+  String invoiceNumber;
   String shippingName;
   String shippingPhoneNumber;
   String shippingStreetAddress;
@@ -62,9 +31,10 @@ class Result {
   String status;
   List<Item> items;
 
-  Result({
+  OrdersListModel({
     required this.orderId,
     required this.user,
+    required this.invoiceNumber,
     required this.shippingName,
     required this.shippingPhoneNumber,
     required this.shippingStreetAddress,
@@ -89,9 +59,10 @@ class Result {
     required this.items,
   });
 
-  factory Result.fromJson(Map<String, dynamic> json) => Result(
+  factory OrdersListModel.fromJson(Map<String, dynamic> json) => OrdersListModel(
         orderId: json["order_id"],
         user: json["user"],
+        invoiceNumber: json["invoice_number"],
         shippingName: json["shipping_name"],
         shippingPhoneNumber: json["shipping_phone_number"],
         shippingStreetAddress: json["shipping_street_address"],
@@ -119,6 +90,7 @@ class Result {
   Map<String, dynamic> toJson() => {
         "order_id": orderId,
         "user": user,
+        "invoice_number": invoiceNumber,
         "shipping_name": shippingName,
         "shipping_phone_number": shippingPhoneNumber,
         "shipping_street_address": shippingStreetAddress,
@@ -149,6 +121,7 @@ class Item {
   int purchaseCount;
   String cgstPrice;
   String sgstPrice;
+  String mrp;
   String total;
 
   Item({
@@ -156,6 +129,7 @@ class Item {
     required this.purchaseCount,
     required this.cgstPrice,
     required this.sgstPrice,
+    required this.mrp,
     required this.total,
   });
 
@@ -164,6 +138,7 @@ class Item {
         purchaseCount: json["purchase_count"],
         cgstPrice: json["cgst_price"],
         sgstPrice: json["sgst_price"],
+        mrp: json["mrp"],
         total: json["total"],
       );
 
@@ -172,6 +147,7 @@ class Item {
         "purchase_count": purchaseCount,
         "cgst_price": cgstPrice,
         "sgst_price": sgstPrice,
+        "mrp": mrp,
         "total": total,
       };
 }
@@ -186,7 +162,7 @@ class ItemProduct {
   String sgstRate;
   String sku;
   int stockQty;
-  double discountPercentage;
+  num discountPercentage;
 
   ItemProduct({
     required this.productVariantId,
@@ -276,7 +252,7 @@ class Category {
   factory Category.fromJson(Map<String, dynamic> json) => Category(
         id: json["id"],
         name: json["name"],
-        parentName: json["parent_name"],
+        parentName: json["parent_name"] ?? "",
         children: List<dynamic>.from(json["children"].map((x) => x)),
       );
 

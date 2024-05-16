@@ -6,11 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/models/cart_product_model.dart';
-import 'package:internship_sample/models/orders_list_model.dart' as ordersModel;
+import 'package:internship_sample/models/orders_list_model.dart';
 import 'package:internship_sample/models/product_details_model.dart';
 import 'package:internship_sample/models/product_model.dart';
 import 'package:internship_sample/models/product_reviews_model.dart';
-import 'package:internship_sample/models/trending_product_model.dart' as trendingModel;
+import 'package:internship_sample/models/trending_product_model.dart';
 import 'package:internship_sample/models/user_address_model.dart';
 import 'package:internship_sample/presentation/main_page/main_page_screen.dart';
 import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
@@ -66,22 +66,21 @@ class AppController extends GetxController {
   RxBool sortAscending = false.obs;
 
   RxString dropdownValue = 'Default'.obs;
-
-  Rx<ProductModel> allProducts = ProductModel(count: 0, next: null, previous: null, results: []).obs;
-  Rx<ProductModel> circleAvatarProductsList = ProductModel(count: 0, next: null, previous: null, results: []).obs;
-  Rx<ProductModel> plainCashews = ProductModel(count: 0, next: null, previous: null, results: []).obs;
-  Rx<ProductModel> roastedAndSalted = ProductModel(count: 0, next: null, previous: null, results: []).obs;
-  Rx<trendingModel.TrendingProductModel> trending = trendingModel.TrendingProductModel(count: 0, next: null, previous: null, results: []).obs;
-  Rx<trendingModel.TrendingProductModel> bestSellers = trendingModel.TrendingProductModel(count: 0, next: null, previous: null, results: []).obs;
-  Rx<trendingModel.TrendingProductModel> sponserd = trendingModel.TrendingProductModel(count: 0, next: null, previous: null, results: []).obs;
-  Rx<ProductModel> valueAdded = ProductModel(count: 0, next: null, previous: null, results: []).obs;
-  Rx<ProductModel> similarProducts = ProductModel(count: 0, next: null, previous: null, results: []).obs;
-  Rx<ProductModel> relatedProducts = ProductModel(count: 0, next: null, previous: null, results: []).obs;
-  Rx<ProductModel> productDisplayList = ProductModel(count: 0, next: null, previous: null, results: []).obs;
-  Rx<trendingModel.TrendingProductModel> productDisplayList2 = trendingModel.TrendingProductModel(count: 0, next: null, previous: null, results: []).obs;
+  RxList<ProductModel> allProducts = <ProductModel>[].obs;
+  RxList<ProductModel> circleAvatarProductsList = <ProductModel>[].obs;
+  RxList<ProductModel> plainCashews = <ProductModel>[].obs;
+  RxList<ProductModel> roastedAndSalted = <ProductModel>[].obs;
+  RxList<TrendingProductModel> bestSellers = <TrendingProductModel>[].obs;
+  RxList<TrendingProductModel> trending = <TrendingProductModel>[].obs;
+  RxList<TrendingProductModel> sponserd = <TrendingProductModel>[].obs;
+  RxList<ProductModel> valueAdded = <ProductModel>[].obs;
+  RxList<ProductModel> similarProducts = <ProductModel>[].obs;
+  RxList<ProductModel> relatedProducts = <ProductModel>[].obs;
+  RxList<ProductModel> productDisplayList = <ProductModel>[].obs;
+  RxList<TrendingProductModel> productDisplayList2 = <TrendingProductModel>[].obs;
   Rx<CartProductModel> cartProducts = CartProductModel(count: 0, next: null, previous: null, results: []).obs;
-  Rx<ProductModel> searchResults = ProductModel(count: 0, next: null, previous: null, results: []).obs;
-  Rx<ordersModel.OrdersListModel> ordersList = ordersModel.OrdersListModel(count: 0, next: null, previous: null, results: []).obs;
+  RxList<ProductModel> searchResults = <ProductModel>[].obs;
+  RxList<OrdersListModel> ordersList = <OrdersListModel>[].obs;
   var sortedSearchList;
   RxBool haveSearchResult = false.obs;
 
@@ -153,7 +152,7 @@ class AppController extends GetxController {
     final response = await ApiServices().loginUser(context, email, password);
 
     if (response != null) {
-      log(response.data.toString());
+      // log(response.data.toString());
       final accessToken = response.data['token']['access'];
       final refreshToken = response.data['token']['refresh'];
       print("access token :$accessToken\nrefresh token :$refreshToken");
@@ -183,29 +182,22 @@ class AppController extends GetxController {
     isAllProductsLoading.value = true;
     final response = await ApiServices().getAllProducts(allProductsPageNo.toString());
     if (response != null) {
-      final data = ProductModel.fromJson(response.data);
+      final List<dynamic> responseData = response.data;
+      final List<ProductModel> productList = responseData.map((productData) => ProductModel.fromJson(productData)).toList();
+      // allProducts.clear;
 
-      print("results ${response.data['results']}");
-      List<Results>? results = data.results;
-      if (results != null) {
-        List<Results> combinedResults = [];
-        combinedResults.addAll(allProducts.value.results ?? []);
-        combinedResults.addAll(results);
-        allProducts.value.results = combinedResults;
-        allProducts.update((val) {
-          val!.count = data.count;
-          val.next = response.data['next'];
-          val.previous = response.data['previous'];
-        });
-        // allProducts.value.next = response.data['next'];
-        // allProducts.value.previous = response.data['previous'];
+      List<ProductModel> temp = [];
+      for (var item in productList) {
+        if (!temp.contains(item.product.name)) {
+          temp.add(item);
+        }
       }
-
+      print(productList[0].product.name);
+      // allProducts.value = productList;
+      allProducts.value = temp.reversed.toList();
+      // productList.shuffle();
+      circleAvatarProductsList.value = productList;
       isAlreadyLoadedAllProducts = true;
-
-      log("All products count:${allProducts.value.count.toString()}");
-
-      log("All products next:${response.data['next'].toString()}");
     } else {
       isAllProductsLoadingError.value = true;
     }
@@ -213,63 +205,18 @@ class AppController extends GetxController {
     isAllProductsLoading.value = false;
   }
 
-  getCircleAvatarProducts(int pageNo) async {
-    isCircleAvatarProductsLoading.value = true;
-    final response = await ApiServices().getAllProducts(pageNo.toString());
-    if (response != null) {
-      final data = ProductModel.fromJson(response.data);
-
-      print("results ${response.data['results']}");
-      List<Results>? results = data.results;
-      if (results != null) {
-        List<Results> combinedResults = [];
-        combinedResults.addAll(circleAvatarProductsList.value.results ?? []);
-
-        combinedResults.addAll(results);
-        circleAvatarProductsList.value.results = combinedResults;
-        circleAvatarProductsList.update((val) {
-          val!.count = data.count;
-          val.next = response.data['next'];
-          val.previous = response.data['previous'];
-        });
-        if (response.data['next'] != null) {
-          getCircleAvatarProducts(pageNo + 1);
-        }
-      }
-      circleAvatarProductsList.value.results!.shuffle();
-
-      isAlreadyLoadedcircleAvatarProducts = true;
-      isCircleAvatarProductsLoading.value = false;
-
-      log("Circle avatar list count:${circleAvatarProductsList.value.results!.length.toString()}");
-
-      log("All products next:${response.data['next'].toString()}");
-    } else {}
-  }
-
   getTrendingProducts() async {
-    isBestSellersLoading.value = true;
-    isBestSellersLoadingError.value = false;
+    isTrendingLoading.value = true;
+    isTrendingLoadingError.value = false;
     final response = await ApiServices().getTrendingProducts(trendingProductsPageNo.toString());
     if (response != null) {
-      final data = trendingModel.TrendingProductModel.fromJson(response.data);
+      final List<dynamic> responseData = response.data;
+      final List<TrendingProductModel> productList = responseData.map((productData) => TrendingProductModel.fromJson(productData)).toList();
+      trending.value = productList;
 
-      print("results ${response.data['results']}");
-      List<trendingModel.Result>? results = data.results;
-
-      List<trendingModel.Result> combinedResults = [];
-      combinedResults.addAll(bestSellers.value.results ?? []);
-      combinedResults.addAll(results);
-      bestSellers.value.results = combinedResults;
-      bestSellers.update((val) {
-        val!.count = data.count;
-        val.next = response.data['next'];
-        val.previous = response.data['previous'];
-      });
-
-      isAlreadyLoadedBestsellers = true;
+      isAlreadyLoadedTrending = true;
     } else {
-      isBestSellersLoadingError.value = true;
+      isTrendingLoadingError.value = true;
     }
 
     print("best sellers :${bestSellers}");
@@ -281,28 +228,9 @@ class AppController extends GetxController {
     isBestSellersLoading.value = false;
     final response = await ApiServices().getBestSellerProducts(bestSellersPageNo.toString());
     if (response != null) {
-      final data = trendingModel.TrendingProductModel.fromJson(response.data);
-
-      List<trendingModel.Result>? results = data.results;
-
-      List<trendingModel.Result> combinedResults = [];
-
-      combinedResults.addAll(bestSellers.value.results ?? []);
-
-      combinedResults.addAll(results);
-
-      bestSellers.value.results = combinedResults;
-      bestSellers.update(
-        (val) {
-          val!.count = data.count;
-          val.next = response.data['next'];
-          val.previous = response.data['previous'];
-        },
-      );
-      bestSellers.value.results.shuffle();
-      isAlreadyLoadedBestsellers = true;
-    } else {
-      isBestSellersLoadingError.value = true;
+      final List<dynamic> responseData = response.data;
+      final List<TrendingProductModel> productList = responseData.map((productData) => TrendingProductModel.fromJson(productData)).toList();
+      bestSellers.value = productList;
     }
     print("best sellers :${bestSellers}");
     isBestSellersLoading.value = false;
@@ -314,135 +242,77 @@ class AppController extends GetxController {
     isSponserdLoadingError.value = false;
     final response = await ApiServices().getSponserdProducts(sponserdProductsPageNo.toString());
 
-    if (response != null) {
-      final data = trendingModel.TrendingProductModel.fromJson(response.data);
-      print("Sponserd next from res :${response.data['next']}");
-      List<trendingModel.Result>? results = data.results;
-
-      List<trendingModel.Result> combinedResults = [];
-      combinedResults.addAll(sponserd.value.results ?? []);
-      combinedResults.addAll(results);
-      sponserd.value.results = combinedResults;
-      sponserd.update((val) {
-        val!.count = data.count;
-        val.next = response.data['next'];
-        val.previous = response.data['previous'];
-      });
-      sponserd.value.results.shuffle();
-      print("Sponserd next from model :${sponserd.value.next}");
-      isAlreadyLoadedSponserd = true;
-    } else {
-      isSponserdLoadingError.value = true;
-    }
-
     isSponserdLoading.value = false;
   }
 
   getProductsByCategory(String category, String categoryName) async {
-    // int count;
-    // print(response.data);
-    // print(data.count);
-
-    if (category == "Plain Cashews") {
+    log("getting plain");
+    if (category == "PLAIN CASHEWS") {
       isPlainCashewLoading.value = true;
       isPlainCashewLoadingError.value = false;
       final response = await ApiServices().getProductByCategory(category, categoryName, plainCashewsPageNo.toString());
-      print("storing plained");
+      log("storing plained");
 // print(response.data);
       if (response != null) {
-        final data = ProductModel.fromJson(response.data);
-
-        print("results ${response.data['results']}");
-        List<Results>? results = data.results;
-        if (results != null) {
-          List<Results> combinedResults = [];
-          combinedResults.addAll(plainCashews.value.results ?? []);
-          combinedResults.addAll(results);
-          plainCashews.value.results = combinedResults;
-          plainCashews.update((val) {
-            val!.count = data.count;
-            val.next = response.data['next'];
-            val.previous = response.data['previous'];
-          });
-          for (int i = 0; i < data.results!.length; i++) {
-            final categoryName = data.results![i].product.category.name;
-            if (!plainCashewSubCategories.contains(categoryName)) {
-              plainCashewSubCategories.add(categoryName);
-            }
+        final List<dynamic> responseData = response.data;
+        final List<ProductModel> productList = responseData.map((productData) => ProductModel.fromJson(productData)).toList();
+        plainCashews.value = productList;
+        for (int i = 0; i < productList.length; i++) {
+          final categoryName = productList[i].product.category.name;
+          if (!plainCashewSubCategories.contains(categoryName)) {
+            plainCashewSubCategories.add(categoryName);
           }
         }
+        // }
 
         print("Categories in roasted :$plainCashewSubCategories");
         isAlreadyLoadedPlainCashews = true;
+        log("plain cas : ${plainCashews.value}");
       } else {
         isPlainCashewLoadingError.value = true;
       }
 
       isPlainCashewLoading.value = false;
-    } else if (category == "Roasted and Salted Cashews") {
+    } else if (category == "ROASTED AND SALTED CASHEWS") {
       isRoastedAndSaltedLoading.value = true;
       isRoastedAndSaltedLoadingError.value = false;
       final response = await ApiServices().getProductByCategory(category, categoryName, roastedAndSaltedPageNo.toString());
       print("storing roasted");
-// print(response.data);
-      if (response != null) {
-        final data = ProductModel.fromJson(response.data);
 
-        print("results ${response.data['results']}");
-        List<Results>? results = data.results;
-        if (results != null) {
-          List<Results> combinedResults = [];
-          combinedResults.addAll(roastedAndSalted.value.results ?? []);
-          combinedResults.addAll(results);
-          roastedAndSalted.value.results = combinedResults;
-          roastedAndSalted.update((val) {
-            val!.count = data.count;
-            val.next = response.data['next'];
-            val.previous = response.data['previous'];
-          });
-          for (int i = 0; i < data.results!.length; i++) {
-            final categoryName = data.results![i].product.category.name;
-            if (!roastedAndSaltedSubCategories.contains(categoryName)) {
-              roastedAndSaltedSubCategories.add(categoryName);
-            }
+      if (response != null) {
+        final List<dynamic> responseData = response.data;
+        final List<ProductModel> productList = responseData.map((productData) => ProductModel.fromJson(productData)).toList();
+        roastedAndSalted.value = productList;
+
+        for (int i = 0; i < productList.length; i++) {
+          final categoryName = productList[i].product.category.name;
+          if (!roastedAndSaltedSubCategories.contains(categoryName)) {
+            roastedAndSaltedSubCategories.add(categoryName);
           }
         }
 
-        print("Categories in roasted :$roastedAndSaltedSubCategories");
         isAlreadyLoadedRoastedAndSaltedCashews = true;
       } else {
         isRoastedAndSaltedLoadingError.value = true;
       }
 
       isRoastedAndSaltedLoading.value = false;
-    } else if (category == "Value Added") {
+    } else if (category == "VALUE ADDED CASHEW PRODUCTS") {
       isValueAddedLoading.value = true;
       isValueAddedLoadingError.value = false;
       final response = await ApiServices().getProductByCategory(category, categoryName, valueAddedPageNo.toString());
       if (response != null) {
-        final data = ProductModel.fromJson(response.data);
+        final List<dynamic> responseData = response.data;
+        final List<ProductModel> productList = responseData.map((productData) => ProductModel.fromJson(productData)).toList();
+        valueAdded.value = productList;
 
-        print("results ${response.data['results']}");
-        List<Results>? results = data.results;
-        if (results != null) {
-          List<Results> combinedResults = [];
-          combinedResults.addAll(valueAdded.value.results ?? []);
-          combinedResults.addAll(results);
-          valueAdded.value.results = combinedResults;
-          valueAdded.update((val) {
-            val!.count = data.count;
-            val.next = response.data['next'];
-            val.previous = response.data['previous'];
-          });
-          for (int i = 0; i < data.results!.length; i++) {
-            final categoryName = data.results![i].product.category.name;
-            if (!valueAddedSubCategories.contains(categoryName)) {
-              valueAddedSubCategories.add(categoryName);
-            }
+        for (int i = 0; i < productList.length; i++) {
+          final categoryName = productList[i].product.category.name;
+          if (!valueAddedSubCategories.contains(categoryName)) {
+            valueAddedSubCategories.add(categoryName);
           }
         }
 
-        print("Categories in roasted :$valueAddedSubCategories");
         isAlreadyLoadedValueAdded = true;
       } else {
         isValueAddedLoadingError.value = true;
@@ -453,44 +323,25 @@ class AppController extends GetxController {
   }
 
   searchProducts(String searchKey) async {
+    print("Search key: $searchKey");
     isLoading.value = true;
-
+    haveSearchResult.value = false;
+    // searchResults.value.results = [];
     final response = await ApiServices().searchProduct(searchKey, minSearchPrice.value, maxSearchPrice.value, searchResultPageNo.toString());
 
     if (response != null) {
-      final data = ProductModel.fromJson(response.data);
-      // searchResults.value = data;
-      List<Results>? results = data.results;
-      List<Results> combinedResults = [];
-      if (results != null && results.isNotEmpty) {
-        combinedResults.addAll(searchResults.value.results ?? []);
-        combinedResults.addAll(results);
-        searchResults.value.results = combinedResults;
-        searchResults.update((val) {
-          val!.count = data.count!;
-          val.next = response.data['next'];
-          val.previous = response.data['previous'];
-        });
-        if (sortProduct.value) {
-          if (sortAscending.value) {
-            searchResults.value.results!.sort((a, b) => double.parse(a.sellingPrice).compareTo(double.parse(b.sellingPrice)));
-          } else {
-            searchResults.value.results!.sort((a, b) => double.parse(b.sellingPrice).compareTo(double.parse(a.sellingPrice)));
-          }
+      final List<dynamic> responseData = response.data;
+      final List<ProductModel> productList = responseData.map((productData) => ProductModel.fromJson(productData)).toList();
+      searchResults.value = productList;
+      if (sortProduct.value) {
+        if (sortAscending.value) {
+          searchResults.sort((a, b) => double.parse(a.sellingPrice).compareTo(double.parse(b.sellingPrice)));
+        } else {
+          searchResults.sort((a, b) => double.parse(b.sellingPrice).compareTo(double.parse(a.sellingPrice)));
         }
-        List<Results> updatedResults = List.from(searchResults.value.results ?? []);
-
-        updatedResults.addAll(results);
-        searchResults.value.results = updatedResults;
-
-        haveSearchResult.value = true;
-      } else {
-        haveSearchResult.value = false;
       }
 
-      searchResults.update((val) {
-        val!.next = response.data['next'];
-      });
+      haveSearchResult.value = true;
     } else {
       haveSearchResult.value = false;
     }
@@ -571,22 +422,11 @@ class AppController extends GetxController {
 
     if (response != null) {
       // final review = ProductReviewsModel.fromJson(item);
-      final data = await ProductReviewsModel.fromJson(response.data);
-      productReviewsList.add(data);
+      getProductReviews(productId);
     }
   }
 
-  getSimilarProducts(ProductModel currentCategoryProducts, int selectedIndex) {
-    print("list length before :${currentCategoryProducts.results!.length}");
-
-    if (currentCategoryProducts.results!.isNotEmpty) {
-      var temp = currentCategoryProducts.copyWith(results: List.from(currentCategoryProducts.results!));
-      temp.results!.removeAt(selectedIndex);
-      print("list length after :${temp.results!.length}");
-      similarProducts.value = temp;
-    }
-    print("original list length after :${currentCategoryProducts.results!.length}");
-  }
+  getSimilarProducts(ProductModel currentCategoryProducts, int selectedIndex) {}
 
   getProfileDetails() async {
     isLoading.value = true;
@@ -612,7 +452,7 @@ class AppController extends GetxController {
     final response = await ApiServices().getCartList();
     if (response != null) {
       final data = CartProductModel.fromJson(response.data);
-      log(response.data.toString());
+      // log(response.data.toString());
       cartProducts.value = data;
       cartCountNotifier.value = data.count;
     } else {
@@ -661,8 +501,6 @@ class AppController extends GetxController {
       }
 
       addressList.value = tempList;
-
-      // productReviews.value = productReviewsList;
     } else {
       isLoadingAddressError.value = true;
     }
@@ -680,26 +518,10 @@ class AppController extends GetxController {
     isError.value = true;
     final response = await ApiServices().getOrdersList(ordersListPageNo.toString());
     if (response != null) {
-      final data = ordersModel.OrdersListModel.fromJson(response.data);
+      final List<dynamic> responseData = response.data;
+      final List<OrdersListModel> productList = responseData.map((productData) => OrdersListModel.fromJson(productData)).toList();
 
-      print("results ${response.data['results']}");
-      List<ordersModel.Result>? results = data.results;
-      List<ordersModel.Result> combinedResults = [];
-      if (results != null) {
-        ordersList.value.results = [];
-        combinedResults.addAll(ordersList.value.results ?? []);
-        combinedResults.addAll(results);
-        ordersList.value.results = combinedResults;
-        ordersList.update((val) {
-          val!.count = data.count;
-          val.next = response.data['next'];
-          val.previous = response.data['previous'];
-        });
-      }
-
-      log("Orders count:${allProducts.value.count.toString()}");
-
-      log("Orders next:${response.data['next'].toString()}");
+      ordersList.value = productList;
     } else {
       isError.value = true;
     }

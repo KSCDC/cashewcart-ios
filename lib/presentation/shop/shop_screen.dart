@@ -107,9 +107,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                       if (email != null && password != null) {
                                         int stock = currentProductDetails.productVariants[value].stockQty;
                                         if (stock > 0) {
-                                          print("id for adding cart${currentProductDetails.productVariants[value].id.toString()}");
-                                          // controller.addProductToCart(currentProductDetails.category.id.toString());
-                                          await controller.addProductToCart(context, currentProductDetails.productVariants[value].id.toString());
+                                          await controller.addProductToCart(context, currentProductDetails.productVariants[value].productVariantId.toString());
                                           double parsedPrice = double.tryParse(currentProductDetails.productVariants[value].sellingPrice ?? '')?.toDouble() ?? 0.0;
 
                                           grantTotalNotifier.value = grantTotalNotifier.value + parsedPrice;
@@ -147,7 +145,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                         int stock = 1;
                                         if (stock > 0) {
                                           controller.getUserAddresses();
-                                          await controller.addProductToCart(context, currentProductDetails.productVariants[value].id.toString());
+                                          // await controller.addProductToCart(context, currentProductDetails.productVariants[value]Id.toString());
                                           controller.getCartList();
                                           previousPageIndexes.add(bottomNavbarIndexNotifier.value);
                                           bottomNavbarIndexNotifier.value = 2;
@@ -312,7 +310,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                                                         if (reviewController.text.trim() != "") {
                                                                           controller.addProductReview(
                                                                             context,
-                                                                            currentProductDetails.id.toString(),
+                                                                            currentProductDetails.productId.toString(),
                                                                             reviewController.text,
                                                                             customerRatingNotifier.value,
                                                                           );
@@ -396,7 +394,7 @@ class _ShopScreenState extends State<ShopScreen> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         child: CustomTextWidget(
-                          text: (controller.similarProducts.value.results!.length - 1) < 0 ? "0" : "${(controller.similarProducts.value.results!.length - 1).toString()}+",
+                          text: (controller.similarProducts.value.length - 1) < 0 ? "0" : "${(controller.similarProducts.value.length - 1).toString()}+",
                           fontSize: 20,
                           fontweight: FontWeight.w600,
                         ),
@@ -406,20 +404,20 @@ class _ShopScreenState extends State<ShopScreen> {
                         height: 250,
                         child: Obx(
                           () {
-                            // print("similar products length:${controller.similarProducts.value.results!.length}");
-                            // print("similar products length:${controller.similarProducts.value.results![0].weightInGrams}");
-                            if (controller.similarProducts.value.results!.length! > 1) {
+                            // print("similar products length:${controller.similarProducts.value.length}");
+                            // print("similar products length:${controller.similarProducts.value[0].weightInGrams}");
+                            if (controller.similarProducts.value.length! > 1) {
                               return controller.isSimilarProductsLoading.value
                                   ? Center(
                                       child: CircularProgressIndicator(),
                                     )
                                   : ListView.builder(
                                       itemBuilder: (context, index) {
-                                        final productDetails = controller.similarProducts.value.results![index];
+                                        final productDetails = controller.similarProducts.value[index];
 
                                         return GestureDetector(
                                           onTap: () async {
-                                            final String productId = controller.similarProducts.value.results![index].product.id.toString();
+                                            final String productId = controller.similarProducts.value[index].productVariantId.toString();
                                             // currentCategoryProducts = controller.roastedAndSalted.value;
                                             await controller.getProductDetails(productId);
                                             controller.productDetailsList.add(controller.productDetails.value!);
@@ -433,7 +431,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                           ),
                                         );
                                       },
-                                      itemCount: controller.similarProducts.value.results!.length - 1,
+                                      itemCount: controller.similarProducts.value.length - 1,
                                       scrollDirection: Axis.horizontal,
                                     );
                             } else {
@@ -459,7 +457,7 @@ class _ShopScreenState extends State<ShopScreen> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         child: CustomTextWidget(
-                          text: "${controller.allProducts.value.count.toString()}+",
+                          text: "${controller.allProducts.value.length.toString()}+",
                           fontSize: 20,
                           fontweight: FontWeight.w600,
                         ),
@@ -470,23 +468,23 @@ class _ShopScreenState extends State<ShopScreen> {
                         child: Obx(
                           () {
                             // for showing shuffled list of all products as related products
-                            List numbers = List.generate(controller.allProducts.value.results!.length, (index) => index);
+                            List numbers = List.generate(controller.allProducts.value.length, (index) => index);
                             print('Original list: $numbers');
 
                             numbers.shuffle();
                             print('Shuffled list: $numbers');
-                            if (controller.allProducts.value.count != 0) {
+                            if (controller.allProducts.value.length != 0) {
                               return controller.isAllProductsLoading.value
                                   ? Center(
                                       child: CircularProgressIndicator(),
                                     )
                                   : ListView.builder(
                                       itemBuilder: (context, index) {
-                                        final productDetails = controller.allProducts.value.results![numbers[index]];
+                                        final productDetails = controller.allProducts.value[numbers[index]];
 
                                         return GestureDetector(
                                           onTap: () async {
-                                            final String productId = controller.allProducts.value.results![numbers[index]].product.id.toString();
+                                            final String productId = controller.allProducts.value[numbers[index]].productVariantId.toString();
 
                                             await controller.getProductDetails(productId);
                                             controller.productDetailsList.add(controller.productDetails.value!);
@@ -500,7 +498,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                           ),
                                         );
                                       },
-                                      itemCount: controller.allProducts.value.results!.length,
+                                      itemCount: controller.allProducts.value.length,
                                       scrollDirection: Axis.horizontal,
                                     );
                             } else {
@@ -529,11 +527,11 @@ class _ShopScreenState extends State<ShopScreen> {
                                 )
                               : ListView.builder(
                                   itemBuilder: (context, index) {
-                                    final productDetails = controller.allProducts.value.results![index];
+                                    final productDetails = controller.allProducts.value[index];
 
                                     return GestureDetector(
                                       onTap: () async {
-                                        final String productId = controller.allProducts.value.results![index].product.id.toString();
+                                        final String productId = controller.allProducts.value[index].productVariantId.toString();
                                         await controller.getProductDetails(productId);
                                         controller.productDetailsList.add(controller.productDetails.value!);
                                         print(currentProductDetails.name);
@@ -543,7 +541,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                       ),
                                     );
                                   },
-                                  itemCount: controller.allProducts.value.results!.length,
+                                  itemCount: controller.allProducts.value.length,
                                   scrollDirection: Axis.horizontal,
                                 );
                         }),

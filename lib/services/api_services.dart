@@ -145,7 +145,7 @@ class ApiServices {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        log(response.data.toString());
+        // log(response.data.toString());
         return response;
       } else {
         print("Unexpected status code: ${response.statusCode}");
@@ -178,7 +178,7 @@ class ApiServices {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        log(response.data.toString());
+        // log(response.data.toString());
         return response;
       } else {
         print("Unexpected status code: ${response.statusCode}");
@@ -215,7 +215,7 @@ class ApiServices {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        log(response.data.toString());
+        // log(response.data.toString());
 
         return response;
       } else {
@@ -262,7 +262,7 @@ class ApiServices {
         );
 
         if (response.statusCode == 200 || response.statusCode == 201) {
-          log(response.data.toString());
+          // log(response.data.toString());
           final accessToken = response.data['access'];
 
           sharedPref.setString(ACCESSTOKEN, accessToken);
@@ -379,7 +379,7 @@ class ApiServices {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         print("Staus 200");
-        log(response.data.toString());
+        // log(response.data.toString());
         return response;
       } else {
         print("Unexpected status code: ${response.statusCode}");
@@ -396,14 +396,15 @@ class ApiServices {
   }
 
   getProductByCategory(String categoryParent, String categoryName, String pageNo) async {
+    log("Getting by cat");
     final params = {
       "product__category__parent__name": categoryParent,
       "product__category__name": categoryName,
       "page": pageNo,
     };
-    print("calling $baseUrl${ApiEndPoints.filterProduct}");
-    print(categoryParent);
-    print(categoryName);
+    log("calling $baseUrl${ApiEndPoints.filterProduct}");
+    log(categoryParent);
+    log(categoryName);
     print(pageNo);
     try {
       final dio = Dio();
@@ -539,7 +540,7 @@ class ApiServices {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        log(response.data.toString());
+        // log(response.data.toString());
         return response;
       } else {
         print("Unexpected status code: ${response.statusCode}");
@@ -568,7 +569,7 @@ class ApiServices {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        log(response.data.toString());
+        // log(response.data.toString());
         return response;
       } else {
         print("Unexpected status code: ${response.statusCode}");
@@ -595,7 +596,7 @@ class ApiServices {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        log(response.data.toString());
+        // log(response.data.toString());
         return response;
       } else {
         print("Unexpected status code: ${response.statusCode}");
@@ -620,7 +621,7 @@ class ApiServices {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        log(response.data.toString());
+        // log(response.data.toString());
         return response;
       } else {
         print("Unexpected status code: ${response.statusCode}");
@@ -655,7 +656,7 @@ class ApiServices {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        log(response.data.toString());
+        // log(response.data.toString());
         return response;
       } else {
         print("Unexpected status code: ${response.statusCode}");
@@ -697,7 +698,7 @@ class ApiServices {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        log(response.data.toString());
+        // log(response.data.toString());
         return response;
       } else {
         print("Unexpected status code: ${response.statusCode}");
@@ -737,7 +738,7 @@ class ApiServices {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        log(response.data.toString());
+        // log(response.data.toString());
         return response;
       } else {
         print("Unexpected status code: ${response.statusCode}");
@@ -774,7 +775,7 @@ class ApiServices {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        log(response.data.toString());
+        // log(response.data.toString());
         cartCountNotifier.value++;
         Services().showCustomSnackBar(context, "Product added to cart");
         return response;
@@ -792,7 +793,7 @@ class ApiServices {
           addProductToCart(context, productId);
         }
       } else {
-        Services().showCustomSnackBar(context, e.response!.data['errors']['non_field_errors'][0]);
+        // Services().showCustomSnackBar(context, e.response?.data['errors']['non_field_errors'][0]);
       }
       return null;
     }
@@ -816,7 +817,7 @@ class ApiServices {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        log(response.data.toString());
+        // log(response.data.toString());
         Services().showCustomSnackBar(context, response.data['message']);
         return response;
       } else {
@@ -859,7 +860,7 @@ class ApiServices {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        log(response.data.toString());
+        // log(response.data.toString());
         // Services().showCustomSnackBar(response.data['message']);
         getCartList();
         return response;
@@ -954,7 +955,7 @@ class ApiServices {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        log(response.data.toString());
+        // log(response.data.toString());
         return response;
       } else {
         print("Unexpected status code: ${response.statusCode}");
@@ -1003,7 +1004,7 @@ class ApiServices {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        log(response.data.toString());
+        // log(response.data.toString());
         Services().showCustomSnackBar(context, "Address updated successfully");
         return response;
       } else {
@@ -1042,7 +1043,7 @@ class ApiServices {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201 || response.statusCode == 204) {
-        log(response.data.toString());
+        // log(response.data.toString());
         print("deleted address");
 
         return response;
@@ -1085,7 +1086,7 @@ class ApiServices {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201 || response.statusCode == 204) {
-        log(response.data.toString());
+        // log(response.data.toString());
 
         return response;
       } else {
@@ -1123,7 +1124,7 @@ class ApiServices {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201 || response.statusCode == 204) {
-        log(response.data.toString());
+        // log(response.data.toString());
 
         return response;
       } else {
@@ -1160,7 +1161,7 @@ class ApiServices {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        log(response.data.toString());
+        // log(response.data.toString());
         return response;
       } else {
         print("Unexpected status code: ${response.statusCode}");
@@ -1196,7 +1197,7 @@ class ApiServices {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        log(response.data.toString());
+        // log(response.data.toString());
         return response;
       } else {
         print("Unexpected status code: ${response.statusCode}");
