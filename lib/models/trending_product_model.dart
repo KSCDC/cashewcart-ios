@@ -4,13 +4,13 @@
 
 import 'dart:convert';
 
-List<TrendingProductModel> trendingProductModelFromJson(String str) => List<TrendingProductModel>.from(json.decode(str).map((x) => TrendingProductModel.fromJson(x)));
+TrendingProductModel trendingProductModelFromJson(String str) => TrendingProductModel.fromJson(json.decode(str));
 
-String trendingProductModelToJson(List<TrendingProductModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String trendingProductModelToJson(TrendingProductModel data) => json.encode(data.toJson());
 
 class TrendingProductModel {
   int id;
-  TrendingProductModelProduct product;
+  Product product;
   DateTime createdAt;
   DateTime updatedAt;
 
@@ -23,7 +23,7 @@ class TrendingProductModel {
 
   factory TrendingProductModel.fromJson(Map<String, dynamic> json) => TrendingProductModel(
         id: json["id"],
-        product: TrendingProductModelProduct.fromJson(json["product"]),
+        product: Product.fromJson(json["product"]),
         createdAt: DateTime.parse(json["created_at"]),
         updatedAt: DateTime.parse(json["updated_at"]),
       );
@@ -36,79 +36,36 @@ class TrendingProductModel {
       };
 }
 
-class TrendingProductModelProduct {
-  int productVariantId;
-  ProductProduct product;
-  String weightInGrams;
-  String actualPrice;
-  String sellingPrice;
-  String cgstRate;
-  String sgstRate;
-  String sku;
-  int stockQty;
-  double discountPercentage;
-
-  TrendingProductModelProduct({
-    required this.productVariantId,
-    required this.product,
-    required this.weightInGrams,
-    required this.actualPrice,
-    required this.sellingPrice,
-    required this.cgstRate,
-    required this.sgstRate,
-    required this.sku,
-    required this.stockQty,
-    required this.discountPercentage,
-  });
-
-  factory TrendingProductModelProduct.fromJson(Map<String, dynamic> json) => TrendingProductModelProduct(
-        productVariantId: json["product_id"],
-        product: ProductProduct.fromJson(json["product"]),
-        weightInGrams: json["weight_in_grams"],
-        actualPrice: json["actual_price"],
-        sellingPrice: json["selling_price"],
-        cgstRate: json["cgst_rate"],
-        sgstRate: json["sgst_rate"],
-        sku: json["sku"],
-        stockQty: json["stock_qty"],
-        discountPercentage: json["discount_percentage"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "product_variant_id": productVariantId,
-        "product": product.toJson(),
-        "weight_in_grams": weightInGrams,
-        "actual_price": actualPrice,
-        "selling_price": sellingPrice,
-        "cgst_rate": cgstRate,
-        "sgst_rate": sgstRate,
-        "sku": sku,
-        "stock_qty": stockQty,
-        "discount_percentage": discountPercentage,
-      };
-}
-
-class ProductProduct {
+class Product {
   int productId;
+  String metaTagTitle;
+  String metaTagDescription;
   String name;
   String description;
+  bool newProduct;
   Category category;
   List<ProductImage> productImages;
   num averageRating;
 
-  ProductProduct({
+  Product({
     required this.productId,
+    required this.metaTagTitle,
+    required this.metaTagDescription,
     required this.name,
     required this.description,
+    required this.newProduct,
     required this.category,
     required this.productImages,
     required this.averageRating,
   });
 
-  factory ProductProduct.fromJson(Map<String, dynamic> json) => ProductProduct(
+  factory Product.fromJson(Map<String, dynamic> json) => Product(
         productId: json["product_id"],
+        metaTagTitle: json["meta_tag_title"],
+        metaTagDescription: json["meta_tag_description"],
         name: json["name"],
         description: json["description"],
+        newProduct: json["new_product"],
         category: Category.fromJson(json["category"]),
         productImages: List<ProductImage>.from(json["product_images"].map((x) => ProductImage.fromJson(x))),
         averageRating: json["average_rating"],
@@ -116,18 +73,21 @@ class ProductProduct {
 
   Map<String, dynamic> toJson() => {
         "product_id": productId,
+        "meta_tag_title": metaTagTitle,
+        "meta_tag_description": metaTagDescription,
         "name": name,
         "description": description,
+        "new_product": newProduct,
         "category": category.toJson(),
         "product_images": List<dynamic>.from(productImages.map((x) => x.toJson())),
-        // "average_rating": averageRating,
+        "average_rating": averageRating,
       };
 }
 
 class Category {
   int id;
   String name;
-  String? parentName;
+  String parentName;
   List<dynamic> children;
 
   Category({

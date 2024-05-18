@@ -3,8 +3,11 @@ import 'package:get/get.dart';
 import 'package:internship_sample/controllers/app_controller.dart';
 import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/main.dart';
+import 'package:internship_sample/models/product_details_model.dart';
 import 'package:internship_sample/presentation/authentication/signin_screen.dart';
 import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
+import 'package:internship_sample/presentation/shop/shop_screen.dart';
+import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 import 'package:internship_sample/services/api_services.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
@@ -12,7 +15,10 @@ class Services {
   AppController controller = Get.put(AppController());
   void showCustomSnackBar(BuildContext context, String message) {
     final snackBar = SnackBar(
-      content: Text(message),
+      content: CustomTextWidget(
+        text: message,
+        fontColor: Colors.white,
+      ),
       behavior: SnackBarBehavior.floating,
       margin: EdgeInsets.all(10),
       padding: EdgeInsets.all(20),
@@ -139,10 +145,12 @@ class Services {
   }
 
   getProductDetailsAndGotoShopScreen(String productId) async {
-    await controller.getProductDetails(productId);
-    controller.productDetailsList.add(controller.productDetails.value!);
-    previousPageIndexes.add(bottomNavbarIndexNotifier.value);
-    bottomNavbarIndexNotifier.value = 4;
+    final ProductDetailsModel productDetails = await controller.getProductDetails(productId);
+    Get.to(() => ShopScreen());
+    // controller.productDetailsList.add(controller.productDetails.value!);
+    controller.getSimilarProducts(productDetails.name, productDetails.category.parentName);
     controller.getProductReviews(productId);
+    // previousPageIndexes.add(bottomNavbarIndexNotifier.value);
+    // bottomNavbarIndexNotifier.value = 4;
   }
 }

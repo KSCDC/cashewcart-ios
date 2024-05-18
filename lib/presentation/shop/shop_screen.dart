@@ -1,12 +1,15 @@
 import 'dart:developer';
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:internship_sample/controllers/app_controller.dart';
 import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/main.dart';
 import 'package:internship_sample/models/product_details_model.dart';
+import 'package:internship_sample/models/trending_product_model.dart';
 import 'package:internship_sample/presentation/checkout/checkout_screen.dart';
 import 'package:internship_sample/presentation/cart/cart_screen.dart';
 import 'package:internship_sample/presentation/home/home_screen.dart';
@@ -30,46 +33,72 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 ValueNotifier<int> customerRatingNotifier = ValueNotifier(5);
 
-class ShopScreen extends StatefulWidget {
+class ShopScreen extends StatelessWidget {
   ShopScreen({
     super.key,
     //  this.productDetails,
   });
 
-  @override
-  State<ShopScreen> createState() => _ShopScreenState();
-}
+  // final _scrollController = ScrollController();
 
-class _ShopScreenState extends State<ShopScreen> {
-  final _scrollController = ScrollController();
   AppController controller = Get.put(AppController());
+  final Random _random = Random();
+  int? randomIndex;
+  List<TrendingProductModel>? randomProductList;
   @override
   Widget build(BuildContext context) {
+    randomIndex = _random.nextInt(3);
+
     final screenSize = MediaQuery.of(context).size;
 
     TextEditingController reviewController = TextEditingController();
 
+    switch (randomIndex) {
+      case 0:
+        randomProductList = controller.trending;
+        break;
+      case 1:
+        randomProductList = controller.sponserd;
+        break;
+      case 2:
+        randomProductList = controller.bestSellers;
+        break;
+    }
+    print("Random number \n::::\n:::\n:: $randomIndex");
+
     return Scaffold(
-      appBar: AppBar(
-        scrolledUnderElevation: 0,
-        leading: IconButton(
-          onPressed: () {
-            if (controller.productDetailsList.isNotEmpty) {
-              controller.productDetailsList.removeLast();
-              print("Removing last : ${controller.productDetailsList}");
-              print("length now : ${controller.productDetailsList.length}");
-            }
-            bottomNavbarIndexNotifier.value = previousPageIndexes.last;
-            previousPageIndexes.removeLast();
+      // appBar: AppBar(
+      //   scrolledUnderElevation: 0,
+      //   leading: IconButton(
+      //     onPressed: () {
+      //       if (controller.productDetailsList.isNotEmpty) {
+      //         controller.productDetailsList.removeLast();
+      //         print("Removing last : ${controller.productDetailsList}");
+      //         print("length now : ${controller.productDetailsList.length}");
+      //       }
+      //       bottomNavbarIndexNotifier.value = previousPageIndexes.last;
+      //       previousPageIndexes.removeLast();
+      //     },
+      //     icon: Icon(Icons.arrow_back_ios_new),
+      //   ),
+      // ),
+      appBar: CustomAppBar(
+        actionWidget: InkWell(
+          onTap: () {
+            bottomNavbarIndexNotifier.value = 0;
+            Get.to(() => MainPageScreen());
           },
-          icon: Icon(Icons.arrow_back_ios_new),
+          child: SvgPicture.asset(
+            "lib/core/assets/images/home_icon.svg",
+            color: Colors.black,
+          ),
         ),
       ),
       body: LoaderOverlay(
         child: SingleChildScrollView(
-          controller: _scrollController,
+          // controller: _scrollController,
           child: Obx(() {
-            ProductDetailsModel currentProductDetails = controller.productDetailsList[controller.productDetailsList.length - 1];
+            // ProductDetailsModel currentProductDetails = controller.productDetailsList[controller.productDetailsList.length - 1];
             return controller.isLoading.value
                 ? SizedBox(
                     height: screenSize.height * 0.9,
@@ -82,8 +111,8 @@ class _ShopScreenState extends State<ShopScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SlidingProductTile(
-                        imageList: currentProductDetails.productImages,
-                        count: currentProductDetails.productImages.isNotEmpty ? currentProductDetails.productImages.length : 1,
+                        imageList: controller.productDetails.value!.productImages,
+                        count: controller.productDetails.value!.productImages.isNotEmpty ? controller.productDetails.value!.productImages.length : 1,
                       ),
 
                       // product details
@@ -94,7 +123,7 @@ class _ShopScreenState extends State<ShopScreen> {
                             valueListenable: sizeSelectNotifier,
                             builder: (context, value, _) {
                               return Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   // add to cart button
                                   GestureDetector(
@@ -105,10 +134,12 @@ class _ShopScreenState extends State<ShopScreen> {
                                       String? password = sharedPref.getString(ENCRYPTEDPASSWORD);
 
                                       if (email != null && password != null) {
-                                        int stock = currentProductDetails.productVariants[value].stockQty;
-                                        if (stock > 0) {
-                                          await controller.addProductToCart(context, currentProductDetails.productVariants[value].productVariantId.toString());
-                                          double parsedPrice = double.tryParse(currentProductDetails.productVariants[value].sellingPrice ?? '')?.toDouble() ?? 0.0;
+                                        int stock = controller.productDetails.value!.productVariants[value].stockQty;
+                                        bool isAvailable = controller.productDetails.value!.productVariants[value].isAvailable;
+
+                                        if (stock > 0 && isAvailable) {
+                                          await controller.addProductToCart(context, controller.productDetails.value!.productVariants[value].productVariantId.toString());
+                                          double parsedPrice = double.tryParse(controller.productDetails.value!.productVariants[value].sellingPrice ?? '')?.toDouble() ?? 0.0;
 
                                           grantTotalNotifier.value = grantTotalNotifier.value + parsedPrice;
                                         } else {
@@ -131,42 +162,44 @@ class _ShopScreenState extends State<ShopScreen> {
                                   kWidth,
 
                                   // buy now button
-                                  GestureDetector(
-                                    onTap: () async {
-                                      print("buy now");
-                                      context.loaderOverlay.show();
-                                      SharedPreferences sharedPref = await SharedPreferences.getInstance();
-                                      String? email = sharedPref.getString(EMAIL);
-                                      String? password = sharedPref.getString(ENCRYPTEDPASSWORD);
+                                  // GestureDetector(
+                                  //   onTap: () async {
+                                  //     print("buy now");
+                                  //     context.loaderOverlay.show();
+                                  //     SharedPreferences sharedPref = await SharedPreferences.getInstance();
+                                  //     String? email = sharedPref.getString(EMAIL);
+                                  //     String? password = sharedPref.getString(ENCRYPTEDPASSWORD);
 
-                                      if (email != null && password != null) {
-                                        productCountNotifier.value = 1;
-                                        // int stock = currentProductDetails.productVariants[i].stockQty;
-                                        int stock = 1;
-                                        if (stock > 0) {
-                                          controller.getUserAddresses();
-                                          // await controller.addProductToCart(context, currentProductDetails.productVariants[value]Id.toString());
-                                          controller.getCartList();
-                                          previousPageIndexes.add(bottomNavbarIndexNotifier.value);
-                                          bottomNavbarIndexNotifier.value = 2;
-                                          Get.to(() => MainPageScreen());
-                                        } else {
-                                          Services().showCustomSnackBar(context, "This item is currently unavailable");
-                                        }
-                                      } else {
-                                        Services().showLoginAlert(context, "Please login for for purchasing this product");
-                                      }
-                                      context.loaderOverlay.hide();
-                                    },
-                                    child: const CustomStyledShopPageButton(
-                                      gradientColors: [
-                                        Color(0xFF71F9A9),
-                                        Color(0xFF31B769),
-                                      ],
-                                      icon: Icons.touch_app_outlined,
-                                      label: "Buy Now",
-                                    ),
-                                  ),
+                                  //     if (email != null && password != null) {
+                                  //       productCountNotifier.value = 1;
+                                  //       // int stock = currentProductDetails.productVariants[i].stockQty;
+                                  //       bool isAvailable = controller.productDetails.value!.productVariants[value].isAvailable;
+
+                                  //       int stock = 1;
+                                  //       if (stock > 0 && isAvailable) {
+                                  //         controller.getUserAddresses();
+                                  //         // await controller.addProductToCart(context, currentProductDetails.productVariants[value]Id.toString());
+                                  //         controller.getCartList();
+                                  //         // previousPageIndexes.add(bottomNavbarIndexNotifier.value);
+                                  //         bottomNavbarIndexNotifier.value = 2;
+                                  //         Get.to(() => MainPageScreen());
+                                  //       } else {
+                                  //         Services().showCustomSnackBar(context, "This item is currently unavailable");
+                                  //       }
+                                  //     } else {
+                                  //       Services().showLoginAlert(context, "Please login for for purchasing this product");
+                                  //     }
+                                  //     context.loaderOverlay.hide();
+                                  //   },
+                                  //   child: const CustomStyledShopPageButton(
+                                  //     gradientColors: [
+                                  //       Color(0xFF71F9A9),
+                                  //       Color(0xFF31B769),
+                                  //     ],
+                                  //     icon: Icons.touch_app_outlined,
+                                  //     label: "Buy Now",
+                                  //   ),
+                                  // ),
                                 ],
                               );
                             }),
@@ -310,7 +343,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                                                         if (reviewController.text.trim() != "") {
                                                                           controller.addProductReview(
                                                                             context,
-                                                                            currentProductDetails.productId.toString(),
+                                                                            controller.productDetails.value!.productId.toString(),
                                                                             reviewController.text,
                                                                             customerRatingNotifier.value,
                                                                           );
@@ -417,14 +450,15 @@ class _ShopScreenState extends State<ShopScreen> {
 
                                         return GestureDetector(
                                           onTap: () async {
-                                            final String productId = controller.similarProducts.value[index].productVariantId.toString();
+                                            final String productId = productDetails.productVariantId.toString();
                                             // currentCategoryProducts = controller.roastedAndSalted.value;
-                                            await controller.getProductDetails(productId);
-                                            controller.productDetailsList.add(controller.productDetails.value!);
-                                            print(currentProductDetails.name);
+                                            // await controller.getProductDetails(productId);
+                                            // controller.productDetailsList.add(controller.productDetails.value!);
+                                            // print(controller.productDetails.value!.name);
 
-                                            previousPageIndexes.add(bottomNavbarIndexNotifier.value);
-                                            bottomNavbarIndexNotifier.value = 4;
+                                            // previousPageIndexes.add(bottomNavbarIndexNotifier.value);
+                                            // bottomNavbarIndexNotifier.value = 4;
+                                            Services().getProductDetailsAndGotoShopScreen(productId);
                                           },
                                           child: ProductsListItemTile(
                                             productDetails: productDetails,
@@ -446,10 +480,14 @@ class _ShopScreenState extends State<ShopScreen> {
 
                       //related products
 
-                      const Padding(
+                      Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         child: CustomTextWidget(
-                          text: "Related To",
+                          text: randomIndex == 0
+                              ? "Trending Products"
+                              : randomIndex == 1
+                                  ? "Sponserd Products"
+                                  : "Best Sellers",
                           fontSize: 20,
                           fontweight: FontWeight.w600,
                         ),
@@ -457,7 +495,7 @@ class _ShopScreenState extends State<ShopScreen> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         child: CustomTextWidget(
-                          text: "${controller.allProducts.value.length.toString()}+",
+                          text: "${randomProductList!.length.toString()}+",
                           fontSize: 20,
                           fontweight: FontWeight.w600,
                         ),
@@ -474,31 +512,31 @@ class _ShopScreenState extends State<ShopScreen> {
                             numbers.shuffle();
                             print('Shuffled list: $numbers');
                             if (controller.allProducts.value.length != 0) {
-                              return controller.isAllProductsLoading.value
+                              return controller.isTrendingLoading.value
                                   ? Center(
                                       child: CircularProgressIndicator(),
                                     )
                                   : ListView.builder(
                                       itemBuilder: (context, index) {
-                                        final productDetails = controller.allProducts.value[numbers[index]];
+                                        final productDetails = randomProductList![numbers[index]];
 
                                         return GestureDetector(
                                           onTap: () async {
-                                            final String productId = controller.allProducts.value[numbers[index]].productVariantId.toString();
+                                            // await controller.getProductDetails(productId);
+                                            // controller.productDetailsList.add(controller.productDetails.value!);
+                                            // print(controller.productDetails.value!.name);
 
-                                            await controller.getProductDetails(productId);
-                                            controller.productDetailsList.add(controller.productDetails.value!);
-                                            print(currentProductDetails.name);
-
-                                            previousPageIndexes.add(bottomNavbarIndexNotifier.value);
-                                            bottomNavbarIndexNotifier.value = 4;
+                                            // // previousPageIndexes.add(bottomNavbarIndexNotifier.value);
+                                            // bottomNavbarIndexNotifier.value = 4;
+                                            final String productId = productDetails.product.productId.toString();
+                                            Services().getProductDetailsAndGotoShopScreen(productId);
                                           },
                                           child: ProductsListItemTile(
                                             productDetails: productDetails,
                                           ),
                                         );
                                       },
-                                      itemCount: controller.allProducts.value.length,
+                                      itemCount: randomProductList!.length,
                                       scrollDirection: Axis.horizontal,
                                     );
                             } else {
@@ -534,7 +572,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                         final String productId = controller.allProducts.value[index].productVariantId.toString();
                                         await controller.getProductDetails(productId);
                                         controller.productDetailsList.add(controller.productDetails.value!);
-                                        print(currentProductDetails.name);
+                                        print(controller.productDetails.value!.name);
                                       },
                                       child: ProductsListItemTile(
                                         productDetails: productDetails,

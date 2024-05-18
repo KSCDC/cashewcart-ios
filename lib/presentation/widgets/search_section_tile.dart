@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:internship_sample/controllers/app_controller.dart';
 import 'package:internship_sample/core/colors.dart';
@@ -20,8 +21,8 @@ class SearchSectionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        vertical: 10,
+      padding: EdgeInsets.only(
+        top: 10.w,
       ),
       child: Column(
         children: [
@@ -35,7 +36,7 @@ class SearchSectionTile extends StatelessWidget {
                     controller.searchProducts(value);
                   } else {
                     controller.haveSearchResult.value = false;
-                    print("${controller.searchResults.value.length}");
+                    print("${controller.searchResults.length}");
                   }
                 },
               );

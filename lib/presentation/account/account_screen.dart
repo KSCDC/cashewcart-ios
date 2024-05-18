@@ -9,10 +9,12 @@ import 'package:internship_sample/presentation/account/widgets/account_item_tile
 import 'package:internship_sample/presentation/account/widgets/custom_text_button.dart';
 import 'package:internship_sample/presentation/authentication/signin_screen.dart';
 import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
+import 'package:internship_sample/presentation/my_orders/my_orders_screen.dart';
 import 'package:internship_sample/presentation/profile/profile_screen.dart';
 import 'package:internship_sample/presentation/widgets/custom_elevated_button.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 import 'package:internship_sample/services/api_services.dart';
+import 'package:internship_sample/services/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AccountScreen extends StatelessWidget {
@@ -21,7 +23,7 @@ class AccountScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
       child: Column(
         // crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -76,28 +78,35 @@ class AccountScreen extends StatelessWidget {
             icon: Icons.local_shipping_outlined,
             label: "My orders",
             onTap: () {
-              previousPageIndexes.add(3);
-              bottomNavbarIndexNotifier.value = 6;
+              // previousPageIndexes.add(3);
+              // bottomNavbarIndexNotifier.value = 6;
+              Get.to(() => MyOrdersScreen());
             },
           ),
           AccountItemTile(
             icon: Icons.shopify_sharp,
             label: "Buy Again",
             onTap: () {
-              previousPageIndexes.add(3);
+              // previousPageIndexes.add(3);
 
-              bottomNavbarIndexNotifier.value = 6;
+              // bottomNavbarIndexNotifier.value = 6;
+              Get.to(() => MyOrdersScreen());
             },
           ),
           AccountItemTile(
             icon: Icons.edit,
             label: "Edit Profile",
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => ProfileScreen(),
-                ),
-              );
+            onTap: () async{
+               SharedPreferences sharedPref = await SharedPreferences.getInstance();
+              final email = sharedPref.getString(EMAIL);
+              final password = sharedPref.getString(ENCRYPTEDPASSWORD);
+              if (email != null && password != null) {
+                controller.getProfileDetails();
+                controller.getUserAddresses();
+                Get.to(() => ProfileScreen());
+              } else {
+                Services().showLoginAlert(context, "Please login to access the profile");
+              }
             },
           ),
 

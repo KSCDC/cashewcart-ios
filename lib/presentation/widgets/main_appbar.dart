@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:internship_sample/controllers/app_controller.dart';
 import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/core/constants.dart';
+import 'package:internship_sample/presentation/home/home_screen.dart';
 import 'package:internship_sample/presentation/profile/profile_screen.dart';
 import 'package:internship_sample/presentation/side_bar/side_bar.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
@@ -15,6 +17,7 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      backgroundColor: kMainThemeColor,
       centerTitle: true,
       title: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -44,11 +47,12 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
               }
             },
             child: CircleAvatar(
-                backgroundColor: Colors.white.withOpacity(0),
-                child: Icon(
-                  Icons.person,
-                  size: 40,
-                )),
+              backgroundColor: Colors.white.withOpacity(0),
+              child: Icon(
+                Icons.person,
+                size: 40,
+              ),
+            ),
           ),
         )
       ],

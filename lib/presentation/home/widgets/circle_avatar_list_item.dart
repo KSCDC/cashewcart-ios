@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:internship_sample/core/base_url.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 
@@ -16,18 +17,23 @@ class CircleAvatarListItem extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: SizedBox(
         // height: 120,
-        width: 90,
+        width: 85.w,
         child: Column(
           children: [
             CircleAvatar(
               radius: 35,
               backgroundColor: Colors.white,
-              child: ClipOval(
-                child: Image.network(
-                  imagePath,
-                  fit: BoxFit.scaleDown, // Apply your desired BoxFit property here
-                  width: 70, // Ensure the width and height match the CircleAvatar's size
-                  height: 70,
+              // backgroundImage: NetworkImage(imagePath),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(40.r),
+                child: SizedBox(
+                  height: 60,
+                  child: Image.network(
+                    imagePath,
+                    fit: BoxFit.fitHeight, // Apply your desired BoxFit property here
+                    width: 70.w, // Ensure the width and height match the CircleAvatar's size
+                    height: 70.w,
+                  ),
                 ),
               ),
             ),

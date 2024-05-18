@@ -21,17 +21,16 @@ class MainPageScreen extends StatelessWidget {
     CategoriesScreen(),
     CartScreen(),
     AccountScreen(),
-    ShopScreen(),
-    ProductListingScreen(),
+    // ShopScreen(),
+    // ProductListingScreen(),
     MyOrdersScreen(),
-    ProductListingScreen(),
-    ProductListingScreen(),
-    TrendingModelProductListingScreen(),
+    // ProductListingScreen(),
+    // ProductListingScreen(),
+    // TrendingModelProductListingScreen(),
   ];
   AppController controller = Get.put(AppController());
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       // drawer: SideBar(),
       backgroundColor: appBackgroundColor,

@@ -6,17 +6,20 @@ import 'package:encrypt/encrypt.dart' as enc;
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:internship_sample/controllers/app_controller.dart';
 
 import 'package:internship_sample/core/base_url.dart';
+import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/core/end_points.dart';
 import 'package:internship_sample/presentation/authentication/signin_screen.dart';
 import 'package:internship_sample/presentation/main_page/main_page_screen.dart';
 import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
+import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 import 'package:internship_sample/services/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -241,7 +244,7 @@ class ApiServices {
   }
 
   refreshAccessToken() async {
-    log("refreshing access token");
+    //log("refreshing access token");
     SharedPreferences sharedPref = await SharedPreferences.getInstance();
     final refreshToken = sharedPref.getString(REFRESHTOKEN);
     if (refreshToken != null) {
@@ -279,11 +282,11 @@ class ApiServices {
           print("Error :${e.response!.data}");
           print("Error :${e.response!.statusCode}");
           if (e.response!.statusCode == 400 || e.response!.statusCode == 401) {
-            log("Going to automatic relogin");
+            //log("Going to automatic relogin");
             final autoRelogin = await automaticRelogin();
             print(autoRelogin);
             // if (autoRelogin == null) {
-            //   log("failed trying of auto relogin");
+            //   //log("failed trying of auto relogin");
             // }
           }
         }
@@ -317,13 +320,13 @@ class ApiServices {
       final ivBytes = base64.decode(ivString!);
       final key = enc.Key(keyBytes);
       final iv = enc.IV(ivBytes);
-      log("encrypted :$encryptedBase64");
+      //log("encrypted :$encryptedBase64");
       if (encryptedBase64 != null) {
         final encrypted = enc.Encrypted.fromBase64(encryptedBase64);
         final decrypter = enc.Encrypter(enc.AES(key));
-        log("decrypting");
+        //log("decrypting");
         decrypted = decrypter.decrypt(encrypted, iv: iv);
-        log("Decrypted :$decrypted");
+        //log("Decrypted :$decrypted");
       }
       print("Email : $email, password: $decrypted");
       final response = await dio.post(
@@ -350,7 +353,7 @@ class ApiServices {
       }
     } on DioException catch (e) {
       print("Error :$e");
-      log("Auto login failed with mail:$email");
+      //log("Auto login failed with mail:$email");
       isFailedLogin = true;
       Get.to(() => SignInScreen());
       return null;
@@ -396,15 +399,15 @@ class ApiServices {
   }
 
   getProductByCategory(String categoryParent, String categoryName, String pageNo) async {
-    log("Getting by cat");
+    //log("Getting by cat");
     final params = {
       "product__category__parent__name": categoryParent,
       "product__category__name": categoryName,
       "page": pageNo,
     };
-    log("calling $baseUrl${ApiEndPoints.filterProduct}");
-    log(categoryParent);
-    log(categoryName);
+    //log("calling $baseUrl${ApiEndPoints.filterProduct}");
+    // log(categoryParent);
+    // log(categoryName);
     print(pageNo);
     try {
       final dio = Dio();
@@ -418,7 +421,7 @@ class ApiServices {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        log(response.data.toString());
+        // log(response.data.toString());
         return response;
       } else {
         print("Unexpected status code: ${response.statusCode}");
@@ -777,7 +780,34 @@ class ApiServices {
       if (response.statusCode == 200 || response.statusCode == 201) {
         // log(response.data.toString());
         cartCountNotifier.value++;
-        Services().showCustomSnackBar(context, "Product added to cart");
+        final snackBar = SnackBar(
+          content: SizedBox(
+            height: 35.w,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                CustomTextWidget(
+                  text: "Product added to cart",
+                  fontColor: Colors.white,
+                ),
+                TextButton(
+                  onPressed: () {
+                    bottomNavbarIndexNotifier.value = 2;
+                    Get.to(() => MainPageScreen());
+                  },
+                  child: CustomTextWidget(
+                    text: "Go to Cart",
+                    fontColor: kMainThemeColor,
+                  ),
+                )
+              ],
+            ),
+          ),
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.all(10),
+          padding: EdgeInsets.all(20),
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
         return response;
       } else {
         print("Unexpected status code: ${response.statusCode}");
@@ -793,7 +823,40 @@ class ApiServices {
           addProductToCart(context, productId);
         }
       } else {
-        // Services().showCustomSnackBar(context, e.response?.data['errors']['non_field_errors'][0]);
+        if (e.response!.data["errors"]["non_field_errors"] != null) {
+          // Services().showCustomSnackBar(context, "message");
+          final snackBar = SnackBar(
+            content: SizedBox(
+              height: 35.w,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SizedBox(
+                    width: 220.w,
+                    child: CustomTextWidget(
+                      text: e.response!.data["errors"]["non_field_errors"][0].toString(),
+                      fontColor: Colors.white,
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      bottomNavbarIndexNotifier.value = 2;
+                      Get.to(() => MainPageScreen());
+                    },
+                    child: CustomTextWidget(
+                      text: "Go to Cart",
+                      fontColor: kMainThemeColor,
+                    ),
+                  )
+                ],
+              ),
+            ),
+            behavior: SnackBarBehavior.floating,
+            margin: EdgeInsets.all(10),
+            padding: EdgeInsets.all(20),
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        }
       }
       return null;
     }
@@ -977,7 +1040,7 @@ class ApiServices {
   editUserAddress(
       BuildContext context, String id, String name, String streetAddress, String region, String district, String state, String postalCode, String phoneNumber, bool isDefaultAddress) async {
     try {
-      log("Editing address id $id");
+      //log("Editing address id $id");
       final dio = Dio();
       dio.options.connectTimeout = connectionTimeoutDuration;
       final Map<String, dynamic> formData = {

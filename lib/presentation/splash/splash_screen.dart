@@ -44,7 +44,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
               Padding(
                 padding: EdgeInsets.all(20),
                 child: Image(
-                  image: AssetImage("lib/core/assets/images/logos/app_logo.png"),
+                  image: AssetImage("lib/core/assets/images/logos/splash_logo.png"),
                   width: screenSize.width * 0.85,
                 ),
               )

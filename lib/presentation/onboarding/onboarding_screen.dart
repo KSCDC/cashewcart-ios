@@ -155,13 +155,13 @@ class OnboardingScreen extends StatelessWidget {
                           ? const CustomTextWidget(
                               text: "Get Started",
                               fontSize: 18,
-                              fontColor: Color(0xffF83758),
+                              fontColor: kMainThemeColor,
                               fontweight: FontWeight.w600,
                             )
                           : const CustomTextWidget(
                               text: "Next",
                               fontSize: 18,
-                              fontColor: Color(0xffF83758),
+                              fontColor: kMainThemeColor,
                               fontweight: FontWeight.w600,
                               textAlign: TextAlign.center,
                             );

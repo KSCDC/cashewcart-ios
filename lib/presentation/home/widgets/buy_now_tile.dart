@@ -11,6 +11,7 @@ import 'package:internship_sample/presentation/home/home_screen.dart';
 import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
 import 'package:internship_sample/presentation/shop/shop_screen.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
+import 'package:internship_sample/services/services.dart';
 
 class BuyNowTile extends StatelessWidget {
   BuyNowTile({
@@ -105,11 +106,12 @@ class BuyNowTile extends StatelessWidget {
                 child: TextButton(
                   onPressed: () async {
                     final String productId = productDetails[0].product.productId.toString();
-                    await controller.getProductDetails(productId);
-                    controller.getProductReviews(productId);
-                    controller.productDetailsList.add(controller.productDetails.value!);
-                    previousPageIndexes.add(bottomNavbarIndexNotifier.value);
-                    bottomNavbarIndexNotifier.value = 4;
+                     Services().getProductDetailsAndGotoShopScreen(productId);
+                    // await controller.getProductDetails(productId);
+                    // controller.getProductReviews(productId);
+                    // controller.productDetailsList.add(controller.productDetails.value!);
+                    // previousPageIndexes.add(bottomNavbarIndexNotifier.value);
+                    // bottomNavbarIndexNotifier.value = 4;
                   },
                   style: TextButton.styleFrom(
                     backgroundColor: kMainThemeColor,

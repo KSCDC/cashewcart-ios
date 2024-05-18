@@ -30,7 +30,7 @@ class CheckoutScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
-    log("checkout :${orderingProductsList[0]}");
+    //log("checkout :${orderingProductsList[0]}");
     return Scaffold(
       backgroundColor: appBackgroundColor,
       appBar: CustomAppBar(title: "Checkout"),
@@ -119,7 +119,7 @@ class CheckoutScreen extends StatelessWidget {
                   bottomNavbarIndexNotifier.value = 2;
                   // recentOrders.add(value)
 
-                  previousPageIndexes.add(bottomNavbarIndexNotifier.value);
+                  // previousPageIndexes.add(bottomNavbarIndexNotifier.value);
                   Future.delayed(Duration(seconds: 2), () {
                     Navigator.of(
                       context,

@@ -33,9 +33,9 @@ class CustomBottomNavbarItem extends StatelessWidget {
           controller.haveSearchResult.value = false;
         }
         if (index == 2) {
-          log("index =2");
+          //log("index =2");
           if (email != null && password != null) {
-            log("setting index");
+            //log("setting index");
             bottomNavbarIndexNotifier.value = index;
             // if (controller.cartProducts.value.count != 0) {
             controller.getCartList();
@@ -56,10 +56,10 @@ class CustomBottomNavbarItem extends StatelessWidget {
         }
         if (bottomNavbarIndexNotifier.value < 4) {
           // bottomNavbarIndexNotifier.value = index;
-          previousPageIndexes.add(index);
+          // previousPageIndexes.add(index);
         } else {
           print("Adding");
-          previousPageIndexes.add(bottomNavbarIndexNotifier.value);
+          // previousPageIndexes.add(bottomNavbarIndexNotifier.value);
         }
       },
       child: Column(

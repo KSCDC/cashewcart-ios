@@ -32,7 +32,7 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // just setting the first address in the list as default address for using if there is no default address
-    UserAddressModel defaultAddress = controller.addressList[0];
+
     _bankAccountNoController.text = "204356XXXXXXX";
 
     _ifscCodeController.text = "SBIN00428";
@@ -92,26 +92,26 @@ class ProfileScreen extends StatelessWidget {
               //Personal details section
 
               Obx(() {
+                UserAddressModel? defaultAddress;
                 // initial values of text fields
                 _emailController.text = controller.email;
                 _accountHolderNameController.text = controller.userName;
                 _passwordController.text = "**********";
                 if (controller.addressList.value.isNotEmpty) {
                   // id = controller.addressList[0].id.toString();
-
+                  // UserAddressModel defaultAddress = controller.addressList[0];
                   for (var address in controller.addressList) {
                     if (address.isDefault) {
                       defaultAddress = address;
+                      _nameController.text = defaultAddress.name;
+                      _streetAddressContrller.text = defaultAddress.streetAddress;
+                      _regionController.text = defaultAddress.region;
+                      _districtController.text = defaultAddress.district;
+                      _stateController.text = defaultAddress.state;
+                      _postalCodeController.text = defaultAddress.postalCode;
+                      _phoneNumberController.text = defaultAddress.phoneNumber;
                     }
                   }
-
-                  _nameController.text = defaultAddress.name;
-                  _streetAddressContrller.text = defaultAddress.streetAddress;
-                  _regionController.text = defaultAddress.region;
-                  _districtController.text = defaultAddress.district;
-                  _stateController.text = defaultAddress.state;
-                  _postalCodeController.text = defaultAddress.postalCode;
-                  _phoneNumberController.text = defaultAddress.phoneNumber;
                 }
 
                 return controller.isLoading.value
@@ -119,12 +119,14 @@ class ProfileScreen extends StatelessWidget {
                         child: CircularProgressIndicator(),
                       )
                     : Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           ProfileScreenSubHeading(text: "Personal Details"),
                           kProfileScreenGap,
                           ProfileEditingTextField(
                             hintText: "Email Address",
                             controller: _emailController,
+                            enabled: false,
                           ),
                           kProfileScreenGap,
                           ProfileEditingTextField(
@@ -194,46 +196,49 @@ class ProfileScreen extends StatelessWidget {
                             hintText: "Phone Number",
                             controller: _phoneNumberController,
                           ),
+                          kProfileScreenGap,
+                          if (defaultAddress != null)
+                            SizedBox(
+                              height: 55,
+                              width: double.infinity,
+                              child: GestureDetector(
+                                onTap: () async {
+                                  await ApiServices().editUserAddress(context, defaultAddress!.id.toString(), _nameController.text, _streetAddressContrller.text, _regionController.text,
+                                      _districtController.text, _stateController.text, _postalCodeController.text, _phoneNumberController.text, true);
+                                  controller.getUserAddresses();
+                                },
+                                child: CustomElevatedButton(label: "Save"),
+                              ),
+                            ),
                         ],
                       );
               }),
 
-              kProfileScreenGap,
-              Divider(),
-              kProfileScreenGap,
+              // kProfileScreenGap,
+              // Divider(),
+              // kProfileScreenGap,
 
-              //Bank account details section
+              // //Bank account details section
 
-              const ProfileScreenSubHeading(text: "Bank Account Details"),
-              kProfileScreenGap,
-              ProfileEditingTextField(
-                hintText: "Bank Account Number",
-                controller: _bankAccountNoController,
-              ),
-              kProfileScreenGap,
-              ProfileEditingTextField(
-                hintText: "Account Holder's Name",
-                controller: _accountHolderNameController,
-              ),
-              kProfileScreenGap,
-              ProfileEditingTextField(
-                hintText: "IFSC Code",
-                controller: _ifscCodeController,
-              ),
-              kProfileScreenGap,
-              SizedBox(
-                height: 55,
-                width: double.infinity,
-                child: GestureDetector(
-                  onTap: () async {
-                    await ApiServices().editUserAddress(context, defaultAddress.id.toString(), _nameController.text, _streetAddressContrller.text, _regionController.text, _districtController.text,
-                        _stateController.text, _postalCodeController.text, _phoneNumberController.text, true);
-                    controller.getUserAddresses();
-                  },
-                  child: CustomElevatedButton(label: "Save"),
-                ),
-              ),
-              const SizedBox(height: 50),
+              // const ProfileScreenSubHeading(text: "Bank Account Details"),
+              // kProfileScreenGap,
+              // ProfileEditingTextField(
+              //   hintText: "Bank Account Number",
+              //   controller: _bankAccountNoController,
+              // ),
+              // kProfileScreenGap,
+              // ProfileEditingTextField(
+              //   hintText: "Account Holder's Name",
+              //   controller: _accountHolderNameController,
+              // ),
+              // kProfileScreenGap,
+              // ProfileEditingTextField(
+              //   hintText: "IFSC Code",
+              //   controller: _ifscCodeController,
+              // ),
+              // kProfileScreenGap,
+
+              const SizedBox(height: 20),
             ],
           ),
         ),

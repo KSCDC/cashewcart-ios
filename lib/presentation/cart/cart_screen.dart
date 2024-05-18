@@ -26,6 +26,7 @@ class CartScreen extends StatelessWidget {
 
     final screenSize = MediaQuery.of(context).size;
     // grantTotalNotifier.value = 0;
+    controller.getCartList();
 
     print("building");
     // print("product name :::::${controller.cartProducts.value.results[0].product.product.name}");
@@ -34,10 +35,11 @@ class CartScreen extends StatelessWidget {
       appBar: AppBar(
         leading: GestureDetector(
           onTap: () {
-            bottomNavbarIndexNotifier.value = previousPageIndexes.last;
-            if (previousPageIndexes.length > 1) {
-              previousPageIndexes.removeLast();
-            }
+            // bottomNavbarIndexNotifier.value = previousPageIndexes.last;
+            // if (previousPageIndexes.length > 1) {
+            //   previousPageIndexes.removeLast();
+            // }
+            Get.back();
           },
           child: Icon(Icons.arrow_back_ios_rounded),
         ),

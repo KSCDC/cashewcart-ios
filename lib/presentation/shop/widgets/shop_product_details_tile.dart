@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:internship_sample/controllers/app_controller.dart';
+import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/presentation/home/home_screen.dart';
 import 'package:internship_sample/presentation/shop/widgets/custom_text_icon_button.dart';
@@ -58,8 +60,8 @@ class ShopProductDetailsTile extends StatelessWidget {
                       SizeSelectorWidget(
                         index: i,
                         label: "${controller.productDetails.value!.productVariants[i].weightInGrams} GM",
-                        fontColor: sizeSelectNotifier.value == i ? Colors.white : Color(0xFFFA7189),
-                        backgroundColor: sizeSelectNotifier.value == i ? Color(0xFFFA7189) : Colors.white,
+                        fontColor: sizeSelectNotifier.value == i ? Colors.white : kMainThemeColor,
+                        backgroundColor: sizeSelectNotifier.value == i ? kMainThemeColor : Colors.white,
                       ),
                   ],
                 );
@@ -103,7 +105,7 @@ class ShopProductDetailsTile extends StatelessWidget {
                     kWidth,
                     CustomTextWidget(
                       text: "${controller.productDetails.value!.productVariants[value].discountPercentage}%",
-                      fontColor: Color(0xFFFE735C),
+                      fontColor: kMainThemeColor,
                       fontSize: 14,
                       fontweight: FontWeight.w400,
                     ),
@@ -125,10 +127,11 @@ class ShopProductDetailsTile extends StatelessWidget {
                   ValueListenableBuilder(
                       valueListenable: sizeSelectNotifier,
                       builder: (context, value, _) {
-                        return Text(
-                          controller.productDetails.value!.description,
-                          maxLines: readMoreClickNotifier.value ? 10 : 5,
-                          overflow: TextOverflow.ellipsis,
+                        return CustomTextWidget(
+                          text: controller.productDetails.value!.description.replaceAll('\n', ''),
+                          maxLines: readMoreClickNotifier.value ? 20 : 5,
+                          textOverflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.justify,
                         );
                       }),
                   Container(
@@ -138,7 +141,7 @@ class ShopProductDetailsTile extends StatelessWidget {
                       child: Text(
                         readMoreClickNotifier.value ? "Less" : "More",
                         style: TextStyle(
-                          color: Color(0xFFFE735C),
+                          color: kMainThemeColor,
                         ),
                       ),
                       onTap: () {
@@ -154,11 +157,13 @@ class ShopProductDetailsTile extends StatelessWidget {
             valueListenable: sizeSelectNotifier,
             builder: (context, value, _) {
               int stock = controller.productDetails.value!.productVariants[value].stockQty;
-              if (stock < 1) {
+              bool isAvailable = controller.productDetails.value!.productVariants[value].isAvailable;
+              String weight = controller.productDetails.value!.productVariants[value].weightInGrams;
+              if (stock < 1 || !isAvailable) {
                 return Center(
                   child: Container(
-                    height: 40,
-                    width: 110,
+                    height: 40.w,
+                    width: 200.w,
                     decoration: BoxDecoration(
                       border: Border.all(
                         color: Colors.red, // Set the border color
@@ -168,7 +173,7 @@ class ShopProductDetailsTile extends StatelessWidget {
                     ),
                     child: Center(
                       child: CustomTextWidget(
-                        text: "Out of stock",
+                        text: "$weight GM Out of stock",
                         fontColor: Colors.red,
                       ),
                     ),

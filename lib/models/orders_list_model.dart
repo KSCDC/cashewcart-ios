@@ -25,9 +25,9 @@ class OrdersListModel {
   String paymentMethod;
   String paymentStatus;
   DateTime createdAt;
-  String subTotalAmount;
-  String deliveryAdditionalAmount;
-  String totalAmount;
+  num subTotalAmount;
+  num deliveryAdditionalAmount;
+  num totalAmount;
   String status;
   List<Item> items;
 

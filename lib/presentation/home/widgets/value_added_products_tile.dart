@@ -46,7 +46,7 @@ class ValueAddedProductsTile extends StatelessWidget {
                     decoration: BoxDecoration(
                       image: DecorationImage(
                         image: NetworkImage(productImage),
-                        fit: BoxFit.fitWidth,
+                        fit: BoxFit.fitHeight,
                       ),
                     ),
                   ),
@@ -71,9 +71,9 @@ class ValueAddedProductsTile extends StatelessWidget {
                       TextButton(
                         onPressed: () async {
                           controller.productDisplayList = controller.valueAdded;
-
-                          previousPageIndexes.add(bottomNavbarIndexNotifier.value);
-                          bottomNavbarIndexNotifier.value = 5;
+                          Get.to(() => ProductListingScreen(title:"Value Added Products"));
+                          // previousPageIndexes.add(bottomNavbarIndexNotifier.value);
+                          // bottomNavbarIndexNotifier.value = 5;
                         },
                         style: TextButton.styleFrom(
                           backgroundColor: kMainThemeColor,

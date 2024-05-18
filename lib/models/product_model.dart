@@ -10,6 +10,7 @@ String productModelToJson(List<ProductModel> data) => json.encode(List<dynamic>.
 
 class ProductModel {
   int productVariantId;
+  bool isAvailable;
   Product product;
   String weightInGrams;
   String actualPrice;
@@ -22,6 +23,7 @@ class ProductModel {
 
   ProductModel({
     required this.productVariantId,
+    required this.isAvailable,
     required this.product,
     required this.weightInGrams,
     required this.actualPrice,
@@ -35,6 +37,7 @@ class ProductModel {
 
   factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(
         productVariantId: json["product_variant_id"],
+        isAvailable: json["is_available"],
         product: Product.fromJson(json["product"]),
         weightInGrams: json["weight_in_grams"],
         actualPrice: json["actual_price"],

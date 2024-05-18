@@ -7,6 +7,7 @@ import 'package:internship_sample/main.dart';
 import 'package:internship_sample/presentation/home/home_screen.dart';
 import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
 import 'package:internship_sample/presentation/product_list/product_listing_screen.dart';
+import 'package:internship_sample/presentation/product_list/trending_model_product_listing_screen.dart';
 import 'package:internship_sample/presentation/side_bar/widgets/side_bar_item_tile.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 
@@ -63,34 +64,56 @@ class ExpandableProductsSideBarItem extends StatelessWidget {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          controller.productDisplayList = controller.plainCashews;
-                          currentDisplayProductCategory = "Plain Cashews";
-                          previousPageIndexes.add(0);
+                          // controller.productDisplayList = controller.plainCashews;
+                          // currentDisplayProductCategory = "Trending";
+                          if (!controller.isAlreadyLoadedTrending) {
+                            controller.getTrendingProducts();
+                          }
 
-                          bottomNavbarIndexNotifier.value = 5;
-                          Navigator.of(context).pop();
+                          controller.productDisplayList2 = controller.trending;
+                          // print("Trending : ${controller.productDisplayList2.value.count}");
+                          // previousPageIndexes.add(bottomNavbarIndexNotifier.value);
+                          // bottomNavbarIndexNotifier.value = 9;
+
+                          Get.to(
+                            () => TrendingModelProductListingScreen(
+                              title: "Trending Products",
+                            ),
+                          );
                         },
-                        child: ExpandableSideBarInnerItem(label: "Plain Cashews"),
+                        child: ExpandableSideBarInnerItem(label: "Trending"),
                       ),
                       GestureDetector(
                         onTap: () {
-                          controller.productDisplayList = controller.roastedAndSalted;
-                          currentDisplayProductCategory = "Roasted And Salted Cashews";
-                          previousPageIndexes.add(0);
-                          bottomNavbarIndexNotifier.value = 7;
-                          Navigator.of(context).pop();
+                          if (!controller.isAlreadyLoadedSponserd) {
+                            controller.getSponserdProducts();
+                          }
+
+                          controller.productDisplayList2 = controller.sponserd;
+                          Get.back();
+                          Get.to(
+                            () => TrendingModelProductListingScreen(
+                              title: "Sponsered Products",
+                            ),
+                          );
                         },
-                        child: ExpandableSideBarInnerItem(label: "Roasted And Salted Cashews"),
+                        child: ExpandableSideBarInnerItem(label: "Sponsered"),
                       ),
                       GestureDetector(
                         onTap: () {
-                          controller.productDisplayList = controller.valueAdded;
-                          currentDisplayProductCategory = "Value Added Products";
-                          previousPageIndexes.add(0);
-                          bottomNavbarIndexNotifier.value = 8;
-                          Navigator.of(context).pop();
+                          if (!controller.isAlreadyLoadedBestsellers) {
+                            controller.getBestSellerProducts();
+                          }
+
+                          controller.productDisplayList2 = controller.bestSellers;
+                          Get.back();
+                          Get.to(
+                            () => TrendingModelProductListingScreen(
+                              title: "Best Sellers",
+                            ),
+                          );
                         },
-                        child: ExpandableSideBarInnerItem(label: "Value Added Products"),
+                        child: ExpandableSideBarInnerItem(label: "Best Sellers"),
                       ),
                     ],
                   )

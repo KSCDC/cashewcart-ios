@@ -21,9 +21,9 @@ import 'package:encrypt/encrypt.dart' as enc;
 class SignInScreen extends StatelessWidget {
   SignInScreen({super.key});
 
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
+  static final TextEditingController _emailController = TextEditingController();
+  static final TextEditingController passwordController = TextEditingController();
+  static final _formKey = GlobalKey<FormState>();
   AppController controller = Get.put(AppController());
 
   @override
@@ -48,9 +48,10 @@ class SignInScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       CustomIconTextField(
-                        icon: Icons.person_2,
+                        icon: Icons.mail_outline,
                         hintText: "Email",
-                        controller: emailController,
+                        controller: _emailController,
+                        keyboardType: TextInputType.emailAddress,
                         validator: Validatorless.multiple(
                           [
                             Validatorless.required('Email is required'),
@@ -78,7 +79,7 @@ class SignInScreen extends StatelessWidget {
                       child: const CustomTextWidget(
                         text: "Forgot Password?",
                         fontSize: 12,
-                        fontColor: Color(0xffF83758),
+                        fontColor: kMainThemeColor,
                         fontweight: FontWeight.w400,
                       ),
                     ),
@@ -92,7 +93,7 @@ class SignInScreen extends StatelessWidget {
                     onTap: () {
                       if (_formKey.currentState!.validate()) {
                         print("Trying to login user");
-                        controller.loginUser(context, emailController.text, passwordController.text);
+                        controller.loginUser(context, _emailController.text, passwordController.text);
                       }
                     },
                     child: CustomElevatedButton(

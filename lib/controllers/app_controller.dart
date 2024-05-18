@@ -35,7 +35,9 @@ class AppController extends GetxController {
   // String selectedProductId = "";
   RxBool isLoading = false.obs;
   RxBool isError = false.obs;
+  RxBool isMyOrdersError = false.obs;
   RxBool isLoadingCart = false.obs;
+  RxBool isLoadingMyproducts = false.obs;
   RxBool isAllProductsLoading = false.obs;
   RxBool isCircleAvatarProductsLoading = false.obs;
   RxBool isPlainCashewLoading = false.obs;
@@ -106,6 +108,8 @@ class AppController extends GetxController {
   RxString selectedRoastedAndSaltedCategory = "All".obs;
   RxList<String> valueAddedSubCategories = ["All"].obs;
   RxString selectedValueAddedCategory = "All".obs;
+
+  // These page nos was used for implementing pagination. Later the pagination was removed
 
   int allProductsPageNo = 1;
   int trendingProductsPageNo = 1;
@@ -184,19 +188,22 @@ class AppController extends GetxController {
     if (response != null) {
       final List<dynamic> responseData = response.data;
       final List<ProductModel> productList = responseData.map((productData) => ProductModel.fromJson(productData)).toList();
-      // allProducts.clear;
+      allProducts.clear;
 
-      List<ProductModel> temp = [];
-      for (var item in productList) {
-        if (!temp.contains(item.product.name)) {
-          temp.add(item);
-        }
-      }
+      final Set<String> uniqueProductNames = {};
+
+      final List<ProductModel> newProductList = productList.where((product) {
+        final isUnique = uniqueProductNames.add(product.product.name);
+        return isUnique;
+      }).toList();
+      log("Length of productList :${productList.length}");
+      log("Length of temp :${newProductList.length}");
       print(productList[0].product.name);
       // allProducts.value = productList;
-      allProducts.value = temp.reversed.toList();
+      allProducts.value = newProductList.reversed.toList();
+
       // productList.shuffle();
-      circleAvatarProductsList.value = productList;
+
       isAlreadyLoadedAllProducts = true;
     } else {
       isAllProductsLoadingError.value = true;
@@ -205,14 +212,50 @@ class AppController extends GetxController {
     isAllProductsLoading.value = false;
   }
 
+  getCircleAvatarProductList() async {
+    log("Getting circle list");
+    circleAvatarProductsList.clear();
+    if (!isAlreadyLoadedPlainCashews) {
+      await getProductsByCategory("PLAIN CASHEWS", "");
+      log("loaded plain");
+    }
+    if (!isAlreadyLoadedRoastedAndSaltedCashews) {
+      await getProductsByCategory("ROASTED AND SALTED CASHEWS", "");
+    }
+    if (!isAlreadyLoadedValueAdded) {
+      await getProductsByCategory("VALUE ADDED CASHEW PRODUCTS", "");
+    }
+    if (plainCashews.isNotEmpty) {
+      circleAvatarProductsList.add(plainCashews[0]);
+    }
+    if (roastedAndSalted.isNotEmpty) {
+      circleAvatarProductsList.add(roastedAndSalted[0]);
+    }
+    if (valueAdded.isNotEmpty) {
+      circleAvatarProductsList.addAll(valueAdded);
+    }
+
+    log("circle list :${circleAvatarProductsList}");
+  }
+
   getTrendingProducts() async {
+    log("getting trending");
     isTrendingLoading.value = true;
     isTrendingLoadingError.value = false;
     final response = await ApiServices().getTrendingProducts(trendingProductsPageNo.toString());
+    // log("trending: ${response.data}");
     if (response != null) {
+      print("response not null");
       final List<dynamic> responseData = response.data;
       final List<TrendingProductModel> productList = responseData.map((productData) => TrendingProductModel.fromJson(productData)).toList();
-      trending.value = productList;
+      final Set<String> uniqueProductNames = {};
+
+      final List<TrendingProductModel> newProductList = productList.where((product) {
+        final isUnique = uniqueProductNames.add(product.product.name);
+        return isUnique;
+      }).toList();
+      trending.value = newProductList.reversed.toList();
+      log("trending products:${trending.value}");
 
       isAlreadyLoadedTrending = true;
     } else {
@@ -220,7 +263,7 @@ class AppController extends GetxController {
     }
 
     print("best sellers :${bestSellers}");
-    isBestSellersLoading.value = false;
+    isTrendingLoading.value = false;
   }
 
   getBestSellerProducts() async {
@@ -230,7 +273,13 @@ class AppController extends GetxController {
     if (response != null) {
       final List<dynamic> responseData = response.data;
       final List<TrendingProductModel> productList = responseData.map((productData) => TrendingProductModel.fromJson(productData)).toList();
-      bestSellers.value = productList;
+      final Set<String> uniqueProductNames = {};
+
+      final List<TrendingProductModel> newProductList = productList.where((product) {
+        final isUnique = uniqueProductNames.add(product.product.name);
+        return isUnique;
+      }).toList();
+      bestSellers.value = newProductList.reversed.toList();
     }
     print("best sellers :${bestSellers}");
     isBestSellersLoading.value = false;
@@ -241,22 +290,38 @@ class AppController extends GetxController {
     isSponserdLoading.value = true;
     isSponserdLoadingError.value = false;
     final response = await ApiServices().getSponserdProducts(sponserdProductsPageNo.toString());
+    if (response != null) {
+      final List<dynamic> responseData = response.data;
+      final List<TrendingProductModel> productList = responseData.map((productData) => TrendingProductModel.fromJson(productData)).toList();
+      final Set<String> uniqueProductNames = {};
 
+      final List<TrendingProductModel> newProductList = productList.where((product) {
+        final isUnique = uniqueProductNames.add(product.product.name);
+        return isUnique;
+      }).toList();
+      sponserd.value = newProductList.reversed.toList();
+    }
     isSponserdLoading.value = false;
   }
 
   getProductsByCategory(String category, String categoryName) async {
     log("getting plain");
+    final response = await ApiServices().getProductByCategory(category, categoryName, plainCashewsPageNo.toString());
     if (category == "PLAIN CASHEWS") {
       isPlainCashewLoading.value = true;
       isPlainCashewLoadingError.value = false;
-      final response = await ApiServices().getProductByCategory(category, categoryName, plainCashewsPageNo.toString());
-      log("storing plained");
+      //log("storing plained");
 // print(response.data);
       if (response != null) {
         final List<dynamic> responseData = response.data;
         final List<ProductModel> productList = responseData.map((productData) => ProductModel.fromJson(productData)).toList();
-        plainCashews.value = productList;
+        final Set<String> uniqueProductNames = {};
+
+        final List<ProductModel> newProductList = productList.where((product) {
+          final isUnique = uniqueProductNames.add(product.product.name);
+          return isUnique;
+        }).toList();
+        plainCashews.value = newProductList.reversed.toList();
         for (int i = 0; i < productList.length; i++) {
           final categoryName = productList[i].product.category.name;
           if (!plainCashewSubCategories.contains(categoryName)) {
@@ -267,7 +332,7 @@ class AppController extends GetxController {
 
         print("Categories in roasted :$plainCashewSubCategories");
         isAlreadyLoadedPlainCashews = true;
-        log("plain cas : ${plainCashews.value}");
+        //log("plain cas : ${plainCashews.value}");
       } else {
         isPlainCashewLoadingError.value = true;
       }
@@ -276,13 +341,19 @@ class AppController extends GetxController {
     } else if (category == "ROASTED AND SALTED CASHEWS") {
       isRoastedAndSaltedLoading.value = true;
       isRoastedAndSaltedLoadingError.value = false;
-      final response = await ApiServices().getProductByCategory(category, categoryName, roastedAndSaltedPageNo.toString());
+      // final response = await ApiServices().getProductByCategory(category, categoryName, roastedAndSaltedPageNo.toString());
       print("storing roasted");
 
       if (response != null) {
         final List<dynamic> responseData = response.data;
         final List<ProductModel> productList = responseData.map((productData) => ProductModel.fromJson(productData)).toList();
-        roastedAndSalted.value = productList;
+        final Set<String> uniqueProductNames = {};
+
+        final List<ProductModel> newProductList = productList.where((product) {
+          final isUnique = uniqueProductNames.add(product.product.name);
+          return isUnique;
+        }).toList();
+        roastedAndSalted.value = newProductList.reversed.toList();
 
         for (int i = 0; i < productList.length; i++) {
           final categoryName = productList[i].product.category.name;
@@ -300,11 +371,17 @@ class AppController extends GetxController {
     } else if (category == "VALUE ADDED CASHEW PRODUCTS") {
       isValueAddedLoading.value = true;
       isValueAddedLoadingError.value = false;
-      final response = await ApiServices().getProductByCategory(category, categoryName, valueAddedPageNo.toString());
+      // final response = await ApiServices().getProductByCategory(category, categoryName, valueAddedPageNo.toString());
       if (response != null) {
         final List<dynamic> responseData = response.data;
         final List<ProductModel> productList = responseData.map((productData) => ProductModel.fromJson(productData)).toList();
-        valueAdded.value = productList;
+        final Set<String> uniqueProductNames = {};
+
+        final List<ProductModel> newProductList = productList.where((product) {
+          final isUnique = uniqueProductNames.add(product.product.name);
+          return isUnique;
+        }).toList();
+        valueAdded.value = newProductList.reversed.toList();
 
         for (int i = 0; i < productList.length; i++) {
           final categoryName = productList[i].product.category.name;
@@ -332,7 +409,13 @@ class AppController extends GetxController {
     if (response != null) {
       final List<dynamic> responseData = response.data;
       final List<ProductModel> productList = responseData.map((productData) => ProductModel.fromJson(productData)).toList();
-      searchResults.value = productList;
+      final Set<String> uniqueProductNames = {};
+
+      final List<ProductModel> newProductList = productList.where((product) {
+        final isUnique = uniqueProductNames.add(product.product.name);
+        return isUnique;
+      }).toList();
+      searchResults.value = newProductList.reversed.toList();
       if (sortProduct.value) {
         if (sortAscending.value) {
           searchResults.sort((a, b) => double.parse(a.sellingPrice).compareTo(double.parse(b.sellingPrice)));
@@ -360,8 +443,8 @@ class AppController extends GetxController {
     } else {
       isError.value = true;
     }
-
     isLoading.value = false;
+    return productDetails.value;
   }
 
   getProductReviews(String productId) async {
@@ -426,7 +509,16 @@ class AppController extends GetxController {
     }
   }
 
-  getSimilarProducts(ProductModel currentCategoryProducts, int selectedIndex) {}
+  getSimilarProducts(String productName, String productParentName) {
+    similarProducts.clear();
+    for (var item in allProducts) {
+      if (item.product.category.parentName == productParentName && item.product.name != productName) {
+        log("${item.product.name} == ${productName}");
+        similarProducts.add(item);
+      }
+    }
+    log("Similar products count : ${similarProducts.length}");
+  }
 
   getProfileDetails() async {
     isLoading.value = true;
@@ -514,18 +606,18 @@ class AppController extends GetxController {
   }
 
   getOrdersList() async {
-    isLoading.value = true;
-    isError.value = true;
+    isLoadingMyproducts.value = true;
+    isMyOrdersError.value = false;
+    log("my orders loading");
     final response = await ApiServices().getOrdersList(ordersListPageNo.toString());
+    isLoadingMyproducts.value = false;
     if (response != null) {
       final List<dynamic> responseData = response.data;
       final List<OrdersListModel> productList = responseData.map((productData) => OrdersListModel.fromJson(productData)).toList();
-
+      log("orders count :${productList.length}");
       ordersList.value = productList;
     } else {
-      isError.value = true;
+      isMyOrdersError.value = true;
     }
-
-    isLoading.value = false;
   }
 }

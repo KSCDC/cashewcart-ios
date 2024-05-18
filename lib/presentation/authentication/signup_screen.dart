@@ -89,7 +89,7 @@ class SignUpScreen extends StatelessWidget {
                           const CustomTextWidget(
                             text: "* ",
                             fontSize: 12,
-                            fontColor: Color(0xffFF4B26),
+                            fontColor: kMainThemeColor,
                             fontweight: FontWeight.w400,
                           ),
                           SizedBox(

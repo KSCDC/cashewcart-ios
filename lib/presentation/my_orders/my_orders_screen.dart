@@ -29,25 +29,28 @@ class MyOrdersScreen extends StatelessWidget {
     controller.getOrdersList();
     final recentOrdersListRev = recentOrdersList.reversed.toList();
     print(numberOfRecentOrders);
-    log("Recent orders List :${recentOrdersList.toString()}");
+    //log("Recent orders List :${recentOrdersList.toString()}");
     final screenSize = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: appBackgroundColor,
-      appBar: AppBar(
-        scrolledUnderElevation: 0,
-        leading: IconButton(
-          onPressed: () {
-            bottomNavbarIndexNotifier.value = previousPageIndexes.last;
-            previousPageIndexes.removeLast();
-          },
-          icon: Icon(Icons.arrow_back_ios_new),
-        ),
-        centerTitle: true,
-        title: CustomTextWidget(
-          text: "Orders",
-          fontSize: 18,
-          fontweight: FontWeight.w600,
-        ),
+      // appBar: AppBar(
+      //   scrolledUnderElevation: 0,
+      //   leading: IconButton(
+      //     onPressed: () {
+      //       bottomNavbarIndexNotifier.value = previousPageIndexes.last;
+      //       previousPageIndexes.removeLast();
+      //     },
+      //     icon: Icon(Icons.arrow_back_ios_new),
+      //   ),
+      //   centerTitle: true,
+      //   title: CustomTextWidget(
+      //     text: "Orders",
+      //     fontSize: 18,
+      //     fontweight: FontWeight.w600,
+      //   ),
+      // ),
+      appBar: CustomAppBar(
+        title: "Orders",
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -61,8 +64,9 @@ class MyOrdersScreen extends StatelessWidget {
                 fontweight: FontWeight.w600,
               ),
               kHeight,
+              //Todo : the backend code has changed and so cant display the below details(backend is not providing the details of product for displaying)
               Obx(() {
-                if (controller.isLoading.value) {
+                if (controller.isLoadingMyproducts.value) {
                   return Center(
                     child: CircularProgressIndicator(),
                   );
@@ -71,6 +75,7 @@ class MyOrdersScreen extends StatelessWidget {
                     // color: Colors.white,
                     child: ListView.builder(
                       itemBuilder: (context, index) {
+                        print("Orders values :${controller.ordersList.value[index].items.length}");
                         final OrdersListModel currentItem = controller.ordersList.value[index];
 
                         return ListView.builder(

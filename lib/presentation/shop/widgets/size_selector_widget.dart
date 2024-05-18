@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/presentation/shop/widgets/shop_product_details_tile.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 
@@ -23,11 +24,11 @@ class SizeSelectorWidget extends StatelessWidget {
           sizeSelectNotifier.value = index;
         },
         style: TextButton.styleFrom(
-          foregroundColor: Color(0xFFFA7189),
+          foregroundColor: kMainThemeColor,
           backgroundColor: backgroundColor,
           side: BorderSide(
             width: 2,
-            color: Color(0xFFFA7189),
+            color: kMainThemeColor,
           ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(6),

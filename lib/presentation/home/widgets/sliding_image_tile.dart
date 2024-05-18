@@ -10,6 +10,7 @@ import 'package:internship_sample/presentation/home/home_screen.dart';
 import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
 import 'package:internship_sample/presentation/shop/shop_screen.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
+import 'package:internship_sample/services/services.dart';
 
 class SlidingImageTile extends StatelessWidget {
   SlidingImageTile({
@@ -87,12 +88,13 @@ class SlidingImageTile extends StatelessWidget {
                         onTap: () async {
                           // controller.productDetails.results[0].value = await productDetails.results[0];
                           final String productId = productDetails.product.productId.toString();
-                          await controller.getProductDetails(productId);
-                          controller.getProductReviews(productId);
-                          controller.getSimilarProducts(productDetails, 0);
-                          controller.productDetailsList.add(controller.productDetails.value!);
-                          previousPageIndexes.add(bottomNavbarIndexNotifier.value);
-                          bottomNavbarIndexNotifier.value = 4;
+                           Services().getProductDetailsAndGotoShopScreen(productId);
+                          // await controller.getProductDetails(productId);
+                          // controller.getProductReviews(productId);
+                          // controller.getSimilarProducts(productDetails, 0);
+                          // controller.productDetailsList.add(controller.productDetails.value!);
+                          // previousPageIndexes.add(bottomNavbarIndexNotifier.value);
+                          // bottomNavbarIndexNotifier.value = 4;
                         },
                         child: Container(
                           width: 90,

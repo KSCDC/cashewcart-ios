@@ -22,7 +22,7 @@ class OrderTrackingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String imagePath = "https://backend.cashewcart.com:8443${productDetails.items[0].product.product.productImages[0].productImage}";
-    final String deliveryFee = productDetails.deliveryAdditionalAmount;
+    final String deliveryFee = productDetails.deliveryAdditionalAmount.toString();
     final String cgst = productDetails.items[0].cgstPrice;
     final String sgst = productDetails.items[0].sgstPrice;
     final DateTime createdAt = productDetails.createdAt;

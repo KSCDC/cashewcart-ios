@@ -16,7 +16,7 @@ class AccountItemTile extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.only(bottom: 40),
+        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
         child: Row(
           children: [
             Icon(icon),

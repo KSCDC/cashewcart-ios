@@ -4,6 +4,7 @@ import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/main.dart';
 import 'package:internship_sample/presentation/about/about_screen.dart';
 import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
+import 'package:internship_sample/presentation/my_orders/my_orders_screen.dart';
 import 'package:internship_sample/presentation/profile/profile_screen.dart';
 import 'package:internship_sample/presentation/side_bar/widgets/expandable_side_bar_item.dart';
 import 'package:internship_sample/presentation/side_bar/widgets/side_bar_item_tile.dart';
@@ -51,8 +52,9 @@ class SideBar extends StatelessWidget {
                 String? password = sharedPref.getString(ENCRYPTEDPASSWORD);
 
                 if (email != null && password != null) {
-                  previousPageIndexes.add(3);
-                  bottomNavbarIndexNotifier.value = 6;
+                  // previousPageIndexes.add(3);
+                  // bottomNavbarIndexNotifier.value = 6;
+                  Get.to(() => MyOrdersScreen());
                 } else {
                   Services().showLoginAlert(context, "Please login to see your orders");
                 }
