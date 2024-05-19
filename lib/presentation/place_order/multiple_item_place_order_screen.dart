@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:internship_sample/controllers/app_controller.dart';
 import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/core/constants.dart';
+import 'package:internship_sample/core/razorpay_key/razorpay_key.dart';
 import 'package:internship_sample/models/cart_product_model.dart';
 import 'package:internship_sample/presentation/cart/cart_screen.dart';
 import 'package:internship_sample/presentation/checkout/checkout_screen.dart';
@@ -477,9 +478,9 @@ class _MultipleItemPlaceOrderScreenState extends State<MultipleItemPlaceOrderScr
       String paymentOrderId = newResponse.data['response']['id'].toString();
       print("Order id = $paymentOrderId");
       final options = {
-        'key': 'rzp_test_0Bm1lMEg56tINT',
+        'key': RAZORPAYKEY,
         'amount': newResponse.data['response']['amount'].toString(),
-        'name': 'KSCDC',
+        'name': 'THE KERALA STATE CASHEW DEVELOPMENT CORPORATION LIMITED',
         'order_id': newResponse.data['response']['id'].toString(),
         'description': newResponse.data['response']['items'].toString(),
         'prefill': {
@@ -546,8 +547,8 @@ class _MultipleItemPlaceOrderScreenState extends State<MultipleItemPlaceOrderScr
         ),
       ],
     ).show().then((value) {
-      bottomNavbarIndexNotifier.value = 6;
-      Get.offAll(() => MainPageScreen());
+      // bottomNavbarIndexNotifier.value = 6;
+      Get.to(() => MyOrdersScreen());
     });
   }
 }

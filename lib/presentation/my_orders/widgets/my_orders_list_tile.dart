@@ -11,7 +11,7 @@ class MyOrdersListTile extends StatelessWidget {
     required this.name,
     required this.price,
     required this.rating,
-    required this.count,
+    required this.totalItemsCount,
     required this.weight,
     required this.paymentStatus,
   });
@@ -20,7 +20,7 @@ class MyOrdersListTile extends StatelessWidget {
   final String price;
   final String rating;
   final String weight;
-  final int count;
+  final int totalItemsCount;
   final String paymentStatus;
 
   @override
@@ -49,6 +49,7 @@ class MyOrdersListTile extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
@@ -134,6 +135,7 @@ class MyOrdersListTile extends StatelessWidget {
                 )
               ],
             ),
+            if (totalItemsCount != 1) CustomTextWidget(text: "And ${totalItemsCount - 1} other ${totalItemsCount - 1 == 1 ? "item" : "items"}"),
             Row(
               children: [
                 CustomTextWidget(text: "Payment status : "),
@@ -145,38 +147,38 @@ class MyOrdersListTile extends StatelessWidget {
             ),
             kHeight,
             Divider(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                CustomTextWidget(
-                  text: "Total Order (${count}) :",
-                  fontSize: 12,
-                  fontweight: FontWeight.w500,
-                ),
-                CustomTextWidget(
-                  text: "₹ ${double.parse(price) * count}",
-                  fontSize: 12,
-                  fontweight: FontWeight.w600,
-                )
-              ],
-            ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //   children: [
+            //     CustomTextWidget(
+            //       text: "Total Order (${count}) :",
+            //       fontSize: 12,
+            //       fontweight: FontWeight.w500,
+            //     ),
+            //     CustomTextWidget(
+            //       text: "₹ ${double.parse(price) * count}",
+            //       fontSize: 12,
+            //       fontweight: FontWeight.w600,
+            //     )
+            //   ],
+            // ),
             SizedBox(height: 5),
-            if (paymentStatusColor == Colors.green)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const CustomTextWidget(
-                    text: "Delivery Expected By :",
-                    fontSize: 12,
-                    fontweight: FontWeight.w500,
-                  ),
-                  CustomTextWidget(
-                    text: "28/03/2024",
-                    fontSize: 12,
-                    fontweight: FontWeight.w600,
-                  )
-                ],
-              ),
+            // if (paymentStatusColor == Colors.green)
+            //   Row(
+            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //     children: [
+            //       const CustomTextWidget(
+            //         text: "Delivery Expected By :",
+            //         fontSize: 12,
+            //         fontweight: FontWeight.w500,
+            //       ),
+            //       CustomTextWidget(
+            //         text: "28/03/2024",
+            //         fontSize: 12,
+            //         fontweight: FontWeight.w600,
+            //       )
+            //     ],
+            //   ),
           ],
         ),
       ),

@@ -6,13 +6,16 @@ import 'package:internship_sample/controllers/app_controller.dart';
 import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/main.dart';
+import 'package:internship_sample/presentation/cart/widgets/cart_item_skeleton.dart';
 import 'package:internship_sample/presentation/cart/widgets/cart_product_list_tile.dart';
 import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
 import 'package:internship_sample/presentation/place_order/multiple_item_place_order_screen.dart';
+import 'package:internship_sample/presentation/shop/widgets/custom_text_icon_button.dart';
 import 'package:internship_sample/presentation/widgets/custom_appbar.dart';
 import 'package:internship_sample/presentation/widgets/custom_elevated_button.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 import 'package:internship_sample/services/api_services.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 List cartProductsList = [];
 ValueNotifier<double> grantTotalNotifier = ValueNotifier(0);
@@ -66,8 +69,13 @@ class CartScreen extends StatelessWidget {
                 getGrandTotal();
                 print("cart count ${controller.cartProducts.value.count}");
                 if (controller.isLoadingCart.value) {
-                  return Center(
-                    child: CircularProgressIndicator(),
+                  return ListView.builder(
+                    itemBuilder: (context, index) {
+                      return CartItemSkeleton();
+                    },
+                    itemCount: 3,
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
                   );
                 } else {
                   return controller.cartProducts.value.count == 0
@@ -83,8 +91,6 @@ class CartScreen extends StatelessWidget {
                                 Container(
                                   child: ListView.builder(
                                     itemBuilder: (context, index) {
-                                      print("\n\n\n");
-                                      print("product name :::::${controller.cartProducts.value.results[index].product.product.name}");
                                       return Column(
                                         children: [
                                           kHeight,

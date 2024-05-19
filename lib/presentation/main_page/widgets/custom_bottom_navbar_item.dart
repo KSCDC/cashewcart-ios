@@ -31,6 +31,22 @@ class CustomBottomNavbarItem extends StatelessWidget {
         if (index == 0 || index == 1) {
           bottomNavbarIndexNotifier.value = index;
           controller.haveSearchResult.value = false;
+          if (controller.circleAvatarProductsList.isEmpty) {
+            controller.getCircleAvatarProductList();
+          }
+
+          if (!controller.isAlreadyLoadedAllProducts) {
+            //log("getting all products");
+            controller.getAllProducts();
+          }
+          if (!controller.isAlreadyLoadedBestsellers) {
+            controller.getBestSellerProducts();
+          }
+          if (!controller.isAlreadyLoadedSponserd) {
+            controller.getSponserdProducts();
+          }
+
+          controller.getCartList();
         }
         if (index == 2) {
           //log("index =2");

@@ -204,56 +204,7 @@ class ShopScreen extends StatelessWidget {
                               );
                             }),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Container(
-                          padding: const EdgeInsets.all(5),
-                          decoration: const BoxDecoration(
-                            color: Color(0xFFFFCCD5),
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(8),
-                            ),
-                          ),
-                          child: const Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    CustomTextWidget(
-                                      text: "Delivery",
-                                      fontweight: FontWeight.w600,
-                                    ),
-                                    SizedBox(height: 5),
-                                    CustomTextWidget(
-                                      text: "Within 4 Days",
-                                      fontSize: 21,
-                                      fontweight: FontWeight.w600,
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Container(
-                            width: screenSize.width * 0.48,
-                            child: CustomTextIconButton(
-                              onPressed: () {},
-                              icon: Icons.remove_red_eye_outlined,
-                              label: "Nearest Store",
-                              textAndIconColor: Colors.black,
-                              textAndIconSize: 14,
-                            ),
-                          ),
-                        ],
-                      ),
+
                       kHeight,
                       Obx(() {
                         print("Stars : ${controller.numOf1Stars},${controller.numOf2Stars},${controller.numOf3Stars},${controller.numOf4Stars},${controller.numOf5Stars}");
@@ -408,9 +359,7 @@ class ShopScreen extends StatelessWidget {
                                   kHeight,
                                   for (int i = controller.productReviewsList.length - 1; i >= 0; i--)
                                     ReviewTile(
-                                        rating: controller.productReviewsList.value[i].stars,
-                                        review: controller.productReviewsList.value[i].reviewText,
-                                        reviewerName: controller.productReviewsList.value[i].userName),
+                                        rating: controller.productReviewsList[i].stars, review: controller.productReviewsList[i].reviewText, reviewerName: controller.productReviewsList[i].userName),
                                   // ReviewTile(rating: 4, review: "Good product", reviewerName: "Arun"),
                                 ],
                               );
@@ -439,14 +388,14 @@ class ShopScreen extends StatelessWidget {
                           () {
                             // print("similar products length:${controller.similarProducts.value.length}");
                             // print("similar products length:${controller.similarProducts.value[0].weightInGrams}");
-                            if (controller.similarProducts.value.length! > 1) {
+                            if (controller.similarProducts.length > 1) {
                               return controller.isSimilarProductsLoading.value
                                   ? Center(
                                       child: CircularProgressIndicator(),
                                     )
                                   : ListView.builder(
                                       itemBuilder: (context, index) {
-                                        final productDetails = controller.similarProducts.value[index];
+                                        final productDetails = controller.similarProducts[index];
 
                                         return GestureDetector(
                                           onTap: () async {

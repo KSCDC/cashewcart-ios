@@ -305,13 +305,14 @@ class AppController extends GetxController {
   }
 
   getProductsByCategory(String category, String categoryName) async {
-    log("getting plain");
+    // log("getting plain");
     final response = await ApiServices().getProductByCategory(category, categoryName, plainCashewsPageNo.toString());
+    log(response.data.toString());
     if (category == "PLAIN CASHEWS") {
       isPlainCashewLoading.value = true;
       isPlainCashewLoadingError.value = false;
-      //log("storing plained");
-// print(response.data);
+      // log("storing plained");
+      print(response.data);
       if (response != null) {
         final List<dynamic> responseData = response.data;
         final List<ProductModel> productList = responseData.map((productData) => ProductModel.fromJson(productData)).toList();
@@ -610,7 +611,7 @@ class AppController extends GetxController {
     isMyOrdersError.value = false;
     log("my orders loading");
     final response = await ApiServices().getOrdersList(ordersListPageNo.toString());
-    isLoadingMyproducts.value = false;
+
     if (response != null) {
       final List<dynamic> responseData = response.data;
       final List<OrdersListModel> productList = responseData.map((productData) => OrdersListModel.fromJson(productData)).toList();
@@ -619,5 +620,6 @@ class AppController extends GetxController {
     } else {
       isMyOrdersError.value = true;
     }
+    isLoadingMyproducts.value = false;
   }
 }

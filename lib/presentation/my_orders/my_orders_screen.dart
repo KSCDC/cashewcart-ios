@@ -9,12 +9,14 @@ import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/main.dart';
 import 'package:internship_sample/models/orders_list_model.dart';
 import 'package:internship_sample/presentation/cart/widgets/cart_product_list_tile.dart';
+import 'package:internship_sample/presentation/main_page/main_page_screen.dart';
 import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
 import 'package:internship_sample/presentation/my_orders/widgets/my_orders_list_tile.dart';
 import 'package:internship_sample/presentation/order_tracking/order_tracking_screen.dart';
 import 'package:internship_sample/presentation/widgets/custom_appbar.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 import 'package:internship_sample/presentation/widgets/products_list_item_tile.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 List recentOrdersList = [];
 List productCountsList = [];
@@ -49,8 +51,23 @@ class MyOrdersScreen extends StatelessWidget {
       //     fontweight: FontWeight.w600,
       //   ),
       // ),
-      appBar: CustomAppBar(
-        title: "Orders",
+      appBar: AppBar(
+        // backgroundColor: kMainThemeColor,
+        centerTitle: true,
+        leading: IconButton(
+          onPressed: () {
+            if (Navigator.canPop(context)) {
+              bottomNavbarIndexNotifier.value = 3;
+              Get.off(() => MainPageScreen());
+            }
+          },
+          icon: Icon(Icons.arrow_back_ios_new),
+        ),
+        title: CustomTextWidget(
+          text: "Orders",
+          fontSize: 18,
+          fontweight: FontWeight.w600,
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -64,67 +81,93 @@ class MyOrdersScreen extends StatelessWidget {
                 fontweight: FontWeight.w600,
               ),
               kHeight,
-              //Todo : the backend code has changed and so cant display the below details(backend is not providing the details of product for displaying)
               Obx(() {
-                if (controller.isLoadingMyproducts.value) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else {
-                  return Container(
-                    // color: Colors.white,
-                    child: ListView.builder(
-                      itemBuilder: (context, index) {
-                        print("Orders values :${controller.ordersList.value[index].items.length}");
-                        final OrdersListModel currentItem = controller.ordersList.value[index];
+                return Container(
+                  // color: Colors.white,
+                  child: ListView.builder(
+                    itemBuilder: (context, index) {
+                      print("Orders values :${controller.ordersList[index].items.length}");
+                      final OrdersListModel currentItem = controller.ordersList[index];
+                      final String imagePath = "https://backend.cashewcart.com:8443${currentItem.items[0].product.product.productImages[0].productImage}";
+                      final String name = currentItem.items[0].product.product.name;
+                      final String description = currentItem.items[0].product.product.description;
+                      final String price = currentItem.items[0].total;
+                      final String rating = "4.5";
+                      final String weight = currentItem.items[0].product.weightInGrams;
+                      final String paymentStatus = controller.ordersList[index].paymentStatus;
+                      final int count = currentItem.items[0].purchaseCount;
 
-                        return ListView.builder(
-                          itemBuilder: (context, ind) {
-                            final String imagePath = "https://backend.cashewcart.com:8443${currentItem.items[ind].product.product.productImages[0].productImage}";
-                            final String name = currentItem.items[ind].product.product.name;
-                            final String description = currentItem.items[ind].product.product.description;
-                            final String price = currentItem.items[ind].total;
-                            final String rating = "4.5";
-                            final String weight = currentItem.items[ind].product.weightInGrams;
-                            final String paymentStatus = controller.ordersList[index].paymentStatus;
-                            final int count = currentItem.items[ind].purchaseCount;
-                            return Column(
-                              children: [
-                                kHeight,
-                                GestureDetector(
-                                  onTap: () => Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) {
-                                        return OrderTrackingScreen(
-                                          productDetails: currentItem,
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                  child: MyOrdersListTile(
-                                    imagePath: imagePath,
-                                    name: name,
-                                    price: price,
-                                    rating: rating,
-                                    count: count,
-                                    weight: weight,
-                                    paymentStatus: paymentStatus,
-                                  ),
-                                ),
-                              ],
-                            );
-                          },
-                          itemCount: currentItem.items.length,
-                          physics: NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                        );
-                      },
-                      itemCount: controller.ordersList.length,
-                      physics: NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                    ),
-                  );
-                }
+                      return Skeletonizer(
+                        enabled: controller.isLoadingMyproducts.value,
+                        child: GestureDetector(
+                          onTap: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return OrderTrackingScreen(
+                                  productDetails: currentItem,
+                                );
+                              },
+                            ),
+                          ),
+                          child: MyOrdersListTile(
+                            imagePath: imagePath,
+                            name: name,
+                            price: price,
+                            rating: rating,
+                            totalItemsCount: currentItem.items.length,
+                            weight: weight,
+                            paymentStatus: paymentStatus,
+                          ),
+                        ),
+
+                        //  ListView.builder(
+                        //   itemBuilder: (context, ind) {
+                        //     final String imagePath = "https://backend.cashewcart.com:8443${currentItem.items[ind].product.product.productImages[0].productImage}";
+                        //     final String name = currentItem.items[ind].product.product.name;
+                        //     final String description = currentItem.items[ind].product.product.description;
+                        //     final String price = currentItem.items[ind].total;
+                        //     final String rating = "4.5";
+                        //     final String weight = currentItem.items[ind].product.weightInGrams;
+                        //     final String paymentStatus = controller.ordersList[index].paymentStatus;
+                        //     final int count = currentItem.items[ind].purchaseCount;
+                        //     return Column(
+                        //       children: [
+                        //         kHeight,
+                        //         GestureDetector(
+                        //           onTap: () => Navigator.of(context).push(
+                        //             MaterialPageRoute(
+                        //               builder: (context) {
+                        //                 return OrderTrackingScreen(
+                        //                   productDetails: currentItem,
+                        //                 );
+                        //               },
+                        //             ),
+                        //           ),
+                        //           child: MyOrdersListTile(
+                        //             imagePath: imagePath,
+                        //             name: name,
+                        //             price: price,
+                        //             rating: rating,
+                        //             count: count,
+                        //             weight: weight,
+                        //             paymentStatus: paymentStatus,
+                        //           ),
+                        //         ),
+                        //       ],
+                        //     );
+                        //   },
+                        //   itemCount: currentItem.items.length,
+                        //   physics: NeverScrollableScrollPhysics(),
+                        //   shrinkWrap: true,
+                        // ),
+                      );
+                    },
+                    itemCount: controller.ordersList.length,
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                  ),
+                );
+                // }
               }),
             ],
           ),

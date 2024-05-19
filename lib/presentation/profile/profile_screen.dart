@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:internship_sample/controllers/app_controller.dart';
 import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/models/user_address_model.dart';
+import 'package:internship_sample/presentation/place_order/widgets/address_section.dart';
 import 'package:internship_sample/presentation/profile/widgets/profile_editing_textfield.dart';
+import 'package:internship_sample/presentation/shop/widgets/custom_text_icon_button.dart';
 import 'package:internship_sample/presentation/widgets/custom_appbar.dart';
 import 'package:internship_sample/presentation/widgets/custom_elevated_button.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
@@ -23,20 +26,16 @@ class ProfileScreen extends StatelessWidget {
   TextEditingController _districtController = TextEditingController();
   TextEditingController _stateController = TextEditingController();
   TextEditingController _phoneNumberController = TextEditingController();
-  TextEditingController _bankAccountNoController = TextEditingController();
   TextEditingController _accountHolderNameController = TextEditingController();
-  TextEditingController _ifscCodeController = TextEditingController();
+  ValueNotifier<bool> useSameAddressNotifier = ValueNotifier(true);
+  ValueNotifier<int> deliveryAddressRadioNotifier = ValueNotifier(0);
+  ValueNotifier<int> billingAddressRadioNotifier = ValueNotifier(0);
 
   // String? id;
   AppController controller = Get.put(AppController());
   @override
   Widget build(BuildContext context) {
-    // just setting the first address in the list as default address for using if there is no default address
-
-    _bankAccountNoController.text = "204356XXXXXXX";
-
-    _ifscCodeController.text = "SBIN00428";
-
+    final screenSize = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: appBackgroundColor,
       appBar: CustomAppBar(
@@ -161,55 +160,140 @@ class ProfileScreen extends StatelessWidget {
 
                           ProfileScreenSubHeading(text: "Address Details"),
                           kProfileScreenGap,
-                          ProfileEditingTextField(
-                            hintText: "Name",
-                            controller: _nameController,
-                          ),
-                          kProfileScreenGap,
-                          ProfileEditingTextField(
-                            hintText: "Street Address",
-                            controller: _streetAddressContrller,
-                          ),
-                          kProfileScreenGap,
-                          ProfileEditingTextField(
-                            hintText: "Region",
-                            controller: _regionController,
-                          ),
-                          kProfileScreenGap,
-                          ProfileEditingTextField(
-                            hintText: "District",
-                            controller: _districtController,
-                          ),
-                          kProfileScreenGap,
-                          ProfileEditingTextField(
-                            hintText: "State",
-                            controller: _stateController,
-                          ),
-                          kProfileScreenGap,
-                          ProfileEditingTextField(
-                            hintText: "Postal Code",
-                            controller: _postalCodeController,
-                          ),
+                          if (controller.addressList.isNotEmpty)
+                            Row(
+                              children: [
+                                SizedBox(
+                                  width: screenSize.width * 0.75,
+                                  child: CustomTextWidget(
+                                    text: "Use Delivery Address as Billing Address :",
+                                    fontSize: 12.sp,
+                                    fontweight: FontWeight.w600,
+                                  ),
+                                ),
+                                // Default value
+                                Spacer(),
 
-                          kProfileScreenGap,
-                          ProfileEditingTextField(
-                            hintText: "Phone Number",
-                            controller: _phoneNumberController,
-                          ),
-                          kProfileScreenGap,
-                          if (defaultAddress != null)
-                            SizedBox(
-                              height: 55,
-                              width: double.infinity,
-                              child: GestureDetector(
-                                onTap: () async {
-                                  await ApiServices().editUserAddress(context, defaultAddress!.id.toString(), _nameController.text, _streetAddressContrller.text, _regionController.text,
-                                      _districtController.text, _stateController.text, _postalCodeController.text, _phoneNumberController.text, true);
-                                  controller.getUserAddresses();
-                                },
-                                child: CustomElevatedButton(label: "Save"),
-                              ),
+                                Checkbox(
+                                  value: useSameAddressNotifier.value,
+                                  onChanged: (bool? value) {
+                                    useSameAddressNotifier.value = value ?? true; // Update the isChecked variable
+                                  },
+                                )
+                              ],
                             ),
+
+                          Obx(() {
+                            if (controller.addressList.isEmpty) {
+                              useSameAddressNotifier.value = false;
+                              return CustomTextWidget(text: "No saved addresses!");
+                            } else {
+                              return AddressSection(
+                                screenSize: screenSize,
+                                heading: "Delivery Address",
+                                selectedRadioNotifier: deliveryAddressRadioNotifier,
+                              );
+                            }
+                          }),
+                          kHeight,
+                          ValueListenableBuilder(
+                              valueListenable: useSameAddressNotifier,
+                              builder: (context, hide, _) {
+                                if (hide) {
+                                  return SizedBox();
+                                } else {
+                                  return AddressSection(
+                                    screenSize: screenSize,
+                                    heading: "Billing Address",
+                                    selectedRadioNotifier: billingAddressRadioNotifier,
+                                  );
+                                }
+                              }),
+                          SizedBox(height: 5),
+
+                          // add new address button
+                          Center(
+                            child: CustomTextIconButton(
+                              onPressed: () async {
+                                TextEditingController _nameContrller = TextEditingController();
+                                TextEditingController _streetAddressContrller = TextEditingController();
+                                TextEditingController _regionController = TextEditingController();
+                                TextEditingController _districtController = TextEditingController();
+                                TextEditingController _stateController = TextEditingController();
+                                TextEditingController _postalcodeController = TextEditingController();
+                                TextEditingController _phoneNumberController = TextEditingController();
+                                await Services().showAddressEditPopup(
+                                  true,
+                                  context,
+                                  "",
+                                  "ADD ADDRESS",
+                                  "ADD",
+                                  _nameContrller,
+                                  _streetAddressContrller,
+                                  _regionController,
+                                  _districtController,
+                                  _stateController,
+                                  _postalcodeController,
+                                  _phoneNumberController,
+                                );
+                                controller.getUserAddresses();
+                              },
+                              icon: Icons.add,
+                              label: "Add address",
+                              textAndIconColor: Colors.black,
+                              textAndIconSize: 12,
+                            ),
+                          ),
+                          SizedBox(height: 20),
+                          // ProfileEditingTextField(
+                          //   hintText: "Name",
+                          //   controller: _nameController,
+                          // ),
+                          // kProfileScreenGap,
+                          // ProfileEditingTextField(
+                          //   hintText: "Street Address",
+                          //   controller: _streetAddressContrller,
+                          // ),
+                          // kProfileScreenGap,
+                          // ProfileEditingTextField(
+                          //   hintText: "Region",
+                          //   controller: _regionController,
+                          // ),
+                          // kProfileScreenGap,
+                          // ProfileEditingTextField(
+                          //   hintText: "District",
+                          //   controller: _districtController,
+                          // ),
+                          // kProfileScreenGap,
+                          // ProfileEditingTextField(
+                          //   hintText: "State",
+                          //   controller: _stateController,
+                          // ),
+                          // kProfileScreenGap,
+                          // ProfileEditingTextField(
+                          //   hintText: "Postal Code",
+                          //   controller: _postalCodeController,
+                          // ),
+
+                          // kProfileScreenGap,
+                          // ProfileEditingTextField(
+                          //   hintText: "Phone Number",
+                          //   controller: _phoneNumberController,
+                          // ),
+                          // kProfileScreenGap,
+                          // if (defaultAddress != null)
+                          //   SizedBox(
+                          //     height: 55,
+                          //     width: double.infinity,
+                          //     child: GestureDetector(
+                          //       onTap: () async {
+                          //         await ApiServices().editUserAddress(context, defaultAddress!.id.toString(), _nameController.text, _streetAddressContrller.text, _regionController.text,
+                          //             _districtController.text, _stateController.text, _postalCodeController.text, _phoneNumberController.text, true);
+                          //         controller.getUserAddresses();
+                          //       },
+                          //       child: CustomElevatedButton(label: "Save"),
+                          //     ),
+                          //   ),
                         ],
                       );
               }),

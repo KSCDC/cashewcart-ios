@@ -22,84 +22,86 @@ class SideBar extends StatelessWidget {
     return Drawer(
       child: Padding(
         padding: const EdgeInsets.all(10),
-        child: Column(
-          children: [
-            SizedBox(height: 20),
-            GestureDetector(
-              onTap: () => Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => ProfileScreen(),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(height: 20),
+              GestureDetector(
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => ProfileScreen(),
+                  ),
+                ),
+                child: CircleAvatar(
+                  radius: 60,
+                  backgroundColor: Colors.white.withOpacity(0),
+                  child: Icon(
+                    Icons.person,
+                    size: 120,
+                  ),
                 ),
               ),
-              child: CircleAvatar(
-                radius: 60,
-                backgroundColor: Colors.white.withOpacity(0),
-                child: Icon(
-                  Icons.person,
-                  size: 120,
-                ),
+              SizedBox(height: 20),
+              Divider(
+                thickness: 0.5,
+                color: Colors.grey,
               ),
-            ),
-            SizedBox(height: 20),
-            Divider(
-              thickness: 0.5,
-              color: Colors.grey,
-            ),
-            GestureDetector(
-              onTap: () async {
-                SharedPreferences sharedPref = await SharedPreferences.getInstance();
-                String? email = sharedPref.getString(EMAIL);
-                String? password = sharedPref.getString(ENCRYPTEDPASSWORD);
+              GestureDetector(
+                onTap: () async {
+                  SharedPreferences sharedPref = await SharedPreferences.getInstance();
+                  String? email = sharedPref.getString(EMAIL);
+                  String? password = sharedPref.getString(ENCRYPTEDPASSWORD);
 
-                if (email != null && password != null) {
-                  // previousPageIndexes.add(3);
-                  // bottomNavbarIndexNotifier.value = 6;
-                  Get.to(() => MyOrdersScreen());
-                } else {
-                  Services().showLoginAlert(context, "Please login to see your orders");
-                }
-              },
-              child: SideBarItemTile(
-                icon: Icons.local_shipping_outlined,
-                label: "My Orders",
+                  if (email != null && password != null) {
+                    // previousPageIndexes.add(3);
+                    // bottomNavbarIndexNotifier.value = 6;
+                    Get.to(() => MyOrdersScreen());
+                  } else {
+                    Services().showLoginAlert(context, "Please login to see your orders");
+                  }
+                },
+                child: SideBarItemTile(
+                  icon: Icons.local_shipping_outlined,
+                  label: "My Orders",
+                ),
               ),
-            ),
-            ExpandableProductsSideBarItem(),
-            GestureDetector(
-              onTap: () {
-                Get.to(() => AboutUsScreen());
-              },
-              child: SideBarItemTile(
-                icon: Icons.info_outline,
-                label: "About KSCDC",
+              ExpandableProductsSideBarItem(),
+              GestureDetector(
+                onTap: () {
+                  Get.to(() => AboutUsScreen());
+                },
+                child: SideBarItemTile(
+                  icon: Icons.info_outline,
+                  label: "About KSCDC",
+                ),
               ),
-            ),
-            GestureDetector(
-              onTap: () async {
-                final url = Uri.parse("https://www.cashewcart.com");
-                if (await canLaunchUrl(url)) {
-                  await launchUrl(
-                    url,
-                    mode: LaunchMode.externalApplication,
-                  );
-                } else {
-                  throw 'Could not launch "https://www.cashewcart.com/"';
-                }
-              },
-              child: SideBarItemTile(
-                icon: Icons.language,
-                label: "Visit our website",
+              GestureDetector(
+                onTap: () async {
+                  final url = Uri.parse("https://www.cashewcart.com");
+                  if (await canLaunchUrl(url)) {
+                    await launchUrl(
+                      url,
+                      mode: LaunchMode.externalApplication,
+                    );
+                  } else {
+                    throw 'Could not launch "https://www.cashewcart.com/"';
+                  }
+                },
+                child: SideBarItemTile(
+                  icon: Icons.language,
+                  label: "Visit our website",
+                ),
               ),
-            ),
-            SideBarItemTile(
-              icon: Icons.star_rate_outlined,
-              label: "Rate Us",
-            ),
-            SideBarItemTile(
-              icon: Icons.share,
-              label: "Share App",
-            ),
-          ],
+              SideBarItemTile(
+                icon: Icons.star_rate_outlined,
+                label: "Rate Us",
+              ),
+              SideBarItemTile(
+                icon: Icons.share,
+                label: "Share App",
+              ),
+            ],
+          ),
         ),
       ),
     );

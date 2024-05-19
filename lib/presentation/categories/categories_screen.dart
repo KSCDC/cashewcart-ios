@@ -20,20 +20,7 @@ class CategoriesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!controller.isAlreadyLoadedPlainCashews) {
-      controller.getProductsByCategory("Plain Cashews", "");
-    }
-    if (!controller.isAlreadyLoadedRoastedAndSaltedCashews) {
-      controller.getProductsByCategory("Roasted and Salted Cashews", "");
-    }
-    if (!controller.isAlreadyLoadedValueAdded) {
-      controller.getProductsByCategory("Value Added", "");
-    }
-    if (!controller.isAlreadyLoadedAllProducts) {
-      controller.getAllProducts();
-    }
-
-    controller.getAllProducts();
+    // controller.getAllProducts();
     return Scaffold(
       backgroundColor: appBackgroundColor,
       appBar: MainAppBar(),
@@ -145,7 +132,7 @@ class CategoriesScreen extends StatelessWidget {
                                         //   );
                                         // }
                                       },
-                                      itemCount: controller.plainCashews.length + 1,
+                                      itemCount: controller.plainCashews.length,
                                       scrollDirection: Axis.horizontal,
                                     );
                                   } else {
@@ -227,7 +214,7 @@ class CategoriesScreen extends StatelessWidget {
                                               );
                                               // }
                                             },
-                                            itemCount: controller.roastedAndSalted.length + 1,
+                                            itemCount: controller.roastedAndSalted.length,
                                             scrollDirection: Axis.horizontal,
                                           ),
                                         ),
@@ -312,7 +299,7 @@ class CategoriesScreen extends StatelessWidget {
                                               );
                                               // }
                                             },
-                                            itemCount: controller.valueAdded.length + 1,
+                                            itemCount: controller.valueAdded.length,
                                             scrollDirection: Axis.horizontal,
                                           ),
                                         ),
@@ -381,7 +368,7 @@ class CategoriesScreen extends StatelessWidget {
                                               //   );
                                               // }
                                             },
-                                            itemCount: controller.allProducts.length + 1,
+                                            itemCount: controller.allProducts.length,
                                             scrollDirection: Axis.horizontal,
                                           ),
                                         ),

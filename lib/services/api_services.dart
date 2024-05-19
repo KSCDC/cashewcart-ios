@@ -399,7 +399,7 @@ class ApiServices {
   }
 
   getProductByCategory(String categoryParent, String categoryName, String pageNo) async {
-    //log("Getting by cat");
+    // log("Getting by cat");
     final params = {
       "product__category__parent__name": categoryParent,
       "product__category__name": categoryName,
@@ -408,7 +408,7 @@ class ApiServices {
     //log("calling $baseUrl${ApiEndPoints.filterProduct}");
     // log(categoryParent);
     // log(categoryName);
-    print(pageNo);
+    // print(pageNo);
     try {
       final dio = Dio();
       dio.options.connectTimeout = connectionTimeoutDuration;
@@ -419,7 +419,7 @@ class ApiServices {
           contentType: Headers.jsonContentType,
         ),
       );
-
+      print("resposne :${response.data}");
       if (response.statusCode == 200 || response.statusCode == 201) {
         // log(response.data.toString());
         return response;
@@ -1239,7 +1239,7 @@ class ApiServices {
 
   getOrdersList(String pageNo) async {
     try {
-      controller.isError.value = false;
+      // controller.isError.value = false;
 
       final dio = Dio();
       final params = {
@@ -1270,7 +1270,7 @@ class ApiServices {
       print("Error :$e");
       if (e.type == DioExceptionType.connectionTimeout) {
         print("Connection timeout");
-        controller.isError.value = true;
+        // controller.isError.value = true;
       }
       if (e.response!.statusCode == 401) {
         print("refresh token");

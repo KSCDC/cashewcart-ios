@@ -42,3 +42,7 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+
+# Razor pay live key
+/lib/core/razorpay_key/razorpay_key.dart
