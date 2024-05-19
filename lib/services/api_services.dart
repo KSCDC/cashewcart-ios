@@ -1157,7 +1157,7 @@ class ApiServices {
         return null;
       }
     } on DioException catch (e) {
-      print("Error :$e");
+      print("Error :${e.response}");
       if (e.response!.statusCode == 401) {
         print("refresh token");
         final refreshedToken = await refreshAccessToken();

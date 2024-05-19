@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-const Widget kWidth = SizedBox(width: 10);
-const Widget kHeight = SizedBox(height: 10);
-const Widget kProfileScreenGap = SizedBox(height: 20);
-const Duration connectionTimeoutDuration = Duration(seconds: 60);
+Widget kWidth = SizedBox(width: 10.w);
+Widget kHeight = SizedBox(height: 10.w);
+Widget kProfileScreenGap = SizedBox(height: 20.w);
+Duration connectionTimeoutDuration = Duration(seconds: 60);
 
 const String ACCESSTOKEN = "accessToken";
 const String REFRESHTOKEN = "refreshToken";

@@ -1,11 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/models/orders_list_model.dart';
 import 'package:internship_sample/presentation/checkout/checkout_screen.dart';
 import 'package:internship_sample/presentation/cart/widgets/cart_product_list_tile.dart';
 import 'package:internship_sample/presentation/order_tracking/widgets/custom_timeline_tile.dart';
+import 'package:internship_sample/presentation/payment_starting/payment_starting_screen.dart';
 import 'package:internship_sample/presentation/place_order/place_order_dropdown.dart';
 import 'package:internship_sample/presentation/widgets/custom_appbar.dart';
 import 'package:internship_sample/presentation/widgets/custom_elevated_button.dart';
@@ -26,6 +29,7 @@ class OrderTrackingScreen extends StatelessWidget {
     final String cgst = productDetails.items[0].cgstPrice;
     final String sgst = productDetails.items[0].sgstPrice;
     final DateTime createdAt = productDetails.createdAt;
+    final bool isPaymentSuccess = productDetails.paymentStatus == "SUCCESS" ? true : false;
     final screenSize = MediaQuery.of(context).size;
     String formattedDateTime = DateFormat("dd/MM/yyyy - hh a").format(createdAt.toLocal());
     return Scaffold(
@@ -212,42 +216,66 @@ class OrderTrackingScreen extends StatelessWidget {
                   SizedBox(height: 20),
                   Divider(),
                   SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      CustomTextWidget(
-                        text: "Total Paid",
-                        fontSize: 17,
-                        fontweight: FontWeight.w600,
-                      ),
-                      CustomTextWidget(
-                        text: "₹ ${productDetails.items[0].total}",
-                        fontSize: 16,
-                        fontweight: FontWeight.w600,
-                      )
-                    ],
-                  ),
+                  if (isPaymentSuccess)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        CustomTextWidget(
+                          text: "Total Paid",
+                          fontSize: 17,
+                          fontweight: FontWeight.w600,
+                        ),
+                        CustomTextWidget(
+                          text: "₹ ${productDetails.items[0].total}",
+                          fontSize: 16,
+                          fontweight: FontWeight.w600,
+                        )
+                      ],
+                    )
+                  else
+                    Column(
+                      children: [
+                        CustomTextWidget(
+                          text: "Your payment was not success. Please retry payment for continuing purchase.",
+                          fontSize: 14.sp,
+                          fontweight: FontWeight.w600,
+                          fontColor: Colors.red,
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(
+                          height: 20.w,
+                        ),
+                        InkWell(
+                          onTap: () {
+                            Get.to(PaymentStartingScreen(orderDetails: productDetails));
+                          },
+                          child: CustomElevatedButton(
+                            label: "Retry Payment",
+                          ),
+                        ),
+                      ],
+                    ),
                   kHeight,
-                  CustomTimelineTile(
-                    isFirst: true,
-                    isCompleted: true,
-                    cardTitle: "Order Placed",
-                    dateAndTime: "Completed on $formattedDateTime",
-                  ),
-                  CustomTimelineTile(
-                    isCompleted: true,
-                    cardTitle: "Product Shipped",
-                    dateAndTime: "Completed on 16/01/2024 - 2PM",
-                  ),
-                  CustomTimelineTile(
-                    cardTitle: "Arrival at Nearest Hub",
-                    dateAndTime: "Expected on 18/01/2024 - 11AM",
-                  ),
-                  CustomTimelineTile(
-                    isLast: true,
-                    cardTitle: "Out of Delivery",
-                    dateAndTime: "Expected on 18/01/2024 - 5PM",
-                  )
+                  // CustomTimelineTile(
+                  //   isFirst: true,
+                  //   isCompleted: true,
+                  //   cardTitle: "Order Placed",
+                  //   dateAndTime: "Completed on $formattedDateTime",
+                  // ),
+                  // CustomTimelineTile(
+                  //   isCompleted: true,
+                  //   cardTitle: "Product Shipped",
+                  //   dateAndTime: "Completed on 16/01/2024 - 2PM",
+                  // ),
+                  // CustomTimelineTile(
+                  //   cardTitle: "Arrival at Nearest Hub",
+                  //   dateAndTime: "Expected on 18/01/2024 - 11AM",
+                  // ),
+                  // CustomTimelineTile(
+                  //   isLast: true,
+                  //   cardTitle: "Out of Delivery",
+                  //   dateAndTime: "Expected on 18/01/2024 - 5PM",
+                  // )
                 ],
               ),
             )

@@ -166,7 +166,7 @@ class PlaceOrderScreen extends StatelessWidget {
 
                   SizedBox(height: 20),
 
-                  const Row(
+                   Row(
                     children: [
                       Icon(CupertinoIcons.ticket),
                       kWidth,

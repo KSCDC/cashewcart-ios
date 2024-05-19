@@ -100,15 +100,7 @@ class MyOrdersScreen extends StatelessWidget {
                       return Skeletonizer(
                         enabled: controller.isLoadingMyproducts.value,
                         child: GestureDetector(
-                          onTap: () => Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) {
-                                return OrderTrackingScreen(
-                                  productDetails: currentItem,
-                                );
-                              },
-                            ),
-                          ),
+                          onTap: () => Get.to(() => OrderTrackingScreen(productDetails: currentItem)),
                           child: MyOrdersListTile(
                             imagePath: imagePath,
                             name: name,

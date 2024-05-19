@@ -161,6 +161,7 @@ class ItemProduct {
   String cgstRate;
   String sgstRate;
   String sku;
+  String hsn;
   int stockQty;
   num discountPercentage;
 
@@ -173,6 +174,7 @@ class ItemProduct {
     required this.cgstRate,
     required this.sgstRate,
     required this.sku,
+    required this.hsn,
     required this.stockQty,
     required this.discountPercentage,
   });
@@ -186,6 +188,7 @@ class ItemProduct {
         cgstRate: json["cgst_rate"],
         sgstRate: json["sgst_rate"],
         sku: json["sku"],
+        hsn: json["hsn_acs"],
         stockQty: json["stock_qty"],
         discountPercentage: json["discount_percentage"],
       );
