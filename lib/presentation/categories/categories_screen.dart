@@ -51,7 +51,7 @@ class CategoriesScreen extends StatelessWidget {
                             Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 8.0),
                               child: CustomTextWidget(
-                                text: "PLAIN CASHEWS",
+                                text: "PLAIN",
                                 fontSize: 18,
                                 fontweight: FontWeight.w600,
                               ),
@@ -104,7 +104,7 @@ class CategoriesScreen extends StatelessWidget {
                                           onTap: () async {
                                             final String productId = controller.plainCashews[index].product.productId.toString();
                                             // controller.getSimilarProducts(controller.plainCashews.value, index);
-                                            Services().getProductDetailsAndGotoShopScreen(productId);
+                                            Services().getProductDetailsAndGotoShopScreen(context, productId);
                                           },
                                           child: ProductsListItemTile(
                                             productDetails: productDetails,
@@ -150,7 +150,7 @@ class CategoriesScreen extends StatelessWidget {
                             Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 8.0),
                               child: CustomTextWidget(
-                                text: "ROASTED & SALTED CASHEWS",
+                                text: "ROASTED & SALTED",
                                 fontSize: 18,
                                 fontweight: FontWeight.w600,
                               ),
@@ -206,7 +206,7 @@ class CategoriesScreen extends StatelessWidget {
                                                 onTap: () async {
                                                   final String productId = controller.roastedAndSalted[index].product.productId.toString();
                                                   // controller.getSimilarProducts(controller.roastedAndSalted, index);
-                                                  Services().getProductDetailsAndGotoShopScreen(productId);
+                                                  Services().getProductDetailsAndGotoShopScreen(context, productId);
                                                 },
                                                 child: ProductsListItemTile(
                                                   productDetails: productDetails,
@@ -291,7 +291,7 @@ class CategoriesScreen extends StatelessWidget {
                                                 onTap: () async {
                                                   final String productId = controller.valueAdded[index].product.productId.toString();
                                                   // controller.getSimilarProducts(controller.valueAdded.value, index);
-                                                  Services().getProductDetailsAndGotoShopScreen(productId);
+                                                  Services().getProductDetailsAndGotoShopScreen(context, productId);
                                                 },
                                                 child: ProductsListItemTile(
                                                   productDetails: productDetails,
@@ -346,7 +346,7 @@ class CategoriesScreen extends StatelessWidget {
                                                 onTap: () async {
                                                   final String productId = controller.allProducts[index].product.productId.toString();
                                                   // controller.getSimilarProducts(controller.allProducts.value, index);
-                                                  Services().getProductDetailsAndGotoShopScreen(productId);
+                                                  Services().getProductDetailsAndGotoShopScreen(context, productId);
                                                 },
                                                 child: ProductsListItemTile(
                                                   productDetails: productDetails,
@@ -414,7 +414,7 @@ class CategoriesScreen extends StatelessWidget {
                                             //     "image list ${controller.productDisplayList.valueindex]}");
                                             final String productId = controller.searchResults[index].product.productId.toString();
                                             // controller.getSimilarProducts(controller.searchResults.value, index);
-                                            Services().getProductDetailsAndGotoShopScreen(productId);
+                                            Services().getProductDetailsAndGotoShopScreen(context, productId);
                                             // await controller.getProductDetails(productId);
                                             // Get.to(() => ShopScreen());
                                             // controller.productDetailsList.add(controller.productDetails.value!);
@@ -444,6 +444,9 @@ class CategoriesScreen extends StatelessWidget {
                       }
                     }
                   }),
+                  SizedBox(
+                    height: 50.w
+                  ),
                 ],
               ),
             ),

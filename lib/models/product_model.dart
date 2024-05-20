@@ -67,6 +67,7 @@ class Product {
   int productId;
   String name;
   String description;
+  bool newProduct;
   Category category;
   List<ProductImage> productImages;
   num averageRating;
@@ -75,6 +76,7 @@ class Product {
     required this.productId,
     required this.name,
     required this.description,
+    required this.newProduct,
     required this.category,
     required this.productImages,
     required this.averageRating,
@@ -84,6 +86,7 @@ class Product {
         productId: json["product_id"],
         name: json["name"],
         description: json["description"],
+        newProduct: json["new_product"],
         category: Category.fromJson(json["category"]),
         productImages: List<ProductImage>.from(json["product_images"].map((x) => ProductImage.fromJson(x))),
         averageRating: json["average_rating"],

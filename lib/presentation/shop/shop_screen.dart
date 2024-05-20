@@ -3,6 +3,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:internship_sample/controllers/app_controller.dart';
@@ -85,8 +86,7 @@ class ShopScreen extends StatelessWidget {
       appBar: CustomAppBar(
         actionWidget: InkWell(
           onTap: () {
-            bottomNavbarIndexNotifier.value = 0;
-            Get.to(() => MainPageScreen());
+            Get.back();
           },
           child: SvgPicture.asset(
             "lib/core/assets/images/home_icon.svg",
@@ -407,7 +407,7 @@ class ShopScreen extends StatelessWidget {
 
                                             // previousPageIndexes.add(bottomNavbarIndexNotifier.value);
                                             // bottomNavbarIndexNotifier.value = 4;
-                                            Services().getProductDetailsAndGotoShopScreen(productId);
+                                            Services().getProductDetailsAndGotoShopScreen(context, productId);
                                           },
                                           child: ProductsListItemTile(
                                             productDetails: productDetails,
@@ -478,7 +478,7 @@ class ShopScreen extends StatelessWidget {
                                             // // previousPageIndexes.add(bottomNavbarIndexNotifier.value);
                                             // bottomNavbarIndexNotifier.value = 4;
                                             final String productId = productDetails.product.productId.toString();
-                                            Services().getProductDetailsAndGotoShopScreen(productId);
+                                            Services().getProductDetailsAndGotoShopScreen(context, productId);
                                           },
                                           child: ProductsListItemTile(
                                             productDetails: productDetails,
@@ -519,9 +519,7 @@ class ShopScreen extends StatelessWidget {
                                     return GestureDetector(
                                       onTap: () async {
                                         final String productId = controller.allProducts.value[index].productVariantId.toString();
-                                        await controller.getProductDetails(productId);
-                                        controller.productDetailsList.add(controller.productDetails.value!);
-                                        print(controller.productDetails.value!.name);
+                                        Services().getProductDetailsAndGotoShopScreen(context, productId);
                                       },
                                       child: ProductsListItemTile(
                                         productDetails: productDetails,
@@ -533,6 +531,7 @@ class ShopScreen extends StatelessWidget {
                                 );
                         }),
                       ),
+                      SizedBox(height: 50.w)
                     ],
                   );
           }),

@@ -70,17 +70,18 @@ class OnboardingScreen extends StatelessWidget {
               OnboardingTile(
                 imagePath: "lib/core/assets/images/onboard_choose_products.png",
                 heading: "Choose Products",
-                description: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit.",
+                description:
+                    "Customers will be able to select the cashew products they want to buy now- and other products will continue to remain in the cart. Selected products will be available on the checkout page.",
               ),
               OnboardingTile(
                 imagePath: "lib/core/assets/images/onboard_make_payment.png",
                 heading: "Make Payment",
-                description: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit.",
+                description: "Customers can make  payments for purchased products through the technology online payment gateway system.",
               ),
               OnboardingTile(
                 imagePath: "lib/core/assets/images/onboard_get_your_order.png",
                 heading: "Get Your Order",
-                description: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit.",
+                description: "After the payment authorization an order summary  will be available on your My Order page.",
               ),
             ],
           ),

@@ -13,7 +13,7 @@ class AccountItemTile extends StatelessWidget {
   final Function()? onTap;
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return GestureDetector(
       onTap: onTap,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),

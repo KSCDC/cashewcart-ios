@@ -1,5 +1,7 @@
+import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:internship_sample/core/colors.dart';
@@ -13,6 +15,7 @@ import 'package:internship_sample/presentation/place_order/place_order_dropdown.
 import 'package:internship_sample/presentation/widgets/custom_appbar.dart';
 import 'package:internship_sample/presentation/widgets/custom_elevated_button.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
+import 'package:internship_sample/services/api_services.dart';
 import 'package:intl/intl.dart';
 
 class OrderTrackingScreen extends StatelessWidget {
@@ -25,11 +28,10 @@ class OrderTrackingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String imagePath = "https://backend.cashewcart.com:8443${productDetails.items[0].product.product.productImages[0].productImage}";
-    final String deliveryFee = productDetails.deliveryAdditionalAmount.toString();
-    final String cgst = productDetails.items[0].cgstPrice;
-    final String sgst = productDetails.items[0].sgstPrice;
+
     final DateTime createdAt = productDetails.createdAt;
     final bool isPaymentSuccess = productDetails.paymentStatus == "SUCCESS" ? true : false;
+    double subTotal = 0;
     final screenSize = MediaQuery.of(context).size;
     String formattedDateTime = DateFormat("dd/MM/yyyy - hh a").format(createdAt.toLocal());
     return Scaffold(
@@ -38,248 +40,325 @@ class OrderTrackingScreen extends StatelessWidget {
       ),
       backgroundColor: appBackgroundColor,
       body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 10),
-                        child: Container(
-                          height: 125,
-                          width: screenSize.width * 0.25,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: NetworkImage(imagePath),
-                              fit: BoxFit.fitHeight,
-                            ),
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(4),
-                            ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: Container(
+                      height: 125,
+                      width: screenSize.width * 0.25,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: NetworkImage(imagePath),
+                          fit: BoxFit.fitHeight,
+                        ),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(4),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: 250,
+                          child: CustomTextWidget(
+                            text: productDetails.items[0].product.product.name,
+                            fontweight: FontWeight.w600,
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        SizedBox(height: 5),
+                        Container(
+                          width: screenSize.width * 0.6,
+                          child: CustomTextWidget(
+                            text: productDetails.items[0].product.product.description,
+                            fontSize: 13,
+                            fontweight: FontWeight.w400,
+                          ),
+                        ),
+                        kHeight,
+                        kHeight,
+                        Row(
                           children: [
                             Container(
-                              width: 250,
-                              child: CustomTextWidget(
-                                text: productDetails.items[0].product.product.name,
-                                fontweight: FontWeight.w600,
+                              height: 35,
+                              child: Row(
+                                children: [
+                                  CustomTextWidget(
+                                    text: "Wt:",
+                                    fontweight: FontWeight.w600,
+                                  ),
+                                  SizedBox(width: 5),
+                                  CustomTextWidget(text: "250GM"),
+                                ],
                               ),
                             ),
-                            SizedBox(height: 5),
+                            SizedBox(width: 20),
                             Container(
-                              width: screenSize.width * 0.6,
-                              child: CustomTextWidget(
-                                text: productDetails.items[0].product.product.description,
-                                fontSize: 13,
-                                fontweight: FontWeight.w400,
+                              height: 35,
+                              child: Row(
+                                children: [
+                                  CustomTextWidget(
+                                    text: "Qty: ",
+                                    fontweight: FontWeight.w600,
+                                  ),
+                                  SizedBox(width: 5),
+                                  CustomTextWidget(text: "1"),
+                                ],
                               ),
                             ),
-                            kHeight,
-                            kHeight,
-                            Row(
-                              children: [
-                                Container(
-                                  height: 35,
-                                  child: Row(
-                                    children: [
-                                      CustomTextWidget(
-                                        text: "Wt:",
-                                        fontweight: FontWeight.w600,
-                                      ),
-                                      SizedBox(width: 5),
-                                      CustomTextWidget(text: "250GM"),
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(width: 20),
-                                Container(
-                                  height: 35,
-                                  child: Row(
-                                    children: [
-                                      CustomTextWidget(
-                                        text: "Qty: ",
-                                        fontweight: FontWeight.w600,
-                                      ),
-                                      SizedBox(width: 5),
-                                      CustomTextWidget(text: "1"),
-                                    ],
-                                  ),
-                                ),
-                                kWidth,
-                              ],
-                            ),
-                            kHeight,
-                            Row(
-                              children: [
-                                CustomTextWidget(
-                                  text: "Delivery by",
-                                  fontSize: 13,
-                                  fontweight: FontWeight.w400,
-                                ),
-                                kWidth,
-                                CustomTextWidget(
-                                  text: "18 Jan 2024",
-                                  fontSize: 13,
-                                  fontweight: FontWeight.w600,
-                                )
-                              ],
-                            )
+                            kWidth,
                           ],
                         ),
-                      )
-                    ],
-                  ),
-                  kHeight,
-                  SizedBox(height: 20),
-                  kHeight,
-                  Divider(),
-                  SizedBox(height: 20),
-                  CustomTextWidget(
-                    text: "Order Payment Details",
-                    fontSize: 17,
-                    fontweight: FontWeight.w500,
-                  ),
-                  SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      CustomTextWidget(
-                        text: "Order Amounts",
-                        fontSize: 16,
-                        fontweight: FontWeight.w400,
-                      ),
-                      CustomTextWidget(
-                        text: "₹ ${productDetails.items[0].product.sellingPrice}",
-                        fontSize: 16,
-                        fontweight: FontWeight.w600,
-                      )
-                    ],
-                  ),
-                  kHeight,
-                  kHeight,
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      CustomTextWidget(
-                        text: "CGST",
-                        fontSize: 16,
-                        fontweight: FontWeight.w400,
-                      ),
-                      CustomTextWidget(
-                        text: cgst,
-                        fontweight: FontWeight.w600,
-                      ),
-                    ],
-                  ),
-                  kHeight,
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      CustomTextWidget(
-                        text: "SGST",
-                        fontSize: 16,
-                        fontweight: FontWeight.w400,
-                      ),
-                      CustomTextWidget(
-                        text: sgst,
-                        fontweight: FontWeight.w600,
-                      ),
-                    ],
-                  ),
-                  kHeight,
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      CustomTextWidget(
-                        text: "Delivery Fee",
-                        fontSize: 16,
-                        fontweight: FontWeight.w400,
-                      ),
-                      CustomTextWidget(
-                        text: deliveryFee,
-                        fontweight: FontWeight.w600,
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 20),
-                  Divider(),
-                  SizedBox(height: 20),
-                  if (isPaymentSuccess)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        CustomTextWidget(
-                          text: "Total Paid",
-                          fontSize: 17,
-                          fontweight: FontWeight.w600,
-                        ),
-                        CustomTextWidget(
-                          text: "₹ ${productDetails.items[0].total}",
-                          fontSize: 16,
-                          fontweight: FontWeight.w600,
-                        )
                       ],
-                    )
-                  else
-                    Column(
+                    ),
+                  )
+                ],
+              ),
+              // kHeight,
+              Divider(),
+              SizedBox(height: 20),
+              CustomTextWidget(
+                text: "Order Payment Details",
+                fontSize: 16.sp,
+                fontweight: FontWeight.w600,
+              ),
+              // SizedBox(height: 20),
+              SizedBox(
+                height: 200,
+                child: DataTable2(
+                  columnSpacing: 12,
+                  horizontalMargin: 12,
+                  minWidth: 1000.w,
+                  dataRowHeight: 50.w,
+                  // fixedLeftColumns: 1,
+                  dividerThickness: 2,
+
+                  columns: [
+                    DataColumn2(
+                      label: CustomTextWidget(
+                        text: 'Product Name',
+                        fontSize: 14.sp,
+                        fontweight: FontWeight.w600,
+                      ),
+                      size: ColumnSize.L,
+                    ),
+                    DataColumn(
+                      label: CustomTextWidget(
+                        text: 'HSN/SAC',
+                        fontSize: 14.sp,
+                        fontweight: FontWeight.w600,
+                      ),
+                    ),
+                    DataColumn(
+                      label: CustomTextWidget(
+                        text: 'Qty',
+                        fontSize: 14.sp,
+                        fontweight: FontWeight.w600,
+                      ),
+                    ),
+                    DataColumn(
+                      label: CustomTextWidget(
+                        text: 'Unit Price',
+                        fontSize: 14.sp,
+                        fontweight: FontWeight.w600,
+                      ),
+                    ),
+                    DataColumn(
+                      label: CustomTextWidget(
+                        text: 'CGST %',
+                        fontSize: 14.sp,
+                        fontweight: FontWeight.w600,
+                      ),
+                      numeric: true,
+                    ),
+                    DataColumn(
+                      label: CustomTextWidget(
+                        text: 'CGST Amnt',
+                        fontSize: 14.sp,
+                        fontweight: FontWeight.w600,
+                      ),
+                      numeric: true,
+                    ),
+                    DataColumn(
+                      label: CustomTextWidget(
+                        text: 'SGST %',
+                        fontSize: 14.sp,
+                        fontweight: FontWeight.w600,
+                      ),
+                      numeric: true,
+                    ),
+                    DataColumn(
+                      label: CustomTextWidget(
+                        text: 'SGST Amnt',
+                        fontSize: 14.sp,
+                        fontweight: FontWeight.w600,
+                      ),
+                      numeric: true,
+                    ),
+                    DataColumn(
+                      label: CustomTextWidget(
+                        text: 'Total Payable',
+                        fontSize: 14.sp,
+                        fontweight: FontWeight.w600,
+                      ),
+                      numeric: true,
+                    ),
+                  ],
+                  rows: List<DataRow>.generate(
+                    productDetails.items.length,
+                    (index) {
+                      subTotal += double.parse(productDetails.items[index].total);
+                      return DataRow(
+                        cells: [
+                          DataCell(
+                            CustomTextWidget(text: productDetails.items[index].product.product.name),
+                          ),
+                          DataCell(
+                            CustomTextWidget(text: productDetails.items[index].product.hsn),
+                          ),
+                          DataCell(
+                            CustomTextWidget(text: productDetails.items[index].purchaseCount.toString()),
+                          ),
+                          DataCell(
+                            CustomTextWidget(text: productDetails.items[index].product.sellingPrice),
+                          ),
+                          // DataCell(
+                          //   CustomTextWidget(text: productDetails.items[index].product.sellingPrice),
+                          // ),
+                          DataCell(
+                            CustomTextWidget(text: productDetails.items[index].product.cgstRate),
+                          ),
+                          DataCell(
+                            CustomTextWidget(text: productDetails.items[index].cgstPrice),
+                          ),
+                          DataCell(
+                            CustomTextWidget(text: productDetails.items[index].product.sgstRate),
+                          ),
+                          DataCell(
+                            CustomTextWidget(text: productDetails.items[index].sgstPrice),
+                          ),
+                          DataCell(
+                            CustomTextWidget(text: productDetails.items[index].total),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(16.w),
+                child: Column(
+                  children: [
+                    SizedBox(width: double.infinity),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         CustomTextWidget(
-                          text: "Your payment was not success. Please retry payment for continuing purchase.",
+                          text: "Sub Total : ",
                           fontSize: 14.sp,
                           fontweight: FontWeight.w600,
-                          fontColor: Colors.red,
-                          textAlign: TextAlign.center,
+                          height: 2,
                         ),
                         SizedBox(
-                          height: 20.w,
-                        ),
-                        InkWell(
-                          onTap: () {
-                            Get.to(PaymentStartingScreen(orderDetails: productDetails));
-                          },
-                          child: CustomElevatedButton(
-                            label: "Retry Payment",
+                          width: 100.w,
+                          child: Center(
+                            child: CustomTextWidget(
+                              text: "₹$subTotal",
+                              fontSize: 14.sp,
+                              fontweight: FontWeight.w600,
+                              height: 2,
+                            ),
                           ),
                         ),
                       ],
                     ),
-                  kHeight,
-                  // CustomTimelineTile(
-                  //   isFirst: true,
-                  //   isCompleted: true,
-                  //   cardTitle: "Order Placed",
-                  //   dateAndTime: "Completed on $formattedDateTime",
-                  // ),
-                  // CustomTimelineTile(
-                  //   isCompleted: true,
-                  //   cardTitle: "Product Shipped",
-                  //   dateAndTime: "Completed on 16/01/2024 - 2PM",
-                  // ),
-                  // CustomTimelineTile(
-                  //   cardTitle: "Arrival at Nearest Hub",
-                  //   dateAndTime: "Expected on 18/01/2024 - 11AM",
-                  // ),
-                  // CustomTimelineTile(
-                  //   isLast: true,
-                  //   cardTitle: "Out of Delivery",
-                  //   dateAndTime: "Expected on 18/01/2024 - 5PM",
-                  // )
-                ],
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        CustomTextWidget(
+                          text: "Shipping & other charges : ",
+                          fontSize: 14.sp,
+                          fontweight: FontWeight.w600,
+                          height: 2,
+                        ),
+                        SizedBox(
+                          width: 100.w,
+                          child: Center(
+                            child: CustomTextWidget(
+                              text: "₹${productDetails.deliveryAdditionalAmount}",
+                              fontSize: 14.sp,
+                              fontweight: FontWeight.w600,
+                              height: 2,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10.w),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        CustomTextWidget(
+                          text: "Grand Total : ",
+                          fontSize: 14.sp,
+                          fontweight: FontWeight.w600,
+                          height: 2,
+                        ),
+                        SizedBox(
+                          width: 100.w,
+                          child: Center(
+                            child: CustomTextWidget(
+                              text: "₹${subTotal + productDetails.deliveryAdditionalAmount}",
+                              fontSize: 14.sp,
+                              fontweight: FontWeight.w600,
+                              height: 2,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            )
-          ],
+              Divider(),
+              SizedBox(height: 20),
+              if (!isPaymentSuccess)
+                Column(
+                  children: [
+                    CustomTextWidget(
+                      text: "Your payment was not success. Please retry payment for continuing purchase.",
+                      fontSize: 14.sp,
+                      fontweight: FontWeight.w600,
+                      fontColor: Colors.red,
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(
+                      height: 20.w,
+                    ),
+                    InkWell(
+                      onTap: () {
+                        Get.to(PaymentStartingScreen(orderDetails: productDetails));
+                      },
+                      child: CustomElevatedButton(
+                        label: "Retry Payment",
+                      ),
+                    ),
+                  ],
+                ),
+              kHeight,
+            ],
+          ),
         ),
       ),
     );

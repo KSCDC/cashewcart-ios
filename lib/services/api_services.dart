@@ -792,7 +792,7 @@ class ApiServices {
                 ),
                 TextButton(
                   onPressed: () {
-                    bottomNavbarIndexNotifier.value = 2;
+                    // bottomNavbarIndexNotifier.value = 2;
                     Get.to(() => MainPageScreen());
                   },
                   child: CustomTextWidget(
@@ -840,7 +840,7 @@ class ApiServices {
                   ),
                   TextButton(
                     onPressed: () {
-                      bottomNavbarIndexNotifier.value = 2;
+                      // bottomNavbarIndexNotifier.value = 2;
                       Get.to(() => MainPageScreen());
                     },
                     child: CustomTextWidget(

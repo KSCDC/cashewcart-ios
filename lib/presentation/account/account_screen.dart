@@ -85,16 +85,7 @@ class AccountScreen extends StatelessWidget {
                 Get.to(() => MyOrdersScreen());
               },
             ),
-            AccountItemTile(
-              icon: Icons.shopify_sharp,
-              label: "Buy Again",
-              onTap: () {
-                // previousPageIndexes.add(3);
 
-                // bottomNavbarIndexNotifier.value = 6;
-                Get.to(() => MyOrdersScreen());
-              },
-            ),
             AccountItemTile(
               icon: Icons.edit,
               label: "Edit Profile",
@@ -127,11 +118,12 @@ class AccountScreen extends StatelessWidget {
                 SharedPreferences sharedPref = await SharedPreferences.getInstance();
                 await sharedPref.clear();
                 cartCountNotifier.value = 0;
-                bottomNavbarIndexNotifier.value = 0;
-                Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) => SignInScreen()),
-                  (route) => false, // Remove all previous routes
-                );
+                // bottomNavbarIndexNotifier.value = 0;
+                // Navigator.of(context).pushAndRemoveUntil(
+                //   MaterialPageRoute(builder: (context) => SignInScreen()),
+                //   (route) => false, // Remove all previous routes
+                // );
+                
               },
             ),
             // Row(

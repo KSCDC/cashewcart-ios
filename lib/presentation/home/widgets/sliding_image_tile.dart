@@ -88,7 +88,7 @@ class SlidingImageTile extends StatelessWidget {
                         onTap: () async {
                           // controller.productDetails.results[0].value = await productDetails.results[0];
                           final String productId = productDetails.product.productId.toString();
-                           Services().getProductDetailsAndGotoShopScreen(productId);
+                          Services().getProductDetailsAndGotoShopScreen(context, productId);
                           // await controller.getProductDetails(productId);
                           // controller.getProductReviews(productId);
                           // controller.getSimilarProducts(productDetails, 0);

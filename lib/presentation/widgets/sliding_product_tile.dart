@@ -34,14 +34,14 @@ class SlidingProductTile extends StatelessWidget {
                     SlideItem(
                       imagePath: imageList.isNotEmpty ? "$baseUrl${imageList[i].productImage}" : "https://t3.ftcdn.net/jpg/05/04/28/96/240_F_504289605_zehJiK0tCuZLP2MdfFBpcJdOVxKLnXg1.jpg",
                     ),
-                    Positioned(
-                      top: 25,
-                      right: 25,
-                      child: CircleAvatar(
-                        radius: 20,
-                        child: Icon(Icons.share),
-                      ),
-                    ),
+                    // Positioned(
+                    //   top: 25,
+                    //   right: 25,
+                    //   child: CircleAvatar(
+                    //     radius: 20,
+                    //     child: Icon(Icons.share),
+                    //   ),
+                    // ),
                   ],
                 ),
             ],

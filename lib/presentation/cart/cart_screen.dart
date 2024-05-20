@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:internship_sample/controllers/app_controller.dart';
 import 'package:internship_sample/core/colors.dart';
@@ -15,6 +17,7 @@ import 'package:internship_sample/presentation/widgets/custom_appbar.dart';
 import 'package:internship_sample/presentation/widgets/custom_elevated_button.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 import 'package:internship_sample/services/api_services.dart';
+import 'package:lottie/lottie.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 List cartProductsList = [];
@@ -60,11 +63,6 @@ class CartScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               kHeight,
-              const CustomTextWidget(
-                text: "Shopping List",
-                fontweight: FontWeight.w600,
-              ),
-              kHeight,
               Obx(() {
                 getGrandTotal();
                 print("cart count ${controller.cartProducts.value.count}");
@@ -79,11 +77,19 @@ class CartScreen extends StatelessWidget {
                   );
                 } else {
                   return controller.cartProducts.value.count == 0
-                      ? Center(
-                          child: CustomTextWidget(
-                            text: "You dont have any items in your cart",
-                            fontSize: 16,
-                          ),
+                      ? Column(
+                          children: [
+                            CustomTextWidget(
+                              text: "Your cart is empty. Please add items to continue purchase.",
+                              fontSize: 14.sp,
+                              fontweight: FontWeight.w600,
+                              textAlign: TextAlign.center,
+                            ),
+                            SizedBox(height: screenSize.height * 0.25),
+                            SizedBox(
+                              child: Lottie.asset("lib/core/assets/lottie/cart_empty.json"),
+                            ),
+                          ],
                         )
                       : controller.cartProducts.value.count != 0
                           ? Column(

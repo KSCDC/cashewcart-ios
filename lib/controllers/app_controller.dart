@@ -92,6 +92,7 @@ class AppController extends GetxController {
   RxList<UserAddressModel> addressList = <UserAddressModel>[].obs;
 
   RxList<ProductDetailsModel> productDetailsList = <ProductDetailsModel>[].obs;
+  RxList<ProductModel> slidingProductsList = <ProductModel>[].obs;
 
   bool isAlreadyLoadedAllProducts = false;
   bool isAlreadyLoadedcircleAvatarProducts = false;
@@ -196,7 +197,11 @@ class AppController extends GetxController {
         final isUnique = uniqueProductNames.add(product.product.name);
         return isUnique;
       }).toList();
+      slidingProductsList.value = newProductList.where((item) {
+        return item.product.newProduct == true;
+      }).toList();
       log("Length of productList :${productList.length}");
+      log("Length of sliding :${slidingProductsList.length}");
       log("Length of temp :${newProductList.length}");
       print(productList[0].product.name);
       // allProducts.value = productList;

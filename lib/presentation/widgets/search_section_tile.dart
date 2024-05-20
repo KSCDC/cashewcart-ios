@@ -36,6 +36,7 @@ class SearchSectionTile extends StatelessWidget {
                     controller.searchProducts(value);
                   } else {
                     controller.haveSearchResult.value = false;
+                    controller.searchResults.clear();
                     print("${controller.searchResults.length}");
                   }
                 },

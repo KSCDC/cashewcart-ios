@@ -7,7 +7,9 @@ import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+  SplashScreen({Key? key}) : super(key: key);
+  static String? email;
+  String? encryptedPassword;
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -64,10 +66,10 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   Future<void> gotoOnboardScreenAfterDelay(int delayInSeconds) async {
     await Future.delayed(Duration(seconds: delayInSeconds));
     SharedPreferences sharedPref = await SharedPreferences.getInstance();
-    final email = sharedPref.getString(EMAIL);
-    final encryptedPassword = sharedPref.getString(ENCRYPTEDPASSWORD);
+    SplashScreen.email = sharedPref.getString(EMAIL);
+    widget.encryptedPassword = sharedPref.getString(ENCRYPTEDPASSWORD);
 
-    if (email != null && encryptedPassword != null) {
+    if (SplashScreen.email != null && widget.encryptedPassword != null) {
       print("have email and password");
       Get.offAll(() => MainPageScreen());
     } else {

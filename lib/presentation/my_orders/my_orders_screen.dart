@@ -57,7 +57,7 @@ class MyOrdersScreen extends StatelessWidget {
         leading: IconButton(
           onPressed: () {
             if (Navigator.canPop(context)) {
-              bottomNavbarIndexNotifier.value = 3;
+              // bottomNavbarIndexNotifier.value = 3;
               Get.off(() => MainPageScreen());
             }
           },

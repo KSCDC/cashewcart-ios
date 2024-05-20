@@ -18,6 +18,7 @@ class ProfileScreen extends StatelessWidget {
   ProfileScreen({super.key});
 
   TextEditingController _emailController = TextEditingController();
+  TextEditingController _accountPhoneNumberController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _postalCodeController = TextEditingController();
   TextEditingController _nameController = TextEditingController();
@@ -94,6 +95,7 @@ class ProfileScreen extends StatelessWidget {
                 UserAddressModel? defaultAddress;
                 // initial values of text fields
                 _emailController.text = controller.email;
+                _accountPhoneNumberController.text = controller.phoneNo;
                 _accountHolderNameController.text = controller.userName;
                 _passwordController.text = "**********";
                 if (controller.addressList.value.isNotEmpty) {
@@ -125,6 +127,12 @@ class ProfileScreen extends StatelessWidget {
                           ProfileEditingTextField(
                             hintText: "Email Address",
                             controller: _emailController,
+                            enabled: false,
+                          ),
+                          kProfileScreenGap,
+                          ProfileEditingTextField(
+                            hintText: "Phone Number",
+                            controller: _accountPhoneNumberController,
                             enabled: false,
                           ),
                           kProfileScreenGap,

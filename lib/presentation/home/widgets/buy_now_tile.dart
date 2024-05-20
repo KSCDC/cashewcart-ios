@@ -106,7 +106,7 @@ class BuyNowTile extends StatelessWidget {
                 child: TextButton(
                   onPressed: () async {
                     final String productId = productDetails[0].product.productId.toString();
-                     Services().getProductDetailsAndGotoShopScreen(productId);
+                     Services().getProductDetailsAndGotoShopScreen(context,productId);
                     // await controller.getProductDetails(productId);
                     // controller.getProductReviews(productId);
                     // controller.productDetailsList.add(controller.productDetails.value!);

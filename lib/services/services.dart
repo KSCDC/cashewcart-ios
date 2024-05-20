@@ -144,9 +144,12 @@ class Services {
     ).show();
   }
 
-  getProductDetailsAndGotoShopScreen(String productId) async {
+  getProductDetailsAndGotoShopScreen(BuildContext context, String productId) async {
     final ProductDetailsModel productDetails = await controller.getProductDetails(productId);
-    Get.to(() => ShopScreen());
+    // Get.to(() => ShopScreen());
+
+    // when using cupertino tabbar view for bottomnavbar, if we want persistent navbar then need to use navigatior instead of get.to
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => ShopScreen()));
     // controller.productDetailsList.add(controller.productDetails.value!);
     controller.getSimilarProducts(productDetails.name, productDetails.category.parentName);
     controller.getProductReviews(productId);

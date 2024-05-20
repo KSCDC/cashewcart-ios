@@ -44,6 +44,7 @@ class OnboardingTile extends StatelessWidget {
             fontweight: FontWeight.w600,
             fontColor: Color(0xffA8A8A9),
             textAlign: TextAlign.center,
+            maxLines: 5,
           ),
           Spacer(
             flex: 4,

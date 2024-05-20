@@ -58,7 +58,7 @@ class ProductListingScreen extends StatelessWidget {
                               // print(
                               //     "image list ${controller.productDisplayList.valueindex]}");
                               final String productId = controller.productDisplayList.value[index].product.productId.toString();
-                              Services().getProductDetailsAndGotoShopScreen(productId);
+                              Services().getProductDetailsAndGotoShopScreen(context,productId);
                               // controller.getSimilarProducts(controller.plainCashews.value, index);
                               // await controller.getProductDetails(productId);
                               // controller.productDetailsList.add(controller.productDetails.value!);

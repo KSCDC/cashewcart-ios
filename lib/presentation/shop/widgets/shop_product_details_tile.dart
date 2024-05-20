@@ -26,6 +26,7 @@ class ShopProductDetailsTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     sizeSelectNotifier.value = 0;
+
     return Padding(
       padding: const EdgeInsets.all(15),
       child: Column(
@@ -59,7 +60,9 @@ class ShopProductDetailsTile extends StatelessWidget {
                     for (int i = 0; i < controller.productDetails.value!.productVariants.length; i++)
                       SizeSelectorWidget(
                         index: i,
-                        label: "${controller.productDetails.value!.productVariants[i].weightInGrams} GM",
+                        label: double.parse(controller.productDetails.value!.productVariants[i].weightInGrams) < 1000
+                            ? "${controller.productDetails.value!.productVariants[i].weightInGrams} GM"
+                            : "${double.parse(controller.productDetails.value!.productVariants[i].weightInGrams) / 1000} KG",
                         fontColor: sizeSelectNotifier.value == i ? Colors.white : kMainThemeColor,
                         backgroundColor: sizeSelectNotifier.value == i ? kMainThemeColor : Colors.white,
                       ),
@@ -85,30 +88,32 @@ class ShopProductDetailsTile extends StatelessWidget {
               builder: (context, value, _) {
                 return Row(
                   children: [
-                    Text(
-                      "₹${controller.productDetails.value!.productVariants[value].actualPrice}",
-                      style: TextStyle(
-                        fontFamily: "Montserrat",
-                        fontSize: 14,
-                        color: Color(0xFF808488),
-                        fontWeight: FontWeight.w500,
-                        decoration: TextDecoration.lineThrough,
-                        decorationColor: Color(0xFF808488),
+                    if (controller.productDetails.value!.productVariants[value].actualPrice != controller.productDetails.value!.productVariants[value].sellingPrice)
+                      Text(
+                        "₹${controller.productDetails.value!.productVariants[value].actualPrice}",
+                        style: TextStyle(
+                          fontFamily: "Montserrat",
+                          fontSize: 14,
+                          color: Color(0xFF808488),
+                          fontWeight: FontWeight.w500,
+                          decoration: TextDecoration.lineThrough,
+                          decorationColor: Color(0xFF808488),
+                        ),
                       ),
-                    ),
-                    kWidth,
+                    if (controller.productDetails.value!.productVariants[value].actualPrice != controller.productDetails.value!.productVariants[value].sellingPrice) kWidth,
                     CustomTextWidget(
                       text: "₹${controller.productDetails.value!.productVariants[value].sellingPrice}",
                       fontSize: 14,
                       fontweight: FontWeight.w400,
                     ),
                     kWidth,
-                    CustomTextWidget(
-                      text: "${controller.productDetails.value!.productVariants[value].discountPercentage}%",
-                      fontColor: kMainThemeColor,
-                      fontSize: 14,
-                      fontweight: FontWeight.w400,
-                    ),
+                    if (controller.productDetails.value!.productVariants[value].actualPrice != controller.productDetails.value!.productVariants[value].sellingPrice)
+                      CustomTextWidget(
+                        text: "${controller.productDetails.value!.productVariants[value].discountPercentage}%",
+                        fontColor: kMainThemeColor,
+                        fontSize: 14,
+                        fontweight: FontWeight.w400,
+                      ),
                   ],
                 );
               }),

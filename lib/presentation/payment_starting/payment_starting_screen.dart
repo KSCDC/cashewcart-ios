@@ -106,8 +106,9 @@ class _PaymentStartingScreenState extends State<PaymentStartingScreen> {
       body: LoaderOverlay(
         child: Column(
           children: [
-            SizedBox(height: 50.w),
-            Expanded(
+            SizedBox(height: 30.w),
+            SizedBox(
+              height: 200,
               child: DataTable2(
                 columnSpacing: 12,
                 horizontalMargin: 12,
