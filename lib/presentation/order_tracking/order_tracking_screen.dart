@@ -348,7 +348,8 @@ class OrderTrackingScreen extends StatelessWidget {
                     ),
                     InkWell(
                       onTap: () {
-                        Get.to(PaymentStartingScreen(orderDetails: productDetails));
+                        // Get.to(PaymentStartingScreen(orderDetails: productDetails));
+                        ApiServices().getInvoice();
                       },
                       child: CustomElevatedButton(
                         label: "Retry Payment",

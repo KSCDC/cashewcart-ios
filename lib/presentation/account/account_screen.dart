@@ -43,7 +43,7 @@ class AccountScreen extends StatelessWidget {
             ),
             SizedBox(height: 20.w),
             Obx(() {
-              return controller.isLoading.value
+              return controller.isLoadingProfile.value
                   ? Center(
                       child: CircularProgressIndicator(),
                     )
@@ -123,7 +123,6 @@ class AccountScreen extends StatelessWidget {
                 //   MaterialPageRoute(builder: (context) => SignInScreen()),
                 //   (route) => false, // Remove all previous routes
                 // );
-                
               },
             ),
             // Row(

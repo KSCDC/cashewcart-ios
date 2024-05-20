@@ -7,6 +7,7 @@ import 'package:internship_sample/models/product_details_model.dart';
 import 'package:internship_sample/presentation/authentication/signin_screen.dart';
 import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
 import 'package:internship_sample/presentation/shop/shop_screen.dart';
+import 'package:internship_sample/presentation/widgets/add_or_edit_address.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 import 'package:internship_sample/services/api_services.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -19,8 +20,8 @@ class Services {
         text: message,
         fontColor: Colors.white,
       ),
-      behavior: SnackBarBehavior.floating,
-      margin: EdgeInsets.all(10),
+      // behavior: SnackBarBehavior.floating,
+      // margin: EdgeInsets.all(10),
       padding: EdgeInsets.all(20),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -33,70 +34,32 @@ class Services {
       String heading,
       String buttonLabel,
       TextEditingController nameController,
-      TextEditingController streetAddressConrller,
+      TextEditingController cityController,
       TextEditingController regionController,
-      TextEditingController districtController,
-      TextEditingController stateController,
+      // TextEditingController districtController,
+      // TextEditingController stateController,
       TextEditingController postalcodeController,
       TextEditingController phoneNumberController) {
     return Alert(
         context: context,
         title: heading,
-        content: Column(
-          children: <Widget>[
-            TextField(
-              controller: nameController,
-              decoration: InputDecoration(
-                labelText: 'Name',
-              ),
-            ),
-            TextField(
-              controller: streetAddressConrller,
-              decoration: InputDecoration(
-                labelText: 'Street Address',
-              ),
-            ),
-            TextField(
-              controller: regionController,
-              decoration: InputDecoration(
-                labelText: 'Region',
-              ),
-            ),
-            TextField(
-              controller: districtController,
-              decoration: InputDecoration(
-                labelText: 'District',
-              ),
-            ),
-            TextField(
-              controller: stateController,
-              decoration: InputDecoration(
-                labelText: 'State',
-              ),
-            ),
-            TextField(
-              controller: postalcodeController,
-              decoration: InputDecoration(
-                labelText: 'Postal Code',
-              ),
-            ),
-            TextField(
-              controller: phoneNumberController,
-              decoration: InputDecoration(
-                labelText: 'Phone Number',
-              ),
-            ),
-          ],
-        ),
+        content: AddOrEditAddress(
+            nameController: nameController,
+            cityController: cityController,
+            regionController: regionController,
+            postalcodeController: postalcodeController,
+            phoneNumberController: phoneNumberController,
+            state: controller.state,
+            district: controller.district),
         buttons: [
           DialogButton(
             onPressed: () async {
               final response;
               if (addNewAddress) {
-                response = ApiServices().createUserAddress(context, nameController.text, streetAddressConrller.text, regionController.text, districtController.text, stateController.text,
-                    postalcodeController.text, phoneNumberController.text, false);
+                response = ApiServices().createUserAddress(
+                    context, nameController.text, cityController.text, regionController.text, controller.district!, controller.state!, postalcodeController.text, phoneNumberController.text, false);
               } else {
-                response = await ApiServices().editUserAddress(context, id, nameController.text, streetAddressConrller.text, regionController.text, districtController.text, stateController.text,
+                response = await ApiServices().editUserAddress(context, id, nameController.text, cityController.text, regionController.text, controller.district!, controller.state!,
                     postalcodeController.text, phoneNumberController.text, false);
               }
               // Close the dialog

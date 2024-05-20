@@ -43,6 +43,7 @@ class CircleAvatarListItem extends StatelessWidget {
               fontweight: FontWeight.w400,
               fontColor: Color(0xFF21003D),
               textAlign: TextAlign.center,
+              maxLines: 2,
             )
           ],
         ),

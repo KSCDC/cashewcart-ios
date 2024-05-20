@@ -21,6 +21,8 @@ class AppController extends GetxController {
   String userName = "";
   String email = "";
   String phoneNo = "";
+  String? state = null;
+  String? district = null;
   int numOf1Stars = 0;
   int numOf2Stars = 0;
   int numOf3Stars = 0;
@@ -34,6 +36,7 @@ class AppController extends GetxController {
   RxInt maxSearchPrice = 5000.obs;
   // String selectedProductId = "";
   RxBool isLoading = false.obs;
+  RxBool isLoadingProfile = false.obs;
   RxBool isError = false.obs;
   RxBool isMyOrdersError = false.obs;
   RxBool isLoadingCart = false.obs;
@@ -527,7 +530,7 @@ class AppController extends GetxController {
   }
 
   getProfileDetails() async {
-    isLoading.value = true;
+    isLoadingProfile.value = true;
     isError.value = false;
     final response = await ApiServices().getProfileDetails();
     SharedPreferences sharedPref = await SharedPreferences.getInstance();
@@ -541,7 +544,7 @@ class AppController extends GetxController {
     }
 
     print(userName);
-    isLoading.value = false;
+    isLoadingProfile.value = false;
   }
 
   getCartList() async {
@@ -599,6 +602,8 @@ class AppController extends GetxController {
       }
 
       addressList.value = tempList;
+      state = addressList[0].state;
+      district = addressList[0].district;
     } else {
       isLoadingAddressError.value = true;
     }

@@ -12,7 +12,7 @@ class CustomTextWidget extends StatelessWidget {
     this.textAlign = TextAlign.start,
     this.underline = false,
     this.height = 1.5,
-    this.maxLines = 2,
+    this.maxLines = 50,
     this.textOverflow = TextOverflow.ellipsis,
   });
 
@@ -36,7 +36,7 @@ class CustomTextWidget extends StatelessWidget {
         color: fontColor,
         fontWeight: fontweight,
         decoration: underline ? TextDecoration.underline : TextDecoration.none,
-        decorationColor: kMainThemeColor,
+        decorationColor: fontColor,
         height: height,
       ),
       overflow: textOverflow,

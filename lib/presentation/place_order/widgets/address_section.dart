@@ -105,8 +105,8 @@ class AddressSection extends StatelessWidget {
                                   _nameController.text = currentAddress.name;
                                   _streetAddressController.text = currentAddress.streetAddress;
                                   _regionController.text = currentAddress.region;
-                                  _districtController.text = currentAddress.district;
-                                  _stateController.text = currentAddress.state;
+                                  controller.district = currentAddress.district;
+                                  controller.state = currentAddress.state;
                                   _postalcodeController.text = currentAddress.postalCode;
                                   _phoneNumberController.text = currentAddress.phoneNumber;
                                   Services().showAddressEditPopup(
@@ -118,8 +118,6 @@ class AddressSection extends StatelessWidget {
                                     _nameController,
                                     _streetAddressController,
                                     _regionController,
-                                    _districtController,
-                                    _stateController,
                                     _postalcodeController,
                                     _phoneNumberController,
                                   );

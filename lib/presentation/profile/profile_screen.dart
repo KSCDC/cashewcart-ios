@@ -226,8 +226,8 @@ class ProfileScreen extends StatelessWidget {
                                 TextEditingController _nameContrller = TextEditingController();
                                 TextEditingController _streetAddressContrller = TextEditingController();
                                 TextEditingController _regionController = TextEditingController();
-                                TextEditingController _districtController = TextEditingController();
-                                TextEditingController _stateController = TextEditingController();
+                                // TextEditingController _districtController = TextEditingController();
+                                // TextEditingController _stateController = TextEditingController();
                                 TextEditingController _postalcodeController = TextEditingController();
                                 TextEditingController _phoneNumberController = TextEditingController();
                                 await Services().showAddressEditPopup(
@@ -239,8 +239,7 @@ class ProfileScreen extends StatelessWidget {
                                   _nameContrller,
                                   _streetAddressContrller,
                                   _regionController,
-                                  _districtController,
-                                  _stateController,
+                                  
                                   _postalcodeController,
                                   _phoneNumberController,
                                 );

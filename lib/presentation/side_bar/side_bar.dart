@@ -5,6 +5,10 @@ import 'package:internship_sample/main.dart';
 import 'package:internship_sample/presentation/about/about_screen.dart';
 import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
 import 'package:internship_sample/presentation/my_orders/my_orders_screen.dart';
+import 'package:internship_sample/presentation/policies_and_T&C/cancellation_policy_screen.dart';
+import 'package:internship_sample/presentation/policies_and_T&C/privacy_policy_screen.dart';
+import 'package:internship_sample/presentation/policies_and_T&C/shipping_policy_screen.dart';
+import 'package:internship_sample/presentation/policies_and_T&C/terms_and_conditions_screen.dart';
 import 'package:internship_sample/presentation/profile/profile_screen.dart';
 import 'package:internship_sample/presentation/side_bar/widgets/expandable_side_bar_item.dart';
 import 'package:internship_sample/presentation/side_bar/widgets/side_bar_item_tile.dart';
@@ -77,19 +81,55 @@ class SideBar extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () async {
-                  final url = Uri.parse("https://www.cashewcart.com");
+                  final url = Uri.parse("https://www.cashewcorporation.com/");
                   if (await canLaunchUrl(url)) {
                     await launchUrl(
                       url,
                       mode: LaunchMode.externalApplication,
                     );
                   } else {
-                    throw 'Could not launch "https://www.cashewcart.com/"';
+                    throw 'Could not launch "https://www.cashewcorporation.com//"';
                   }
                 },
                 child: SideBarItemTile(
                   icon: Icons.language,
                   label: "Visit our website",
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  Get.to(() => TermsAndConditionsScreen());
+                },
+                child: SideBarItemTile(
+                  icon: Icons.info_outline,
+                  label: "Terms & Conditions",
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  Get.to(() => CancellationPolicyScreen());
+                },
+                child: SideBarItemTile(
+                  icon: Icons.info_outline,
+                  label: "Cancellation Policy",
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  Get.to(() => PrivacyPolicyScreen());
+                },
+                child: SideBarItemTile(
+                  icon: Icons.info_outline,
+                  label: "Privacy Policy",
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  Get.to(() => ShippingPolicyScreen());
+                },
+                child: SideBarItemTile(
+                  icon: Icons.info_outline,
+                  label: "Shipping Policy",
                 ),
               ),
               SideBarItemTile(

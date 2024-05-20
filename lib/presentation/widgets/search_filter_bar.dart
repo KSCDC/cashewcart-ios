@@ -65,6 +65,7 @@ class SearchFilterBar extends StatelessWidget {
     RangeValues _currentRangeValues = RangeValues(controller.minSearchPrice.value.toDouble(), controller.maxSearchPrice.value.toDouble());
 
     showModalBottomSheet(
+      useRootNavigator: true,
       context: context,
       builder: (BuildContext context) {
         return StatefulBuilder(

@@ -5,11 +5,17 @@ import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/presentation/authentication/signin_screen.dart';
 import 'package:internship_sample/presentation/authentication/signup_screen.dart';
 import 'package:internship_sample/presentation/main_page/main_page_screen.dart';
+import 'package:internship_sample/presentation/policies_and_T&C/cancellation_policy_screen.dart';
+import 'package:internship_sample/presentation/policies_and_T&C/privacy_policy_screen.dart';
+import 'package:internship_sample/presentation/policies_and_T&C/shipping_policy_screen.dart';
+import 'package:internship_sample/presentation/policies_and_T&C/terms_and_conditions_screen.dart';
 import 'package:internship_sample/presentation/splash/splash_screen.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 // List<int> previousPageIndexes = [0];
 void main() {
   runApp(const MyApp());
+  Permission.storage.request();
 }
 
 class MyApp extends StatelessWidget {

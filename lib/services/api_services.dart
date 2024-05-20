@@ -21,6 +21,8 @@ import 'package:internship_sample/presentation/main_page/main_page_screen.dart';
 import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 import 'package:internship_sample/services/services.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiServices {
@@ -803,8 +805,8 @@ class ApiServices {
               ],
             ),
           ),
-          behavior: SnackBarBehavior.floating,
-          margin: EdgeInsets.all(10),
+          // behavior: SnackBarBehavior.floating,
+          // margin: EdgeInsets.all(10),
           padding: EdgeInsets.all(20),
         );
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -851,8 +853,8 @@ class ApiServices {
                 ],
               ),
             ),
-            behavior: SnackBarBehavior.floating,
-            margin: EdgeInsets.all(10),
+            // behavior: SnackBarBehavior.floating,
+            // margin: EdgeInsets.all(10),
             padding: EdgeInsets.all(20),
           );
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -1076,6 +1078,7 @@ class ApiServices {
       }
     } on DioException catch (e) {
       print("Error :$e");
+      log("Address edit error: ${e.response!.data}");
       if (e.response!.statusCode == 401) {
         print("refresh token");
         final refreshedToken = await refreshAccessToken();
@@ -1281,5 +1284,74 @@ class ApiServices {
       }
       return null;
     }
+  }
+
+  Future<void> getInvoice() async {
+    try {
+      final dio = Dio();
+      dio.options.connectTimeout = connectionTimeoutDuration;
+
+      SharedPreferences sharedPref = await SharedPreferences.getInstance();
+      final authToken = sharedPref.getString(ACCESSTOKEN);
+
+      final response = await dio.get(
+        "https://backend.cashewcart.com:8443/api/order/generateinvoice/596/",
+        options: Options(
+          responseType: ResponseType.bytes, // Set response type to bytes
+          headers: {
+            'Authorization':
+                'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE2MjA5Nzk2LCJpYXQiOjE3MTYyMDg1OTYsImp0aSI6IjIwOTZlZTBlYzczODQyMDM5N2MyM2ViYzdmOTM0MmVmIiwidXNlcl9pZCI6MTJ9.OWqoJzjaQwUhANH6fPlSgGbkzR_oL9xti8yybnRH-JE',
+          },
+        ),
+      );
+      if (await _requestPermission(Permission.storage)) {
+        Directory? downloadsDirectory;
+        if (Platform.isAndroid) {
+          downloadsDirectory = Directory('/storage/emulated/0/Download');
+        } else if (Platform.isIOS) {
+          downloadsDirectory = await getApplicationDocumentsDirectory(); // Adjust accordingly for iOS
+        }
+
+        if (downloadsDirectory == null) {
+          print("Downloads directory not found");
+          return;
+        }
+
+        String downloadsPath = downloadsDirectory.path;
+
+        // Generate a unique file name
+        final String fileName = '${DateTime.now().microsecondsSinceEpoch}-akt.pdf';
+        File file = File('$downloadsPath/$fileName');
+
+        // Create the file if it doesn't exist
+        if (!await file.exists()) {
+          await file.create();
+        }
+
+        // Write the response data as bytes to the file
+        await file.writeAsBytes(response.data);
+
+        print("File downloaded at ${file.path}");
+      } else {
+        print("Storage permission denied");
+      }
+    } on DioException catch (e) {
+      print("Error: $e");
+      if (e.type == DioExceptionType.connectionTimeout) {
+        print("Connection timeout");
+      }
+      if (e.response?.statusCode == 401) {
+        print("Token expired, refreshing token...");
+        // final refreshedToken = await refreshAccessToken();
+        // Retry logic can be added here if needed
+      }
+    } catch (e) {
+      print("Unexpected error: $e");
+    }
+  }
+
+  Future<bool> _requestPermission(Permission permission) async {
+    final status = await permission.request();
+    return status.isGranted;
   }
 }

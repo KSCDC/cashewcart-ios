@@ -19,8 +19,8 @@ class CustomCircleAvatarLogo extends StatelessWidget {
       onTap: () {
         SnackBar snackBar = SnackBar(
           content: Text("Logging with ${loginWith.name}"),
-          behavior: SnackBarBehavior.floating,
-          margin: EdgeInsets.all(10),
+          // behavior: SnackBarBehavior.floating,
+          // margin: EdgeInsets.all(10),
           padding: EdgeInsets.all(20),
         );
         ScaffoldMessenger.of(context).showSnackBar(snackBar);

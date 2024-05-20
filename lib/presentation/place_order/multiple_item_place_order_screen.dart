@@ -171,6 +171,7 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
                         TextEditingController _stateController = TextEditingController();
                         TextEditingController _postalcodeController = TextEditingController();
                         TextEditingController _phoneNumberController = TextEditingController();
+                        controller.getUserAddresses();
                         await Services().showAddressEditPopup(
                           true,
                           context,
@@ -180,12 +181,9 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
                           _nameContrller,
                           _streetAddressContrller,
                           _regionController,
-                          _districtController,
-                          _stateController,
                           _postalcodeController,
                           _phoneNumberController,
                         );
-                        controller.getUserAddresses();
                       },
                       icon: Icons.add,
                       label: "Add address",

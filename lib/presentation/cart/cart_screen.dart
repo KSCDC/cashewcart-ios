@@ -134,8 +134,8 @@ class CartScreen extends StatelessWidget {
                                     if (grantTotalNotifier.value <= 500) {
                                       const snackBar = SnackBar(
                                         content: Text('Minimum order amount is Rs 500 and above'),
-                                        behavior: SnackBarBehavior.floating,
-                                        margin: EdgeInsets.all(10),
+                                        // behavior: SnackBarBehavior.floating,
+                                        // margin: EdgeInsets.all(10),
                                         padding: EdgeInsets.all(20),
                                       );
                                       ScaffoldMessenger.of(context).showSnackBar(snackBar);
