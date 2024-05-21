@@ -113,92 +113,94 @@ class _PaymentStartingScreenState extends State<PaymentStartingScreen> {
                 columnSpacing: 12,
                 horizontalMargin: 12,
                 minWidth: 1000.w,
-                dataRowHeight: 50.w,
+                dataRowHeight: 60.w,
                 // fixedLeftColumns: 1,
                 dividerThickness: 2,
-                // dataRowColor: MaterialStateProperty.resolveWith<Color>(
-                //   (Set<MaterialState> states) {
-                //     if (states.contains(MaterialState.selected)) {
-                //       return Colors.blue.withOpacity(0.5);
-                //     }
-                //     return kMainThemeColor; // Default color
-                //   },
-                // ),
+
                 columns: [
                   DataColumn2(
                     label: CustomTextWidget(
                       text: 'Product Name',
                       fontSize: 14.sp,
                       fontweight: FontWeight.w600,
+                      maxLines: 3,
                     ),
                     size: ColumnSize.L,
                   ),
                   DataColumn(
-                    label: CustomTextWidget(
-                      text: 'HSN/SAC',
-                      fontSize: 14.sp,
-                      fontweight: FontWeight.w600,
+                    label: Center(
+                      child: CustomTextWidget(
+                        text: 'HSN/SAC',
+                        fontSize: 14.sp,
+                        fontweight: FontWeight.w600,
+                      ),
                     ),
                   ),
                   DataColumn(
-                    label: CustomTextWidget(
-                      text: 'Qty',
-                      fontSize: 14.sp,
-                      fontweight: FontWeight.w600,
+                    label: Center(
+                      child: CustomTextWidget(
+                        text: 'Qty',
+                        fontSize: 14.sp,
+                        fontweight: FontWeight.w600,
+                      ),
                     ),
                   ),
                   DataColumn(
-                    label: CustomTextWidget(
-                      text: 'Unit Price',
-                      fontSize: 14.sp,
-                      fontweight: FontWeight.w600,
+                    label: Center(
+                      child: CustomTextWidget(
+                        text: 'Unit Price',
+                        fontSize: 14.sp,
+                        fontweight: FontWeight.w600,
+                      ),
                     ),
                   ),
-                  // DataColumn(
-                  //   label: CustomTextWidget(
-                  //     text: 'Taxable Amnt',
-                  //     fontSize: 14.sp,
-                  //     fontweight: FontWeight.w600,
-                  //   ),
-                  //   numeric: true,
-                  // ),
                   DataColumn(
-                    label: CustomTextWidget(
-                      text: 'CGST %',
-                      fontSize: 14.sp,
-                      fontweight: FontWeight.w600,
-                    ),
-                    numeric: true,
-                  ),
-                  DataColumn(
-                    label: CustomTextWidget(
-                      text: 'CGST Amnt',
-                      fontSize: 14.sp,
-                      fontweight: FontWeight.w600,
+                    label: Center(
+                      child: CustomTextWidget(
+                        text: 'CGST %',
+                        fontSize: 14.sp,
+                        fontweight: FontWeight.w600,
+                      ),
                     ),
                     numeric: true,
                   ),
                   DataColumn(
-                    label: CustomTextWidget(
-                      text: 'SGST %',
-                      fontSize: 14.sp,
-                      fontweight: FontWeight.w600,
+                    label: Center(
+                      child: CustomTextWidget(
+                        text: 'CGST Amnt',
+                        fontSize: 14.sp,
+                        fontweight: FontWeight.w600,
+                      ),
                     ),
                     numeric: true,
                   ),
                   DataColumn(
-                    label: CustomTextWidget(
-                      text: 'SGST Amnt',
-                      fontSize: 14.sp,
-                      fontweight: FontWeight.w600,
+                    label: Center(
+                      child: CustomTextWidget(
+                        text: 'SGST %',
+                        fontSize: 14.sp,
+                        fontweight: FontWeight.w600,
+                      ),
                     ),
                     numeric: true,
                   ),
                   DataColumn(
-                    label: CustomTextWidget(
-                      text: 'Total Payable',
-                      fontSize: 14.sp,
-                      fontweight: FontWeight.w600,
+                    label: Center(
+                      child: CustomTextWidget(
+                        text: 'SGST Amnt',
+                        fontSize: 14.sp,
+                        fontweight: FontWeight.w600,
+                      ),
+                    ),
+                    numeric: true,
+                  ),
+                  DataColumn(
+                    label: Center(
+                      child: CustomTextWidget(
+                        text: 'Total Payable',
+                        fontSize: 14.sp,
+                        fontweight: FontWeight.w600,
+                      ),
                     ),
                     numeric: true,
                   ),
@@ -210,34 +212,34 @@ class _PaymentStartingScreenState extends State<PaymentStartingScreen> {
                     return DataRow(
                       cells: [
                         DataCell(
-                          CustomTextWidget(text: widget.orderDetails.items[index].product.product.name),
+                          Center(child: CustomTextWidget(text: widget.orderDetails.items[index].product.product.name)),
                         ),
                         DataCell(
-                          CustomTextWidget(text: widget.orderDetails.items[index].product.hsn),
+                          Center(child: CustomTextWidget(text: widget.orderDetails.items[index].product.hsn)),
                         ),
                         DataCell(
-                          CustomTextWidget(text: widget.orderDetails.items[index].purchaseCount.toString()),
+                          Center(child: CustomTextWidget(text: widget.orderDetails.items[index].purchaseCount.toString())),
                         ),
                         DataCell(
-                          CustomTextWidget(text: widget.orderDetails.items[index].product.sellingPrice),
+                          Center(child: CustomTextWidget(text: widget.orderDetails.items[index].product.sellingPrice)),
                         ),
                         // DataCell(
                         //   CustomTextWidget(text: widget.orderDetails.items[index].product.sellingPrice),
                         // ),
                         DataCell(
-                          CustomTextWidget(text: widget.orderDetails.items[index].product.cgstRate),
+                          Center(child: CustomTextWidget(text: widget.orderDetails.items[index].product.cgstRate)),
                         ),
                         DataCell(
-                          CustomTextWidget(text: widget.orderDetails.items[index].cgstPrice),
+                          Center(child: CustomTextWidget(text: widget.orderDetails.items[index].cgstPrice)),
                         ),
                         DataCell(
-                          CustomTextWidget(text: widget.orderDetails.items[index].product.sgstRate),
+                          Center(child: CustomTextWidget(text: widget.orderDetails.items[index].product.sgstRate)),
                         ),
                         DataCell(
-                          CustomTextWidget(text: widget.orderDetails.items[index].sgstPrice),
+                          Center(child: CustomTextWidget(text: widget.orderDetails.items[index].sgstPrice)),
                         ),
                         DataCell(
-                          CustomTextWidget(text: widget.orderDetails.items[index].total),
+                          Center(child: CustomTextWidget(text: widget.orderDetails.items[index].total)),
                         ),
                       ],
                     );

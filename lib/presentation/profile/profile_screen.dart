@@ -98,7 +98,7 @@ class ProfileScreen extends StatelessWidget {
                 _accountPhoneNumberController.text = controller.phoneNo;
                 _accountHolderNameController.text = controller.userName;
                 _passwordController.text = "**********";
-                if (controller.addressList.value.isNotEmpty) {
+                if (controller.addressList.isNotEmpty) {
                   // id = controller.addressList[0].id.toString();
                   // UserAddressModel defaultAddress = controller.addressList[0];
                   for (var address in controller.addressList) {
@@ -124,6 +124,11 @@ class ProfileScreen extends StatelessWidget {
                         children: [
                           ProfileScreenSubHeading(text: "Personal Details"),
                           kProfileScreenGap,
+                          ProfileEditingTextField(
+                            hintText: "Name",
+                            controller: _accountHolderNameController,
+                            // enabled: false,
+                          ),
                           ProfileEditingTextField(
                             hintText: "Email Address",
                             controller: _emailController,
@@ -169,27 +174,30 @@ class ProfileScreen extends StatelessWidget {
                           ProfileScreenSubHeading(text: "Address Details"),
                           kProfileScreenGap,
                           if (controller.addressList.isNotEmpty)
-                            Row(
-                              children: [
-                                SizedBox(
-                                  width: screenSize.width * 0.75,
-                                  child: CustomTextWidget(
-                                    text: "Use Delivery Address as Billing Address :",
-                                    fontSize: 12.sp,
-                                    fontweight: FontWeight.w600,
-                                  ),
-                                ),
-                                // Default value
-                                Spacer(),
+                            ValueListenableBuilder(
+                                valueListenable: useSameAddressNotifier,
+                                builder: (context, newValue, _) {
+                                  return Row(
+                                    children: [
+                                      SizedBox(
+                                        // width: screenSize.width * 0.75,
+                                        child: CustomTextWidget(
+                                          text: "Use Delivery Address as Billing Address :",
+                                          fontweight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      // Default value
+                                      Spacer(),
 
-                                Checkbox(
-                                  value: useSameAddressNotifier.value,
-                                  onChanged: (bool? value) {
-                                    useSameAddressNotifier.value = value ?? true; // Update the isChecked variable
-                                  },
-                                )
-                              ],
-                            ),
+                                      Checkbox(
+                                        value: newValue,
+                                        onChanged: (bool? value) {
+                                          useSameAddressNotifier.value = value ?? true; // Update the isChecked variable
+                                        },
+                                      )
+                                    ],
+                                  );
+                                }),
 
                           Obx(() {
                             if (controller.addressList.isEmpty) {
@@ -239,7 +247,6 @@ class ProfileScreen extends StatelessWidget {
                                   _nameContrller,
                                   _streetAddressContrller,
                                   _regionController,
-                                  
                                   _postalcodeController,
                                   _phoneNumberController,
                                 );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/main.dart';
@@ -140,6 +141,7 @@ class SideBar extends StatelessWidget {
                 icon: Icons.share,
                 label: "Share App",
               ),
+              SizedBox(height: 50.w)
             ],
           ),
         ),

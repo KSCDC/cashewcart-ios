@@ -11,6 +11,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:internship_sample/controllers/app_controller.dart';
+import 'package:internship_sample/controllers/search_controller.dart';
 
 import 'package:internship_sample/core/base_url.dart';
 import 'package:internship_sample/core/colors.dart';
@@ -27,6 +28,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiServices {
   AppController controller = Get.put(AppController());
+  SearchResultController searchController = Get.put(SearchResultController());
 
   bool isFailedLogin = false;
 
@@ -525,12 +527,11 @@ class ApiServices {
     }
   }
 
-  searchProduct(String searchKey, int minPrice, int maxPrice, String pageNo) async {
+  searchProduct(String searchKey, int minPrice, int maxPrice) async {
     final params = {
       "search": searchKey,
       "min_price": minPrice,
       "max_price": maxPrice,
-      "page": pageNo,
     };
 
     try {
@@ -555,7 +556,7 @@ class ApiServices {
       print("Error :$e");
       if (e.type == DioExceptionType.connectionTimeout) {
         print("Connection timeout");
-        controller.isSearchProductError.value = true;
+        searchController.isSearchProductError.value = true;
       }
       return null;
     }
@@ -792,16 +793,16 @@ class ApiServices {
                   text: "Product added to cart",
                   fontColor: Colors.white,
                 ),
-                TextButton(
-                  onPressed: () {
-                    // bottomNavbarIndexNotifier.value = 2;
-                    Get.to(() => MainPageScreen());
-                  },
-                  child: CustomTextWidget(
-                    text: "Go to Cart",
-                    fontColor: kMainThemeColor,
-                  ),
-                )
+                // TextButton(
+                //   onPressed: () {
+                //     // bottomNavbarIndexNotifier.value = 2;
+                //     Get.to(() => MainPageScreen());
+                //   },
+                //   child: CustomTextWidget(
+                //     text: "Go to Cart",
+                //     fontColor: kMainThemeColor,
+                //   ),
+                // )
               ],
             ),
           ),
@@ -1085,6 +1086,8 @@ class ApiServices {
         if (refreshedToken != null) {
           getUserAddresses();
         }
+      } else {
+        Services().showCustomSnackBar(context, e.response!.statusMessage!);
       }
       return null;
     }

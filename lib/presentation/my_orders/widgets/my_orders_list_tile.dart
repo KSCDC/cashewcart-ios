@@ -1,30 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/core/constants.dart';
+import 'package:internship_sample/models/orders_list_model.dart';
 import 'package:internship_sample/presentation/widgets/custom_star_rating_tile.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
+import 'package:intl/intl.dart';
 
 class MyOrdersListTile extends StatelessWidget {
   const MyOrdersListTile({
     super.key,
-    required this.imagePath,
-    required this.name,
-    required this.price,
-    required this.rating,
-    required this.totalItemsCount,
-    required this.weight,
-    required this.paymentStatus,
+    required this.currentItem,
   });
-  final String imagePath;
-  final String name;
-  final String price;
-  final String rating;
-  final String weight;
-  final int totalItemsCount;
-  final String paymentStatus;
+  final OrdersListModel currentItem;
 
   @override
   Widget build(BuildContext context) {
+    final String orderId = currentItem.orderId.toString();
+    final String paymentStatus = currentItem.paymentStatus;
+    final int totalItems = currentItem.items.length;
+    final DateTime date = currentItem.createdAt;
+    final num subTotal = currentItem.subTotalAmount;
+    final num deliveryCharge = currentItem.deliveryAdditionalAmount;
+    final num grandTotal = currentItem.totalAmount;
+    String orderPlacedDate = DateFormat('dd MMMM yyyy').format(date);
     final screenSize = MediaQuery.of(context).size;
     Color paymentStatusColor = Colors.black;
     String status;
@@ -51,134 +50,131 @@ class MyOrdersListTile extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Row(
+            //   children: [
+            //     Container(
+            //       height: 125,
+            //       width: 130,
+            //       decoration: BoxDecoration(
+            //         image: DecorationImage(
+            //           image: NetworkImage(imagePath),
+            //           fit: BoxFit.fitHeight,
+            //         ),
+            //         borderRadius: BorderRadius.all(
+            //           Radius.circular(4),
+            //         ),
+            //       ),
+            //     ),
+            //     Padding(
+            //       padding: const EdgeInsets.all(10),
+            //       child: Column(
+            //         crossAxisAlignment: CrossAxisAlignment.start,
+            //         children: [
+            //           SizedBox(
+            //             width: screenSize.width * 0.52,
+            //             child: CustomTextWidget(
+            //               text: name,
+            //               fontSize: 13,
+            //               fontweight: FontWeight.w600,
+            //             ),
+            //           ),
+            //           const SizedBox(height: 5),
+            //           Row(
+            //             children: [
+            //               const CustomTextWidget(
+            //                 text: "Quantity :",
+            //                 fontSize: 12,
+            //                 fontweight: FontWeight.w500,
+            //               ),
+            //               kWidth,
+            //               CustomTextWidget(
+            //                 text: weight.toString(),
+            //                 fontSize: 12,
+            //               ),
+            //               kWidth,
+            //             ],
+            //           ),
+            //           kHeight,
+            //           Row(
+            //             children: [
+            //               CustomTextWidget(
+            //                 text: rating,
+            //                 // fontColor: ,
+            //                 fontSize: 12,
+            //               ),
+            //               for (int i = 0; i < 4; i++)
+            //                 const Icon(
+            //                   Icons.star,
+            //                   color: Color(0xFFF7B305),
+            //                   size: 15,
+            //                 ),
+            //               const Icon(
+            //                 Icons.star_half,
+            //                 color: Color(0xFFBBBBBB),
+            //                 size: 15,
+            //               ),
+            //               kWidth,
+            //             ],
+            //           ),
+            //           kHeight,
+            //           Row(
+            //             children: [
+            //               CartProductListTileButton(
+            //                 buttonHeight: 30,
+            //                 buttonWidth: 85,
+            //                 label: "₹ ${price}",
+            //                 fontSize: 16,
+            //                 fontWeight: FontWeight.w600,
+            //               ),
+            //               kWidth,
+            //             ],
+            //           ),
+            //         ],
+            //       ),
+            //     )
+            //   ],
+            // ),
+
             Row(
               children: [
-                Container(
-                  height: 125,
-                  width: 130,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: NetworkImage(imagePath),
-                      fit: BoxFit.fitHeight,
-                    ),
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(4),
-                    ),
-                  ),
+                CustomTextWidget(
+                  text: "Order ID : $orderId",
+                  fontSize: 14.sp,
+                  fontweight: FontWeight.w600,
+                  fontColor: kMainThemeColor,
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        width: screenSize.width * 0.52,
-                        child: CustomTextWidget(
-                          text: name,
-                          fontSize: 13,
-                          fontweight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(height: 5),
-                      Row(
-                        children: [
-                          const CustomTextWidget(
-                            text: "Quantity :",
-                            fontSize: 12,
-                            fontweight: FontWeight.w500,
-                          ),
-                          kWidth,
-                          CustomTextWidget(
-                            text: weight.toString(),
-                            fontSize: 12,
-                          ),
-                          kWidth,
-                        ],
-                      ),
-                      kHeight,
-                      Row(
-                        children: [
-                          CustomTextWidget(
-                            text: rating,
-                            // fontColor: ,
-                            fontSize: 12,
-                          ),
-                          for (int i = 0; i < 4; i++)
-                            const Icon(
-                              Icons.star,
-                              color: Color(0xFFF7B305),
-                              size: 15,
-                            ),
-                          const Icon(
-                            Icons.star_half,
-                            color: Color(0xFFBBBBBB),
-                            size: 15,
-                          ),
-                          kWidth,
-                        ],
-                      ),
-                      kHeight,
-                      Row(
-                        children: [
-                          CartProductListTileButton(
-                            buttonHeight: 30,
-                            buttonWidth: 85,
-                            label: "₹ ${price}",
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
-                          kWidth,
-                        ],
-                      ),
-                    ],
-                  ),
-                )
               ],
             ),
-            if (totalItemsCount != 1) CustomTextWidget(text: "And ${totalItemsCount - 1} other ${totalItemsCount - 1 == 1 ? "item" : "items"}"),
+
+            CustomTextWidget(
+              text: "Order placed on $orderPlacedDate",
+              fontSize: 14.sp,
+            ),
+            OrderListLine(label: "Number of items", number: "$totalItems"),
+            OrderListLine(label: "Sub Total", number: "₹ $subTotal"),
+            OrderListLine(label: "Delivery charge", number: "₹ $deliveryCharge"),
+            OrderListLine(label: "Grand Total", number: "₹ $grandTotal"),
+
+            SizedBox(height: 10.w),
             Row(
               children: [
-                CustomTextWidget(text: "Payment status : "),
+                CustomTextWidget(
+                  text: "Payment status : ",
+                  fontSize: 14.sp,
+                  fontweight: FontWeight.w600,
+                ),
                 CustomTextWidget(
                   text: status,
                   fontColor: paymentStatusColor,
+                  fontSize: 14.sp,
+                  fontweight: FontWeight.w600,
                 ),
               ],
             ),
             kHeight,
             Divider(),
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //   children: [
-            //     CustomTextWidget(
-            //       text: "Total Order (${count}) :",
-            //       fontSize: 12,
-            //       fontweight: FontWeight.w500,
-            //     ),
-            //     CustomTextWidget(
-            //       text: "₹ ${double.parse(price) * count}",
-            //       fontSize: 12,
-            //       fontweight: FontWeight.w600,
-            //     )
-            //   ],
-            // ),
+
             SizedBox(height: 5),
-            // if (paymentStatusColor == Colors.green)
-            //   Row(
-            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //     children: [
-            //       const CustomTextWidget(
-            //         text: "Delivery Expected By :",
-            //         fontSize: 12,
-            //         fontweight: FontWeight.w500,
-            //       ),
-            //       CustomTextWidget(
-            //         text: "28/03/2024",
-            //         fontSize: 12,
-            //         fontweight: FontWeight.w600,
-            //       )
-            //     ],
-            //   ),
           ],
         ),
       ),
@@ -186,38 +182,68 @@ class MyOrdersListTile extends StatelessWidget {
   }
 }
 
-class CartProductListTileButton extends StatelessWidget {
-  const CartProductListTileButton({
+class OrderListLine extends StatelessWidget {
+  const OrderListLine({
     super.key,
-    required this.buttonHeight,
-    required this.buttonWidth,
     required this.label,
-    required this.fontSize,
-    required this.fontWeight,
+    required this.number,
   });
-
-  final double buttonHeight;
-  final double buttonWidth;
   final String label;
-  final double fontSize;
-  final FontWeight fontWeight;
-
+  final String number;
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: buttonHeight,
-      width: buttonWidth,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(2),
-        border: Border.all(),
-      ),
-      child: Center(
-        child: CustomTextWidget(
-          text: label,
-          fontSize: fontSize,
-          fontweight: fontWeight,
+    return Row(
+      children: [
+        SizedBox(
+          width: 200.w,
+          child: CustomTextWidget(
+            text: label,
+            fontSize: 14.sp,
+          ),
         ),
-      ),
+        CustomTextWidget(
+          text: ": " + number,
+          fontSize: 14.sp,
+        ),
+      ],
     );
   }
 }
+
+
+
+// class CartProductListTileButton extends StatelessWidget {
+//   const CartProductListTileButton({
+//     super.key,
+//     required this.buttonHeight,
+//     required this.buttonWidth,
+//     required this.label,
+//     required this.fontSize,
+//     required this.fontWeight,
+//   });
+
+//   final double buttonHeight;
+//   final double buttonWidth;
+//   final String label;
+//   final double fontSize;
+//   final FontWeight fontWeight;
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       height: buttonHeight,
+//       width: buttonWidth,
+//       decoration: BoxDecoration(
+//         borderRadius: BorderRadius.circular(2),
+//         border: Border.all(),
+//       ),
+//       child: Center(
+//         child: CustomTextWidget(
+//           text: label,
+//           fontSize: fontSize,
+//           fontweight: fontWeight,
+//         ),
+//       ),
+//     );
+//   }
+// }

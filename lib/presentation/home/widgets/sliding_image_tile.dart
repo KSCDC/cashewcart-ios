@@ -1,4 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:internship_sample/controllers/app_controller.dart';
 import 'package:internship_sample/core/base_url.dart';
@@ -11,6 +14,7 @@ import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_n
 import 'package:internship_sample/presentation/shop/shop_screen.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 import 'package:internship_sample/services/services.dart';
+import 'package:lottie/lottie.dart';
 
 class SlidingImageTile extends StatelessWidget {
   SlidingImageTile({
@@ -119,7 +123,16 @@ class SlidingImageTile extends StatelessWidget {
                 )
               ],
             ),
-          )
+          ),
+          Positioned(
+            left: 25.w,
+            child: SizedBox(
+              height: 80.w,
+              child: Lottie.asset(
+                "lib/core/assets/lottie/new_product.json",
+              ),
+            ),
+          ),
         ],
       ),
     );

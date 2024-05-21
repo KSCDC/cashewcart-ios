@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:internship_sample/controllers/app_controller.dart';
+import 'package:internship_sample/controllers/search_controller.dart';
 import 'package:internship_sample/presentation/widgets/custom_elevated_button.dart';
 import 'package:internship_sample/presentation/widgets/custom_search_filtering_button.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
@@ -12,6 +14,7 @@ class SearchFilterBar extends StatelessWidget {
   });
 
   AppController controller = Get.put(AppController());
+  SearchResultController searchController = Get.put(SearchResultController());
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -24,18 +27,18 @@ class SearchFilterBar extends StatelessWidget {
               controller.dropdownValue.value = newValue!;
               // Here you can add code to sort the list based on the selected option
               if (newValue == 'Price Low to High') {
-                controller.sortProduct.value = true;
-                controller.sortAscending.value = true;
-                controller.searchProducts(SearchSectionTile().searchController.text);
+                searchController.sortProduct.value = true;
+                searchController.sortAscending.value = true;
+                searchController.searchProducts(SearchSectionTile().searchController.text);
                 // result.sort((a, b) => double.parse(a.sellingPrice).compareTo(double.parse(b.sellingPrice)));
               } else if (newValue == 'Price High to Low') {
-                controller.sortProduct.value = true;
-                controller.sortAscending.value = false;
-                controller.searchProducts(SearchSectionTile().searchController.text);
+                searchController.sortProduct.value = true;
+                searchController.sortAscending.value = false;
+                searchController.searchProducts(SearchSectionTile().searchController.text);
                 // result.sort((a, b) => double.parse(b.sellingPrice).compareTo(double.parse(a.sellingPrice)));
               } else {
-                controller.sortProduct.value = false;
-                controller.searchProducts(SearchSectionTile().searchController.text);
+                searchController.sortProduct.value = false;
+                searchController.searchProducts(SearchSectionTile().searchController.text);
               }
             },
             items: <String>['Default', 'Price Low to High', 'Price High to Low'].map<DropdownMenuItem<String>>((String value) {
@@ -62,10 +65,10 @@ class SearchFilterBar extends StatelessWidget {
   }
 
   void showPriceFilterBottomSheet(BuildContext context) {
-    RangeValues _currentRangeValues = RangeValues(controller.minSearchPrice.value.toDouble(), controller.maxSearchPrice.value.toDouble());
+    RangeValues _currentRangeValues = RangeValues(searchController.minSearchPrice.value.toDouble(), searchController.maxSearchPrice.value.toDouble());
 
     showModalBottomSheet(
-      useRootNavigator: true,
+      // useRootNavigator: true,
       context: context,
       builder: (BuildContext context) {
         return StatefulBuilder(
@@ -107,15 +110,18 @@ class SearchFilterBar extends StatelessWidget {
                       onTap: () {
                         print('Minimum Price: ₹${_currentRangeValues.start.toStringAsFixed(2)}');
                         print('Maximum Price: ₹${_currentRangeValues.end.toStringAsFixed(2)}');
-                        controller.minSearchPrice.value = _currentRangeValues.start.round();
-                        controller.maxSearchPrice.value = _currentRangeValues.end.round();
-                        controller.searchProducts(SearchSectionTile().searchController.text);
+                        searchController.minSearchPrice.value = _currentRangeValues.start.round();
+                        searchController.maxSearchPrice.value = _currentRangeValues.end.round();
+                        searchController.searchProducts(SearchSectionTile().searchController.text);
                         Navigator.pop(context);
                       },
                       child: CustomElevatedButton(
                         label: 'Apply',
                       ),
                     ),
+                    SizedBox(
+                      height: 50.w,
+                    )
                   ],
                 ),
               ),

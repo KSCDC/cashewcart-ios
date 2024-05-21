@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:internship_sample/controllers/app_controller.dart';
+import 'package:internship_sample/controllers/cart_controller.dart';
 import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/presentation/account/account_screen.dart';
 import 'package:internship_sample/presentation/cart/cart_screen.dart';
@@ -37,10 +38,15 @@ class MainPageScreen extends StatelessWidget {
   //   // TrendingModelProductListingScreen(),
   // ];
   AppController controller = Get.put(AppController());
+  CartController cartController = Get.put(CartController());
+  final CupertinoTabController _tabController = CupertinoTabController();
+
   @override
   Widget build(BuildContext context) {
+    _tabController.index = controller.mainPageIndex;
     return SafeArea(
       child: CupertinoTabScaffold(
+        controller: _tabController,
         tabBar: CupertinoTabBar(
           activeColor: kMainThemeColor,
           inactiveColor: Colors.grey,
@@ -90,6 +96,21 @@ class MainPageScreen extends StatelessWidget {
               label: 'Account',
             ),
           ],
+          onTap: (index) async {
+            if (index == 0) {
+              controller.mainPageIndex = 0;
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => MainPageScreen()),
+                (route) => false,
+              );
+            } else if (index == 1) {
+              controller.mainPageIndex = 1;
+              await Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => MainPageScreen()),
+                (route) => false,
+              );
+            }
+          },
         ),
         tabBuilder: (context, index) {
           switch (index) {
@@ -114,7 +135,7 @@ class MainPageScreen extends StatelessWidget {
                     controller.getTrendingProducts();
                   }
 
-                  controller.getCartList();
+                  cartController.getCartList();
 
                   return CupertinoPageScaffold(child: HomeScreen());
                 },
@@ -126,7 +147,7 @@ class MainPageScreen extends StatelessWidget {
                     controller.getCircleAvatarProductList();
                   }
 
-                  controller.getCartList();
+                  cartController.getCartList();
                   return CupertinoPageScaffold(child: CategoriesScreen());
                 },
               );
@@ -134,7 +155,7 @@ class MainPageScreen extends StatelessWidget {
               return CupertinoTabView(
                 builder: (context) {
                   if (SplashScreen.email != null) {
-                    controller.getCartList();
+                    cartController.getCartList();
                   } else {
                     Services().showLoginAlert(context, "Please login to access Cart");
                   }

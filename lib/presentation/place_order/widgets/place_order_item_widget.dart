@@ -56,6 +56,7 @@ class PlaceOrderItemWidget extends StatelessWidget {
                   text: productDescription,
                   fontSize: 13,
                   fontweight: FontWeight.w400,
+                  maxLines: 2,
                 ),
               ),
               kHeight,

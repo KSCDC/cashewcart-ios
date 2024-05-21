@@ -88,9 +88,7 @@ class AddressSection extends StatelessWidget {
                                   ),
                                   GestureDetector(
                                     onTap: () async {
-                                      final adderssId = controller.addressList[index].id.toString();
-                                      await ApiServices().deleteUserAddress(adderssId);
-                                      controller.getUserAddresses();
+                                      showDeleteWarning(context, index);
                                     },
                                     child: Icon(
                                       Icons.delete,
@@ -164,5 +162,40 @@ class AddressSection extends StatelessWidget {
         }),
       ],
     );
+  }
+
+  showDeleteWarning(BuildContext context, int index) {
+    Alert(
+      context: context,
+      type: AlertType.warning,
+      title: "Warning",
+      desc: "This address will be deleted",
+      buttons: [
+        DialogButton(
+          child: Text(
+            "Cancel",
+            style: TextStyle(color: Colors.white, fontSize: 18),
+          ),
+          onPressed: () => Navigator.pop(context),
+          color: Color.fromRGBO(0, 179, 134, 1.0),
+        ),
+        DialogButton(
+          child: Text(
+            "Delete",
+            style: TextStyle(color: Colors.white, fontSize: 18),
+          ),
+          onPressed: () async {
+            final adderssId = controller.addressList[index].id.toString();
+            await ApiServices().deleteUserAddress(adderssId);
+            Navigator.of(context).pop();
+            controller.getUserAddresses();
+          },
+          gradient: LinearGradient(colors: [
+            Colors.red,
+            Color.fromARGB(255, 244, 86, 75),
+          ]),
+        )
+      ],
+    ).show();
   }
 }

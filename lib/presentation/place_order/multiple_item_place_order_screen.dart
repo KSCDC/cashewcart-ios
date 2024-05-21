@@ -86,6 +86,7 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
                         itemBuilder: (context, index) {
                           // final int selectedCategory = productList[index]['category'];
 
+                          // final int count = productList[index].purchaseCount;
                           final int count = productList[index].purchaseCount;
 
                           return Column(
@@ -112,26 +113,30 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
                     kHeight,
                     //delivery addresses
                     if (controller.addressList.isNotEmpty)
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: screenSize.width * 0.8,
-                            child: CustomTextWidget(
-                              text: "Use Delivery Address as Billing Address :",
-                              fontweight: FontWeight.w600,
-                            ),
-                          ),
-                          // Default value
-                          Spacer(),
+                      ValueListenableBuilder(
+                          valueListenable: useSameAddressNotifier,
+                          builder: (context, newValue, _) {
+                            return Row(
+                              children: [
+                                SizedBox(
+                                  width: screenSize.width * 0.8,
+                                  child: CustomTextWidget(
+                                    text: "Use Delivery Address as Billing Address :",
+                                    fontweight: FontWeight.w600,
+                                  ),
+                                ),
+                                // Default value
+                                Spacer(),
 
-                          Checkbox(
-                            value: useSameAddressNotifier.value,
-                            onChanged: (bool? value) {
-                              useSameAddressNotifier.value = value ?? true; // Update the isChecked variable
-                            },
-                          )
-                        ],
-                      ),
+                                Checkbox(
+                                  value: newValue,
+                                  onChanged: (bool? value) {
+                                    useSameAddressNotifier.value = value ?? true; // Update the isChecked variable
+                                  },
+                                )
+                              ],
+                            );
+                          }),
 
                     Obx(() {
                       if (controller.addressList.isEmpty) {

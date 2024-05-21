@@ -1,5 +1,5 @@
 import 'dart:developer';
-import 'dart:math';
+
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -7,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:internship_sample/controllers/app_controller.dart';
+import 'package:internship_sample/controllers/product_details_controller.dart';
 import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/main.dart';
 import 'package:internship_sample/models/product_details_model.dart';
@@ -37,35 +38,25 @@ ValueNotifier<int> customerRatingNotifier = ValueNotifier(5);
 class ShopScreen extends StatelessWidget {
   ShopScreen({
     super.key,
-    //  this.productDetails,
+    required this.randomIndex,
+    required this.randomProductList,
+    required this.productDetails,
   });
 
-  // final _scrollController = ScrollController();
+  final int randomIndex;
+  final List<TrendingProductModel> randomProductList;
+  final ProductDetailsModel productDetails;
 
   AppController controller = Get.put(AppController());
-  final Random _random = Random();
-  int? randomIndex;
-  List<TrendingProductModel>? randomProductList;
+  ProductDetailsController productDetailsController = Get.put(ProductDetailsController());
+
   @override
   Widget build(BuildContext context) {
-    randomIndex = _random.nextInt(3);
+    log("random num :$randomIndex");
 
     final screenSize = MediaQuery.of(context).size;
 
     TextEditingController reviewController = TextEditingController();
-
-    switch (randomIndex) {
-      case 0:
-        randomProductList = controller.trending;
-        break;
-      case 1:
-        randomProductList = controller.sponserd;
-        break;
-      case 2:
-        randomProductList = controller.bestSellers;
-        break;
-    }
-    print("Random number \n::::\n:::\n:: $randomIndex");
 
     return Scaffold(
       // appBar: AppBar(
@@ -83,457 +74,444 @@ class ShopScreen extends StatelessWidget {
       //     icon: Icon(Icons.arrow_back_ios_new),
       //   ),
       // ),
-      appBar: CustomAppBar(
-        actionWidget: InkWell(
-          onTap: () {
-            Get.back();
-          },
-          child: SvgPicture.asset(
-            "lib/core/assets/images/home_icon.svg",
-            color: Colors.black,
+      appBar: AppBar(
+          // backgroundColor: kMainThemeColor,
+          centerTitle: true,
+          leading: IconButton(
+            onPressed: () {
+              if (Navigator.canPop(context)) {
+                Navigator.pop(context);
+                print("Going back");
+                productDetailsController.isLoading.value = false;
+                log("is loading : ${productDetailsController.isLoading.value}");
+              }
+            },
+            icon: Icon(Icons.arrow_back_ios_new),
           ),
-        ),
-      ),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: InkWell(
+                onTap: () {
+                  Get.back();
+                },
+                child: SvgPicture.asset(
+                  "lib/core/assets/images/home_icon.svg",
+                  color: Colors.black,
+                ),
+              ),
+            ),
+          ]),
+
       body: LoaderOverlay(
         child: SingleChildScrollView(
           // controller: _scrollController,
           child: Obx(() {
             // ProductDetailsModel currentProductDetails = controller.productDetailsList[controller.productDetailsList.length - 1];
-            return controller.isLoading.value
-                ? SizedBox(
-                    height: screenSize.height * 0.9,
-                    width: screenSize.width,
-                    child: Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  )
-                : Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SlidingProductTile(
-                        imageList: controller.productDetails.value!.productImages,
-                        count: controller.productDetails.value!.productImages.isNotEmpty ? controller.productDetails.value!.productImages.length : 1,
-                      ),
+            // productDetailsController.isLoading.value ? context.loaderOverlay.show() : context.loaderOverlay.hide();
+            return
+                //  productDetailsController.isLoading.value
+                // ? SizedBox(
+                //     height: screenSize.height * 0.9,
+                //     width: screenSize.width,
+                //     child: Center(
+                //       child: CircularProgressIndicator(),
+                //     ),
+                //   )
+                // :
+                Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SlidingProductTile(
+                  imageList: productDetails.productImages,
+                  count: productDetails.productImages.isNotEmpty ? productDetails.productImages.length : 1,
+                ),
 
-                      // product details
-                      ShopProductDetailsTile(),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: ValueListenableBuilder(
-                            valueListenable: sizeSelectNotifier,
-                            builder: (context, value, _) {
-                              return Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  // add to cart button
-                                  GestureDetector(
-                                    onTap: () async {
-                                      context.loaderOverlay.show();
-                                      SharedPreferences sharedPref = await SharedPreferences.getInstance();
-                                      String? email = sharedPref.getString(EMAIL);
-                                      String? password = sharedPref.getString(ENCRYPTEDPASSWORD);
+                // product details
+                ShopProductDetailsTile(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: ValueListenableBuilder(
+                      valueListenable: sizeSelectNotifier,
+                      builder: (context, value, _) {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            // add to cart button
 
-                                      if (email != null && password != null) {
-                                        int stock = controller.productDetails.value!.productVariants[value].stockQty;
-                                        bool isAvailable = controller.productDetails.value!.productVariants[value].isAvailable;
+                            kWidth,
 
-                                        if (stock > 0 && isAvailable) {
-                                          await controller.addProductToCart(context, controller.productDetails.value!.productVariants[value].productVariantId.toString());
-                                          double parsedPrice = double.tryParse(controller.productDetails.value!.productVariants[value].sellingPrice ?? '')?.toDouble() ?? 0.0;
+                            // buy now button
+                            // GestureDetector(
+                            //   onTap: () async {
+                            //     print("buy now");
+                            //     context.loaderOverlay.show();
+                            //     SharedPreferences sharedPref = await SharedPreferences.getInstance();
+                            //     String? email = sharedPref.getString(EMAIL);
+                            //     String? password = sharedPref.getString(ENCRYPTEDPASSWORD);
 
-                                          grantTotalNotifier.value = grantTotalNotifier.value + parsedPrice;
-                                        } else {
-                                          Services().showCustomSnackBar(context, "This item is currently unavailable");
-                                        }
-                                      } else {
-                                        Services().showLoginAlert(context, "Please login for adding product to your cart");
-                                      }
-                                      context.loaderOverlay.hide();
-                                    },
-                                    child: const CustomStyledShopPageButton(
-                                      gradientColors: [
-                                        Color(0xFF3F92FF),
-                                        Color(0xFF0B3689),
-                                      ],
-                                      icon: Icons.shopping_cart_outlined,
-                                      label: "Add to cart",
+                            //     if (email != null && password != null) {
+                            //       productCountNotifier.value = 1;
+                            //       // int stock = currentProductDetails.productVariants[i].stockQty;
+                            //       bool isAvailable = controller.productDetails.value!.productVariants[value].isAvailable;
+
+                            //       int stock = 1;
+                            //       if (stock > 0 && isAvailable) {
+                            //         controller.getUserAddresses();
+                            //         // await controller.addProductToCart(context, currentProductDetails.productVariants[value]Id.toString());
+                            //         controller.getCartList();
+                            //         // previousPageIndexes.add(bottomNavbarIndexNotifier.value);
+                            //         bottomNavbarIndexNotifier.value = 2;
+                            //         Get.to(() => MainPageScreen());
+                            //       } else {
+                            //         Services().showCustomSnackBar(context, "This item is currently unavailable");
+                            //       }
+                            //     } else {
+                            //       Services().showLoginAlert(context, "Please login for for purchasing this product");
+                            //     }
+                            //     context.loaderOverlay.hide();
+                            //   },
+                            //   child: const CustomStyledShopPageButton(
+                            //     gradientColors: [
+                            //       Color(0xFF71F9A9),
+                            //       Color(0xFF31B769),
+                            //     ],
+                            //     icon: Icons.touch_app_outlined,
+                            //     label: "Buy Now",
+                            //   ),
+                            // ),
+                          ],
+                        );
+                      }),
+                ),
+
+                kHeight,
+                Obx(() {
+                  print(
+                      "Stars : ${productDetailsController.numOf1Stars},${productDetailsController.numOf2Stars},${productDetailsController.numOf3Stars},${productDetailsController.numOf4Stars},${productDetailsController.numOf5Stars}");
+
+                  return productDetailsController.isReviewsLoading.value
+                      ? Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(10),
+                              child: CustomTextWidget(
+                                text: "Customer Ratings and Reviews",
+                                fontSize: 20.sp,
+                                fontweight: FontWeight.w600,
+                              ),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Column(
+                                  children: [
+                                    CustomTextWidget(
+                                      text: "${productDetailsController.productReviewsList.length.toString()} Ratings and reviews",
+                                      fontSize: 15.sp,
+                                      fontweight: FontWeight.w600,
                                     ),
-                                  ),
-                                  kWidth,
+                                    CustomTextWidget(text: "Average rating : ${productDetailsController.avgRating}"),
+                                    kHeight,
+                                    Container(
+                                      height: 40.w,
+                                      width: 110.w,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: Colors.grey, // Set the border color
+                                          width: 1, // Set the border width
+                                        ),
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                      child: Center(
+                                        child: GestureDetector(
+                                          onTap: () async {
+                                            SharedPreferences sharedPref = await SharedPreferences.getInstance();
+                                            final email = sharedPref.getString(EMAIL);
+                                            final password = sharedPref.getString(ENCRYPTEDPASSWORD);
+                                            if (email != null && password != null) {
+                                              await showDialog(
+                                                context: context,
+                                                builder: (BuildContext context) {
+                                                  return Dialog(
+                                                    insetAnimationDuration: Duration(milliseconds: 1000),
+                                                    child: Container(
+                                                      decoration: BoxDecoration(
+                                                        color: Colors.white,
+                                                        borderRadius: BorderRadius.circular(6),
+                                                      ),
+                                                      width: screenSize.width * 0.9,
+                                                      height: screenSize.width * 0.8,
+                                                      child: Padding(
+                                                        padding: const EdgeInsets.all(15),
+                                                        child: Column(
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          children: [
+                                                            ValueListenableBuilder(
+                                                                valueListenable: customerRatingNotifier,
+                                                                builder: (context, value, _) {
+                                                                  return RatingStars();
+                                                                }),
+                                                            kHeight,
+                                                            CustomTextWidget(text: "Enter your product review here"),
+                                                            TextField(
+                                                              controller: reviewController,
+                                                              maxLines: 4, // Set to null for an unlimited number of lines
+                                                              decoration: InputDecoration(
+                                                                border: OutlineInputBorder(),
+                                                              ),
+                                                            ),
+                                                            SizedBox(height: 20),
+                                                            GestureDetector(
+                                                              onTap: () {
+                                                                Navigator.of(context).pop();
+                                                              },
+                                                              child: GestureDetector(
+                                                                onTap: () {
+                                                                  if (reviewController.text.trim() != "") {
+                                                                    productDetailsController.addProductReview(
+                                                                      context,
+                                                                      productDetailsController.productDetails.value!.productId.toString(),
+                                                                      reviewController.text,
+                                                                      customerRatingNotifier.value,
+                                                                    );
+                                                                    Get.back();
+                                                                  }
+                                                                },
+                                                                child: CustomElevatedButton(
+                                                                  label: "Submit",
+                                                                  fontSize: 16,
+                                                                ),
+                                                              ),
+                                                            )
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                              );
+                                            } else {
+                                              Services().showLoginAlert(context, "Please login to add product review");
+                                            }
+                                          },
+                                          child: CustomTextWidget(text: "Rate Product"),
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                Container(
+                                  height: 100,
+                                  width: 1,
+                                  color: Colors.grey,
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    DisplayStars(
+                                      numberOfStars: 5,
+                                      rating: productDetailsController.numOf5Stars,
+                                    ),
+                                    DisplayStars(
+                                      numberOfStars: 4,
+                                      rating: productDetailsController.numOf4Stars,
+                                    ),
+                                    DisplayStars(
+                                      numberOfStars: 3,
+                                      rating: productDetailsController.numOf3Stars,
+                                    ),
+                                    DisplayStars(
+                                      numberOfStars: 2,
+                                      rating: productDetailsController.numOf2Stars,
+                                    ),
+                                    DisplayStars(
+                                      numberOfStars: 1,
+                                      rating: productDetailsController.numOf1Stars,
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                            kHeight,
+                            for (int i = productDetailsController.productReviewsList.length - 1; i >= 0; i--)
+                              ReviewTile(
+                                  rating: productDetailsController.productReviewsList[i].stars,
+                                  review: productDetailsController.productReviewsList[i].reviewText,
+                                  reviewerName: productDetailsController.productReviewsList[i].userName),
+                            // ReviewTile(rating: 4, review: "Good product", reviewerName: "Arun"),
+                          ],
+                        );
+                }),
+                kHeight,
+                const Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: CustomTextWidget(
+                    text: "Similar To",
+                    fontSize: 20,
+                    fontweight: FontWeight.w600,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: CustomTextWidget(
+                    text: (controller.similarProducts.value.length - 1) < 0 ? "0" : "${(controller.similarProducts.value.length - 1).toString()}+",
+                    fontSize: 20,
+                    fontweight: FontWeight.w600,
+                  ),
+                ),
 
-                                  // buy now button
-                                  // GestureDetector(
-                                  //   onTap: () async {
-                                  //     print("buy now");
-                                  //     context.loaderOverlay.show();
-                                  //     SharedPreferences sharedPref = await SharedPreferences.getInstance();
-                                  //     String? email = sharedPref.getString(EMAIL);
-                                  //     String? password = sharedPref.getString(ENCRYPTEDPASSWORD);
-
-                                  //     if (email != null && password != null) {
-                                  //       productCountNotifier.value = 1;
-                                  //       // int stock = currentProductDetails.productVariants[i].stockQty;
-                                  //       bool isAvailable = controller.productDetails.value!.productVariants[value].isAvailable;
-
-                                  //       int stock = 1;
-                                  //       if (stock > 0 && isAvailable) {
-                                  //         controller.getUserAddresses();
-                                  //         // await controller.addProductToCart(context, currentProductDetails.productVariants[value]Id.toString());
-                                  //         controller.getCartList();
-                                  //         // previousPageIndexes.add(bottomNavbarIndexNotifier.value);
-                                  //         bottomNavbarIndexNotifier.value = 2;
-                                  //         Get.to(() => MainPageScreen());
-                                  //       } else {
-                                  //         Services().showCustomSnackBar(context, "This item is currently unavailable");
-                                  //       }
-                                  //     } else {
-                                  //       Services().showLoginAlert(context, "Please login for for purchasing this product");
-                                  //     }
-                                  //     context.loaderOverlay.hide();
-                                  //   },
-                                  //   child: const CustomStyledShopPageButton(
-                                  //     gradientColors: [
-                                  //       Color(0xFF71F9A9),
-                                  //       Color(0xFF31B769),
-                                  //     ],
-                                  //     icon: Icons.touch_app_outlined,
-                                  //     label: "Buy Now",
-                                  //   ),
-                                  // ),
-                                ],
-                              );
-                            }),
-                      ),
-
-                      kHeight,
-                      Obx(() {
-                        print("Stars : ${controller.numOf1Stars},${controller.numOf2Stars},${controller.numOf3Stars},${controller.numOf4Stars},${controller.numOf5Stars}");
-
-                        return controller.isReviewsLoading.value
+                Container(
+                  height: 250,
+                  child: Obx(
+                    () {
+                      // print("similar products length:${controller.similarProducts.value.length}");
+                      // print("similar products length:${controller.similarProducts.value[0].weightInGrams}");
+                      if (controller.similarProducts.length > 1) {
+                        return controller.isSimilarProductsLoading.value
                             ? Center(
                                 child: CircularProgressIndicator(),
                               )
-                            : Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(10),
-                                    child: CustomTextWidget(
-                                      text: "Ratings and Reviews",
-                                      fontSize: 20,
-                                      fontweight: FontWeight.w600,
+                            : ListView.builder(
+                                itemBuilder: (context, index) {
+                                  final productDetails = controller.similarProducts[index];
+
+                                  return GestureDetector(
+                                    onTap: () async {
+                                      // final String productId = productDetails.productVariantId.toString();
+                                      // currentCategoryProducts = controller.roastedAndSalted.value;
+                                      // await controller.getProductDetails(productId);
+                                      // controller.productDetailsList.add(controller.productDetails.value!);
+                                      // print(controller.productDetails.value!.name);
+
+                                      // previousPageIndexes.add(bottomNavbarIndexNotifier.value);
+                                      // bottomNavbarIndexNotifier.value = 4;
+                                      // Services().getProductDetailsAndGotoShopScreen(context, productId);
+                                      final String productId = controller.similarProducts[index].product.productId.toString();
+
+                                      Services().getProductDetailsAndGotoShopScreen(context, productId);
+                                    },
+                                    child: ProductsListItemTile(
+                                      productDetails: productDetails,
                                     ),
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      Column(
-                                        children: [
-                                          CustomTextWidget(
-                                            text: "${controller.productReviewsList.length.toString()} Ratings and reviews",
-                                            fontSize: 15,
-                                            fontweight: FontWeight.w600,
-                                          ),
-                                          CustomTextWidget(text: "Average rating : ${controller.avgRating}"),
-                                          kHeight,
-                                          Container(
-                                            height: 40,
-                                            width: 110,
-                                            decoration: BoxDecoration(
-                                              border: Border.all(
-                                                color: Colors.grey, // Set the border color
-                                                width: 1, // Set the border width
-                                              ),
-                                              borderRadius: BorderRadius.circular(5),
-                                            ),
-                                            child: Center(
-                                              child: GestureDetector(
-                                                onTap: () async {
-                                                  SharedPreferences sharedPref = await SharedPreferences.getInstance();
-                                                  final email = sharedPref.getString(EMAIL);
-                                                  final password = sharedPref.getString(ENCRYPTEDPASSWORD);
-                                                  if (email != null && password != null) {
-                                                    await showDialog(
-                                                      context: context,
-                                                      builder: (BuildContext context) {
-                                                        return Dialog(
-                                                          insetAnimationDuration: Duration(milliseconds: 1000),
-                                                          child: Container(
-                                                            decoration: BoxDecoration(
-                                                              color: Colors.white,
-                                                              borderRadius: BorderRadius.circular(6),
-                                                            ),
-                                                            width: screenSize.width * 0.9,
-                                                            height: screenSize.width * 0.8,
-                                                            child: Padding(
-                                                              padding: const EdgeInsets.all(15),
-                                                              child: Column(
-                                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                                children: [
-                                                                  ValueListenableBuilder(
-                                                                      valueListenable: customerRatingNotifier,
-                                                                      builder: (context, value, _) {
-                                                                        return RatingStars();
-                                                                      }),
-                                                                  kHeight,
-                                                                  CustomTextWidget(text: "Enter your review here"),
-                                                                  TextField(
-                                                                    controller: reviewController,
-                                                                    maxLines: 4, // Set to null for an unlimited number of lines
-                                                                    decoration: InputDecoration(
-                                                                      border: OutlineInputBorder(),
-                                                                    ),
-                                                                  ),
-                                                                  SizedBox(height: 20),
-                                                                  GestureDetector(
-                                                                    onTap: () {
-                                                                      Navigator.of(context).pop();
-                                                                    },
-                                                                    child: GestureDetector(
-                                                                      onTap: () {
-                                                                        if (reviewController.text.trim() != "") {
-                                                                          controller.addProductReview(
-                                                                            context,
-                                                                            controller.productDetails.value!.productId.toString(),
-                                                                            reviewController.text,
-                                                                            customerRatingNotifier.value,
-                                                                          );
-                                                                          Get.back();
-                                                                        }
-                                                                      },
-                                                                      child: CustomElevatedButton(
-                                                                        label: "Submit",
-                                                                        fontSize: 16,
-                                                                      ),
-                                                                    ),
-                                                                  )
-                                                                ],
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        );
-                                                      },
-                                                    );
-                                                  } else {
-                                                    Services().showLoginAlert(context, "Please login to add product review");
-                                                  }
-                                                },
-                                                child: CustomTextWidget(text: "Rate Product"),
-                                              ),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                      Container(
-                                        height: 100,
-                                        width: 1,
-                                        color: Colors.grey,
-                                      ),
-                                      Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          DisplayStars(
-                                            numberOfStars: 5,
-                                            rating: controller.numOf5Stars,
-                                          ),
-                                          DisplayStars(
-                                            numberOfStars: 4,
-                                            rating: controller.numOf4Stars,
-                                          ),
-                                          DisplayStars(
-                                            numberOfStars: 3,
-                                            rating: controller.numOf3Stars,
-                                          ),
-                                          DisplayStars(
-                                            numberOfStars: 2,
-                                            rating: controller.numOf2Stars,
-                                          ),
-                                          DisplayStars(
-                                            numberOfStars: 1,
-                                            rating: controller.numOf1Stars,
-                                          ),
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                  kHeight,
-                                  for (int i = controller.productReviewsList.length - 1; i >= 0; i--)
-                                    ReviewTile(
-                                        rating: controller.productReviewsList[i].stars, review: controller.productReviewsList[i].reviewText, reviewerName: controller.productReviewsList[i].userName),
-                                  // ReviewTile(rating: 4, review: "Good product", reviewerName: "Arun"),
-                                ],
+                                  );
+                                },
+                                itemCount: controller.similarProducts.value.length - 1,
+                                scrollDirection: Axis.horizontal,
                               );
-                      }),
-                      kHeight,
-                      const Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: CustomTextWidget(
-                          text: "Similar To",
-                          fontSize: 20,
-                          fontweight: FontWeight.w600,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: CustomTextWidget(
-                          text: (controller.similarProducts.value.length - 1) < 0 ? "0" : "${(controller.similarProducts.value.length - 1).toString()}+",
-                          fontSize: 20,
-                          fontweight: FontWeight.w600,
-                        ),
-                      ),
+                      } else {
+                        return Center(
+                          child: CustomTextWidget(text: "No similar products"),
+                        );
+                      }
+                    },
+                  ),
+                ),
+                SizedBox(height: 20),
 
-                      Container(
-                        height: 250,
-                        child: Obx(
-                          () {
-                            // print("similar products length:${controller.similarProducts.value.length}");
-                            // print("similar products length:${controller.similarProducts.value[0].weightInGrams}");
-                            if (controller.similarProducts.length > 1) {
-                              return controller.isSimilarProductsLoading.value
-                                  ? Center(
-                                      child: CircularProgressIndicator(),
-                                    )
-                                  : ListView.builder(
-                                      itemBuilder: (context, index) {
-                                        final productDetails = controller.similarProducts[index];
+                //related products
 
-                                        return GestureDetector(
-                                          onTap: () async {
-                                            final String productId = productDetails.productVariantId.toString();
-                                            // currentCategoryProducts = controller.roastedAndSalted.value;
-                                            // await controller.getProductDetails(productId);
-                                            // controller.productDetailsList.add(controller.productDetails.value!);
-                                            // print(controller.productDetails.value!.name);
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: CustomTextWidget(
+                    text: randomIndex == 0
+                        ? "Trending Products"
+                        : randomIndex == 1
+                            ? "Sponserd Products"
+                            : "Best Sellers",
+                    fontSize: 20,
+                    fontweight: FontWeight.w600,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: CustomTextWidget(
+                    text: "${randomProductList.length.toString()}+",
+                    fontSize: 20,
+                    fontweight: FontWeight.w600,
+                  ),
+                ),
 
-                                            // previousPageIndexes.add(bottomNavbarIndexNotifier.value);
-                                            // bottomNavbarIndexNotifier.value = 4;
-                                            Services().getProductDetailsAndGotoShopScreen(context, productId);
-                                          },
-                                          child: ProductsListItemTile(
-                                            productDetails: productDetails,
-                                          ),
-                                        );
-                                      },
-                                      itemCount: controller.similarProducts.value.length - 1,
-                                      scrollDirection: Axis.horizontal,
-                                    );
-                            } else {
-                              return Center(
-                                child: CustomTextWidget(text: "No similar products"),
-                              );
-                            }
+                Container(
+                  height: 250,
+                  child: Obx(
+                    () {
+                      // for showing shuffled list of all products as related products
+
+                      if (randomProductList.isNotEmpty) {
+                        return ListView.builder(
+                          itemBuilder: (context, index) {
+                            final productDetails = randomProductList[index];
+
+                            return GestureDetector(
+                              onTap: () async {
+                                // await controller.getProductDetails(productId);
+                                // controller.productDetailsList.add(controller.productDetails.value!);
+                                // print(controller.productDetails.value!.name);
+
+                                // // previousPageIndexes.add(bottomNavbarIndexNotifier.value);
+                                // bottomNavbarIndexNotifier.value = 4;
+                                final String productId = randomProductList[index].product.productId.toString();
+                                Services().getProductDetailsAndGotoShopScreen(context, productId);
+                              },
+                              child: ProductsListItemTile(
+                                productDetails: productDetails,
+                              ),
+                            );
                           },
-                        ),
-                      ),
-                      SizedBox(height: 20),
+                          itemCount: randomProductList!.length,
+                          scrollDirection: Axis.horizontal,
+                        );
+                      } else {
+                        return Center(
+                          child: CustomTextWidget(text: "Related products not available right now."),
+                        );
+                      }
+                    },
+                  ),
+                ),
+                SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: CustomTextWidget(
+                    text: "ALL FEATURED PRODUCTS",
+                    fontSize: 18,
+                    fontweight: FontWeight.w600,
+                  ),
+                ),
+                Container(
+                  height: 250,
+                  child: Obx(() {
+                    return controller.isAllProductsLoading.value
+                        ? Center(
+                            child: CircularProgressIndicator(),
+                          )
+                        : ListView.builder(
+                            itemBuilder: (context, index) {
+                              final productDetails = controller.allProducts[index];
 
-                      //related products
-
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: CustomTextWidget(
-                          text: randomIndex == 0
-                              ? "Trending Products"
-                              : randomIndex == 1
-                                  ? "Sponserd Products"
-                                  : "Best Sellers",
-                          fontSize: 20,
-                          fontweight: FontWeight.w600,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: CustomTextWidget(
-                          text: "${randomProductList!.length.toString()}+",
-                          fontSize: 20,
-                          fontweight: FontWeight.w600,
-                        ),
-                      ),
-
-                      Container(
-                        height: 250,
-                        child: Obx(
-                          () {
-                            // for showing shuffled list of all products as related products
-                            List numbers = List.generate(controller.allProducts.value.length, (index) => index);
-                            print('Original list: $numbers');
-
-                            numbers.shuffle();
-                            print('Shuffled list: $numbers');
-                            if (controller.allProducts.value.length != 0) {
-                              return controller.isTrendingLoading.value
-                                  ? Center(
-                                      child: CircularProgressIndicator(),
-                                    )
-                                  : ListView.builder(
-                                      itemBuilder: (context, index) {
-                                        final productDetails = randomProductList![numbers[index]];
-
-                                        return GestureDetector(
-                                          onTap: () async {
-                                            // await controller.getProductDetails(productId);
-                                            // controller.productDetailsList.add(controller.productDetails.value!);
-                                            // print(controller.productDetails.value!.name);
-
-                                            // // previousPageIndexes.add(bottomNavbarIndexNotifier.value);
-                                            // bottomNavbarIndexNotifier.value = 4;
-                                            final String productId = productDetails.product.productId.toString();
-                                            Services().getProductDetailsAndGotoShopScreen(context, productId);
-                                          },
-                                          child: ProductsListItemTile(
-                                            productDetails: productDetails,
-                                          ),
-                                        );
-                                      },
-                                      itemCount: randomProductList!.length,
-                                      scrollDirection: Axis.horizontal,
-                                    );
-                            } else {
-                              return Center(
-                                child: CustomTextWidget(text: "Related products not available right now."),
+                              return GestureDetector(
+                                onTap: () async {
+                                  final String productId = controller.allProducts[index].product.productId.toString();
+                                  Services().getProductDetailsAndGotoShopScreen(context, productId);
+                                },
+                                child: ProductsListItemTile(
+                                  productDetails: productDetails,
+                                ),
                               );
-                            }
-                          },
-                        ),
-                      ),
-                      SizedBox(height: 20),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: CustomTextWidget(
-                          text: "ALL FEATURED PRODUCTS",
-                          fontSize: 18,
-                          fontweight: FontWeight.w600,
-                        ),
-                      ),
-                      Container(
-                        height: 250,
-                        child: Obx(() {
-                          return controller.isAllProductsLoading.value
-                              ? Center(
-                                  child: CircularProgressIndicator(),
-                                )
-                              : ListView.builder(
-                                  itemBuilder: (context, index) {
-                                    final productDetails = controller.allProducts.value[index];
-
-                                    return GestureDetector(
-                                      onTap: () async {
-                                        final String productId = controller.allProducts.value[index].productVariantId.toString();
-                                        Services().getProductDetailsAndGotoShopScreen(context, productId);
-                                      },
-                                      child: ProductsListItemTile(
-                                        productDetails: productDetails,
-                                      ),
-                                    );
-                                  },
-                                  itemCount: controller.allProducts.value.length,
-                                  scrollDirection: Axis.horizontal,
-                                );
-                        }),
-                      ),
-                      SizedBox(height: 50.w)
-                    ],
-                  );
+                            },
+                            itemCount: controller.allProducts.length,
+                            scrollDirection: Axis.horizontal,
+                          );
+                  }),
+                ),
+                SizedBox(height: 50.w)
+              ],
+            );
           }),
         ),
       ),

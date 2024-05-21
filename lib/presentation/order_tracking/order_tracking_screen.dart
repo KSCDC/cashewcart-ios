@@ -21,16 +21,16 @@ import 'package:intl/intl.dart';
 class OrderTrackingScreen extends StatelessWidget {
   const OrderTrackingScreen({
     super.key,
-    required this.productDetails,
+    required this.orderDetails,
   });
-  final OrdersListModel productDetails;
+  final OrdersListModel orderDetails;
 
   @override
   Widget build(BuildContext context) {
-    final String imagePath = "https://backend.cashewcart.com:8443${productDetails.items[0].product.product.productImages[0].productImage}";
+    final String imagePath = "https://backend.cashewcart.com:8443${orderDetails.items[0].product.product.productImages[0].productImage}";
 
-    final DateTime createdAt = productDetails.createdAt;
-    final bool isPaymentSuccess = productDetails.paymentStatus == "SUCCESS" ? true : false;
+    final DateTime createdAt = orderDetails.createdAt;
+    final bool isPaymentSuccess = orderDetails.paymentStatus == "SUCCESS" ? true : false;
     double subTotal = 0;
     final screenSize = MediaQuery.of(context).size;
     String formattedDateTime = DateFormat("dd/MM/yyyy - hh a").format(createdAt.toLocal());
@@ -45,86 +45,25 @@ class OrderTrackingScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10),
-                    child: Container(
-                      height: 125,
-                      width: screenSize.width * 0.25,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: NetworkImage(imagePath),
-                          fit: BoxFit.fitHeight,
-                        ),
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(4),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          width: 250,
-                          child: CustomTextWidget(
-                            text: productDetails.items[0].product.product.name,
-                            fontweight: FontWeight.w600,
-                          ),
-                        ),
-                        SizedBox(height: 5),
-                        Container(
-                          width: screenSize.width * 0.6,
-                          child: CustomTextWidget(
-                            text: productDetails.items[0].product.product.description,
-                            fontSize: 13,
-                            fontweight: FontWeight.w400,
-                          ),
-                        ),
-                        kHeight,
-                        kHeight,
-                        Row(
-                          children: [
-                            Container(
-                              height: 35,
-                              child: Row(
-                                children: [
-                                  CustomTextWidget(
-                                    text: "Wt:",
-                                    fontweight: FontWeight.w600,
-                                  ),
-                                  SizedBox(width: 5),
-                                  CustomTextWidget(text: "250GM"),
-                                ],
-                              ),
-                            ),
-                            SizedBox(width: 20),
-                            Container(
-                              height: 35,
-                              child: Row(
-                                children: [
-                                  CustomTextWidget(
-                                    text: "Qty: ",
-                                    fontweight: FontWeight.w600,
-                                  ),
-                                  SizedBox(width: 5),
-                                  CustomTextWidget(text: "1"),
-                                ],
-                              ),
-                            ),
-                            kWidth,
-                          ],
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
               // kHeight,
+              CustomTextWidget(
+                text: "Shipping Details :",
+                fontSize: 15.w,
+                fontweight: FontWeight.w600,
+              ),
+              CustomTextWidget(
+                text: orderDetails.shippingName,
+                fontSize: 14.w,
+              ),
+              CustomTextWidget(
+                text: orderDetails.shippingPhoneNumber,
+                fontSize: 14.w,
+              ),
+              CustomTextWidget(
+                text: "${orderDetails.shippingRegion}, ${orderDetails.shippingDistrict}, ${orderDetails.shippingState}, ${orderDetails.shippingPostalCode}",
+                fontSize: 14.w,
+              ),
+              SizedBox(height: 10.w),
               Divider(),
               SizedBox(height: 20),
               CustomTextWidget(
@@ -139,7 +78,7 @@ class OrderTrackingScreen extends StatelessWidget {
                   columnSpacing: 12,
                   horizontalMargin: 12,
                   minWidth: 1000.w,
-                  dataRowHeight: 50.w,
+                  dataRowHeight: 60.w,
                   // fixedLeftColumns: 1,
                   dividerThickness: 2,
 
@@ -149,106 +88,123 @@ class OrderTrackingScreen extends StatelessWidget {
                         text: 'Product Name',
                         fontSize: 14.sp,
                         fontweight: FontWeight.w600,
+                        maxLines: 3,
                       ),
                       size: ColumnSize.L,
                     ),
                     DataColumn(
-                      label: CustomTextWidget(
-                        text: 'HSN/SAC',
-                        fontSize: 14.sp,
-                        fontweight: FontWeight.w600,
+                      label: Center(
+                        child: CustomTextWidget(
+                          text: 'HSN/SAC',
+                          fontSize: 14.sp,
+                          fontweight: FontWeight.w600,
+                        ),
                       ),
                     ),
                     DataColumn(
-                      label: CustomTextWidget(
-                        text: 'Qty',
-                        fontSize: 14.sp,
-                        fontweight: FontWeight.w600,
+                      label: Center(
+                        child: CustomTextWidget(
+                          text: 'Qty',
+                          fontSize: 14.sp,
+                          fontweight: FontWeight.w600,
+                        ),
                       ),
                     ),
                     DataColumn(
-                      label: CustomTextWidget(
-                        text: 'Unit Price',
-                        fontSize: 14.sp,
-                        fontweight: FontWeight.w600,
+                      label: Center(
+                        child: CustomTextWidget(
+                          text: 'Unit Price',
+                          fontSize: 14.sp,
+                          fontweight: FontWeight.w600,
+                        ),
                       ),
                     ),
                     DataColumn(
-                      label: CustomTextWidget(
-                        text: 'CGST %',
-                        fontSize: 14.sp,
-                        fontweight: FontWeight.w600,
-                      ),
-                      numeric: true,
-                    ),
-                    DataColumn(
-                      label: CustomTextWidget(
-                        text: 'CGST Amnt',
-                        fontSize: 14.sp,
-                        fontweight: FontWeight.w600,
-                      ),
-                      numeric: true,
-                    ),
-                    DataColumn(
-                      label: CustomTextWidget(
-                        text: 'SGST %',
-                        fontSize: 14.sp,
-                        fontweight: FontWeight.w600,
+                      label: Center(
+                        child: CustomTextWidget(
+                          text: 'CGST %',
+                          fontSize: 14.sp,
+                          fontweight: FontWeight.w600,
+                        ),
                       ),
                       numeric: true,
                     ),
                     DataColumn(
-                      label: CustomTextWidget(
-                        text: 'SGST Amnt',
-                        fontSize: 14.sp,
-                        fontweight: FontWeight.w600,
+                      label: Center(
+                        child: CustomTextWidget(
+                          text: 'CGST Amnt',
+                          fontSize: 14.sp,
+                          fontweight: FontWeight.w600,
+                        ),
                       ),
                       numeric: true,
                     ),
                     DataColumn(
-                      label: CustomTextWidget(
-                        text: 'Total Payable',
-                        fontSize: 14.sp,
-                        fontweight: FontWeight.w600,
+                      label: Center(
+                        child: CustomTextWidget(
+                          text: 'SGST %',
+                          fontSize: 14.sp,
+                          fontweight: FontWeight.w600,
+                        ),
+                      ),
+                      numeric: true,
+                    ),
+                    DataColumn(
+                      label: Center(
+                        child: CustomTextWidget(
+                          text: 'SGST Amnt',
+                          fontSize: 14.sp,
+                          fontweight: FontWeight.w600,
+                        ),
+                      ),
+                      numeric: true,
+                    ),
+                    DataColumn(
+                      label: Center(
+                        child: CustomTextWidget(
+                          text: 'Total Payable',
+                          fontSize: 14.sp,
+                          fontweight: FontWeight.w600,
+                        ),
                       ),
                       numeric: true,
                     ),
                   ],
                   rows: List<DataRow>.generate(
-                    productDetails.items.length,
+                    orderDetails.items.length,
                     (index) {
-                      subTotal += double.parse(productDetails.items[index].total);
+                      subTotal += double.parse(orderDetails.items[index].total);
                       return DataRow(
                         cells: [
                           DataCell(
-                            CustomTextWidget(text: productDetails.items[index].product.product.name),
+                            Center(child: CustomTextWidget(text: orderDetails.items[index].product.product.name)),
                           ),
                           DataCell(
-                            CustomTextWidget(text: productDetails.items[index].product.hsn),
+                            Center(child: CustomTextWidget(text: orderDetails.items[index].product.hsn)),
                           ),
                           DataCell(
-                            CustomTextWidget(text: productDetails.items[index].purchaseCount.toString()),
+                            Center(child: CustomTextWidget(text: orderDetails.items[index].purchaseCount.toString())),
                           ),
                           DataCell(
-                            CustomTextWidget(text: productDetails.items[index].product.sellingPrice),
+                            Center(child: CustomTextWidget(text: orderDetails.items[index].product.sellingPrice)),
                           ),
                           // DataCell(
-                          //   CustomTextWidget(text: productDetails.items[index].product.sellingPrice),
+                          //   CustomTextWidget(text: orderDetails.items[index].product.sellingPrice),
                           // ),
                           DataCell(
-                            CustomTextWidget(text: productDetails.items[index].product.cgstRate),
+                            Center(child: CustomTextWidget(text: orderDetails.items[index].product.cgstRate)),
                           ),
                           DataCell(
-                            CustomTextWidget(text: productDetails.items[index].cgstPrice),
+                            Center(child: CustomTextWidget(text: orderDetails.items[index].cgstPrice)),
                           ),
                           DataCell(
-                            CustomTextWidget(text: productDetails.items[index].product.sgstRate),
+                            Center(child: CustomTextWidget(text: orderDetails.items[index].product.sgstRate)),
                           ),
                           DataCell(
-                            CustomTextWidget(text: productDetails.items[index].sgstPrice),
+                            Center(child: CustomTextWidget(text: orderDetails.items[index].sgstPrice)),
                           ),
                           DataCell(
-                            CustomTextWidget(text: productDetails.items[index].total),
+                            Center(child: CustomTextWidget(text: orderDetails.items[index].total)),
                           ),
                         ],
                       );
@@ -296,7 +252,7 @@ class OrderTrackingScreen extends StatelessWidget {
                           width: 100.w,
                           child: Center(
                             child: CustomTextWidget(
-                              text: "₹${productDetails.deliveryAdditionalAmount}",
+                              text: "₹${orderDetails.deliveryAdditionalAmount}",
                               fontSize: 14.sp,
                               fontweight: FontWeight.w600,
                               height: 2,
@@ -319,7 +275,7 @@ class OrderTrackingScreen extends StatelessWidget {
                           width: 100.w,
                           child: Center(
                             child: CustomTextWidget(
-                              text: "₹${subTotal + productDetails.deliveryAdditionalAmount}",
+                              text: "₹${subTotal + orderDetails.deliveryAdditionalAmount}",
                               fontSize: 14.sp,
                               fontweight: FontWeight.w600,
                               height: 2,
@@ -348,7 +304,7 @@ class OrderTrackingScreen extends StatelessWidget {
                     ),
                     InkWell(
                       onTap: () {
-                        // Get.to(PaymentStartingScreen(orderDetails: productDetails));
+                        // Get.to(PaymentStartingScreen(orderDetails: orderDetails));
                         ApiServices().getInvoice();
                       },
                       child: CustomElevatedButton(

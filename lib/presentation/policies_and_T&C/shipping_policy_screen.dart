@@ -20,7 +20,7 @@ class ShippingPolicyScreen extends StatelessWidget {
             children: [
               Paragraph(paragraph: "All custom products ship within 2-3 weeks of receiving the final design agreement or verbal agreement."),
               Heading(
-                heading: "Damaged to items resulting from shipping",
+                heading: "Damages to items resulting from shipping",
                 underline: false,
               ),
               Paragraph(

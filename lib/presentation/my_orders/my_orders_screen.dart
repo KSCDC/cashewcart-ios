@@ -88,70 +88,17 @@ class MyOrdersScreen extends StatelessWidget {
                     itemBuilder: (context, index) {
                       print("Orders values :${controller.ordersList[index].items.length}");
                       final OrdersListModel currentItem = controller.ordersList[index];
-                      final String imagePath = "https://backend.cashewcart.com:8443${currentItem.items[0].product.product.productImages[0].productImage}";
-                      final String name = currentItem.items[0].product.product.name;
-                      final String description = currentItem.items[0].product.product.description;
-                      final String price = currentItem.items[0].total;
-                      final String rating = "4.5";
-                      final String weight = currentItem.items[0].product.weightInGrams;
-                      final String paymentStatus = controller.ordersList[index].paymentStatus;
-                      final int count = currentItem.items[0].purchaseCount;
+                  
 
                       return Skeletonizer(
                         enabled: controller.isLoadingMyproducts.value,
                         child: GestureDetector(
-                          onTap: () => Get.to(() => OrderTrackingScreen(productDetails: currentItem)),
+                          onTap: () => Get.to(() => OrderTrackingScreen(orderDetails: currentItem)),
                           child: MyOrdersListTile(
-                            imagePath: imagePath,
-                            name: name,
-                            price: price,
-                            rating: rating,
-                            totalItemsCount: currentItem.items.length,
-                            weight: weight,
-                            paymentStatus: paymentStatus,
+                            currentItem: currentItem,
                           ),
                         ),
 
-                        //  ListView.builder(
-                        //   itemBuilder: (context, ind) {
-                        //     final String imagePath = "https://backend.cashewcart.com:8443${currentItem.items[ind].product.product.productImages[0].productImage}";
-                        //     final String name = currentItem.items[ind].product.product.name;
-                        //     final String description = currentItem.items[ind].product.product.description;
-                        //     final String price = currentItem.items[ind].total;
-                        //     final String rating = "4.5";
-                        //     final String weight = currentItem.items[ind].product.weightInGrams;
-                        //     final String paymentStatus = controller.ordersList[index].paymentStatus;
-                        //     final int count = currentItem.items[ind].purchaseCount;
-                        //     return Column(
-                        //       children: [
-                        //         kHeight,
-                        //         GestureDetector(
-                        //           onTap: () => Navigator.of(context).push(
-                        //             MaterialPageRoute(
-                        //               builder: (context) {
-                        //                 return OrderTrackingScreen(
-                        //                   productDetails: currentItem,
-                        //                 );
-                        //               },
-                        //             ),
-                        //           ),
-                        //           child: MyOrdersListTile(
-                        //             imagePath: imagePath,
-                        //             name: name,
-                        //             price: price,
-                        //             rating: rating,
-                        //             count: count,
-                        //             weight: weight,
-                        //             paymentStatus: paymentStatus,
-                        //           ),
-                        //         ),
-                        //       ],
-                        //     );
-                        //   },
-                        //   itemCount: currentItem.items.length,
-                        //   physics: NeverScrollableScrollPhysics(),
-                        //   shrinkWrap: true,
-                        // ),
                       );
                     },
                     itemCount: controller.ordersList.length,

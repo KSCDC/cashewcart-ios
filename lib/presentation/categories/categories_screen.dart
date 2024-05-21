@@ -4,19 +4,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:internship_sample/controllers/app_controller.dart';
+import 'package:internship_sample/controllers/search_controller.dart';
 import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/core/constants.dart';
+import 'package:internship_sample/presentation/shop/shop_screen.dart';
 import 'package:internship_sample/presentation/side_bar/side_bar.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 import 'package:internship_sample/presentation/widgets/main_appbar.dart';
 import 'package:internship_sample/presentation/widgets/products_list_item_tile.dart';
 import 'package:internship_sample/presentation/widgets/search_section_tile.dart';
 import 'package:internship_sample/services/services.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 
 class CategoriesScreen extends StatelessWidget {
   CategoriesScreen({super.key});
 
   AppController controller = Get.put(AppController());
+  SearchResultController searchController = Get.put(SearchResultController());
 
   @override
   Widget build(BuildContext context) {
@@ -25,26 +29,22 @@ class CategoriesScreen extends StatelessWidget {
       backgroundColor: appBackgroundColor,
       appBar: MainAppBar(),
       drawer: SideBar(),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: SearchSectionTile(),
-          ),
-          Flexible(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  //Plain cashews
+      body: LoaderOverlay(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: SearchSectionTile(),
+            ),
+            Flexible(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    //Plain cashews
 
-                  Obx(() {
-                    if (controller.isLoading.value) {
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    } else {
+                    Obx(() {
                       // print("count : ${controller.searchResults.value.count}");
-                      if (!controller.haveSearchResult.value) {
+                      if (!searchController.isSearchMode.value) {
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -386,7 +386,7 @@ class CategoriesScreen extends StatelessWidget {
                         );
                       } else {
                         print("displaying search results");
-                        return controller.searchResults.value.length == 0
+                        return searchController.searchResults.value.length == 0
                             ? Center(
                                 child: CustomTextWidget(
                                   text: "Product not found",
@@ -403,16 +403,16 @@ class CategoriesScreen extends StatelessWidget {
                                     mainAxisSpacing: 5,
                                     crossAxisSpacing: 5,
                                     children: List.generate(
-                                      controller.searchResults.length,
+                                      searchController.searchResults.length,
                                       (index) {
-                                        final productDetails = controller.searchResults[index];
+                                        final productDetails = searchController.searchResults[index];
 
                                         return GestureDetector(
                                           onTap: () async {
                                             print("Search results");
                                             // print(
                                             //     "image list ${controller.productDisplayList.valueindex]}");
-                                            final String productId = controller.searchResults[index].product.productId.toString();
+                                            final String productId = searchController.searchResults[index].product.productId.toString();
                                             // controller.getSimilarProducts(controller.searchResults.value, index);
                                             Services().getProductDetailsAndGotoShopScreen(context, productId);
                                             // await controller.getProductDetails(productId);
@@ -442,16 +442,14 @@ class CategoriesScreen extends StatelessWidget {
                                 ],
                               );
                       }
-                    }
-                  }),
-                  SizedBox(
-                    height: 50.w
-                  ),
-                ],
+                    }),
+                    SizedBox(height: 50.w),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -14,7 +14,7 @@ class AddOrEditAddress extends StatefulWidget {
     super.key,
     required this.nameController,
     required this.cityController,
-    required this.regionController,
+    required this.addressController,
     required this.postalcodeController,
     required this.phoneNumberController,
     required this.state,
@@ -22,7 +22,7 @@ class AddOrEditAddress extends StatefulWidget {
   });
   final TextEditingController nameController;
   final TextEditingController cityController;
-  final TextEditingController regionController;
+  final TextEditingController addressController;
   // final TextEditingController districtController;
   // final TextEditingController stateController;
   final TextEditingController postalcodeController;
@@ -68,7 +68,20 @@ class _AddOrEditAddressState extends State<AddOrEditAddress> {
             labelText: 'Name',
           ),
         ),
+        TextField(
+          controller: widget.addressController,
+          decoration: InputDecoration(
+            labelText: 'Address',
+          ),
+        ),
         SizedBox(height: 5),
+        TextField(
+          controller: widget.cityController,
+          decoration: InputDecoration(
+            labelText: 'Post Office/City/Town',
+          ),
+        ),
+
         CustomTextWidget(
           text: "State",
           fontSize: 11.sp,
@@ -122,26 +135,19 @@ class _AddOrEditAddressState extends State<AddOrEditAddress> {
         //     child: Text('Item 1'),
         //   ),
         // ]),
-        TextField(
-          controller: widget.cityController,
-          decoration: InputDecoration(
-            labelText: 'City/Town',
-          ),
-        ),
-        TextField(
-          controller: widget.regionController,
-          decoration: InputDecoration(
-            labelText: 'Region',
-          ),
-        ),
+
         TextField(
           controller: widget.postalcodeController,
+          keyboardType: TextInputType.number,
+          maxLength: 6,
           decoration: InputDecoration(
             labelText: 'Postal Code',
           ),
         ),
         TextField(
           controller: widget.phoneNumberController,
+          keyboardType: TextInputType.number,
+          maxLength: 10,
           decoration: InputDecoration(
             labelText: 'Phone Number',
           ),

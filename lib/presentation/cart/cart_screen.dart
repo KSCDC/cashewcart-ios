@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:internship_sample/controllers/app_controller.dart';
+import 'package:internship_sample/controllers/cart_controller.dart';
 import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/main.dart';
@@ -26,13 +27,14 @@ ValueNotifier<double> grantTotalNotifier = ValueNotifier(0);
 class CartScreen extends StatelessWidget {
   CartScreen({Key? key}) : super(key: key);
   AppController controller = Get.put(AppController());
+  CartController cartController = Get.put(CartController());
   @override
   Widget build(BuildContext context) {
     grantTotalNotifier.value = 0;
 
     final screenSize = MediaQuery.of(context).size;
     // grantTotalNotifier.value = 0;
-    controller.getCartList();
+    cartController.getCartList();
 
     print("building");
     // print("product name :::::${controller.cartProducts.value.results[0].product.product.name}");
@@ -65,7 +67,7 @@ class CartScreen extends StatelessWidget {
               kHeight,
               Obx(() {
                 getGrandTotal();
-                print("cart count ${controller.cartProducts.value.count}");
+                print("cart count ${cartController.cartProducts.value.count}");
                 if (controller.isLoadingCart.value) {
                   return ListView.builder(
                     itemBuilder: (context, index) {
@@ -76,7 +78,7 @@ class CartScreen extends StatelessWidget {
                     shrinkWrap: true,
                   );
                 } else {
-                  return controller.cartProducts.value.count == 0
+                  return cartController.cartProducts.value.count == 0
                       ? Column(
                           children: [
                             CustomTextWidget(
@@ -91,7 +93,7 @@ class CartScreen extends StatelessWidget {
                             ),
                           ],
                         )
-                      : controller.cartProducts.value.count != 0
+                      : cartController.cartProducts.value.count != 0
                           ? Column(
                               children: [
                                 Container(
@@ -101,12 +103,12 @@ class CartScreen extends StatelessWidget {
                                         children: [
                                           kHeight,
                                           CartProductsListTile(
-                                            productDetails: controller.cartProducts.value.results[index],
+                                            productDetails: cartController.cartProducts.value.results[index],
                                           ),
                                         ],
                                       );
                                     },
-                                    itemCount: controller.cartProducts.value.count,
+                                    itemCount: cartController.cartProducts.value.count,
                                     physics: NeverScrollableScrollPhysics(),
                                     shrinkWrap: true,
                                   ),
@@ -115,7 +117,8 @@ class CartScreen extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
                                     CustomTextWidget(
-                                      text: "Grant Total : ",
+                                      text: "Total : ₹ ",
+                                      fontSize: 15.sp,
                                       fontweight: FontWeight.w600,
                                     ),
                                     ValueListenableBuilder(
@@ -123,6 +126,7 @@ class CartScreen extends StatelessWidget {
                                         builder: (context, grandTotal, _) {
                                           return CustomTextWidget(
                                             text: grandTotal.toStringAsFixed(2),
+                                            fontSize: 15.sp,
                                             fontweight: FontWeight.w600,
                                           );
                                         })
@@ -143,7 +147,7 @@ class CartScreen extends StatelessWidget {
                                       await controller.getUserAddresses();
                                       Get.to(
                                         () => MultipleItemPlaceOrderScreen(
-                                          productList: controller.cartProducts.value.results,
+                                          productList: cartController.cartProducts.value.results,
                                           grandTotal: grantTotalNotifier.value,
                                         ),
                                       );
@@ -159,6 +163,9 @@ class CartScreen extends StatelessWidget {
                           : SizedBox();
                 }
               }),
+              SizedBox(
+                height: 60.w,
+              )
             ],
           ),
         ),
@@ -170,11 +177,11 @@ class CartScreen extends StatelessWidget {
     // controller.getCartList();
     double grandTotal = 0;
     print("grand total fn");
-    print(controller.cartProducts.value);
-    for (int i = 0; i < controller.cartProducts.value.count; i++) {
+    print(cartController.cartProducts.value);
+    for (int i = 0; i < cartController.cartProducts.value.count; i++) {
       // final int selectedCategory = cartProductsList[i]['category'];
-      final String price = controller.cartProducts.value.results[i].product.sellingPrice.toString();
-      final int count = controller.cartProducts.value.results[i].purchaseCount;
+      final String price = cartController.cartProducts.value.results[i].product.sellingPrice.toString();
+      final int count = cartController.cartProducts.value.results[i].purchaseCount;
       final double total = double.parse(price) * count;
       print("prices are ${price} * ${count}== ${total}");
       grandTotal += total;

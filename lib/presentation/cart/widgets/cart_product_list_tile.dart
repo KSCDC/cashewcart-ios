@@ -1,17 +1,18 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:internship_sample/controllers/app_controller.dart';
+import 'package:internship_sample/controllers/cart_controller.dart';
 import 'package:internship_sample/core/base_url.dart';
 import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/presentation/cart/cart_screen.dart';
 import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
 import 'package:internship_sample/presentation/shop/widgets/custom_text_icon_button.dart';
-import 'package:internship_sample/presentation/widgets/custom_star_rating_tile.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 import 'package:internship_sample/services/api_services.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class CartProductsListTile extends StatelessWidget {
   CartProductsListTile({
@@ -19,7 +20,7 @@ class CartProductsListTile extends StatelessWidget {
     required this.productDetails,
   });
   final productDetails;
-  AppController controller = Get.put(AppController());
+  CartController cartController = Get.put(CartController());
   @override
   Widget build(BuildContext context) {
     final String imagePath = productDetails.product.product.productImages.isNotEmpty ? productDetails.product.product.productImages[0].productImage : "";
@@ -29,7 +30,7 @@ class CartProductsListTile extends StatelessWidget {
     print("purchase count:${productDetails.purchaseCount}");
     final String originalPrice = productDetails.product.actualPrice;
     final String offerPrice = productDetails.product.sellingPrice;
-    final String numberOfRatings = "20";
+    // final String numberOfRatings = productDetails.;
     final String weight = productDetails.product.weightInGrams;
     final screenSize = MediaQuery.of(context).size;
 
@@ -84,37 +85,37 @@ class CartProductsListTile extends StatelessWidget {
                           ),
                           kWidth,
                           CartProductListTileButton(
-                            buttonHeight: 20,
-                            buttonWidth: 40,
-                            label: weight,
-                            fontSize: 10,
+                            buttonHeight: 20.w,
+                            buttonWidth: 60.w,
+                            label: double.parse(weight) < 1000 ? weight + "GM" : "${double.parse(weight) / 1000} KG",
+                            fontSize: 10.w,
                             fontWeight: FontWeight.w500,
                           ),
                         ],
                       ),
                       kHeight,
-                      Row(
-                        children: [
-                          CustomTextWidget(
-                            text: numberOfRatings,
-                            // fontColor: ,
-                            fontSize: 12,
-                          ),
-                          for (int i = 0; i < 4; i++)
-                            const Icon(
-                              Icons.star,
-                              color: Color(0xFFF7B305),
-                              size: 15,
-                            ),
-                          const Icon(
-                            Icons.star_half,
-                            color: Color(0xFFBBBBBB),
-                            size: 15,
-                          ),
-                          kWidth,
-                        ],
-                      ),
-                      kHeight,
+                      // Row(
+                      //   children: [
+                      //     CustomTextWidget(
+                      //       text: numberOfRatings,
+                      //       // fontColor: ,
+                      //       fontSize: 12,
+                      //     ),
+                      //     for (int i = 0; i < 4; i++)
+                      //       const Icon(
+                      //         Icons.star,
+                      //         color: Color(0xFFF7B305),
+                      //         size: 15,
+                      //       ),
+                      //     const Icon(
+                      //       Icons.star_half,
+                      //       color: Color(0xFFBBBBBB),
+                      //       size: 15,
+                      //     ),
+                      //     kWidth,
+                      //   ],
+                      // ),
+                      // kHeight,
                       Row(
                         children: [
                           CartProductListTileButton(
@@ -123,31 +124,33 @@ class CartProductsListTile extends StatelessWidget {
                             label: "₹ ${offerPrice}",
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
+                            fontColor: kMainThemeColor,
                           ),
                           kWidth,
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              CustomTextWidget(
-                                text: "${(double.parse(offerPrice) * 100 / double.parse(originalPrice)).toStringAsFixed(2)}%",
-                                fontColor: Color(0xFFFE735C),
-                                fontSize: 10,
-                                fontweight: FontWeight.w400,
-                              ),
-                              SizedBox(width: 10),
-                              Text(
-                                originalPrice,
-                                style: const TextStyle(
-                                  fontFamily: "Montserrat",
-                                  fontSize: 15,
-                                  color: Color(0xFF808488),
-                                  fontWeight: FontWeight.w500,
-                                  decoration: TextDecoration.lineThrough,
-                                  decorationColor: Color(0xFF808488),
+                          if (offerPrice != originalPrice)
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                CustomTextWidget(
+                                  text: "${(double.parse(offerPrice) * 100 / double.parse(originalPrice)).toStringAsFixed(2)}%",
+                                  fontColor: Color(0xFFFE735C),
+                                  fontSize: 10,
+                                  fontweight: FontWeight.w400,
                                 ),
-                              ),
-                            ],
-                          ),
+                                SizedBox(width: 10),
+                                Text(
+                                  originalPrice,
+                                  style: const TextStyle(
+                                    fontFamily: "Montserrat",
+                                    fontSize: 15,
+                                    color: Color(0xFF808488),
+                                    fontWeight: FontWeight.w500,
+                                    decoration: TextDecoration.lineThrough,
+                                    decorationColor: Color(0xFF808488),
+                                  ),
+                                ),
+                              ],
+                            ),
                         ],
                       ),
                     ],
@@ -163,21 +166,21 @@ class CartProductsListTile extends StatelessWidget {
                   return Row(
                     // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      CustomTextWidget(
-                        text: "Total Order (${newCount}) :",
-                        fontSize: 12,
-                        fontweight: FontWeight.w500,
-                      ),
-                      kWidth,
+                      // CustomTextWidget(
+                      //   text: "Total Order (${newCount}) :",
+                      //   fontSize: 12,
+                      //   fontweight: FontWeight.w500,
+                      // ),
+                      // kWidth,
                       GestureDetector(
                         onTap: () {
-                          if (newCount != 0) {
+                          if (newCount > 1) {
                             cartCountNotifier.value--;
                             currentProductCountNotifier.value--;
                             ApiServices().updateCartCount(productDetails.id.toString(), currentProductCountNotifier.value);
-                            for (int i = 0; i < controller.cartProducts.value.count; i++) {
-                              if (controller.cartProducts.value.results[i].id == productDetails.id) {
-                                controller.cartProducts.value.results[i].purchaseCount = controller.cartProducts.value.results[i].purchaseCount - 1;
+                            for (int i = 0; i < cartController.cartProducts.value.count; i++) {
+                              if (cartController.cartProducts.value.results[i].id == productDetails.id) {
+                                cartController.cartProducts.value.results[i].purchaseCount = cartController.cartProducts.value.results[i].purchaseCount - 1;
                               }
                             }
                             CartScreen().getGrandTotal();
@@ -185,15 +188,31 @@ class CartProductsListTile extends StatelessWidget {
                         },
                         child: Icon(Icons.remove),
                       ),
-                      SizedBox(width: 5),
+                      SizedBox(width: 10.w),
+                      Container(
+                        height: 35.w,
+                        width: 35.w,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.r),
+                          color: kMainThemeColor,
+                        ),
+                        child: Center(
+                          child: CustomTextWidget(
+                            text: "$newCount",
+                            fontSize: 14.sp,
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 10.w),
+
                       GestureDetector(
                         onTap: () {
                           cartCountNotifier.value++;
                           currentProductCountNotifier.value++;
                           ApiServices().updateCartCount(productDetails.id.toString(), currentProductCountNotifier.value);
-                          for (int i = 0; i < controller.cartProducts.value.count; i++) {
-                            if (controller.cartProducts.value.results[i].id == productDetails.id) {
-                              controller.cartProducts.value.results[i].purchaseCount = controller.cartProducts.value.results[i].purchaseCount + 1;
+                          for (int i = 0; i < cartController.cartProducts.value.count; i++) {
+                            if (cartController.cartProducts.value.results[i].id == productDetails.id) {
+                              cartController.cartProducts.value.results[i].purchaseCount = cartController.cartProducts.value.results[i].purchaseCount + 1;
                             }
                           }
                           CartScreen().getGrandTotal();
@@ -204,10 +223,11 @@ class CartProductsListTile extends StatelessWidget {
                       Container(
                         child: CustomTextIconButton(
                           onPressed: () {
-                            cartCountNotifier.value = (cartCountNotifier.value - newCount).toInt();
-                            cartProductsList.remove(productDetails);
-                            controller.removeProductFromCart(context, productDetails.product.id.toString());
-                            CartScreen().getGrandTotal();
+                            showProductRemoveWarning(context, newCount);
+                            // cartCountNotifier.value = (cartCountNotifier.value - newCount).toInt();
+                            // cartProductsList.remove(productDetails);
+                            // controller.removeProductFromCart(context, productDetails.product.id.toString());
+                            // CartScreen().getGrandTotal();
                           },
                           icon: Icons.delete_outline,
                           label: "Remove",
@@ -217,17 +237,58 @@ class CartProductsListTile extends StatelessWidget {
                       ),
                       Spacer(),
                       CustomTextWidget(
-                        text: "₹ ${newCount * double.parse(offerPrice)}",
-                        fontSize: 12,
+                        text: "₹ ${(newCount * double.parse(offerPrice)).toStringAsFixed(2)}",
+                        fontSize: 13.sp,
                         fontweight: FontWeight.w600,
+                        textOverflow: TextOverflow.fade,
                       ),
                     ],
                   );
-                })
+                }),
+            Divider(
+              thickness: 2,
+              color: Colors.red,
+            ),
           ],
         ),
       ),
     );
+  }
+
+  showProductRemoveWarning(BuildContext context, int count) {
+    Alert(
+      context: context,
+      type: AlertType.warning,
+      title: "Warning",
+      desc: "This item will be removed from cart",
+      buttons: [
+        DialogButton(
+          child: Text(
+            "Cancel",
+            style: TextStyle(color: Colors.white, fontSize: 18),
+          ),
+          onPressed: () => Get.back(),
+          color: Color.fromRGBO(0, 179, 134, 1.0),
+        ),
+        DialogButton(
+          child: Text(
+            "Remove",
+            style: TextStyle(color: Colors.white, fontSize: 18),
+          ),
+          onPressed: () async {
+            cartCountNotifier.value = (cartCountNotifier.value - count).toInt();
+            cartProductsList.remove(productDetails);
+            cartController.removeProductFromCart(context, productDetails.product.id.toString());
+            CartScreen().getGrandTotal();
+            Get.back();
+          },
+          gradient: LinearGradient(colors: [
+            Colors.red,
+            Color.fromARGB(255, 244, 86, 75),
+          ]),
+        )
+      ],
+    ).show();
   }
 }
 
@@ -237,6 +298,7 @@ class CartProductListTileButton extends StatelessWidget {
     required this.buttonHeight,
     required this.buttonWidth,
     required this.label,
+    this.fontColor = Colors.black,
     required this.fontSize,
     required this.fontWeight,
   });
@@ -245,6 +307,7 @@ class CartProductListTileButton extends StatelessWidget {
   final double buttonWidth;
   final String label;
   final double fontSize;
+  final Color fontColor;
   final FontWeight fontWeight;
 
   @override
@@ -261,6 +324,7 @@ class CartProductListTileButton extends StatelessWidget {
           text: label,
           fontSize: fontSize,
           fontweight: fontWeight,
+          fontColor: fontColor,
         ),
       ),
     );

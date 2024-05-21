@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:internship_sample/controllers/app_controller.dart';
+import 'package:internship_sample/controllers/cart_controller.dart';
 import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/main.dart';
 import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
@@ -19,6 +20,7 @@ class CustomBottomNavbarItem extends StatelessWidget {
   final Color color;
 
   AppController controller = Get.put(AppController());
+  CartController cartController = Get.put(CartController());
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -30,7 +32,7 @@ class CustomBottomNavbarItem extends StatelessWidget {
         //fetching items in cart when cart is selected from bottom navbar
         if (index == 0 || index == 1) {
           bottomNavbarIndexNotifier.value = index;
-          controller.haveSearchResult.value = false;
+          // controller.haveSearchResult.value = false;
           if (controller.circleAvatarProductsList.isEmpty) {
             controller.getCircleAvatarProductList();
           }
@@ -46,7 +48,7 @@ class CustomBottomNavbarItem extends StatelessWidget {
             controller.getSponserdProducts();
           }
 
-          controller.getCartList();
+          cartController.getCartList();
         }
         if (index == 2) {
           //log("index =2");
@@ -54,7 +56,7 @@ class CustomBottomNavbarItem extends StatelessWidget {
             //log("setting index");
             bottomNavbarIndexNotifier.value = index;
             // if (controller.cartProducts.value.count != 0) {
-            controller.getCartList();
+            cartController.getCartList();
             // }
           } else {
             Services().showLoginAlert(context, "Please login to access Cart");

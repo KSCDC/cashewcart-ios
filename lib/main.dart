@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/presentation/authentication/signin_screen.dart';
 import 'package:internship_sample/presentation/authentication/signup_screen.dart';
@@ -34,7 +35,12 @@ class MyApp extends StatelessWidget {
               colorScheme: ColorScheme.fromSeed(seedColor: kMainThemeColor),
               useMaterial3: true,
             ),
-            home: SplashScreen(),
+            // home: SplashScreen(),
+            initialRoute: '/',
+            getPages: [
+              GetPage(name: '/', page: () => MainPageScreen()),
+              // GetPage(name: '/other', page: () => SomeOtherScreen()),
+            ],
           );
         });
   }
