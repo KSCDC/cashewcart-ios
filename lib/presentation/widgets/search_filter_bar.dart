@@ -108,8 +108,8 @@ class SearchFilterBar extends StatelessWidget {
                     SizedBox(height: 20),
                     GestureDetector(
                       onTap: () {
-                        print('Minimum Price: ₹${_currentRangeValues.start.toStringAsFixed(2)}');
-                        print('Maximum Price: ₹${_currentRangeValues.end.toStringAsFixed(2)}');
+                        // print('Minimum Price: ₹${_currentRangeValues.start.toStringAsFixed(2)}');
+                        // print('Maximum Price: ₹${_currentRangeValues.end.toStringAsFixed(2)}');
                         searchController.minSearchPrice.value = _currentRangeValues.start.round();
                         searchController.maxSearchPrice.value = _currentRangeValues.end.round();
                         searchController.searchProducts(SearchSectionTile().searchController.text);

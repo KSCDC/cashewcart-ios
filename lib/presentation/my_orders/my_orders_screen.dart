@@ -30,7 +30,7 @@ class MyOrdersScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     controller.getOrdersList();
     final recentOrdersListRev = recentOrdersList.reversed.toList();
-    print(numberOfRecentOrders);
+    // print(numberOfRecentOrders);
     //log("Recent orders List :${recentOrdersList.toString()}");
     final screenSize = MediaQuery.of(context).size;
     return Scaffold(
@@ -86,9 +86,8 @@ class MyOrdersScreen extends StatelessWidget {
                   // color: Colors.white,
                   child: ListView.builder(
                     itemBuilder: (context, index) {
-                      print("Orders values :${controller.ordersList[index].items.length}");
+                      // print("Orders values :${controller.ordersList[index].items.length}");
                       final OrdersListModel currentItem = controller.ordersList[index];
-                  
 
                       return Skeletonizer(
                         enabled: controller.isLoadingMyproducts.value,
@@ -98,7 +97,6 @@ class MyOrdersScreen extends StatelessWidget {
                             currentItem: currentItem,
                           ),
                         ),
-
                       );
                     },
                     itemCount: controller.ordersList.length,

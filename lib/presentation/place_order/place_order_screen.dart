@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:internship_sample/controllers/app_controller.dart';
+import 'package:internship_sample/controllers/profile_controller.dart';
 import 'package:internship_sample/core/base_url.dart';
 import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/core/constants.dart';
@@ -32,6 +33,7 @@ class PlaceOrderScreen extends StatelessWidget {
   final ProductDetailsModel productDetails;
   // TextEditingController _textEditingController = TextEditingController(text: "216 St Paul's Rd, London N1 2LL, UK, \nContact :  +44-784232 ");
   AppController controller = Get.put(AppController());
+  ProfileController profileController = Get.put(ProfileController());
   TextEditingController _streetAddressConrller = TextEditingController();
   TextEditingController _regionController = TextEditingController();
   TextEditingController _districtController = TextEditingController();
@@ -166,7 +168,7 @@ class PlaceOrderScreen extends StatelessWidget {
 
                   SizedBox(height: 20),
 
-                   Row(
+                  Row(
                     children: [
                       Icon(CupertinoIcons.ticket),
                       kWidth,
@@ -311,7 +313,7 @@ class PlaceOrderScreen extends StatelessWidget {
                   final double total = double.parse(price) * productCountNotifier.value;
                   if (total <= 500) {
                     Services().showCustomSnackBar(context, "Minimum order amount is Rs 500 and above");
-                  } else if (controller.addressList.isEmpty) {
+                  } else if (profileController.addressList.isEmpty) {
                     Services().showCustomSnackBar(context, "No address found. Add an address to continue");
                   } else {
                     Get.to(

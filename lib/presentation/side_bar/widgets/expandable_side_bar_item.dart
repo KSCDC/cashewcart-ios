@@ -65,7 +65,7 @@ class ExpandableProductsSideBarItem extends StatelessWidget {
                       children: [
                         GestureDetector(
                           onTap: () {
-                            if (!controller.isAlreadyLoadedAllProducts) {
+                            if (!controller.isAlreadyLoadedAllProducts.value) {
                               controller.getAllProducts();
                             }
 

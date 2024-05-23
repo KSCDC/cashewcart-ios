@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:internship_sample/controllers/app_controller.dart';
 import 'package:internship_sample/controllers/cart_controller.dart';
+import 'package:internship_sample/controllers/profile_controller.dart';
 import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/main.dart';
 import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
@@ -21,6 +22,7 @@ class CustomBottomNavbarItem extends StatelessWidget {
 
   AppController controller = Get.put(AppController());
   CartController cartController = Get.put(CartController());
+  ProfileController profileController = Get.put(ProfileController());
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -37,7 +39,7 @@ class CustomBottomNavbarItem extends StatelessWidget {
             controller.getCircleAvatarProductList();
           }
 
-          if (!controller.isAlreadyLoadedAllProducts) {
+          if (!controller.isAlreadyLoadedAllProducts.value) {
             //log("getting all products");
             controller.getAllProducts();
           }
@@ -48,7 +50,7 @@ class CustomBottomNavbarItem extends StatelessWidget {
             controller.getSponserdProducts();
           }
 
-          cartController.getCartList();
+          // cartController.getCartList();
         }
         if (index == 2) {
           //log("index =2");
@@ -56,7 +58,7 @@ class CustomBottomNavbarItem extends StatelessWidget {
             //log("setting index");
             bottomNavbarIndexNotifier.value = index;
             // if (controller.cartProducts.value.count != 0) {
-            cartController.getCartList();
+            // cartController.getCartList();
             // }
           } else {
             Services().showLoginAlert(context, "Please login to access Cart");
@@ -67,7 +69,7 @@ class CustomBottomNavbarItem extends StatelessWidget {
         if (index == 3) {
           if (email != null && password != null) {
             bottomNavbarIndexNotifier.value = index;
-            controller.getProfileDetails();
+            profileController.getProfileDetails();
           } else {
             Services().showLoginAlert(context, "Please login to access Account");
           }

@@ -127,9 +127,10 @@ class ShopProductDetailsTile extends StatelessWidget {
                         if (productDetailsController.productDetails.value!.productVariants[value].actualPrice != productDetailsController.productDetails.value!.productVariants[value].sellingPrice)
                           kWidth,
                         CustomTextWidget(
-                          text: "₹ ${productDetailsController.productDetails.value!.productVariants[value].sellingPrice}",
-                          fontSize: 16.sp,
+                          text: "₹ ${double.parse(productDetailsController.productDetails.value!.productVariants[value].sellingPrice).toStringAsFixed(2)}",
+                          fontSize: 24.sp,
                           fontweight: FontWeight.w600,
+                          fontColor: kMainThemeColor,
                         ),
                         kWidth,
                         if (productDetailsController.productDetails.value!.productVariants[value].actualPrice != productDetailsController.productDetails.value!.productVariants[value].sellingPrice)
@@ -156,7 +157,7 @@ class ShopProductDetailsTile extends StatelessWidget {
                           ),
                           child: Center(
                             child: CustomTextWidget(
-                              text: double.parse(weight) < 1000 ? "$weight GM Out of stock" : "$weight KG Out of stock",
+                              text: double.parse(weight) < 1000 ? "$weight GM Out of stock" : "${double.parse(weight) / 1000} KG Out of stock",
                               fontColor: Colors.red,
                             ),
                           ),
@@ -263,15 +264,15 @@ class ShopProductDetailsTile extends StatelessWidget {
               //   textAndIconSize: 12,
               // ),
               // kWidth,
-              CustomTextIconButton(
-                onPressed: () {
-                  Get.to(() => CancellationPolicyScreen());
-                },
-                icon: Icons.lock_outline_sharp,
-                label: "Return Policy",
-                textAndIconColor: Color(0xFF828282),
-                textAndIconSize: 12.sp,
-              ),
+              // CustomTextIconButton(
+              //   onPressed: () {
+              //     Get.to(() => CancellationPolicyScreen());
+              //   },
+              //   icon: Icons.lock_outline_sharp,
+              //   label: "Return & Refund Policy",
+              //   textAndIconColor: Color(0xFF828282),
+              //   textAndIconSize: 12.sp,
+              // ),
             ],
           )
         ],

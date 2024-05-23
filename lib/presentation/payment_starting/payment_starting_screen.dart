@@ -104,237 +104,251 @@ class _PaymentStartingScreenState extends State<PaymentStartingScreen> {
         centerTitle: true,
       ),
       body: LoaderOverlay(
-        child: Column(
-          children: [
-            SizedBox(height: 30.w),
-            SizedBox(
-              height: 200,
-              child: DataTable2(
-                columnSpacing: 12,
-                horizontalMargin: 12,
-                minWidth: 1000.w,
-                dataRowHeight: 60.w,
-                // fixedLeftColumns: 1,
-                dividerThickness: 2,
+        child: Padding(
+          padding: EdgeInsets.all(16.w),
+          child: Column(
+            children: [
+              SizedBox(height: 30.w),
+              SizedBox(
+                height: 300.w,
+                child: DataTable2(
+                  columnSpacing: 12,
+                  horizontalMargin: 12,
+                  minWidth: 1000.w,
+                  dataRowHeight: 60.w,
+                  // fixedLeftColumns: 1,
+                  dividerThickness: 2,
 
-                columns: [
-                  DataColumn2(
-                    label: CustomTextWidget(
-                      text: 'Product Name',
-                      fontSize: 14.sp,
-                      fontweight: FontWeight.w600,
-                      maxLines: 3,
-                    ),
-                    size: ColumnSize.L,
-                  ),
-                  DataColumn(
-                    label: Center(
-                      child: CustomTextWidget(
-                        text: 'HSN/SAC',
+                  columns: [
+                    DataColumn2(
+                      label: CustomTextWidget(
+                        text: 'Product Name',
                         fontSize: 14.sp,
                         fontweight: FontWeight.w600,
+                        maxLines: 3,
                       ),
+                      size: ColumnSize.L,
                     ),
-                  ),
-                  DataColumn(
-                    label: Center(
-                      child: CustomTextWidget(
-                        text: 'Qty',
-                        fontSize: 14.sp,
-                        fontweight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                  DataColumn(
-                    label: Center(
-                      child: CustomTextWidget(
-                        text: 'Unit Price',
-                        fontSize: 14.sp,
-                        fontweight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                  DataColumn(
-                    label: Center(
-                      child: CustomTextWidget(
-                        text: 'CGST %',
-                        fontSize: 14.sp,
-                        fontweight: FontWeight.w600,
-                      ),
-                    ),
-                    numeric: true,
-                  ),
-                  DataColumn(
-                    label: Center(
-                      child: CustomTextWidget(
-                        text: 'CGST Amnt',
-                        fontSize: 14.sp,
-                        fontweight: FontWeight.w600,
-                      ),
-                    ),
-                    numeric: true,
-                  ),
-                  DataColumn(
-                    label: Center(
-                      child: CustomTextWidget(
-                        text: 'SGST %',
-                        fontSize: 14.sp,
-                        fontweight: FontWeight.w600,
-                      ),
-                    ),
-                    numeric: true,
-                  ),
-                  DataColumn(
-                    label: Center(
-                      child: CustomTextWidget(
-                        text: 'SGST Amnt',
-                        fontSize: 14.sp,
-                        fontweight: FontWeight.w600,
-                      ),
-                    ),
-                    numeric: true,
-                  ),
-                  DataColumn(
-                    label: Center(
-                      child: CustomTextWidget(
-                        text: 'Total Payable',
-                        fontSize: 14.sp,
-                        fontweight: FontWeight.w600,
-                      ),
-                    ),
-                    numeric: true,
-                  ),
-                ],
-                rows: List<DataRow>.generate(
-                  widget.orderDetails.items.length,
-                  (index) {
-                    subTotal += double.parse(widget.orderDetails.items[index].total);
-                    return DataRow(
-                      cells: [
-                        DataCell(
-                          Center(child: CustomTextWidget(text: widget.orderDetails.items[index].product.product.name)),
-                        ),
-                        DataCell(
-                          Center(child: CustomTextWidget(text: widget.orderDetails.items[index].product.hsn)),
-                        ),
-                        DataCell(
-                          Center(child: CustomTextWidget(text: widget.orderDetails.items[index].purchaseCount.toString())),
-                        ),
-                        DataCell(
-                          Center(child: CustomTextWidget(text: widget.orderDetails.items[index].product.sellingPrice)),
-                        ),
-                        // DataCell(
-                        //   CustomTextWidget(text: widget.orderDetails.items[index].product.sellingPrice),
-                        // ),
-                        DataCell(
-                          Center(child: CustomTextWidget(text: widget.orderDetails.items[index].product.cgstRate)),
-                        ),
-                        DataCell(
-                          Center(child: CustomTextWidget(text: widget.orderDetails.items[index].cgstPrice)),
-                        ),
-                        DataCell(
-                          Center(child: CustomTextWidget(text: widget.orderDetails.items[index].product.sgstRate)),
-                        ),
-                        DataCell(
-                          Center(child: CustomTextWidget(text: widget.orderDetails.items[index].sgstPrice)),
-                        ),
-                        DataCell(
-                          Center(child: CustomTextWidget(text: widget.orderDetails.items[index].total)),
-                        ),
-                      ],
-                    );
-                  },
-                ),
-              ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: EdgeInsets.all(16.w),
-                child: Column(
-                  children: [
-                    SizedBox(width: double.infinity),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        CustomTextWidget(
-                          text: "Sub Total : ",
+                    DataColumn(
+                      label: Center(
+                        child: CustomTextWidget(
+                          text: 'HSN/SAC',
                           fontSize: 14.sp,
                           fontweight: FontWeight.w600,
-                          height: 2,
                         ),
-                        SizedBox(
-                          width: 100.w,
-                          child: Center(
-                            child: CustomTextWidget(
-                              text: "₹$subTotal",
-                              fontSize: 14.sp,
-                              fontweight: FontWeight.w600,
-                              height: 2,
-                            ),
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        CustomTextWidget(
-                          text: "Shipping & other charges : ",
+                    DataColumn(
+                      label: Center(
+                        child: CustomTextWidget(
+                          text: 'Qty',
                           fontSize: 14.sp,
                           fontweight: FontWeight.w600,
-                          height: 2,
                         ),
-                        SizedBox(
-                          width: 100.w,
-                          child: Center(
-                            child: CustomTextWidget(
-                              text: "₹${widget.orderDetails.deliveryAdditionalAmount}",
-                              fontSize: 14.sp,
-                              fontweight: FontWeight.w600,
-                              height: 2,
-                            ),
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
-                    SizedBox(height: 10.w),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        CustomTextWidget(
-                          text: "Grand Total : ",
+                    DataColumn(
+                      label: Center(
+                        child: CustomTextWidget(
+                          text: 'Unit Price',
                           fontSize: 14.sp,
                           fontweight: FontWeight.w600,
-                          height: 2,
                         ),
-                        SizedBox(
-                          width: 100.w,
-                          child: Center(
-                            child: CustomTextWidget(
-                              text: "₹${subTotal + widget.orderDetails.deliveryAdditionalAmount}",
-                              fontSize: 14.sp,
-                              fontweight: FontWeight.w600,
-                              height: 2,
-                            ),
-                          ),
+                      ),
+                    ),
+                    DataColumn(
+                      label: Center(
+                        child: CustomTextWidget(
+                          text: 'Taxable Amnt',
+                          fontSize: 14.sp,
+                          fontweight: FontWeight.w600,
                         ),
-                      ],
+                      ),
+                    ),
+                    DataColumn(
+                      label: Center(
+                        child: CustomTextWidget(
+                          text: 'CGST %',
+                          fontSize: 14.sp,
+                          fontweight: FontWeight.w600,
+                        ),
+                      ),
+                      numeric: true,
+                    ),
+                    DataColumn(
+                      label: Center(
+                        child: CustomTextWidget(
+                          text: 'CGST Amnt',
+                          fontSize: 14.sp,
+                          fontweight: FontWeight.w600,
+                        ),
+                      ),
+                      numeric: true,
+                    ),
+                    DataColumn(
+                      label: Center(
+                        child: CustomTextWidget(
+                          text: 'SGST %',
+                          fontSize: 14.sp,
+                          fontweight: FontWeight.w600,
+                        ),
+                      ),
+                      numeric: true,
+                    ),
+                    DataColumn(
+                      label: Center(
+                        child: CustomTextWidget(
+                          text: 'SGST Amnt',
+                          fontSize: 14.sp,
+                          fontweight: FontWeight.w600,
+                        ),
+                      ),
+                      numeric: true,
+                    ),
+                    DataColumn(
+                      label: Center(
+                        child: CustomTextWidget(
+                          text: 'Total Payable',
+                          fontSize: 14.sp,
+                          fontweight: FontWeight.w600,
+                        ),
+                      ),
+                      numeric: true,
                     ),
                   ],
+                  rows: List<DataRow>.generate(
+                    widget.orderDetails.items.length,
+                    (index) {
+                      subTotal += double.parse(widget.orderDetails.items[index].total);
+                      return DataRow(
+                        cells: [
+                          DataCell(
+                            Center(child: CustomTextWidget(text: widget.orderDetails.items[index].product.product.name)),
+                          ),
+                          DataCell(
+                            Center(child: CustomTextWidget(text: widget.orderDetails.items[index].product.hsn)),
+                          ),
+                          DataCell(
+                            Center(child: CustomTextWidget(text: widget.orderDetails.items[index].purchaseCount.toString())),
+                          ),
+                          DataCell(
+                            Center(child: CustomTextWidget(text: widget.orderDetails.items[index].product.sellingPrice)),
+                          ),
+                          DataCell(
+                            Center(child: CustomTextWidget(text: widget.orderDetails.items[index].product.sellingPrice)),
+                          ),
+                          DataCell(
+                            Center(child: CustomTextWidget(text: widget.orderDetails.items[index].product.cgstRate)),
+                          ),
+                          DataCell(
+                            Center(child: CustomTextWidget(text: widget.orderDetails.items[index].cgstPrice)),
+                          ),
+                          DataCell(
+                            Center(child: CustomTextWidget(text: widget.orderDetails.items[index].product.sgstRate)),
+                          ),
+                          DataCell(
+                            Center(child: CustomTextWidget(text: widget.orderDetails.items[index].sgstPrice)),
+                          ),
+                          DataCell(
+                            Center(child: CustomTextWidget(text: widget.orderDetails.items[index].total)),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
                 ),
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.all(16.w),
-              child: GestureDetector(
-                onTap: () {
-                  context.loaderOverlay.show();
-                  proceedToPay(context, _razorpay, widget.orderDetails.orderId.toString(), widget.orderDetails.billingPhoneNumber);
-                },
-                child: CustomElevatedButton(label: "Proceed to Pay"),
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.all(16.w),
+                  child: Column(
+                    children: [
+                      SizedBox(width: double.infinity),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          CustomTextWidget(
+                            text: "Sub Total : ",
+                            fontSize: 14.sp,
+                            fontweight: FontWeight.w600,
+                            height: 2,
+                          ),
+                          SizedBox(
+                            width: 100.w,
+                            child: Center(
+                              child: CustomTextWidget(
+                                text: "₹ ${subTotal.toStringAsFixed(2)}",
+                                fontSize: 14.sp,
+                                fontweight: FontWeight.w600,
+                                height: 2,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          CustomTextWidget(
+                            text: "Shipping & other charges : ",
+                            fontSize: 14.sp,
+                            fontweight: FontWeight.w600,
+                            height: 2,
+                          ),
+                          SizedBox(
+                            width: 100.w,
+                            child: Center(
+                              child: CustomTextWidget(
+                                text: "₹ ${widget.orderDetails.deliveryAdditionalAmount.toStringAsFixed(2)}",
+                                fontSize: 14.sp,
+                                fontweight: FontWeight.w600,
+                                height: 2,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 10.w),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          CustomTextWidget(
+                            text: "Grand Total : ",
+                            fontSize: 16.sp,
+                            fontweight: FontWeight.w600,
+                            height: 2,
+                            fontColor: Colors.red,
+                          ),
+                          SizedBox(
+                            width: 100.w,
+                            child: Center(
+                              child: CustomTextWidget(
+                                text: "₹ ${(subTotal + widget.orderDetails.deliveryAdditionalAmount).toStringAsFixed(2)}",
+                                fontSize: 16.sp,
+                                fontweight: FontWeight.w600,
+                                height: 2,
+                                fontColor: Colors.red,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
               ),
-            )
-          ],
+              Padding(
+                padding: EdgeInsets.all(16.w),
+                child: GestureDetector(
+                  onTap: () {
+                    context.loaderOverlay.show();
+                    proceedToPay(context, _razorpay, widget.orderDetails.orderId.toString(), widget.orderDetails.billingPhoneNumber);
+                  },
+                  child: CustomElevatedButton(label: "Proceed to Pay"),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

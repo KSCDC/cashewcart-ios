@@ -102,7 +102,7 @@ class SideBar extends StatelessWidget {
                   Get.to(() => TermsAndConditionsScreen());
                 },
                 child: SideBarItemTile(
-                  icon: Icons.info_outline,
+                  icon: Icons.new_releases_outlined,
                   label: "Terms & Conditions",
                 ),
               ),
@@ -111,7 +111,7 @@ class SideBar extends StatelessWidget {
                   Get.to(() => CancellationPolicyScreen());
                 },
                 child: SideBarItemTile(
-                  icon: Icons.info_outline,
+                  icon: Icons.new_releases_outlined,
                   label: "Cancellation Policy",
                 ),
               ),
@@ -120,7 +120,7 @@ class SideBar extends StatelessWidget {
                   Get.to(() => PrivacyPolicyScreen());
                 },
                 child: SideBarItemTile(
-                  icon: Icons.info_outline,
+                  icon: Icons.new_releases_outlined,
                   label: "Privacy Policy",
                 ),
               ),
@@ -129,7 +129,7 @@ class SideBar extends StatelessWidget {
                   Get.to(() => ShippingPolicyScreen());
                 },
                 child: SideBarItemTile(
-                  icon: Icons.info_outline,
+                  icon: Icons.new_releases_outlined,
                   label: "Shipping Policy",
                 ),
               ),

@@ -6,6 +6,7 @@ import 'package:encrypt/encrypt.dart' as enc;
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -402,12 +403,10 @@ class ApiServices {
     }
   }
 
-  getProductByCategory(String categoryParent, String categoryName, String pageNo) async {
-    // log("Getting by cat");
+  getProductByCategory(String categoryParent, String categoryName) async {
     final params = {
       "product__category__parent__name": categoryParent,
       "product__category__name": categoryName,
-      "page": pageNo,
     };
     //log("calling $baseUrl${ApiEndPoints.filterProduct}");
     // log(categoryParent);
@@ -428,14 +427,18 @@ class ApiServices {
         // log(response.data.toString());
         return response;
       } else {
-        print("Unexpected status code: ${response.statusCode}");
+        log("Unexpected status code: ${response.statusCode}");
+
         return null;
       }
     } on DioException catch (e) {
       print("Error :$e");
+      log("getting error");
+
       if (e.type == DioExceptionType.connectionTimeout) {
-        print("Connection timeout");
+        log("Connection timeout");
       }
+
       return null;
     }
   }
@@ -724,6 +727,7 @@ class ApiServices {
   }
 
   getCartList() async {
+    log("getting cart");
     SharedPreferences sharedPref = await SharedPreferences.getInstance();
     final authToken = sharedPref.getString(ACCESSTOKEN);
     final email = await sharedPref.getString(EMAIL);
@@ -752,7 +756,7 @@ class ApiServices {
       }
     } on DioException catch (e) {
       print("Error :$e");
-      if (e.response!.statusCode == 401) {
+      if (e.response != null) if (e.response!.statusCode == 401) {
         print("refreshing token");
         final refreshedToken = await refreshAccessToken();
         if (refreshedToken != null) {
@@ -783,34 +787,7 @@ class ApiServices {
       if (response.statusCode == 200 || response.statusCode == 201) {
         // log(response.data.toString());
         cartCountNotifier.value++;
-        final snackBar = SnackBar(
-          content: SizedBox(
-            height: 35.w,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                CustomTextWidget(
-                  text: "Product added to cart",
-                  fontColor: Colors.white,
-                ),
-                // TextButton(
-                //   onPressed: () {
-                //     // bottomNavbarIndexNotifier.value = 2;
-                //     Get.to(() => MainPageScreen());
-                //   },
-                //   child: CustomTextWidget(
-                //     text: "Go to Cart",
-                //     fontColor: kMainThemeColor,
-                //   ),
-                // )
-              ],
-            ),
-          ),
-          // behavior: SnackBarBehavior.floating,
-          // margin: EdgeInsets.all(10),
-          padding: EdgeInsets.all(20),
-        );
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        Services().showCustomSnackBar(context, "Product added to cart");
         return response;
       } else {
         print("Unexpected status code: ${response.statusCode}");
@@ -1289,21 +1266,20 @@ class ApiServices {
     }
   }
 
-  Future<void> getInvoice() async {
+  Future<void> getInvoice(String orderId) async {
     try {
       final dio = Dio();
       dio.options.connectTimeout = connectionTimeoutDuration;
 
       SharedPreferences sharedPref = await SharedPreferences.getInstance();
       final authToken = sharedPref.getString(ACCESSTOKEN);
-
+      log("Url : ${"$baseUrl${ApiEndPoints.generateInvoice}$orderId/"}");
       final response = await dio.get(
-        "https://backend.cashewcart.com:8443/api/order/generateinvoice/596/",
+        "$baseUrl${ApiEndPoints.generateInvoice}$orderId/",
         options: Options(
           responseType: ResponseType.bytes, // Set response type to bytes
           headers: {
-            'Authorization':
-                'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE2MjA5Nzk2LCJpYXQiOjE3MTYyMDg1OTYsImp0aSI6IjIwOTZlZTBlYzczODQyMDM5N2MyM2ViYzdmOTM0MmVmIiwidXNlcl9pZCI6MTJ9.OWqoJzjaQwUhANH6fPlSgGbkzR_oL9xti8yybnRH-JE',
+            'Authorization': 'Bearer $authToken',
           },
         ),
       );
@@ -1323,7 +1299,7 @@ class ApiServices {
         String downloadsPath = downloadsDirectory.path;
 
         // Generate a unique file name
-        final String fileName = '${DateTime.now().microsecondsSinceEpoch}-akt.pdf';
+        final String fileName = '${DateTime.now().microsecondsSinceEpoch}invoice$orderId.pdf';
         File file = File('$downloadsPath/$fileName');
 
         // Create the file if it doesn't exist
@@ -1335,6 +1311,7 @@ class ApiServices {
         await file.writeAsBytes(response.data);
 
         print("File downloaded at ${file.path}");
+        await showNotification("Download Complete", "Invoice is downloaded to Downloads folder", file.path);
       } else {
         print("Storage permission denied");
       }
@@ -1354,7 +1331,29 @@ class ApiServices {
   }
 
   Future<bool> _requestPermission(Permission permission) async {
+    Permission.storage.request();
     final status = await permission.request();
     return status.isGranted;
+  }
+
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+  Future<void> showNotification(String title, String body, String filePath) async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics = AndroidNotificationDetails(
+      'download_channel',
+      'Downloads',
+      importance: Importance.max,
+      priority: Priority.high,
+    );
+
+    const NotificationDetails platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics);
+
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      title,
+      body,
+      platformChannelSpecifics,
+      payload: filePath,
+    );
   }
 }

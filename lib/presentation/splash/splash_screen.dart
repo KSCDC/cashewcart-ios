@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:internship_sample/controllers/app_controller.dart';
+import 'package:internship_sample/controllers/cart_controller.dart';
 import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/presentation/main_page/main_page_screen.dart';
 import 'package:internship_sample/presentation/onboarding/onboarding_screen.dart';
@@ -18,6 +20,8 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
+  CartController cartController = Get.put(CartController());
+  AppController controller = Get.put(AppController());
 
   @override
   void initState() {
@@ -71,9 +75,12 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 
     if (SplashScreen.email != null && widget.encryptedPassword != null) {
       print("have email and password");
+      controller.isLoggedIn.value = true;
+      cartController.getCartList();
       Get.offAll(() => MainPageScreen());
     } else {
       print("dont have email and password");
+       controller.isLoggedIn.value = true;
       Get.offAll(() => OnboardingScreen());
     }
   }

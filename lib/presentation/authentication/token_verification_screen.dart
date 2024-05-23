@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:internship_sample/presentation/authentication/create_account_screen.dart';
@@ -10,8 +11,9 @@ import 'package:internship_sample/services/api_services.dart';
 import 'package:internship_sample/services/services.dart';
 
 class TokenVerificationScreen extends StatelessWidget {
-  TokenVerificationScreen({super.key, required this.isNewUser});
+  TokenVerificationScreen({super.key, required this.isNewUser, required this.email});
   final bool isNewUser;
+  final String email;
   TextEditingController _tokenController = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -31,17 +33,24 @@ class TokenVerificationScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 10),
                 CustomTextWidget(
-                  text: "We have sent the code verification\nto your mobile number",
-                  fontColor: Colors.grey,
+                  text: "We have sent the key to\n$email",
+                  fontSize: 12.sp,
+                  fontColor: Colors.red,
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(height: 10),
                 CustomIconTextField(
                   icon: Icons.key,
-                  hintText: "Copy and paste your secret key from the mail here",
+                  hintText: "Paste your secret key here",
                   controller: _tokenController,
                 ),
                 SizedBox(height: 10),
+                CustomTextWidget(
+                  text: "Please check your mail, copy the secret key we have sent to you and paste it in the above field.",
+                  fontColor: Colors.red,
+                  fontSize: 12.sp,
+                  textAlign: TextAlign.center,
+                ),
                 Container(
                   height: 40,
                   width: double.infinity,

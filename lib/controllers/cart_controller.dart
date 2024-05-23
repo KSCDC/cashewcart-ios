@@ -8,12 +8,12 @@ class CartController extends GetxController {
   RxBool isLoading = false.obs;
   RxBool isError = false.obs;
 
-    Rx<CartProductModel> cartProducts = CartProductModel(count: 0, next: null, previous: null, results: []).obs;
-
+  Rx<CartProductModel> cartProducts = CartProductModel(count: 0, next: null, previous: null, results: []).obs;
 
   getCartList() async {
     isLoading.value = true;
     isError.value = false;
+    print("Fetching cart");
     final response = await ApiServices().getCartList();
     if (response != null) {
       final data = CartProductModel.fromJson(response.data);

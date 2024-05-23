@@ -288,6 +288,7 @@ class CartProductsListTile extends StatelessWidget {
           ]),
         )
       ],
+      closeFunction: () => Get.back(),
     ).show();
   }
 }

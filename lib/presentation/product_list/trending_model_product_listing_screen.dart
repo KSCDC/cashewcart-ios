@@ -45,7 +45,7 @@ class TrendingModelProductListingScreen extends StatelessWidget {
               // SearchSectionTile(),
 
               Obx(() {
-                print("counts :${controller.productDisplayList2.value.length}");
+                // print("counts :${controller.productDisplayList2.value.length}");
                 return controller.isTrendingLoading.value
                     //  || controller.isSponserdLoading.value
                     ? Center(

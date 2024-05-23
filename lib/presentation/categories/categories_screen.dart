@@ -11,6 +11,7 @@ import 'package:internship_sample/presentation/shop/shop_screen.dart';
 import 'package:internship_sample/presentation/side_bar/side_bar.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 import 'package:internship_sample/presentation/widgets/main_appbar.dart';
+import 'package:internship_sample/presentation/widgets/products_list_item_skeleton.dart';
 import 'package:internship_sample/presentation/widgets/products_list_item_tile.dart';
 import 'package:internship_sample/presentation/widgets/search_section_tile.dart';
 import 'package:internship_sample/services/services.dart';
@@ -63,7 +64,7 @@ class CategoriesScreen extends StatelessWidget {
                                   return DropdownButton<String>(
                                     value: controller.selectedPlainCashewCategory.value,
                                     onChanged: (String? newValue) {
-                                      print(newValue);
+                                      // print(newValue);
                                       if (newValue == "All") {
                                         controller.getProductsByCategory("PLAIN CASHEWS", '');
                                         controller.selectedPlainCashewCategory.value = newValue!;
@@ -91,10 +92,31 @@ class CategoriesScreen extends StatelessWidget {
                               child: Obx(
                                 () {
                                   if (controller.isPlainCashewLoading.value) {
-                                    return Center(
-                                      child: CircularProgressIndicator(),
+                                    return ListView.builder(
+                                      shrinkWrap: true,
+                                      itemBuilder: (context, index) {
+                                        return ProductsListItemTileSkeleton();
+                                      },
+                                      itemCount: 6,
+                                      scrollDirection: Axis.horizontal,
                                     );
-                                  } else if (controller.plainCashews.length != 0) {
+                                  } else if (controller.isAlreadyLoadedPlainCashews.value && controller.plainCashews.isEmpty) {
+                                    
+                                    return Center(
+                                      child: CustomTextWidget(
+                                        text: "Plain cashews products not available right now.",
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    );
+                                  } else if (controller.isPlainCashewLoadingError.value) {
+                                    log("pl lo err");
+                                    return Center(
+                                      child: CustomTextWidget(
+                                        text: "Loading failed. Please check your internet connection",
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    );
+                                  } else {
                                     return ListView.builder(
                                       shrinkWrap: true,
                                       itemBuilder: (context, index) {
@@ -110,37 +132,9 @@ class CategoriesScreen extends StatelessWidget {
                                             productDetails: productDetails,
                                           ),
                                         );
-                                        // }
-                                        // else if (controller.plainCashews.value.next != null) {
-                                        //   return GestureDetector(
-                                        //     onTap: () {
-                                        //       controller.plainCashewsPageNo++;
-                                        //       String subCategory;
-                                        //       if (controller.selectedPlainCashewCategory.value == "All") {
-                                        //         subCategory = "";
-                                        //       } else {
-                                        //         subCategory = controller.selectedPlainCashewCategory.value;
-                                        //       }
-                                        //       controller.getProductsByCategory("Plain Cashews", subCategory);
-                                        //     },
-                                        //     child: Row(
-                                        //       children: [
-                                        //         CustomTextWidget(text: "Load More ->"),
-                                        //         kWidth,
-                                        //       ],
-                                        //     ),
-                                        //   );
-                                        // }
                                       },
                                       itemCount: controller.plainCashews.length,
                                       scrollDirection: Axis.horizontal,
-                                    );
-                                  } else {
-                                    return Center(
-                                      child: CustomTextWidget(
-                                        text: "Plain cashews products not available right now.",
-                                        textAlign: TextAlign.center,
-                                      ),
                                     );
                                   }
                                 },
@@ -162,7 +156,7 @@ class CategoriesScreen extends StatelessWidget {
                                   return DropdownButton<String>(
                                     value: controller.selectedRoastedAndSaltedCategory.value,
                                     onChanged: (String? newValue) {
-                                      print(newValue);
+                                      // print(newValue);
                                       if (newValue == "All") {
                                         controller.getProductsByCategory("ROASTED AND SALTED CASHEWS", '');
                                         controller.selectedRoastedAndSaltedCategory.value = newValue!;
@@ -190,10 +184,29 @@ class CategoriesScreen extends StatelessWidget {
                               child: Obx(
                                 () {
                                   if (controller.isRoastedAndSaltedLoading.value) {
-                                    return Center(
-                                      child: CircularProgressIndicator(),
+                                    return ListView.builder(
+                                      shrinkWrap: true,
+                                      itemBuilder: (context, index) {
+                                        return ProductsListItemTileSkeleton();
+                                      },
+                                      itemCount: 6,
+                                      scrollDirection: Axis.horizontal,
                                     );
-                                  } else if (controller.roastedAndSalted.length != 0) {
+                                  } else if (controller.isAlreadyLoadedRoastedAndSaltedCashews.value && controller.roastedAndSalted.isEmpty) {
+                                    return Center(
+                                      child: CustomTextWidget(
+                                        text: "Roasted cashews products not available right now.",
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    );
+                                  } else if (controller.isRoastedAndSaltedLoadingError.value) {
+                                    return Center(
+                                      child: CustomTextWidget(
+                                        text: "Loading failed. Please check your internet connection",
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    );
+                                  } else {
                                     return Row(
                                       crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
@@ -220,13 +233,6 @@ class CategoriesScreen extends StatelessWidget {
                                         ),
                                       ],
                                     );
-                                  } else {
-                                    return Center(
-                                      child: CustomTextWidget(
-                                        text: "Roasted and Salted Cashews products not available right now.",
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    );
                                   }
                                 },
                               ),
@@ -247,7 +253,7 @@ class CategoriesScreen extends StatelessWidget {
                                   return DropdownButton<String>(
                                     value: controller.selectedValueAddedCategory.value,
                                     onChanged: (String? newValue) {
-                                      print(newValue);
+                                      // print(newValue);
                                       if (newValue == "All") {
                                         controller.getProductsByCategory("VALUE ADDED CASHEW PRODUCTS", '');
                                         controller.selectedValueAddedCategory.value = newValue!;
@@ -275,10 +281,29 @@ class CategoriesScreen extends StatelessWidget {
                               child: Obx(
                                 () {
                                   if (controller.isValueAddedLoading.value) {
-                                    return Center(
-                                      child: CircularProgressIndicator(),
+                                    return ListView.builder(
+                                      shrinkWrap: true,
+                                      itemBuilder: (context, index) {
+                                        return ProductsListItemTileSkeleton();
+                                      },
+                                      itemCount: 6,
+                                      scrollDirection: Axis.horizontal,
                                     );
-                                  } else if (controller.valueAdded.length != 0) {
+                                  } else if (controller.isAlreadyLoadedValueAdded.value && controller.valueAdded.isEmpty) {
+                                    return Center(
+                                      child: CustomTextWidget(
+                                        text: "Value added products not available right now.",
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    );
+                                  } else if (controller.isValueAddedLoadingError.value) {
+                                    return Center(
+                                      child: CustomTextWidget(
+                                        text: "Loading failed. Please check your internet connection",
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    );
+                                  } else {
                                     return Row(
                                       crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
@@ -305,13 +330,6 @@ class CategoriesScreen extends StatelessWidget {
                                         ),
                                       ],
                                     );
-                                  } else {
-                                    return Center(
-                                      child: CustomTextWidget(
-                                        text: "Value Added products not available right now.",
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    );
                                   }
                                 },
                               ),
@@ -330,10 +348,29 @@ class CategoriesScreen extends StatelessWidget {
                               child: Obx(
                                 () {
                                   if (controller.isAllProductsLoading.value) {
-                                    return Center(
-                                      child: CircularProgressIndicator(),
+                                    return ListView.builder(
+                                      shrinkWrap: true,
+                                      itemBuilder: (context, index) {
+                                        return ProductsListItemTileSkeleton();
+                                      },
+                                      itemCount: 6,
+                                      scrollDirection: Axis.horizontal,
                                     );
-                                  } else if (controller.allProducts.length != 0) {
+                                  } else if (controller.isAlreadyLoadedAllProducts.value && controller.allProducts.isEmpty) {
+                                    return Center(
+                                      child: CustomTextWidget(
+                                        text: "Featured products not available right now.",
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    );
+                                  } else if (controller.isAllProductsLoadingError.value) {
+                                    return Center(
+                                      child: CustomTextWidget(
+                                        text: "Loading failed. Please check your internet connection",
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    );
+                                  } else {
                                     return Row(
                                       crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
@@ -352,31 +389,12 @@ class CategoriesScreen extends StatelessWidget {
                                                   productDetails: productDetails,
                                                 ),
                                               );
-                                              // }
-                                              //  else if (controller.allProducts.value.length != null) {
-                                              //   return GestureDetector(
-                                              //     onTap: () {
-                                              //       controller.allProductsPageNo++;
-                                              //       controller.getAllProducts();
-                                              //     },
-                                              //     child: Row(
-                                              //       children: [
-                                              //         CustomTextWidget(text: "Load More ->"),
-                                              //         kWidth,
-                                              //       ],
-                                              //     ),
-                                              //   );
-                                              // }
                                             },
                                             itemCount: controller.allProducts.length,
                                             scrollDirection: Axis.horizontal,
                                           ),
                                         ),
                                       ],
-                                    );
-                                  } else {
-                                    return Center(
-                                      child: CustomTextWidget(text: "Products not available right now."),
                                     );
                                   }
                                 },
@@ -409,17 +427,8 @@ class CategoriesScreen extends StatelessWidget {
 
                                         return GestureDetector(
                                           onTap: () async {
-                                            print("Search results");
-                                            // print(
-                                            //     "image list ${controller.productDisplayList.valueindex]}");
                                             final String productId = searchController.searchResults[index].product.productId.toString();
-                                            // controller.getSimilarProducts(controller.searchResults.value, index);
                                             Services().getProductDetailsAndGotoShopScreen(context, productId);
-                                            // await controller.getProductDetails(productId);
-                                            // Get.to(() => ShopScreen());
-                                            // controller.productDetailsList.add(controller.productDetails.value!);
-                                            // previousPageIndexes.add(bottomNavbarIndexNotifier.value);
-                                            // bottomNavbarIndexNotifier.value = 4;
                                           },
                                           child: ProductsListItemTile(
                                             productDetails: productDetails,
@@ -429,16 +438,6 @@ class CategoriesScreen extends StatelessWidget {
                                     ),
                                   ),
                                   kHeight,
-
-                                  // if (controller.searchResults.value.length != null)
-                                  //   GestureDetector(
-                                  //     onTap: () {
-                                  //       controller.searchResultPageNo++;
-                                  //       controller.searchProducts(SearchSectionTile().searchController.text);
-                                  //     },
-                                  //     child: CustomTextWidget(text: "Load More"),
-                                  //   ),
-                                  // kHeight,
                                 ],
                               );
                       }

@@ -114,6 +114,7 @@ class SignUpScreen extends StatelessWidget {
                               Get.to(
                                 () => TokenVerificationScreen(
                                   isNewUser: true,
+                                  email: _emailController.text,
                                 ),
                               );
                             }

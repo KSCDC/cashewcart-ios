@@ -7,6 +7,7 @@ import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/models/product_model.dart';
 import 'package:internship_sample/presentation/widgets/custom_star_rating_tile.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class ProductsListItemTile extends StatelessWidget {
   ProductsListItemTile({

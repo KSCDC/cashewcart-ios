@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:internship_sample/controllers/app_controller.dart';
 import 'package:internship_sample/controllers/product_details_controller.dart';
+import 'package:internship_sample/controllers/profile_controller.dart';
 import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/main.dart';
 import 'package:internship_sample/models/product_details_model.dart';
@@ -19,6 +20,7 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 
 class Services {
   AppController controller = Get.put(AppController());
+  ProfileController profileController = Get.put(ProfileController());
   ProductDetailsController productDetailsController = Get.put(ProductDetailsController());
   void showCustomSnackBar(BuildContext context, String message) {
     final snackBar = SnackBar(
@@ -29,7 +31,9 @@ class Services {
       // behavior: SnackBarBehavior.floating,
       // margin: EdgeInsets.all(10),
       padding: EdgeInsets.all(20),
+      duration: Duration(seconds: 2),
     );
+
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
@@ -55,23 +59,23 @@ class Services {
             addressController: addressController,
             postalcodeController: postalcodeController,
             phoneNumberController: phoneNumberController,
-            state: controller.state,
-            district: controller.district),
+            state: profileController.state,
+            district: profileController.district),
         buttons: [
           DialogButton(
             onPressed: () async {
               final response;
               if (addNewAddress) {
-                response = await ApiServices().createUserAddress(
-                    context, nameController.text, cityController.text, addressController.text, controller.district!, controller.state!, postalcodeController.text, phoneNumberController.text, false);
+                response = await ApiServices().createUserAddress(context, nameController.text, cityController.text, addressController.text, profileController.district!, profileController.state!,
+                    postalcodeController.text, phoneNumberController.text, false);
               } else {
-                response = await ApiServices().editUserAddress(context, id, nameController.text, cityController.text, addressController.text, controller.district!, controller.state!,
+                response = await ApiServices().editUserAddress(context, id, nameController.text, cityController.text, addressController.text, profileController.district!, profileController.state!,
                     postalcodeController.text, phoneNumberController.text, false);
               }
 
               if (response != null) {
                 Services().showCustomSnackBar(context, addNewAddress ? "Address added successfully" : "Address edited successfully");
-                controller.getUserAddresses();
+                profileController.getUserAddresses();
                 Navigator.pop(context);
               }
             },
@@ -84,8 +88,8 @@ class Services {
         ]).show();
   }
 
-  showLoginAlert(BuildContext context, String description) {
-    Alert(
+  showLoginAlert(BuildContext context, String description) async {
+    await Alert(
       context: context,
       type: AlertType.warning,
       title: "NO ACCESS",
@@ -96,7 +100,7 @@ class Services {
             "Cancel",
             style: TextStyle(color: Colors.white, fontSize: 18),
           ),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
           color: Color.fromRGBO(0, 179, 134, 1.0),
         ),
         DialogButton(
@@ -105,12 +109,15 @@ class Services {
             style: TextStyle(color: Colors.white, fontSize: 18),
           ),
           onPressed: () => Get.to(() => SignInScreen()),
-          gradient: LinearGradient(colors: [
-            Color.fromRGBO(116, 116, 191, 1.0),
-            Color.fromRGBO(52, 138, 199, 1.0),
-          ]),
+          gradient: LinearGradient(
+            colors: [
+              Color.fromRGBO(116, 116, 191, 1.0),
+              Color.fromRGBO(52, 138, 199, 1.0),
+            ],
+          ),
         )
       ],
+      closeFunction: () => Navigator.of(context, rootNavigator: true).pop(),
     ).show();
   }
 

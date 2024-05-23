@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:internship_sample/controllers/app_controller.dart';
+import 'package:internship_sample/controllers/profile_controller.dart';
 import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/presentation/shop/widgets/custom_text_icon_button.dart';
@@ -22,6 +23,7 @@ class AddressSection extends StatelessWidget {
   final String heading;
   final ValueNotifier<int> selectedRadioNotifier;
   AppController controller = Get.put(AppController());
+  ProfileController profileController = Get.put(ProfileController());
   TextEditingController _nameController = TextEditingController();
   TextEditingController _streetAddressController = TextEditingController();
   TextEditingController _regionController = TextEditingController();
@@ -55,9 +57,9 @@ class AddressSection extends StatelessWidget {
         Obx(() {
           return Column(
             children: List.generate(
-              controller.addressList.length,
+              profileController.addressList.length,
               (index) {
-                final currentAddress = controller.addressList[index];
+                final currentAddress = profileController.addressList[index];
 
                 return Padding(
                   padding: const EdgeInsets.only(top: 5),
@@ -103,8 +105,8 @@ class AddressSection extends StatelessWidget {
                                   _nameController.text = currentAddress.name;
                                   _streetAddressController.text = currentAddress.streetAddress;
                                   _regionController.text = currentAddress.region;
-                                  controller.district = currentAddress.district;
-                                  controller.state = currentAddress.state;
+                                  profileController.district = currentAddress.district;
+                                  profileController.state = currentAddress.state;
                                   _postalcodeController.text = currentAddress.postalCode;
                                   _phoneNumberController.text = currentAddress.phoneNumber;
                                   Services().showAddressEditPopup(
@@ -185,10 +187,10 @@ class AddressSection extends StatelessWidget {
             style: TextStyle(color: Colors.white, fontSize: 18),
           ),
           onPressed: () async {
-            final adderssId = controller.addressList[index].id.toString();
+            final adderssId = profileController.addressList[index].id.toString();
             await ApiServices().deleteUserAddress(adderssId);
             Navigator.of(context).pop();
-            controller.getUserAddresses();
+            profileController.getUserAddresses();
           },
           gradient: LinearGradient(colors: [
             Colors.red,

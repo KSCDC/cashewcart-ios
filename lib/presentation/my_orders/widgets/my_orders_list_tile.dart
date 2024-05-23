@@ -151,9 +151,9 @@ class MyOrdersListTile extends StatelessWidget {
               fontSize: 14.sp,
             ),
             OrderListLine(label: "Number of items", number: "$totalItems"),
-            OrderListLine(label: "Sub Total", number: "₹ $subTotal"),
-            OrderListLine(label: "Delivery charge", number: "₹ $deliveryCharge"),
-            OrderListLine(label: "Grand Total", number: "₹ $grandTotal"),
+            OrderListLine(label: "Sub Total", number: "₹ ${subTotal..toStringAsFixed(2)}"),
+            OrderListLine(label: "Delivery charge", number: "₹ ${deliveryCharge..toStringAsFixed(2)}"),
+            OrderListLine(label: "Grand Total", number: "₹ ${grandTotal..toStringAsFixed(2)}"),
 
             SizedBox(height: 10.w),
             Row(

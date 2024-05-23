@@ -77,8 +77,8 @@ class OrderTrackingScreen extends StatelessWidget {
                 child: DataTable2(
                   columnSpacing: 12,
                   horizontalMargin: 12,
-                  minWidth: 1000.w,
-                  dataRowHeight: 60.w,
+                  minWidth: 1400.w,
+                  dataRowHeight: 65.w,
                   // fixedLeftColumns: 1,
                   dividerThickness: 2,
 
@@ -88,7 +88,6 @@ class OrderTrackingScreen extends StatelessWidget {
                         text: 'Product Name',
                         fontSize: 14.sp,
                         fontweight: FontWeight.w600,
-                        maxLines: 3,
                       ),
                       size: ColumnSize.L,
                     ),
@@ -114,6 +113,15 @@ class OrderTrackingScreen extends StatelessWidget {
                       label: Center(
                         child: CustomTextWidget(
                           text: 'Unit Price',
+                          fontSize: 14.sp,
+                          fontweight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    DataColumn(
+                      label: Center(
+                        child: CustomTextWidget(
+                          text: 'Taxable Amnt',
                           fontSize: 14.sp,
                           fontweight: FontWeight.w600,
                         ),
@@ -177,7 +185,11 @@ class OrderTrackingScreen extends StatelessWidget {
                       return DataRow(
                         cells: [
                           DataCell(
-                            Center(child: CustomTextWidget(text: orderDetails.items[index].product.product.name)),
+                            Center(
+                                child: CustomTextWidget(
+                              text: orderDetails.items[index].product.product.name,
+                              maxLines: 3,
+                            )),
                           ),
                           DataCell(
                             Center(child: CustomTextWidget(text: orderDetails.items[index].product.hsn)),
@@ -188,9 +200,9 @@ class OrderTrackingScreen extends StatelessWidget {
                           DataCell(
                             Center(child: CustomTextWidget(text: orderDetails.items[index].product.sellingPrice)),
                           ),
-                          // DataCell(
-                          //   CustomTextWidget(text: orderDetails.items[index].product.sellingPrice),
-                          // ),
+                          DataCell(
+                            Center(child: CustomTextWidget(text: orderDetails.items[index].product.sellingPrice)),
+                          ),
                           DataCell(
                             Center(child: CustomTextWidget(text: orderDetails.items[index].product.cgstRate)),
                           ),
@@ -230,7 +242,7 @@ class OrderTrackingScreen extends StatelessWidget {
                           width: 100.w,
                           child: Center(
                             child: CustomTextWidget(
-                              text: "₹$subTotal",
+                              text: "₹${subTotal..toStringAsFixed(2)}",
                               fontSize: 14.sp,
                               fontweight: FontWeight.w600,
                               height: 2,
@@ -252,7 +264,7 @@ class OrderTrackingScreen extends StatelessWidget {
                           width: 100.w,
                           child: Center(
                             child: CustomTextWidget(
-                              text: "₹${orderDetails.deliveryAdditionalAmount}",
+                              text: "₹${orderDetails.deliveryAdditionalAmount..toStringAsFixed(2)}",
                               fontSize: 14.sp,
                               fontweight: FontWeight.w600,
                               height: 2,
@@ -275,7 +287,7 @@ class OrderTrackingScreen extends StatelessWidget {
                           width: 100.w,
                           child: Center(
                             child: CustomTextWidget(
-                              text: "₹${subTotal + orderDetails.deliveryAdditionalAmount}",
+                              text: "₹${subTotal + orderDetails.deliveryAdditionalAmount..toStringAsFixed(2)}",
                               fontSize: 14.sp,
                               fontweight: FontWeight.w600,
                               height: 2,
@@ -304,8 +316,20 @@ class OrderTrackingScreen extends StatelessWidget {
                     ),
                     InkWell(
                       onTap: () {
-                        // Get.to(PaymentStartingScreen(orderDetails: orderDetails));
-                        ApiServices().getInvoice();
+                        Get.to(PaymentStartingScreen(orderDetails: orderDetails));
+                      },
+                      child: CustomElevatedButton(
+                        label: "Retry Payment",
+                      ),
+                    ),
+                  ],
+                )
+              else
+                Column(
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        ApiServices().getInvoice(orderDetails.orderId.toString());
                       },
                       child: CustomElevatedButton(
                         label: "Retry Payment",
@@ -313,6 +337,7 @@ class OrderTrackingScreen extends StatelessWidget {
                     ),
                   ],
                 ),
+
               kHeight,
             ],
           ),

@@ -22,4 +22,5 @@ class ApiEndPoints {
   static String payment = "/api/payment/ordernumber/";
   static String verifyPayment = "/api/payment/verify-payment/";
   static String ordersList = "/api/order/listallorder/";
+  static String generateInvoice = "/api/order/generateinvoice/";
 }

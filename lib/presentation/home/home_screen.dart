@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -23,6 +24,7 @@ import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_n
 import 'package:internship_sample/presentation/product_list/trending_model_product_listing_screen.dart';
 import 'package:internship_sample/presentation/shop/shop_screen.dart';
 import 'package:internship_sample/presentation/side_bar/side_bar.dart';
+import 'package:internship_sample/presentation/widgets/products_list_item_skeleton.dart';
 import 'package:internship_sample/presentation/widgets/products_list_item_tile.dart';
 import 'package:internship_sample/presentation/widgets/search_section_tile.dart';
 import 'package:internship_sample/presentation/widgets/custom_search_filtering_button.dart';
@@ -46,6 +48,7 @@ class HomeScreen extends StatelessWidget {
   AppController controller = Get.put(AppController());
   // SearchController searchController = Get.put(SearchController());
   SearchResultController searchController = Get.put(SearchResultController());
+  Timer? timer;
 
   @override
   Widget build(BuildContext context) {
@@ -54,34 +57,7 @@ class HomeScreen extends StatelessWidget {
         statusBarColor: kMainThemeColor,
       ),
     );
-    // if (controller.circleAvatarProductsList.isEmpty) {
-    //   controller.getCircleAvatarProductList();
-    // }
-    // if (!controller.isAlreadyLoadedPlainCashews) {
-    //   controller.getProductsByCategory("PLAIN CASHEWS", "");
-    // }
-    // if (!controller.isAlreadyLoadedRoastedAndSaltedCashews) {
-    //   controller.getProductsByCategory("ROASTED AND SALTED CASHEWS", "");
-    // }
-    // if (!controller.isAlreadyLoadedValueAdded) {
-    //   controller.getProductsByCategory("VALUE ADDED CASHEW PRODUCTS", "");
-    // }
-
-    // if (!controller.isAlreadyLoadedAllProducts) {
-    //   //log("getting all products");
-    //   controller.getAllProducts();
-    // }
-    // if (!controller.isAlreadyLoadedBestsellers) {
-    //   controller.getBestSellerProducts();
-    // }
-    // if (!controller.isAlreadyLoadedTrending) {
-    //   controller.getTrendingProducts();
-    // }
-    // if (!controller.isAlreadyLoadedSponserd) {
-    //   controller.getSponserdProducts();
-    // }
-
-    // controller.getCartList();
+    startAutoSlide();
 
     final screenSize = MediaQuery.of(context).size;
     return Scaffold(
@@ -109,77 +85,125 @@ class HomeScreen extends StatelessWidget {
                         // } else {
                         // print("count : ${controller.searchResults.value.count}");
                         // print("total count :${controller.searchResults.value.results!.length}");
-                        print("have seawrchresult : ${searchController.haveSearchResult.value}");
+                        // print("have seawrchresult : ${searchController.haveSearchResult.value}");
                         if (!searchController.isSearchMode.value) {
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               // circular list
-                              Container(
-                                height: 120.w,
-                                child: Obx(
-                                  () {
-                                    return Skeletonizer(
-                                      enabled: controller.isCircleAvatarProductsLoading.value,
-                                      child: ListView.builder(
-                                        itemBuilder: (context, index) {
-                                          String productImageUrl = '';
-                                          if (controller.circleAvatarProductsList.isNotEmpty) {
-                                            productImageUrl = controller.circleAvatarProductsList[index].product.productImages.isNotEmpty
-                                                ? "$baseUrl${controller.circleAvatarProductsList[index].product.productImages[0].productImage}"
-                                                : "https://t3.ftcdn.net/jpg/05/04/28/96/240_F_504289605_zehJiK0tCuZLP2MdfFBpcJdOVxKLnXg1.jpg";
-                                          }
-
-                                          final productName = controller.circleAvatarProductsList[index].product.name;
-                                          return GestureDetector(
-                                            onTap: () async {
-                                              final String productId = controller.circleAvatarProductsList.value[index].product.productId.toString();
-
-                                              // controller.getSimilarProducts(controller.allProducts.value, index);
-
-                                              Services().getProductDetailsAndGotoShopScreen(context, productId);
-                                            },
-                                            child: CircleAvatarListItem(
-                                              imagePath: productImageUrl,
-                                              label: productName,
+                              if (controller.isCircleAvatarProductsLoading.value)
+                                SizedBox(
+                                  height: 120.w,
+                                  // width: screenSize.width,
+                                  child: ListView.builder(
+                                      itemCount: 5,
+                                      scrollDirection: Axis.horizontal,
+                                      itemBuilder: (context, index) {
+                                        return Skeletonizer(
+                                          enabled: true,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: SizedBox(
+                                              height: 120.w,
+                                              width: 85.w,
+                                              child: Column(
+                                                children: [
+                                                  CircleAvatar(
+                                                    radius: 35,
+                                                    backgroundColor: Colors.white,
+                                                    // backgroundImage: NetworkImage(imagePath),
+                                                    child: ClipRRect(
+                                                      borderRadius: BorderRadius.circular(40.r),
+                                                      child: SizedBox(
+                                                        height: 60,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  CustomTextWidget(
+                                                    text: "Product name",
+                                                    fontSize: 10,
+                                                    fontweight: FontWeight.w400,
+                                                    fontColor: Color(0xFF21003D),
+                                                    textAlign: TextAlign.center,
+                                                    maxLines: 2,
+                                                  )
+                                                ],
+                                              ),
                                             ),
-                                          );
+                                          ),
+                                        );
+                                      }),
+                                )
+                              else
+                                Container(
+                                  height: 120.w,
+                                  child: ListView.builder(
+                                    itemBuilder: (context, index) {
+                                      String productImageUrl = '';
+                                      if (controller.circleAvatarProductsList.isNotEmpty) {
+                                        productImageUrl = controller.circleAvatarProductsList[index].product.productImages.isNotEmpty
+                                            ? "$baseUrl${controller.circleAvatarProductsList[index].product.productImages[0].productImage}"
+                                            : "https://t3.ftcdn.net/jpg/05/04/28/96/240_F_504289605_zehJiK0tCuZLP2MdfFBpcJdOVxKLnXg1.jpg";
+                                      }
+
+                                      final productName = controller.circleAvatarProductsList[index].product.name;
+                                      return GestureDetector(
+                                        onTap: () async {
+                                          final String productId = controller.circleAvatarProductsList.value[index].product.productId.toString();
+
+                                          // controller.getSimilarProducts(controller.allProducts.value, index);
+
+                                          Services().getProductDetailsAndGotoShopScreen(context, productId);
                                         },
-                                        itemCount: controller.circleAvatarProductsList.length,
-                                        scrollDirection: Axis.horizontal,
-                                      ),
-                                    );
-                                  },
+                                        child: CircleAvatarListItem(
+                                          imagePath: productImageUrl,
+                                          label: productName,
+                                        ),
+                                      );
+                                    },
+                                    itemCount: controller.circleAvatarProductsList.length,
+                                    scrollDirection: Axis.horizontal,
+                                  ),
                                 ),
-                              ),
 
                               kHeight,
                               //sliding windows
-                              Obx(() {
-                                return Skeletonizer(
-                                  enabled: controller.isAllProductsLoading.value,
-                                  child: SizedBox(
-                                    height: 230.w,
-                                    width: screenSize.width * 0.9,
-                                    child: controller.isAllProductsLoadingError.value
-                                        ? Center(
-                                            child: CustomTextWidget(
-                                              text: "Loading failed. Please check your internet connection",
-                                              textAlign: TextAlign.center,
-                                            ),
-                                          )
-                                        : PageView(
-                                            controller: pageController,
-                                            children: [
-                                              for (int i = 0; i < controller.slidingProductsList.length; i++)
-                                                SlidingImageTile(
-                                                  productDetails: controller.slidingProductsList[i],
-                                                ),
-                                            ],
-                                          ),
+                              if (controller.isAllProductsLoading.value)
+                                Center(
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10.r),
+                                    child: Skeletonizer(
+                                      enabled: true,
+                                      child: Container(
+                                        height: 230.w,
+                                        width: screenSize.width * 0.9,
+                                        color: Colors.amber,
+                                      ),
+                                    ),
                                   ),
-                                );
-                              }),
+                                )
+                              else
+                                SizedBox(
+                                  height: 230.w,
+                                  width: screenSize.width * 0.9,
+                                  child: controller.isAllProductsLoadingError.value
+                                      ? Center(
+                                          child: CustomTextWidget(
+                                            text: "Loading failed. Please check your internet connection",
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        )
+                                      : PageView(
+                                          controller: pageController,
+                                          children: [
+                                            for (int i = 0; i < controller.slidingProductsList.length; i++)
+                                              SlidingImageTile(
+                                                productDetails: controller.slidingProductsList[i],
+                                              ),
+                                          ],
+                                        ),
+                                ),
+
                               SizedBox(height: 10.w),
                               Center(
                                 child: Obx(() {
@@ -228,12 +252,24 @@ class HomeScreen extends StatelessWidget {
                               ),
                               Obx(() {
                                 return controller.isAllProductsLoading.value
-                                    ? SizedBox(
-                                        width: screenSize.width,
-                                        height: 300.w,
-                                        child: const Center(
-                                          child: CircularProgressIndicator(),
-                                        ),
+                                    ? Column(
+                                        children: [
+                                          GridView.count(
+                                            physics: const NeverScrollableScrollPhysics(),
+                                            shrinkWrap: true,
+                                            childAspectRatio: (20 / 30),
+                                            crossAxisCount: 2,
+                                            mainAxisSpacing: 0,
+                                            crossAxisSpacing: 5,
+                                            children: List.generate(
+                                              6,
+                                              (index) {
+                                                return ProductsListItemTileSkeleton();
+                                              },
+                                            ),
+                                          ),
+                                          kHeight,
+                                        ],
                                       )
                                     : Column(
                                         children: [
@@ -244,21 +280,24 @@ class HomeScreen extends StatelessWidget {
                                             crossAxisCount: 2,
                                             mainAxisSpacing: 0,
                                             crossAxisSpacing: 5,
-                                            children: List.generate(controller.allProducts.value.length, (index) {
-                                              final productDetails = controller.allProducts.value[index];
-                                              return GestureDetector(
-                                                onTap: () async {
-                                                  final String productId = controller.allProducts.value[index].product.productId.toString();
+                                            children: List.generate(
+                                              controller.allProducts.length,
+                                              (index) {
+                                                final productDetails = controller.allProducts[index];
+                                                return GestureDetector(
+                                                  onTap: () async {
+                                                    final String productId = controller.allProducts[index].product.productId.toString();
 
-                                                  // controller.getSimilarProducts(controller.allProducts.value, index);
+                                                    // controller.getSimilarProducts(controller.allProducts.value, index);
 
-                                                  Services().getProductDetailsAndGotoShopScreen(context, productId);
-                                                },
-                                                child: ProductsListItemTile(
-                                                  productDetails: productDetails,
-                                                ),
-                                              );
-                                            }),
+                                                    Services().getProductDetailsAndGotoShopScreen(context, productId);
+                                                  },
+                                                  child: ProductsListItemTile(
+                                                    productDetails: productDetails,
+                                                  ),
+                                                );
+                                              },
+                                            ),
                                           ),
                                           kHeight,
                                           // if (controller.allProducts.value.next != null)
@@ -575,16 +614,16 @@ class HomeScreen extends StatelessWidget {
                                   crossAxisCount: 2,
                                   mainAxisSpacing: 5,
                                   crossAxisSpacing: 5,
-                                  children: List.generate(searchController.searchResults.value.length, (index) {
+                                  children: List.generate(searchController.searchResults.length, (index) {
                                     count++;
                                     // print("total count :${searchController.searchResults.value.length}");
-                                    print("generating results");
-                                    print(count);
-                                    final productDetails = searchController.searchResults.value[index];
+                                    // print("generating results");
+                                    // print(count);
+                                    final productDetails = searchController.searchResults[index];
 
                                     return GestureDetector(
                                       onTap: () async {
-                                        final String productId = searchController.searchResults.value[index].product.productId.toString();
+                                        final String productId = searchController.searchResults[index].product.productId.toString();
                                         // controller.getSimilarProducts(controller.searchResults.value, index);
                                         // Get.to(() => ShopScreen());
                                         // await controller.getProductDetails(productId);
@@ -613,6 +652,27 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  void startAutoSlide() {
+    timer = Timer.periodic(
+      Duration(seconds: 4),
+      (timer) {
+        if (pageController.hasClients) {
+          if (controller.currentSlideNumber.value < controller.slidingProductsList.length - 1) {
+            controller.currentSlideNumber.value++;
+          } else {
+            controller.currentSlideNumber.value = 0;
+          }
+
+          pageController.animateToPage(
+            controller.currentSlideNumber.value,
+            duration: Duration(seconds: 1),
+            curve: Curves.easeIn,
+          );
+        }
+      },
     );
   }
 }

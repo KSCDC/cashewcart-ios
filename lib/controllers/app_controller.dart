@@ -21,8 +21,9 @@ class AppController extends GetxController {
   String userName = "";
   String email = "";
   String phoneNo = "";
-  String? state = null;
-  String? district = null;
+   RxInt currentSlideNumber = 0.obs;
+
+  RxBool isLoggedIn= false.obs;
 
   final key = enc.Key.fromLength(32);
   final iv = enc.IV.fromLength(8);
@@ -31,7 +32,7 @@ class AppController extends GetxController {
 
   // String selectedProductId = "";
   RxBool isLoading = false.obs;
-  RxBool isLoadingProfile = false.obs;
+
   RxBool isError = false.obs;
   RxBool isMyOrdersError = false.obs;
   RxBool isLoadingCart = false.obs;
@@ -48,7 +49,7 @@ class AppController extends GetxController {
   RxBool isTrendingLoading = false.obs;
 
   RxBool isDisplayingTrendingModelList = false.obs;
-  RxBool isLoadingAddress = false.obs;
+
   RxBool isAllProductsLoadingError = false.obs;
   RxBool isPlainCashewLoadingError = false.obs;
   RxBool isRoastedAndSaltedLoadingError = false.obs;
@@ -59,7 +60,6 @@ class AppController extends GetxController {
   RxBool isSponserdLoadingError = false.obs;
   RxBool isTrendingLoadingError = false.obs;
   RxBool isDisplayingTrendingModelListError = false.obs;
-  RxBool isLoadingAddressError = false.obs;
 
   RxString dropdownValue = 'Default'.obs;
   RxList<ProductModel> allProducts = <ProductModel>[].obs;
@@ -79,16 +79,15 @@ class AppController extends GetxController {
   var sortedSearchList;
 
   // Rxn<ProductReviewsModel> productReviews = Rxn<ProductReviewsModel>();
-  RxList<UserAddressModel> addressList = <UserAddressModel>[].obs;
 
   RxList<ProductDetailsModel> productDetailsList = <ProductDetailsModel>[].obs;
   RxList<ProductModel> slidingProductsList = <ProductModel>[].obs;
 
-  bool isAlreadyLoadedAllProducts = false;
+  RxBool isAlreadyLoadedAllProducts = false.obs;
   bool isAlreadyLoadedcircleAvatarProducts = false;
-  bool isAlreadyLoadedPlainCashews = false;
-  bool isAlreadyLoadedRoastedAndSaltedCashews = false;
-  bool isAlreadyLoadedValueAdded = false;
+  RxBool isAlreadyLoadedPlainCashews = false.obs;
+  RxBool isAlreadyLoadedRoastedAndSaltedCashews = false.obs;
+  RxBool isAlreadyLoadedValueAdded = false.obs;
   bool isAlreadyLoadedTrending = false;
   bool isAlreadyLoadedBestsellers = false;
   bool isAlreadyLoadedSponserd = false;
@@ -199,7 +198,7 @@ class AppController extends GetxController {
 
       // productList.shuffle();
 
-      isAlreadyLoadedAllProducts = true;
+      isAlreadyLoadedAllProducts.value = true;
     } else {
       isAllProductsLoadingError.value = true;
     }
@@ -209,15 +208,16 @@ class AppController extends GetxController {
 
   getCircleAvatarProductList() async {
     log("Getting circle list");
+    isCircleAvatarProductsLoading.value = true;
     circleAvatarProductsList.clear();
-    if (!isAlreadyLoadedPlainCashews) {
+    if (!isAlreadyLoadedPlainCashews.value) {
       await getProductsByCategory("PLAIN CASHEWS", "");
       log("loaded plain");
     }
-    if (!isAlreadyLoadedRoastedAndSaltedCashews) {
+    if (!isAlreadyLoadedRoastedAndSaltedCashews.value) {
       await getProductsByCategory("ROASTED AND SALTED CASHEWS", "");
     }
-    if (!isAlreadyLoadedValueAdded) {
+    if (!isAlreadyLoadedValueAdded.value) {
       await getProductsByCategory("VALUE ADDED CASHEW PRODUCTS", "");
     }
     if (plainCashews.isNotEmpty) {
@@ -229,6 +229,7 @@ class AppController extends GetxController {
     if (valueAdded.isNotEmpty) {
       circleAvatarProductsList.addAll(valueAdded);
     }
+    isCircleAvatarProductsLoading.value = false;
 
     log("circle list :${circleAvatarProductsList}");
   }
@@ -301,13 +302,14 @@ class AppController extends GetxController {
 
   getProductsByCategory(String category, String categoryName) async {
     // log("getting plain");
-    final response = await ApiServices().getProductByCategory(category, categoryName, plainCashewsPageNo.toString());
-    log(response.data.toString());
+
     if (category == "PLAIN CASHEWS") {
       isPlainCashewLoading.value = true;
       isPlainCashewLoadingError.value = false;
+      isAlreadyLoadedPlainCashews.value = false;
       // log("storing plained");
-      print(response.data);
+      final response = await ApiServices().getProductByCategory(category, categoryName);
+
       if (response != null) {
         final List<dynamic> responseData = response.data;
         final List<ProductModel> productList = responseData.map((productData) => ProductModel.fromJson(productData)).toList();
@@ -327,9 +329,10 @@ class AppController extends GetxController {
         // }
 
         print("Categories in roasted :$plainCashewSubCategories");
-        isAlreadyLoadedPlainCashews = true;
+        isAlreadyLoadedPlainCashews.value = true;
         //log("plain cas : ${plainCashews.value}");
       } else {
+        log("loading error for plain");
         isPlainCashewLoadingError.value = true;
       }
 
@@ -337,7 +340,10 @@ class AppController extends GetxController {
     } else if (category == "ROASTED AND SALTED CASHEWS") {
       isRoastedAndSaltedLoading.value = true;
       isRoastedAndSaltedLoadingError.value = false;
+      isAlreadyLoadedRoastedAndSaltedCashews.value = false;
       // final response = await ApiServices().getProductByCategory(category, categoryName, roastedAndSaltedPageNo.toString());
+      final response = await ApiServices().getProductByCategory(category, categoryName);
+
       print("storing roasted");
 
       if (response != null) {
@@ -358,7 +364,7 @@ class AppController extends GetxController {
           }
         }
 
-        isAlreadyLoadedRoastedAndSaltedCashews = true;
+        isAlreadyLoadedRoastedAndSaltedCashews.value = true;
       } else {
         isRoastedAndSaltedLoadingError.value = true;
       }
@@ -367,7 +373,8 @@ class AppController extends GetxController {
     } else if (category == "VALUE ADDED CASHEW PRODUCTS") {
       isValueAddedLoading.value = true;
       isValueAddedLoadingError.value = false;
-      // final response = await ApiServices().getProductByCategory(category, categoryName, valueAddedPageNo.toString());
+      isAlreadyLoadedValueAdded.value = false;
+      final response = await ApiServices().getProductByCategory(category, categoryName);
       if (response != null) {
         final List<dynamic> responseData = response.data;
         final List<ProductModel> productList = responseData.map((productData) => ProductModel.fromJson(productData)).toList();
@@ -386,7 +393,7 @@ class AppController extends GetxController {
           }
         }
 
-        isAlreadyLoadedValueAdded = true;
+        isAlreadyLoadedValueAdded.value = true;
       } else {
         isValueAddedLoadingError.value = true;
       }
@@ -404,50 +411,6 @@ class AppController extends GetxController {
       }
     }
     log("Similar products count : ${similarProducts.length}");
-  }
-
-  getProfileDetails() async {
-    isLoadingProfile.value = true;
-    isError.value = false;
-    final response = await ApiServices().getProfileDetails();
-    SharedPreferences sharedPref = await SharedPreferences.getInstance();
-    if (response != null) {
-      userName = response.data['name'];
-      email = response.data['email'];
-      phoneNo = response.data['phone_number'];
-      sharedPref.setString(PHONE, phoneNo);
-    } else {
-      isError.value = true;
-    }
-
-    print(userName);
-    isLoadingProfile.value = false;
-  }
-
-  getUserAddresses() async {
-    print("getting addresses");
-    isLoadingAddress.value = true;
-    isLoadingAddressError.value = false;
-    // productReviewsList.clear();
-    final List<UserAddressModel> tempList = [];
-    final response = await ApiServices().getUserAddresses();
-
-    if (response != null) {
-      final List<dynamic> responseData = response.data;
-      print(responseData);
-      for (final item in responseData) {
-        final address = UserAddressModel.fromJson(item);
-        tempList.add(address);
-      }
-
-      addressList.value = tempList;
-      state = addressList[0].state;
-      district = addressList[0].district;
-    } else {
-      isLoadingAddressError.value = true;
-    }
-
-    isLoadingAddress.value = false;
   }
 
   createOrder(String shippingAddressId, String billingAddressId) async {

@@ -6,18 +6,22 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:internship_sample/controllers/app_controller.dart';
 import 'package:internship_sample/controllers/cart_controller.dart';
+import 'package:internship_sample/controllers/profile_controller.dart';
 import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/main.dart';
 import 'package:internship_sample/presentation/cart/widgets/cart_item_skeleton.dart';
 import 'package:internship_sample/presentation/cart/widgets/cart_product_list_tile.dart';
+import 'package:internship_sample/presentation/widgets/no_access_tile.dart';
 import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
 import 'package:internship_sample/presentation/place_order/multiple_item_place_order_screen.dart';
 import 'package:internship_sample/presentation/shop/widgets/custom_text_icon_button.dart';
+import 'package:internship_sample/presentation/splash/splash_screen.dart';
 import 'package:internship_sample/presentation/widgets/custom_appbar.dart';
 import 'package:internship_sample/presentation/widgets/custom_elevated_button.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 import 'package:internship_sample/services/api_services.dart';
+import 'package:internship_sample/services/services.dart';
 import 'package:lottie/lottie.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -28,13 +32,14 @@ class CartScreen extends StatelessWidget {
   CartScreen({Key? key}) : super(key: key);
   AppController controller = Get.put(AppController());
   CartController cartController = Get.put(CartController());
+  ProfileController profileController = Get.put(ProfileController());
   @override
   Widget build(BuildContext context) {
     grantTotalNotifier.value = 0;
 
     final screenSize = MediaQuery.of(context).size;
     // grantTotalNotifier.value = 0;
-    cartController.getCartList();
+    // cartController.getCartList();
 
     print("building");
     // print("product name :::::${controller.cartProducts.value.results[0].product.product.name}");
@@ -68,7 +73,9 @@ class CartScreen extends StatelessWidget {
               Obx(() {
                 getGrandTotal();
                 print("cart count ${cartController.cartProducts.value.count}");
-                if (controller.isLoadingCart.value) {
+                if (!controller.isLoggedIn.value) {
+                  return NoAccessTile();
+                } else if (cartController.isLoading.value) {
                   return ListView.builder(
                     itemBuilder: (context, index) {
                       return CartItemSkeleton();
@@ -144,7 +151,7 @@ class CartScreen extends StatelessWidget {
                                       );
                                       ScaffoldMessenger.of(context).showSnackBar(snackBar);
                                     } else {
-                                      await controller.getUserAddresses();
+                                      await profileController.getUserAddresses();
                                       Get.to(
                                         () => MultipleItemPlaceOrderScreen(
                                           productList: cartController.cartProducts.value.results,

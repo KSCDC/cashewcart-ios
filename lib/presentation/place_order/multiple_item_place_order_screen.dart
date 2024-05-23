@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:internship_sample/controllers/app_controller.dart';
+import 'package:internship_sample/controllers/profile_controller.dart';
 import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/core/razorpay_key/razorpay_key.dart';
@@ -37,6 +38,7 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
   final List<Result> productList;
   final double grandTotal;
   AppController controller = Get.put(AppController());
+  ProfileController profileController = Get.put(ProfileController());
 
   ValueNotifier<bool> useSameAddressNotifier = ValueNotifier(true);
 
@@ -112,16 +114,16 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
                     ),
                     kHeight,
                     //delivery addresses
-                    if (controller.addressList.isNotEmpty)
+                    if (profileController.addressList.isNotEmpty)
                       ValueListenableBuilder(
                           valueListenable: useSameAddressNotifier,
                           builder: (context, newValue, _) {
                             return Row(
                               children: [
                                 SizedBox(
-                                  width: screenSize.width * 0.8,
+                                  // width: screenSize.width * 0.8,
                                   child: CustomTextWidget(
-                                    text: "Use Delivery Address as Billing Address :",
+                                    text: "Use same Delivery Address\nand Billing Address :",
                                     fontweight: FontWeight.w600,
                                   ),
                                 ),
@@ -137,9 +139,10 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
                               ],
                             );
                           }),
+                    kHeight,
 
                     Obx(() {
-                      if (controller.addressList.isEmpty) {
+                      if (profileController.addressList.isEmpty) {
                         useSameAddressNotifier.value = false;
                         return CustomTextWidget(text: "No saved addresses!");
                       } else {
@@ -176,7 +179,7 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
                         TextEditingController _stateController = TextEditingController();
                         TextEditingController _postalcodeController = TextEditingController();
                         TextEditingController _phoneNumberController = TextEditingController();
-                        controller.getUserAddresses();
+                        profileController.getUserAddresses();
                         await Services().showAddressEditPopup(
                           true,
                           context,
@@ -258,7 +261,7 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
                                     ),
                                     // Spacer(),
                                     CustomTextWidget(
-                                      text: total.toString(),
+                                      text: total.toStringAsFixed(2),
                                       // fontColor: kMainThemeColor,
                                       fontweight: FontWeight.w600,
                                     ),
@@ -285,7 +288,7 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
                             valueListenable: grantTotalNotifier,
                             builder: (context, total, _) {
                               return CustomTextWidget(
-                                text: "₹ $totalProductPrice",
+                                text: "₹ ${totalProductPrice.toStringAsFixed(2)}",
                                 fontSize: 16,
                                 fontweight: FontWeight.w600,
                               );
@@ -393,7 +396,7 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
               width: screenSize.width * 0.5,
               child: GestureDetector(
                 onTap: () async {
-                  if (controller.addressList.isEmpty) {
+                  if (profileController.addressList.isEmpty) {
                     Services().showCustomSnackBar(context, "No address found. Add an address to continue");
                   } else {
                     // context.loaderOverlay.show();
@@ -417,15 +420,15 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
     // await controller.getProfileDetails();
     // SharedPreferences sharedPref = await SharedPreferences.getInstance();
     // final String phoneNo = sharedPref.getString(PHONE)!;
-    print("List length = $productList");
+    // print("List length = $productList");
     for (var product in productList) {
-      print("Working loop");
       // final product = item['product'];
       orderingProductsList.add(product);
     }
-    print("delivery ${controller.addressList[deliveryAddressRadioNotifier.value].id}");
-    print("bill ${controller.addressList[billingAddressRadioNotifier.value].id}");
-    final response = await ApiServices().placeOrder(controller.addressList[deliveryAddressRadioNotifier.value].id.toString(), controller.addressList[billingAddressRadioNotifier.value].id.toString());
+    // print("delivery ${profileController.addressList[deliveryAddressRadioNotifier.value].id}");
+    // print("bill ${profileController.addressList[billingAddressRadioNotifier.value].id}");
+    final response =
+        await ApiServices().placeOrder(profileController.addressList[deliveryAddressRadioNotifier.value].id.toString(), profileController.addressList[billingAddressRadioNotifier.value].id.toString());
     if (response != null) {
       // String phoneNumber = response.data['billing_phone_number'].toString();
       // String _orderId = response.data['order_id'].toString();

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:internship_sample/controllers/app_controller.dart';
+import 'package:internship_sample/controllers/profile_controller.dart';
 import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/core/states_and_districts.dart';
 import 'package:internship_sample/models/states_and_districts_model.dart';
@@ -56,6 +57,7 @@ class _AddOrEditAddressState extends State<AddOrEditAddress> {
   }
 
   AppController controller = Get.put(AppController());
+  ProfileController profileController = Get.put(ProfileController());
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +96,7 @@ class _AddOrEditAddressState extends State<AddOrEditAddress> {
             setState(() {
               widget.state = newValue!;
               widget.district = null;
-              controller.state = newValue;
+              profileController.state = newValue;
             });
           },
           items: models.map((model) {
@@ -116,7 +118,7 @@ class _AddOrEditAddressState extends State<AddOrEditAddress> {
           onChanged: (newValue) {
             setState(() {
               widget.district = newValue;
-              controller.district = newValue!;
+              profileController.district = newValue!;
             });
           },
           items: widget.state != null
@@ -149,6 +151,7 @@ class _AddOrEditAddressState extends State<AddOrEditAddress> {
           keyboardType: TextInputType.number,
           maxLength: 10,
           decoration: InputDecoration(
+            prefixText: "+91",
             labelText: 'Phone Number',
           ),
         ),

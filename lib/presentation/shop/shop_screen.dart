@@ -12,15 +12,6 @@ import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/main.dart';
 import 'package:internship_sample/models/product_details_model.dart';
 import 'package:internship_sample/models/trending_product_model.dart';
-import 'package:internship_sample/presentation/checkout/checkout_screen.dart';
-import 'package:internship_sample/presentation/cart/cart_screen.dart';
-import 'package:internship_sample/presentation/home/home_screen.dart';
-import 'package:internship_sample/presentation/main_page/main_page_screen.dart';
-import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
-import 'package:internship_sample/presentation/place_order/place_order_screen.dart';
-import 'package:internship_sample/presentation/place_order/widgets/address_section.dart';
-import 'package:internship_sample/presentation/shop/widgets/custom_styled_shop_page_button.dart';
-import 'package:internship_sample/presentation/shop/widgets/custom_text_icon_button.dart';
 import 'package:internship_sample/presentation/shop/widgets/review_tile.dart';
 import 'package:internship_sample/presentation/shop/widgets/shop_product_details_tile.dart';
 import 'package:internship_sample/presentation/widgets/custom_appbar.dart';
@@ -75,33 +66,34 @@ class ShopScreen extends StatelessWidget {
       //   ),
       // ),
       appBar: AppBar(
-          // backgroundColor: kMainThemeColor,
-          centerTitle: true,
-          leading: IconButton(
-            onPressed: () {
-              if (Navigator.canPop(context)) {
-                Navigator.pop(context);
-                print("Going back");
-                productDetailsController.isLoading.value = false;
-                log("is loading : ${productDetailsController.isLoading.value}");
-              }
-            },
-            icon: Icon(Icons.arrow_back_ios_new),
-          ),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: InkWell(
-                onTap: () {
-                  Get.back();
-                },
-                child: SvgPicture.asset(
-                  "lib/core/assets/images/home_icon.svg",
-                  color: Colors.black,
-                ),
-              ),
-            ),
-          ]),
+        // backgroundColor: kMainThemeColor,
+        centerTitle: true,
+        leading: IconButton(
+          onPressed: () {
+            if (Navigator.canPop(context)) {
+              Navigator.pop(context);
+              print("Going back");
+              productDetailsController.isLoading.value = false;
+              log("is loading : ${productDetailsController.isLoading.value}");
+            }
+          },
+          icon: Icon(Icons.arrow_back_ios_new),
+        ),
+        // actions: [
+        //   Padding(
+        //     padding: const EdgeInsets.symmetric(horizontal: 10),
+        //     child: InkWell(
+        //       onTap: () {
+        //         Get.back();
+        //       },
+        //       child: SvgPicture.asset(
+        //         "lib/core/assets/images/home_icon.svg",
+        //         color: Colors.black,
+        //       ),
+        //     ),
+        //   ),
+        // ],
+      ),
 
       body: LoaderOverlay(
         child: SingleChildScrollView(
