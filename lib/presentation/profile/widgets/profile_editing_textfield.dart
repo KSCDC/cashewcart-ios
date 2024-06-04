@@ -5,12 +5,13 @@ import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 class ProfileEditingTextField extends StatelessWidget {
   ProfileEditingTextField({
     super.key,
+    this.prefix = null,
     required this.hintText,
     required this.controller,
     this.obscureText = false,
     this.enabled = true,
   });
-
+  final Widget? prefix;
   final String hintText;
   final TextEditingController controller;
   final bool obscureText;
@@ -32,6 +33,7 @@ class ProfileEditingTextField extends StatelessWidget {
           style: const TextStyle(color: Colors.black),
           textCapitalization: TextCapitalization.sentences,
           decoration: InputDecoration(
+            prefix: prefix,
             fillColor: Colors.white,
             border: const OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(10)),

@@ -8,6 +8,7 @@ import 'package:internship_sample/core/constants.dart';
 import 'package:internship_sample/main.dart';
 import 'package:internship_sample/models/product_model.dart';
 import 'package:internship_sample/presentation/home/home_screen.dart';
+import 'package:internship_sample/presentation/main_page/main_page_screen.dart';
 import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
 import 'package:internship_sample/presentation/shop/shop_screen.dart';
 import 'package:internship_sample/presentation/side_bar/side_bar.dart';
@@ -79,7 +80,7 @@ class TrendingModelProductListingScreen extends StatelessWidget {
                                         //     "image list ${controller.productDisplayList.valueindex]}");
 
                                         final String productId = controller.productDisplayList2.value[index].product.productId.toString();
-                                        Services().getProductDetailsAndGotoShopScreen(context,productId);
+                                        Services().getProductDetailsAndGotoShopScreen(context, productId);
                                         // controller.getSimilarProducts(controller.plainCashews.value, index);
                                         // await controller.getProductDetails(productId);
                                         // controller.productDetailsList.add(controller.productDetails.value!);

@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,23 +13,12 @@ import 'package:internship_sample/controllers/search_controller.dart';
 import 'package:internship_sample/core/base_url.dart';
 import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/core/constants.dart';
-import 'package:internship_sample/main.dart';
-import 'package:internship_sample/models/product_details_model.dart';
-import 'package:internship_sample/models/product_model.dart';
 import 'package:internship_sample/presentation/home/widgets/circle_avatar_list_item.dart';
-import 'package:internship_sample/presentation/home/widgets/buy_now_tile.dart';
-import 'package:internship_sample/presentation/home/widgets/value_added_products_tile.dart';
 import 'package:internship_sample/presentation/home/widgets/sliding_image_tile.dart';
-import 'package:internship_sample/presentation/home/widgets/sponsered_product_tile.dart';
-import 'package:internship_sample/presentation/home/widgets/view_offer_tile.dart';
-import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
-import 'package:internship_sample/presentation/product_list/trending_model_product_listing_screen.dart';
-import 'package:internship_sample/presentation/shop/shop_screen.dart';
 import 'package:internship_sample/presentation/side_bar/side_bar.dart';
 import 'package:internship_sample/presentation/widgets/products_list_item_skeleton.dart';
 import 'package:internship_sample/presentation/widgets/products_list_item_tile.dart';
 import 'package:internship_sample/presentation/widgets/search_section_tile.dart';
-import 'package:internship_sample/presentation/widgets/custom_search_filtering_button.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 import 'package:internship_sample/presentation/widgets/main_appbar.dart';
 import 'package:internship_sample/services/services.dart';
@@ -49,15 +40,17 @@ class HomeScreen extends StatelessWidget {
   // SearchController searchController = Get.put(SearchController());
   SearchResultController searchController = Get.put(SearchResultController());
   Timer? timer;
+  bool isIcrementing = true;
 
   @override
   Widget build(BuildContext context) {
+    controller.currentSlideNumber.value = 0;
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
         statusBarColor: kMainThemeColor,
       ),
     );
-    startAutoSlide();
+    // startAutoSlide();
 
     final screenSize = MediaQuery.of(context).size;
     return Scaffold(
@@ -78,14 +71,6 @@ class HomeScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       Obx(() {
-                        // if (controller.isLoading.value) {
-                        //   return Center(
-                        //     child: CircularProgressIndicator(),
-                        //   );
-                        // } else {
-                        // print("count : ${controller.searchResults.value.count}");
-                        // print("total count :${controller.searchResults.value.results!.length}");
-                        // print("have seawrchresult : ${searchController.haveSearchResult.value}");
                         if (!searchController.isSearchMode.value) {
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -167,7 +152,9 @@ class HomeScreen extends StatelessWidget {
                                 ),
 
                               kHeight,
-                              //sliding windows
+
+                              //sliding new products windows
+
                               if (controller.isAllProductsLoading.value)
                                 Center(
                                   child: ClipRRect(
@@ -184,65 +171,60 @@ class HomeScreen extends StatelessWidget {
                                 )
                               else
                                 SizedBox(
-                                  height: 230.w,
-                                  width: screenSize.width * 0.9,
-                                  child: controller.isAllProductsLoadingError.value
-                                      ? Center(
-                                          child: CustomTextWidget(
-                                            text: "Loading failed. Please check your internet connection",
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        )
-                                      : PageView(
-                                          controller: pageController,
-                                          children: [
-                                            for (int i = 0; i < controller.slidingProductsList.length; i++)
-                                              SlidingImageTile(
-                                                productDetails: controller.slidingProductsList[i],
-                                              ),
-                                          ],
-                                        ),
-                                ),
+                                    height: 230.w,
+                                    width: screenSize.width * 0.95,
+                                    child: controller.isAllProductsLoadingError.value
+                                        ? Center(
+                                            child: CustomTextWidget(
+                                              text: "Loading failed. Please check your internet connection",
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          )
+                                        : CarouselSlider(
+                                            options: CarouselOptions(
+                                              height: 350.w,
+                                              autoPlay: true,
+                                              autoPlayInterval: Duration(seconds: 5),
+                                              // padEnds: true,
+                                              viewportFraction: 0.8,
+                                              enlargeCenterPage: true,
+                                              enlargeFactor: 0.4,
+                                              onPageChanged: (index, reason) {
+                                                controller.currentSlideNumber.value = index;
+                                              },
+                                            ),
+                                            items: controller.slidingProductsList.map((product) {
+                                              return Builder(
+                                                builder: (BuildContext context) {
+                                                  return SizedBox(
+                                                    width: screenSize.width * 0.95,
+                                                    child: SlidingImageTile(
+                                                      productDetails: product,
+                                                    ),
+                                                  );
+                                                },
+                                              );
+                                            }).toList(),
+                                          )),
 
                               SizedBox(height: 10.w),
-                              Center(
-                                child: Obx(() {
-                                  return controller.slidingProductsList.isNotEmpty
-                                      ? SmoothPageIndicator(
-                                          controller: pageController,
-                                          count: controller.slidingProductsList.length,
-                                          effect: const WormEffect(
-                                            dotColor: Color(0xFFDEDBDB),
-                                            activeDotColor: Color(0xFFFFA3B3),
-                                            dotHeight: 10,
-                                            dotWidth: 10,
-                                            spacing: 15,
-                                          ),
-                                          onDotClicked: (index) {
-                                            pageController.animateToPage(
-                                              index,
-                                              duration: const Duration(milliseconds: 500),
-                                              curve: Curves.easeIn,
-                                            );
-                                          },
-                                        )
-                                      : SizedBox();
-                                }),
-                              ),
-
-                              // SizedBox(
-                              //   width: double.infinity,
-                              //   child: Image(
-                              //     image: AssetImage("lib/core/assets/images/home/banners/Premium_cashew_kernels.jpg"),
-                              //   ),
-                              // ),
-                              // SizedBox(height: 10),
-                              // ViewOfferTile(
-                              //   color: Color(0xFF4392F9),
-                              //   mainLabel: "Deal of the Day",
-                              //   icon: Icons.timer_outlined,
-                              //   subLabel: "22h 55m 20s remaining",
-                              // ),
+                              Obx(() {
+                                return Center(
+                                  child: DotsIndicator(
+                                    dotsCount: controller.slidingProductsList.length == 0 ? 8 : controller.slidingProductsList.length,
+                                    position: controller.currentSlideNumber.value,
+                                    decorator: DotsDecorator(
+                                      activeColor: Colors.red,
+                                      color: Colors.grey,
+                                      size: const Size.square(9.0),
+                                      activeSize: const Size(18.0, 9.0),
+                                      activeShape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(5.0),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }),
 
                               kHeight,
                               CustomTextWidget(
@@ -290,6 +272,7 @@ class HomeScreen extends StatelessWidget {
 
                                                     // controller.getSimilarProducts(controller.allProducts.value, index);
 
+                                                    print("stopped");
                                                     Services().getProductDetailsAndGotoShopScreen(context, productId);
                                                   },
                                                   child: ProductsListItemTile(
@@ -299,21 +282,11 @@ class HomeScreen extends StatelessWidget {
                                               },
                                             ),
                                           ),
-                                          kHeight,
-                                          // if (controller.allProducts.value.next != null)
-                                          //   GestureDetector(
-                                          //     onTap: () {
-                                          //       controller.allProductsPageNo++;
-                                          //       controller.getAllProducts();
-                                          //     },
-                                          //     child: CustomTextWidget(text: "Load More"),
-                                          //   ),
-                                          kHeight,
                                         ],
                                       );
                               }),
 
-                              kHeight,
+                              // kHeight,
                               Container(
                                 height: 84.w,
                                 width: screenSize.width * 0.9,
@@ -512,132 +485,44 @@ class HomeScreen extends StatelessWidget {
                               ),
                               kHeight,
 
-                              //special offers
-
-                              //buy now
-
-                              // Obx(() {
-                              //   return controller.isPlainCashewLoading.value
-                              //       ? const Center(
-                              //           child: CircularProgressIndicator(),
-                              //         )
-                              //       : BuyNowTile(
-                              //           productDetails: controller.allProducts.value,
-                              //         );
-                              // }),
-
-                              // Trending
-                              // Obx(() {
-                              //   return controller.isTrendingLoading.value
-                              //       ? const Center(
-                              //           child: CircularProgressIndicator(),
-                              //         )
-                              //       : controller.isTrendingLoadingError.value
-                              //           ? const Center(
-                              //               child: CustomTextWidget(text: "Loading trending products failed. Please check your internet connection"),
-                              //             )
-                              //           : ViewOfferTile(
-                              //               onPressed: () {
-                              //                 if (!controller.isAlreadyLoadedTrending) {
-                              //                   controller.getTrendingProducts();
-                              //                 }
-
-                              //                 controller.productDisplayList2 = controller.trending;
-                              //                 // print("Trending : ${controller.productDisplayList2.value.count}");
-                              //                 // previousPageIndexes.add(bottomNavbarIndexNotifier.value);
-                              //                 // bottomNavbarIndexNotifier.value = 9;
-                              //                 Get.to(() => TrendingModelProductListingScreen(
-                              //                       title: "Trending Products",
-                              //                     ));
-                              //               },
-                              //               color: kMainThemeColor,
-                              //               mainLabel: "Trending Products",
-                              //               icon: Icons.calendar_month,
-                              //               subLabel: "Last Date 29/02/22",
-                              //             );
-                              // }),
-
                               SizedBox(height: 10.w),
-
-                              // value added products
-
-                              // ValueAddedProductsTile(),
-                              SizedBox(height: 15.w),
-
-                              //Sponsered product
-                              // Obx(
-                              //   () {
-                              //     if (controller.sponserd.value.isEmpty) {
-                              //       return SizedBox(
-                              //         width: screenSize.width * 0.95,
-                              //         height: screenSize.width * 0.8,
-                              //         child: const Center(child: CustomTextWidget(text: "No sponserd products right now")),
-                              //       );
-                              //     } else {
-                              //       // log(controller.sponserd.value.toString());
-                              //       final String imagePath = controller.sponserd.value[0].product.productImages.isNotEmpty
-                              //           ? "$baseUrl${controller.sponserd.value[0].product!.productImages[0].productImage}"
-                              //           : "https://t3.ftcdn.net/jpg/05/04/28/96/240_F_504289605_zehJiK0tCuZLP2MdfFBpcJdOVxKLnXg1.jpg";
-                              //       return controller.isSponserdLoading.value
-                              //           ? const Center(
-                              //               child: CircularProgressIndicator(),
-                              //             )
-                              //           : GestureDetector(
-                              //               onTap: () {
-                              //                 final String productId = controller.sponserd.value[0].product.productId.toString();
-                              //                 Services().getProductDetailsAndGotoShopScreen(context,productId);
-                              //               },
-                              //               child: SponseredProductTile(
-                              //                 imagePath: imagePath,
-                              //               ),
-                              //             );
-                              //     }
-                              //   },
-                              // ),
                             ],
                           );
                         } else {
                           int count = 0;
-                          // print("displaying search results");
                           // //log("total result count :${controller.searchResults.value.length}");
-                          return searchController.searchResults.length == 0
-                              ? Center(
-                                  child: CustomTextWidget(
-                                    text: "Product not found",
-                                    fontSize: 16.sp,
-                                  ),
-                                )
-                              : GridView.count(
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  shrinkWrap: true,
-                                  childAspectRatio: (20 / 30),
-                                  crossAxisCount: 2,
-                                  mainAxisSpacing: 5,
-                                  crossAxisSpacing: 5,
-                                  children: List.generate(searchController.searchResults.length, (index) {
-                                    count++;
-                                    // print("total count :${searchController.searchResults.value.length}");
-                                    // print("generating results");
-                                    // print(count);
-                                    final productDetails = searchController.searchResults[index];
-
-                                    return GestureDetector(
-                                      onTap: () async {
-                                        final String productId = searchController.searchResults[index].product.productId.toString();
-                                        // controller.getSimilarProducts(controller.searchResults.value, index);
-                                        // Get.to(() => ShopScreen());
-                                        // await controller.getProductDetails(productId);
-                                        // controller.productDetailsList.add(controller.productDetails.value!);
-                                        // previousPageIndexes.add(bottomNavbarIndexNotifier.value);
-                                        // bottomNavbarIndexNotifier.value = 4;
-                                        Services().getProductDetailsAndGotoShopScreen(context, productId);
-                                      },
-                                      child: ProductsListItemTile(
-                                        productDetails: productDetails,
+                          return searchController.isLoading.value
+                              ? Center(child: CircularProgressIndicator())
+                              : searchController.searchResults.length == 0
+                                  ? Center(
+                                      child: CustomTextWidget(
+                                        text: "Product not found",
+                                        fontSize: 16.sp,
                                       ),
+                                    )
+                                  : GridView.count(
+                                      physics: const NeverScrollableScrollPhysics(),
+                                      shrinkWrap: true,
+                                      childAspectRatio: (20 / 30),
+                                      crossAxisCount: 2,
+                                      mainAxisSpacing: 5,
+                                      crossAxisSpacing: 5,
+                                      children: List.generate(searchController.searchResults.length, (index) {
+                                        count++;
+                                        final productDetails = searchController.searchResults[index];
+
+                                        return GestureDetector(
+                                          onTap: () async {
+                                            final String productId = searchController.searchResults[index].product.productId.toString();
+
+                                            Services().getProductDetailsAndGotoShopScreen(context, productId);
+                                          },
+                                          child: ProductsListItemTile(
+                                            productDetails: productDetails,
+                                          ),
+                                        );
+                                      }),
                                     );
-                                  }),
-                                );
                         }
                         // }
                       }),
@@ -652,27 +537,6 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-
-  void startAutoSlide() {
-    timer = Timer.periodic(
-      Duration(seconds: 4),
-      (timer) {
-        if (pageController.hasClients) {
-          if (controller.currentSlideNumber.value < controller.slidingProductsList.length - 1) {
-            controller.currentSlideNumber.value++;
-          } else {
-            controller.currentSlideNumber.value = 0;
-          }
-
-          pageController.animateToPage(
-            controller.currentSlideNumber.value,
-            duration: Duration(seconds: 1),
-            curve: Curves.easeIn,
-          );
-        }
-      },
     );
   }
 }

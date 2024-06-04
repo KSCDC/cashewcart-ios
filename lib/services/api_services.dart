@@ -64,6 +64,7 @@ class ApiServices {
       if (response.statusCode == 200 || response.statusCode == 201) {
         print("Registration successful");
         Services().showCustomSnackBar(context, "Account created successfully");
+        controller.isLoggedIn.value = true;
         return response;
       } else {
         print("Unexpected status code: ${response.statusCode}");
@@ -112,6 +113,7 @@ class ApiServices {
       if (response.statusCode == 200 || response.statusCode == 201) {
         print("Login successful");
         Services().showCustomSnackBar(context, "Login successful");
+        controller.isLoggedIn.value = true;
 
         return response;
       } else {

@@ -162,8 +162,8 @@ class MainPageScreen extends StatelessWidget {
               return CupertinoTabView(
                 builder: (context) {
                   // controller.getProfileDetails();
-                  log("Emaill :${SplashScreen.email}");
-                  if (SplashScreen.email != null) {
+                  log("Emaill :${controller.isLoggedIn.value}");
+                  if (controller.isLoggedIn.value) {
                     if (!profileController.isLoadingProfile.value) profileController.getProfileDetails();
                   } else {
                     // Services().showLoginAlert(context, "Please login to access Account");

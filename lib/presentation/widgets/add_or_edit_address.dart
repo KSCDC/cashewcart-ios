@@ -151,7 +151,7 @@ class _AddOrEditAddressState extends State<AddOrEditAddress> {
           keyboardType: TextInputType.number,
           maxLength: 10,
           decoration: InputDecoration(
-            prefixText: "+91",
+            prefixText: "+91 ",
             labelText: 'Phone Number',
           ),
         ),

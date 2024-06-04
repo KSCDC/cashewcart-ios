@@ -46,16 +46,16 @@ class CartScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: appBackgroundColor,
       appBar: AppBar(
-        leading: GestureDetector(
-          onTap: () {
-            // bottomNavbarIndexNotifier.value = previousPageIndexes.last;
-            // if (previousPageIndexes.length > 1) {
-            //   previousPageIndexes.removeLast();
-            // }
-            Get.back();
-          },
-          child: Icon(Icons.arrow_back_ios_rounded),
-        ),
+        // leading: GestureDetector(
+        //   onTap: () {
+        //     // bottomNavbarIndexNotifier.value = previousPageIndexes.last;
+        //     // if (previousPageIndexes.length > 1) {
+        //     //   previousPageIndexes.removeLast();
+        //     // }
+        //     Get.back();
+        //   },
+        //   child: Icon(Icons.arrow_back_ios_rounded),
+        // ),
         centerTitle: true,
         title: CustomTextWidget(
           text: "Cart",
@@ -74,6 +74,7 @@ class CartScreen extends StatelessWidget {
                 getGrandTotal();
                 print("cart count ${cartController.cartProducts.value.count}");
                 if (!controller.isLoggedIn.value) {
+                  log("Not logged in");
                   return NoAccessTile();
                 } else if (cartController.isLoading.value) {
                   return ListView.builder(
@@ -187,7 +188,7 @@ class CartScreen extends StatelessWidget {
     print(cartController.cartProducts.value);
     for (int i = 0; i < cartController.cartProducts.value.count; i++) {
       // final int selectedCategory = cartProductsList[i]['category'];
-      final String price = cartController.cartProducts.value.results[i].product.sellingPrice.toString();
+      final String price = cartController.cartProducts.value.results[i].total.toString();
       final int count = cartController.cartProducts.value.results[i].purchaseCount;
       final double total = double.parse(price) * count;
       print("prices are ${price} * ${count}== ${total}");

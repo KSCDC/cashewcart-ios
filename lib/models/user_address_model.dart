@@ -15,6 +15,8 @@ class UserAddressModel {
   String postalCode;
   String phoneNumber;
   bool isDefault;
+  String deliveryChargePercentage;
+  String additionalChargePercentage;
 
   UserAddressModel({
     required this.id,
@@ -27,6 +29,8 @@ class UserAddressModel {
     required this.postalCode,
     required this.phoneNumber,
     required this.isDefault,
+    required this.deliveryChargePercentage,
+    required this.additionalChargePercentage,
   });
 
   factory UserAddressModel.fromJson(Map<String, dynamic> json) => UserAddressModel(
@@ -40,18 +44,20 @@ class UserAddressModel {
         postalCode: json["postal_code"],
         phoneNumber: json["phone_number"],
         isDefault: json["is_default"],
+        deliveryChargePercentage: json["delivery_charge_percentage"],
+        additionalChargePercentage: json["additional_charge_percentage"],
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
         "user": user,
-        "name":name,
+        "name": name,
         "street_address": streetAddress,
         "region": region,
         "district": district,
         "state": state,
         "postal_code": postalCode,
-        "phone_number":phoneNumber,
+        "phone_number": phoneNumber,
         "is_default": isDefault,
       };
 }

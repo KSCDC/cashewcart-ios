@@ -25,6 +25,7 @@ class ProductsListItemTile extends StatelessWidget {
     final String description = productDetails.product.description;
     String originalPrice;
     String offerPrice;
+    double priceWithGST = 0;
     num numberOfRatings = productDetails.product.averageRating;
     try {
       if (imagePath == '') {
@@ -35,6 +36,10 @@ class ProductsListItemTile extends StatelessWidget {
 
       originalPrice = productDetails.actualPrice;
       offerPrice = productDetails.sellingPrice;
+      double cgstPrice = double.parse(productDetails.sellingPrice) * (double.parse(productDetails.cgstRate) / 100);
+      double sgstPrice = double.parse(productDetails.sellingPrice) * (double.parse(productDetails.cgstRate) / 100);
+      double sellingPrice = double.parse(productDetails.sellingPrice);
+      priceWithGST = sellingPrice + cgstPrice + sgstPrice;
     } catch (e) {
       print("err :$e");
       // trending product model dont have getter actual price selling price etc. so the exception will occur
@@ -114,9 +119,10 @@ class ProductsListItemTile extends StatelessWidget {
                       ),
                       if (offerPrice != "" || originalPrice != "")
                         CustomTextWidget(
-                          text: "₹${offerPrice}",
+                          text: "₹ ${priceWithGST!.toStringAsFixed(2)}",
                           fontSize: 12.sp,
-                          fontweight: FontWeight.w500,
+                          fontweight: FontWeight.w600,
+                          fontColor: Colors.red,
                         ),
 
                       //here from the api, if actual price and selling price are same, the discount percentage is coming as 100 (But actually it is zero)

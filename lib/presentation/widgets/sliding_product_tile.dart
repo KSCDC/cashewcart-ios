@@ -80,7 +80,7 @@ class SlideItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("Image path: $imagePath");
+    // print("Image path: $imagePath");
     final screenSize = MediaQuery.of(context).size;
     return Padding(
       padding: const EdgeInsets.all(8.0),

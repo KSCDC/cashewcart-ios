@@ -80,7 +80,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       Get.offAll(() => MainPageScreen());
     } else {
       print("dont have email and password");
-       controller.isLoggedIn.value = true;
+      controller.isLoggedIn.value = false;
       Get.offAll(() => OnboardingScreen());
     }
   }

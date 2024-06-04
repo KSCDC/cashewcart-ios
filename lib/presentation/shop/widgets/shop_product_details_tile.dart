@@ -32,6 +32,7 @@ class ShopProductDetailsTile extends StatelessWidget {
   // AppController controller = Get.put(AppController());
   ProductDetailsController productDetailsController = Get.put(ProductDetailsController());
   CartController cartController = Get.put(CartController());
+  double priceWithGST = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +46,12 @@ class ShopProductDetailsTile extends StatelessWidget {
           ValueListenableBuilder(
               valueListenable: sizeSelectNotifier,
               builder: (context, value, _) {
+                double cgstPrice = double.parse(productDetailsController.productDetails.value!.productVariants[value].sellingPrice) *
+                    (double.parse(productDetailsController.productDetails.value!.productVariants[value].cgstRate) / 100);
+                double sgstPrice = double.parse(productDetailsController.productDetails.value!.productVariants[value].sellingPrice) *
+                    (double.parse(productDetailsController.productDetails.value!.productVariants[value].cgstRate) / 100);
+                double sellingPrice = double.parse(productDetailsController.productDetails.value!.productVariants[value].sellingPrice);
+                priceWithGST = sellingPrice + cgstPrice + sgstPrice;
                 return Row(
                   children: [
                     CustomTextWidget(
@@ -127,7 +134,7 @@ class ShopProductDetailsTile extends StatelessWidget {
                         if (productDetailsController.productDetails.value!.productVariants[value].actualPrice != productDetailsController.productDetails.value!.productVariants[value].sellingPrice)
                           kWidth,
                         CustomTextWidget(
-                          text: "₹ ${double.parse(productDetailsController.productDetails.value!.productVariants[value].sellingPrice).toStringAsFixed(2)}",
+                          text: "₹ ${priceWithGST.toStringAsFixed(2)}",
                           fontSize: 24.sp,
                           fontweight: FontWeight.w600,
                           fontColor: kMainThemeColor,
@@ -150,15 +157,16 @@ class ShopProductDetailsTile extends StatelessWidget {
                           width: 200.w,
                           decoration: BoxDecoration(
                             border: Border.all(
-                              color: Colors.red, // Set the border color
-                              width: 1, // Set the border width
+                              color: Color(0xFFdc2626), // Set the border color
+                              width: 2, // Set the border width
                             ),
                             borderRadius: BorderRadius.circular(5),
                           ),
                           child: Center(
                             child: CustomTextWidget(
                               text: double.parse(weight) < 1000 ? "$weight GM Out of stock" : "${double.parse(weight) / 1000} KG Out of stock",
-                              fontColor: Colors.red,
+                              fontColor: Color(0xFFdc2626),
+                              fontweight: FontWeight.w600,
                             ),
                           ),
                         ),

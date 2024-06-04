@@ -40,19 +40,21 @@ class SearchSectionTile extends StatelessWidget {
                       _debouncer.run(
                         () async {
                           print("searching");
-                          if (value.trim() != "") {
-                            controller.searchProducts(value);
-                          } else {
-                            controller.haveSearchResult.value = false;
-                            controller.searchResults.clear();
-                            print("${controller.searchResults.length}");
-                          }
+                          // if (value.trim() != "") {
+                          controller.searchProducts(value);
+                          // } else {
+                          //   controller.haveSearchResult.value = false;
+                          //   controller.searchResults.clear();
+                          //   print("${controller.searchResults.length}");
+                          // }
                         },
                       );
                     },
                     onTap: () {
+                      if (!controller.isSearchMode.value) {
+                        controller.searchProducts("");
+                      }
                       controller.isSearchMode.value = true;
-                      controller.searchProducts("");
                     },
                     style: const TextStyle(
                       color: kSearchBarElementsColor,

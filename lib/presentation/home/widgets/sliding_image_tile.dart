@@ -32,7 +32,7 @@ class SlidingImageTile extends StatelessWidget {
           : "https://t3.ftcdn.net/jpg/05/04/28/96/240_F_504289605_zehJiK0tCuZLP2MdfFBpcJdOVxKLnXg1.jpg";
     }
 
-    print("Image path : $imagePath");
+    // print("Image path : $imagePath");
 
     final screenSize = MediaQuery.of(context).size;
     return Container(
@@ -40,7 +40,7 @@ class SlidingImageTile extends StatelessWidget {
       child: Stack(
         children: [
           Container(
-            width: screenSize.width * 0.89,
+            width: screenSize.width,
             height: screenSize.width * 0.8,
             decoration: BoxDecoration(
               image: DecorationImage(

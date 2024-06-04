@@ -28,15 +28,19 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  carousel_slider: ^4.2.1
   csc_picker: ^0.2.7
   cupertino_icons: ^1.0.2
   data_table_2: ^2.5.12
   debouncer_widget: ^1.0.0
   dio: ^5.4.1
+  dots_indicator: ^3.0.0
   easy_image_viewer: ^1.4.0
   encrypt: ^5.0.3
+  fan_carousel_image_slider: ^1.0.1
   flutter:
     sdk: flutter
+  flutter_image_slideshow: ^0.1.6
   flutter_local_notifications: ^17.1.2
   flutter_screenutil: ^5.9.1
   flutter_svg: ^2.0.9

@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -14,6 +17,8 @@ import 'package:internship_sample/presentation/widgets/custom_elevated_button.da
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
 import 'package:internship_sample/services/api_services.dart';
 import 'package:internship_sample/services/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:encrypt/encrypt.dart' as enc;
 
 class ProfileScreen extends StatelessWidget {
   ProfileScreen({super.key});
@@ -131,7 +136,7 @@ class ProfileScreen extends StatelessWidget {
                     ProfileEditingTextField(
                       hintText: "Name",
                       controller: _accountHolderNameController,
-                      // enabled: false,
+                      enabled: false,
                     ),
                     ProfileEditingTextField(
                       hintText: "Email Address",
@@ -140,6 +145,7 @@ class ProfileScreen extends StatelessWidget {
                     ),
                     kProfileScreenGap,
                     ProfileEditingTextField(
+                      prefix: Text("+91 "),
                       hintText: "Phone Number",
                       controller: _accountPhoneNumberController,
                       enabled: false,
@@ -379,15 +385,37 @@ class ProfileScreen extends StatelessWidget {
             ),
             actions: [
               GestureDetector(
-                onTap: () {
+                onTap: () async {
+                  String _decrypted = '';
                   if (_newPasswordController.text != _confirmNewPasswordController.text) {
                     Services().showCustomSnackBar(context, "Password and confirm password doesn't match");
                   } else if (_newPasswordController.text.length < 6) {
                     Services().showCustomSnackBar(context, "Password must contain atleast 6 characters");
                   } else {
-                    final response = ApiServices().changePassword(context, _newPasswordController.text, _confirmNewPasswordController.text);
-                    if (response != null) {
-                      Services().showCustomSnackBar(context, "Password changed successfully");
+                    SharedPreferences sharedPref = await SharedPreferences.getInstance();
+
+                    // email = sharedPref.getString(EMAIL);
+                    final encryptedBase64 = sharedPref.getString(ENCRYPTEDPASSWORD);
+                    final keyString = sharedPref.getString('ENCRYPTION_KEY');
+                    final ivString = sharedPref.getString('ENCRYPTION_IV');
+
+                    // decoding the stored key for decrypting password
+                    final keyBytes = base64.decode(keyString!);
+                    final ivBytes = base64.decode(ivString!);
+                    final key = enc.Key(keyBytes);
+                    final iv = enc.IV(ivBytes);
+                    if (encryptedBase64 != null) {
+                      final encrypted = enc.Encrypted.fromBase64(encryptedBase64);
+                      final decrypter = enc.Encrypter(enc.AES(key));
+                      _decrypted = decrypter.decrypt(encrypted, iv: iv);
+                    }
+                    if (_decrypted != _currentPasswordController.text) {
+                      Services().showCustomSnackBar(context, "Current password is incorrect");
+                    } else {
+                      final response = ApiServices().changePassword(context, _newPasswordController.text, _confirmNewPasswordController.text);
+                      if (response != null) {
+                        Services().showCustomSnackBar(context, "Password changed successfully");
+                      }
                     }
                   }
                   Get.back();

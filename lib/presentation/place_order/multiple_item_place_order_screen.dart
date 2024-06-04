@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -45,6 +46,8 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
   ValueNotifier<int> deliveryAddressRadioNotifier = ValueNotifier(0);
 
   ValueNotifier<int> billingAddressRadioNotifier = ValueNotifier(0);
+  double deliveryCharge = 0;
+  double additionalCharges = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -52,20 +55,27 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
 
     double cgstTotal = 0;
     double sgstTotal = 0;
+    double priceWithGST = 0;
+
     // double totalPriceWithoutGst = 0;
 
     final screenSize = MediaQuery.of(context).size;
     for (int i = 0; i < productList.length; i++) {
+      // double sellingPrice = double.parse(productList[i].product.sellingPrice);
+      double cgstPrice = double.parse(productList[i].product.sellingPrice) * (double.parse(productList[i].product.cgstRate) / 100);
+      double sgstPrice = double.parse(productList[i].product.sellingPrice) * (double.parse(productList[i].product.cgstRate) / 100);
       double sellingPrice = double.parse(productList[i].product.sellingPrice);
       // double cgstPercentage = double.parse(productList[i].product.cgstRate);
       // double sgstPercentage = double.parse(productList[i].product.sgstRate);
-      double cgstPrice = double.parse(productList[i].cgstPrice);
-      double sgstPrice = double.parse(productList[i].sgstPrice);
+      // double cgstPrice = double.parse(productList[i].cgstPrice);
+      // double sgstPrice = double.parse(productList[i].sgstPrice);
       // double originalProductPriceWithoutGst = (sellingPrice - cgstPrice - sgstPrice) * productList[i].purchaseCount;
       cgstTotal += cgstPrice * productList[i].purchaseCount;
       sgstTotal += sgstPrice * productList[i].purchaseCount;
       // totalPriceWithoutGst += originalProductPriceWithoutGst;
-      totalProductPrice += sellingPrice * productList[i].purchaseCount;
+      totalProductPrice += ((sellingPrice + cgstPrice + sgstPrice) * productList[i].purchaseCount).roundToDouble();
+      deliveryCharge = ((double.parse(profileController.addressList[deliveryAddressRadioNotifier.value].deliveryChargePercentage) / 100) * totalProductPrice).ceilToDouble();
+      additionalCharges = ((double.parse(profileController.addressList[deliveryAddressRadioNotifier.value].additionalChargePercentage) / 100) * totalProductPrice).ceilToDouble();
     }
 
     return Scaffold(
@@ -158,6 +168,7 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
                         valueListenable: useSameAddressNotifier,
                         builder: (context, hide, _) {
                           if (hide) {
+                            billingAddressRadioNotifier.value = deliveryAddressRadioNotifier.value;
                             return SizedBox();
                           } else {
                             return AddressSection(
@@ -230,7 +241,12 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
                           // final int selectedCategory = productList[index]['category'];
                           final String price = productList[index].product.sellingPrice.toString();
                           final int count = productList[index].purchaseCount;
-                          final double total = double.parse(price) * count;
+
+                          double cgstPrice = double.parse(productList[index].product.sellingPrice) * (double.parse(productList[index].product.cgstRate) / 100);
+                          double sgstPrice = double.parse(productList[index].product.sellingPrice) * (double.parse(productList[index].product.cgstRate) / 100);
+                          double sellingPrice = double.parse(productList[index].product.sellingPrice);
+                          priceWithGST = sellingPrice + cgstPrice + sgstPrice;
+                          final double total = priceWithGST * count;
                           // grantTotalNotifier.value = grantTotalNotifier.value + total;
                           return Column(
                             children: [
@@ -240,28 +256,28 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
                                   // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Container(
-                                      width: screenSize.width * 0.56,
+                                      width: screenSize.width * 0.62,
                                       child: CustomTextWidget(
-                                        text: productList[index].product.product.name,
-                                        fontSize: 16,
-                                        fontweight: FontWeight.w400,
+                                        text: productList[index].product.product.name + " - ( ${priceWithGST.toStringAsFixed(2)} * ${count} )",
+                                        fontSize: 13.sp,
+                                        fontweight: FontWeight.w500,
                                       ),
                                     ),
                                     Spacer(),
-                                    CustomTextWidget(
-                                      text: price,
-                                      // fontColor: kMainThemeColor,
-                                      fontweight: FontWeight.w600,
-                                    ),
-                                    CustomTextWidget(text: " * "),
-                                    CustomTextWidget(
-                                      text: "${count}  : ",
-                                      // fontColor: kMainThemeColor,
-                                      fontweight: FontWeight.w600,
-                                    ),
+                                    // CustomTextWidget(
+                                    //   text: priceWithGST.toStringAsFixed(2),
+                                    //   // fontColor: kMainThemeColor,
+                                    //   fontweight: FontWeight.w600,
+                                    // ),
+                                    // CustomTextWidget(text: " * "),
+                                    // CustomTextWidget(
+                                    //   text: "${count}  : ",
+                                    //   // fontColor: kMainThemeColor,
+                                    //   fontweight: FontWeight.w600,
+                                    // ),
                                     // Spacer(),
                                     CustomTextWidget(
-                                      text: total.toStringAsFixed(2),
+                                      text: "₹ ${(total.round()).toStringAsFixed(2)}",
                                       // fontColor: kMainThemeColor,
                                       fontweight: FontWeight.w600,
                                     ),
@@ -276,60 +292,60 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        CustomTextWidget(
-                          text: "Order Amounts",
-                          fontSize: 16,
-                          fontweight: FontWeight.w400,
-                        ),
-                        ValueListenableBuilder(
-                            valueListenable: grantTotalNotifier,
-                            builder: (context, total, _) {
-                              return CustomTextWidget(
-                                text: "₹ ${totalProductPrice.toStringAsFixed(2)}",
-                                fontSize: 16,
-                                fontweight: FontWeight.w600,
-                              );
-                            })
-                      ],
-                    ),
-                    kHeight,
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        CustomTextWidget(
-                          text: "Total CGST",
-                          fontSize: 16,
-                          fontweight: FontWeight.w400,
-                        ),
-                        Spacer(),
-                        Column(
-                          children: [
-                            CustomTextWidget(
-                              text: "₹ ${cgstTotal.toStringAsFixed(2)}",
-                              fontweight: FontWeight.w600,
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    kHeight,
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        CustomTextWidget(
-                          text: "Total SGST",
-                          fontSize: 16,
-                          fontweight: FontWeight.w400,
-                        ),
-                        CustomTextWidget(
-                          text: "₹ ${sgstTotal.toStringAsFixed(2)}",
-                          fontweight: FontWeight.w600,
-                        ),
-                      ],
-                    ),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //   children: [
+                    //     CustomTextWidget(
+                    //       text: "Order Amounts",
+                    //       fontSize: 16,
+                    //       fontweight: FontWeight.w400,
+                    //     ),
+                    //     ValueListenableBuilder(
+                    //         valueListenable: grantTotalNotifier,
+                    //         builder: (context, total, _) {
+                    //           return CustomTextWidget(
+                    //             text: "₹ ${totalProductPrice.toStringAsFixed(2)}",
+                    //             fontSize: 16,
+                    //             fontweight: FontWeight.w600,
+                    //           );
+                    //         })
+                    //   ],
+                    // ),
+                    // kHeight,
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //   children: [
+                    //     CustomTextWidget(
+                    //       text: "Total CGST",
+                    //       fontSize: 16,
+                    //       fontweight: FontWeight.w400,
+                    //     ),
+                    //     Spacer(),
+                    //     Column(
+                    //       children: [
+                    //         CustomTextWidget(
+                    //           text: "₹ ${cgstTotal.toStringAsFixed(2)}",
+                    //           fontweight: FontWeight.w600,
+                    //         ),
+                    //       ],
+                    //     ),
+                    //   ],
+                    // ),
+                    // kHeight,
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //   children: [
+                    //     CustomTextWidget(
+                    //       text: "Total SGST",
+                    //       fontSize: 16,
+                    //       fontweight: FontWeight.w400,
+                    //     ),
+                    //     CustomTextWidget(
+                    //       text: "₹ ${sgstTotal.toStringAsFixed(2)}",
+                    //       fontweight: FontWeight.w600,
+                    //     ),
+                    //   ],
+                    // ),
                     SizedBox(height: 20),
                     Divider(),
                     SizedBox(height: 20),
@@ -342,7 +358,23 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
                           fontweight: FontWeight.w600,
                         ),
                         CustomTextWidget(
-                          text: "₹ ${(totalProductPrice + cgstTotal + sgstTotal).toStringAsFixed(2)}",
+                          text: "₹ ${(totalProductPrice).toStringAsFixed(2)}",
+                          fontSize: 16,
+                          fontweight: FontWeight.w600,
+                        )
+                      ],
+                    ),
+                    kHeight,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        CustomTextWidget(
+                          text: "Delivery Charge",
+                          fontSize: 17,
+                          fontweight: FontWeight.w600,
+                        ),
+                        CustomTextWidget(
+                          text: "₹ ${(deliveryCharge).toStringAsFixed(2)}",
                           fontSize: 16,
                           fontweight: FontWeight.w600,
                         )
@@ -377,20 +409,19 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
         height: 55,
         width: double.infinity,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Center(
-                  child: CustomTextWidget(
-                    text: "₹ ${(totalProductPrice + cgstTotal + sgstTotal).toStringAsFixed(2)} +",
-                    fontSize: 16,
-                    fontweight: FontWeight.w600,
-                  ),
+                CustomTextWidget(
+                  text: "₹ ${(totalProductPrice + deliveryCharge + additionalCharges).toStringAsFixed(2)}",
+                  fontSize: 18.sp,
+                  fontweight: FontWeight.w600,
                 ),
-                CustomTextWidget(text: "Delivery charges")
               ],
             ),
+            SizedBox(width: 10),
             Container(
               height: 55,
               width: screenSize.width * 0.5,
@@ -400,7 +431,14 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
                     Services().showCustomSnackBar(context, "No address found. Add an address to continue");
                   } else {
                     // context.loaderOverlay.show();
-                    proceedToPayment();
+                    // proceedToPayment();
+                    Get.to(() => PaymentStartingScreen(
+                          productsList: productList,
+                          deliveryAddress: profileController.addressList[deliveryAddressRadioNotifier.value],
+                          billingAddress: profileController.addressList[billingAddressRadioNotifier.value],
+                          deliveryCharge: deliveryCharge,
+                          additionalAmount: additionalCharges,
+                        ));
                   }
                 },
                 child: CustomElevatedButton(
@@ -415,27 +453,31 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
     );
   }
 
-  proceedToPayment() async {
-    List orderingProductsList = [];
-    // await controller.getProfileDetails();
-    // SharedPreferences sharedPref = await SharedPreferences.getInstance();
-    // final String phoneNo = sharedPref.getString(PHONE)!;
-    // print("List length = $productList");
-    for (var product in productList) {
-      // final product = item['product'];
-      orderingProductsList.add(product);
-    }
-    // print("delivery ${profileController.addressList[deliveryAddressRadioNotifier.value].id}");
-    // print("bill ${profileController.addressList[billingAddressRadioNotifier.value].id}");
-    final response =
-        await ApiServices().placeOrder(profileController.addressList[deliveryAddressRadioNotifier.value].id.toString(), profileController.addressList[billingAddressRadioNotifier.value].id.toString());
-    if (response != null) {
-      // String phoneNumber = response.data['billing_phone_number'].toString();
-      // String _orderId = response.data['order_id'].toString();
-      final OrdersListModel order = OrdersListModel.fromJson(response.data);
+  // proceedToPayment() async {
+  //   List orderingProductsList = [];
+  //   // await controller.getProfileDetails();
+  //   // SharedPreferences sharedPref = await SharedPreferences.getInstance();
+  //   // final String phoneNo = sharedPref.getString(PHONE)!;
+  //   // print("List length = $productList");
+  //   for (var product in productList) {
+  //     // final product = item['product'];
+  //     orderingProductsList.add(product);
+  //   }
+  //   print("Address del: ${profileController.addressList[deliveryAddressRadioNotifier.value].id}");
+  //   print("Address del: ${profileController.addressList[deliveryAddressRadioNotifier.value].deliveryChargePercentage}");
 
-      // print(_orderId);
-      Get.off(() => PaymentStartingScreen(orderDetails: order));
-    }
-  }
+  //   print("Address bil: ${profileController.addressList[billingAddressRadioNotifier.value].id}");
+  //   // print("delivery ${profileController.addressList[deliveryAddressRadioNotifier.value].id}");
+  //   // print("bill ${profileController.addressList[billingAddressRadioNotifier.value].id}");
+  //   final response =
+  //       await ApiServices().placeOrder(profileController.addressList[deliveryAddressRadioNotifier.value].id.toString(), profileController.addressList[billingAddressRadioNotifier.value].id.toString());
+  //   if (response != null) {
+  //     //   // String phoneNumber = response.data['billing_phone_number'].toString();
+  //     //   // String _orderId = response.data['order_id'].toString();
+  //     final OrdersListModel order = OrdersListModel.fromJson(response.data);
+
+  //     //   // print(_orderId);
+
+  //   }
+  // }
 }

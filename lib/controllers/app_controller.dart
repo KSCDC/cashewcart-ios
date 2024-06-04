@@ -21,9 +21,9 @@ class AppController extends GetxController {
   String userName = "";
   String email = "";
   String phoneNo = "";
-   RxInt currentSlideNumber = 0.obs;
+  RxInt currentSlideNumber = 0.obs;
 
-  RxBool isLoggedIn= false.obs;
+  RxBool isLoggedIn = false.obs;
 
   final key = enc.Key.fromLength(32);
   final iv = enc.IV.fromLength(8);
@@ -273,6 +273,7 @@ class AppController extends GetxController {
 
       final List<TrendingProductModel> newProductList = productList.where((product) {
         final isUnique = uniqueProductNames.add(product.product.name);
+        isAlreadyLoadedBestsellers = true;
         return isUnique;
       }).toList();
       bestSellers.value = newProductList.reversed.toList();
@@ -293,6 +294,8 @@ class AppController extends GetxController {
 
       final List<TrendingProductModel> newProductList = productList.where((product) {
         final isUnique = uniqueProductNames.add(product.product.name);
+
+        isAlreadyLoadedSponserd = true;
         return isUnique;
       }).toList();
       sponserd.value = newProductList.reversed.toList();

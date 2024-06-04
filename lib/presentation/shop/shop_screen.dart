@@ -119,8 +119,14 @@ class ShopScreen extends StatelessWidget {
                   count: productDetails.productImages.isNotEmpty ? productDetails.productImages.length : 1,
                 ),
 
+
+
                 // product details
                 ShopProductDetailsTile(),
+
+
+
+
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: ValueListenableBuilder(

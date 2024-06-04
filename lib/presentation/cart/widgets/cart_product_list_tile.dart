@@ -30,6 +30,8 @@ class CartProductsListTile extends StatelessWidget {
     print("purchase count:${productDetails.purchaseCount}");
     final String originalPrice = productDetails.product.actualPrice;
     final String offerPrice = productDetails.product.sellingPrice;
+    // double price = double.parse(productDetails.total);
+    double priceWithGST = double.parse(productDetails.total);
     // final String numberOfRatings = productDetails.;
     final String weight = productDetails.product.weightInGrams;
     final screenSize = MediaQuery.of(context).size;
@@ -121,7 +123,7 @@ class CartProductsListTile extends StatelessWidget {
                           CartProductListTileButton(
                             buttonHeight: 30,
                             buttonWidth: 85,
-                            label: "₹ ${offerPrice}",
+                            label: "₹ ${priceWithGST.toStringAsFixed(2)}",
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                             fontColor: kMainThemeColor,
@@ -237,7 +239,7 @@ class CartProductsListTile extends StatelessWidget {
                       ),
                       Spacer(),
                       CustomTextWidget(
-                        text: "₹ ${(newCount * double.parse(offerPrice)).toStringAsFixed(2)}",
+                        text: "₹ ${(newCount * priceWithGST).toStringAsFixed(2)}",
                         fontSize: 13.sp,
                         fontweight: FontWeight.w600,
                         textOverflow: TextOverflow.fade,
@@ -282,10 +284,12 @@ class CartProductsListTile extends StatelessWidget {
             CartScreen().getGrandTotal();
             Get.back();
           },
-          gradient: LinearGradient(colors: [
-            Colors.red,
-            Color.fromARGB(255, 244, 86, 75),
-          ]),
+          gradient: LinearGradient(
+            colors: [
+              Colors.red,
+              Color.fromARGB(255, 244, 86, 75),
+            ],
+          ),
         )
       ],
       closeFunction: () => Get.back(),

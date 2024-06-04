@@ -36,6 +36,7 @@ class Result {
   int id;
   ResultProduct product;
   int purchaseCount;
+  String mrp;
   String cgstPrice;
   String sgstPrice;
   String total;
@@ -44,6 +45,7 @@ class Result {
     required this.id,
     required this.product,
     required this.purchaseCount,
+    required this.mrp,
     required this.cgstPrice,
     required this.sgstPrice,
     required this.total,
@@ -53,6 +55,7 @@ class Result {
         id: json["id"],
         product: ResultProduct.fromJson(json["product"]),
         purchaseCount: json["purchase_count"],
+        mrp: json["mrp"],
         cgstPrice: json["cgst_price"],
         sgstPrice: json["sgst_price"],
         total: json["total"],
@@ -77,6 +80,7 @@ class ResultProduct {
   String cgstRate;
   String sgstRate;
   String sku;
+  String hsn;
   int stockQty;
   double discountPercentage;
 
@@ -89,6 +93,7 @@ class ResultProduct {
     required this.cgstRate,
     required this.sgstRate,
     required this.sku,
+    required this.hsn,
     required this.stockQty,
     required this.discountPercentage,
   });
@@ -102,6 +107,7 @@ class ResultProduct {
         cgstRate: json["cgst_rate"],
         sgstRate: json["sgst_rate"],
         sku: json["sku"],
+        hsn: json["hsn_acs"],
         stockQty: json["stock_qty"],
         discountPercentage: json["discount_percentage"]?.toDouble(),
       );

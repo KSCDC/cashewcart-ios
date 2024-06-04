@@ -11,9 +11,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:internship_sample/controllers/app_controller.dart';
 import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/core/razorpay_key/razorpay_key.dart';
-import 'package:internship_sample/models/cart_product_model.dart';
 import 'package:internship_sample/models/orders_list_model.dart';
-import 'package:internship_sample/models/user_address_model.dart';
 import 'package:internship_sample/presentation/main_page/main_page_screen.dart';
 import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
 import 'package:internship_sample/presentation/my_orders/my_orders_screen.dart';
@@ -24,27 +22,17 @@ import 'package:loader_overlay/loader_overlay.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
-class PaymentStartingScreen extends StatefulWidget {
-  const PaymentStartingScreen({
+class PaymentRetryScreen extends StatefulWidget {
+  const PaymentRetryScreen({
     super.key,
-    required this.deliveryAddress,
-    required this.billingAddress,
-    required this.productsList,
-    required this.deliveryCharge,
-    required this.additionalAmount,
-    // required this.orderDetails,
+    required this.orderDetails,
   });
-  // final OrdersListModel orderDetails;
-  final List<Result> productsList;
-  final UserAddressModel deliveryAddress;
-  final UserAddressModel billingAddress;
-  final double deliveryCharge;
-  final double additionalAmount;
+  final OrdersListModel orderDetails;
   @override
-  State<PaymentStartingScreen> createState() => _PaymentStartingScreenState();
+  State<PaymentRetryScreen> createState() => _PaymentRetryScreenState();
 }
 
-class _PaymentStartingScreenState extends State<PaymentStartingScreen> {
+class _PaymentRetryScreenState extends State<PaymentRetryScreen> {
   AppController controller = Get.put(AppController());
   late Razorpay _razorpay;
 
@@ -104,7 +92,7 @@ class _PaymentStartingScreenState extends State<PaymentStartingScreen> {
       appBar: AppBar(
         leading: GestureDetector(
           onTap: () {
-            Get.back();
+            Get.off(() => MyOrdersScreen());
           },
           child: Icon(Icons.arrow_back_ios_new_rounded),
         ),
@@ -128,15 +116,15 @@ class _PaymentStartingScreenState extends State<PaymentStartingScreen> {
                   fontweight: FontWeight.w600,
                 ),
                 CustomTextWidget(
-                  text: widget.deliveryAddress.name,
+                  text: widget.orderDetails.shippingName,
                   fontSize: 14.w,
                 ),
                 CustomTextWidget(
-                  text: widget.deliveryAddress.phoneNumber,
+                  text: widget.orderDetails.shippingPhoneNumber,
                   fontSize: 14.w,
                 ),
                 CustomTextWidget(
-                  text: "${widget.deliveryAddress.region}, ${widget.deliveryAddress.district}, ${widget.deliveryAddress.state}, ${widget.deliveryAddress.postalCode}",
+                  text: "${widget.orderDetails.shippingRegion}, ${widget.orderDetails.shippingDistrict}, ${widget.orderDetails.shippingState}, ${widget.orderDetails.shippingPostalCode}",
                   fontSize: 14.w,
                 ),
                 SizedBox(height: 10.w),
@@ -146,15 +134,15 @@ class _PaymentStartingScreenState extends State<PaymentStartingScreen> {
                   fontweight: FontWeight.w600,
                 ),
                 CustomTextWidget(
-                  text: widget.billingAddress.name,
+                  text: widget.orderDetails.billingName,
                   fontSize: 14.w,
                 ),
                 CustomTextWidget(
-                  text: widget.billingAddress.phoneNumber,
+                  text: widget.orderDetails.billingPhoneNumber,
                   fontSize: 14.w,
                 ),
                 CustomTextWidget(
-                  text: "${widget.billingAddress.region}, ${widget.billingAddress.district}, ${widget.billingAddress.state}, ${widget.billingAddress.postalCode}",
+                  text: "${widget.orderDetails.billingRegion}, ${widget.orderDetails.billingDistrict}, ${widget.orderDetails.billingState}, ${widget.orderDetails.billingPostalCode}",
                   fontSize: 14.w,
                 ),
                 SizedBox(height: 10.w),
@@ -165,7 +153,7 @@ class _PaymentStartingScreenState extends State<PaymentStartingScreen> {
                   child: DataTable2(
                     columnSpacing: 12,
                     horizontalMargin: 12,
-                    minWidth: 1000.w,
+                    minWidth: 1400.w,
                     dataRowHeight: 60.w,
                     // fixedLeftColumns: 1,
                     dividerThickness: 2,
@@ -268,40 +256,40 @@ class _PaymentStartingScreenState extends State<PaymentStartingScreen> {
                       ),
                     ],
                     rows: List<DataRow>.generate(
-                      widget.productsList.length,
+                      widget.orderDetails.items.length,
                       (index) {
-                        subTotal += double.parse(widget.productsList[index].total);
+                        subTotal += double.parse(widget.orderDetails.items[index].total);
                         return DataRow(
                           cells: [
                             DataCell(
-                              Center(child: CustomTextWidget(text: widget.productsList[index].product.product.name)),
+                              Center(child: CustomTextWidget(text: widget.orderDetails.items[index].product.product.name)),
                             ),
                             DataCell(
-                              Center(child: CustomTextWidget(text: widget.productsList[index].product.hsn)),
+                              Center(child: CustomTextWidget(text: widget.orderDetails.items[index].product.hsn)),
                             ),
                             DataCell(
-                              Center(child: CustomTextWidget(text: widget.productsList[index].purchaseCount.toString())),
+                              Center(child: CustomTextWidget(text: widget.orderDetails.items[index].purchaseCount.toString())),
                             ),
                             DataCell(
-                              Center(child: CustomTextWidget(text: widget.productsList[index].product.sellingPrice)),
+                              Center(child: CustomTextWidget(text: widget.orderDetails.items[index].product.sellingPrice)),
                             ),
                             DataCell(
-                              Center(child: CustomTextWidget(text: widget.productsList[index].product.sellingPrice)),
+                              Center(child: CustomTextWidget(text: widget.orderDetails.items[index].product.sellingPrice)),
                             ),
                             DataCell(
-                              Center(child: CustomTextWidget(text: widget.productsList[index].product.cgstRate)),
+                              Center(child: CustomTextWidget(text: widget.orderDetails.items[index].product.cgstRate)),
                             ),
                             DataCell(
-                              Center(child: CustomTextWidget(text: widget.productsList[index].cgstPrice)),
+                              Center(child: CustomTextWidget(text: widget.orderDetails.items[index].cgstPrice)),
                             ),
                             DataCell(
-                              Center(child: CustomTextWidget(text: widget.productsList[index].product.sgstRate)),
+                              Center(child: CustomTextWidget(text: widget.orderDetails.items[index].product.sgstRate)),
                             ),
                             DataCell(
-                              Center(child: CustomTextWidget(text: widget.productsList[index].sgstPrice)),
+                              Center(child: CustomTextWidget(text: widget.orderDetails.items[index].sgstPrice)),
                             ),
                             DataCell(
-                              Center(child: CustomTextWidget(text: widget.productsList[index].total)),
+                              Center(child: CustomTextWidget(text: widget.orderDetails.items[index].total)),
                             ),
                           ],
                         );
@@ -347,7 +335,7 @@ class _PaymentStartingScreenState extends State<PaymentStartingScreen> {
                           SizedBox(
                             width: 100.w,
                             child: CustomTextWidget(
-                              text: "₹ ${(widget.deliveryCharge + widget.additionalAmount).toStringAsFixed(2)}",
+                              text: "₹ ${widget.orderDetails.deliveryAdditionalAmount.toStringAsFixed(2)}",
                               fontSize: 14.sp,
                               fontweight: FontWeight.w600,
                               height: 2,
@@ -370,7 +358,7 @@ class _PaymentStartingScreenState extends State<PaymentStartingScreen> {
                           SizedBox(
                             width: 100.w,
                             child: CustomTextWidget(
-                              text: "₹ ${(subTotal + widget.deliveryCharge).toStringAsFixed(2)}",
+                              text: "₹ ${(subTotal + widget.orderDetails.deliveryAdditionalAmount).toStringAsFixed(2)}",
                               fontSize: 16.sp,
                               fontweight: FontWeight.w600,
                               height: 2,
@@ -388,7 +376,7 @@ class _PaymentStartingScreenState extends State<PaymentStartingScreen> {
                   child: GestureDetector(
                     onTap: () {
                       context.loaderOverlay.show();
-                      proceedToPay(context, _razorpay, widget.deliveryAddress.id.toString(), widget.billingAddress.id.toString());
+                      proceedToPay(context, _razorpay, widget.orderDetails.orderId.toString(), widget.orderDetails.billingPhoneNumber);
                     },
                     child: CustomElevatedButton(label: "Proceed to Pay"),
                   ),
@@ -456,35 +444,26 @@ class _PaymentStartingScreenState extends State<PaymentStartingScreen> {
   }
 }
 
-proceedToPay(BuildContext context, Razorpay razorpay, String deliveryAddressId, String billingAddressId) async {
-  List orderingProductsList = [];
-  final OrdersListModel order;
-
-  final response = await ApiServices().placeOrder(deliveryAddressId, billingAddressId);
-  if (response != null) {
-    //   // String phoneNumber = response.data['billing_phone_number'].toString();
-    //   // String _orderId = response.data['order_id'].toString();
-    order = OrdersListModel.fromJson(response.data);
-    final newResponse = await ApiServices().payment(order.orderId.toString());
-    String paymentOrderId = newResponse.data['response']['id'].toString();
-    print("Order id = $paymentOrderId");
-    final options = {
-      'key': RAZORPAYKEY,
-      'amount': newResponse.data['response']['amount'].toString(),
-      'name': 'THE KERALA STATE CASHEW DEVELOPMENT CORPORATION LIMITED',
-      'order_id': newResponse.data['response']['id'].toString(),
-      'description': newResponse.data['response']['items'].toString(),
-      'prefill': {
-        'contact': order.billingPhoneNumber,
-        'email': newResponse.data['response']['notes']['email'],
-      }
-    };
-    context.loaderOverlay.hide();
-
-    try {
-      razorpay.open(options);
-    } catch (e) {
-      print('Error: $e');
+proceedToPay(BuildContext context, Razorpay razorpay, String orderId, String phoneNumber) async {
+  final newResponse = await ApiServices().payment(orderId);
+  String paymentOrderId = newResponse.data['response']['id'].toString();
+  print("Order id = $paymentOrderId");
+  final options = {
+    'key': RAZORPAYKEY,
+    'amount': newResponse.data['response']['amount'].toString(),
+    'name': 'THE KERALA STATE CASHEW DEVELOPMENT CORPORATION LIMITED',
+    'order_id': newResponse.data['response']['id'].toString(),
+    'description': newResponse.data['response']['items'].toString(),
+    'prefill': {
+      'contact': phoneNumber,
+      'email': newResponse.data['response']['notes']['email'],
     }
+  };
+  context.loaderOverlay.hide();
+
+  try {
+    razorpay.open(options);
+  } catch (e) {
+    print('Error: $e');
   }
 }

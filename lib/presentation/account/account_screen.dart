@@ -21,6 +21,7 @@ import 'package:internship_sample/presentation/widgets/no_access_tile.dart';
 import 'package:internship_sample/services/api_services.dart';
 import 'package:internship_sample/services/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AccountScreen extends StatelessWidget {
   AccountScreen({super.key});
@@ -29,7 +30,16 @@ class AccountScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: "Account"),
+      appBar: AppBar(
+        // backgroundColor: kMainThemeColor,
+        centerTitle: true,
+
+        title: CustomTextWidget(
+          text: "Account",
+          fontSize: 18,
+          fontweight: FontWeight.w600,
+        ),
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
@@ -98,6 +108,23 @@ class AccountScreen extends StatelessWidget {
                         },
                       ),
                       AccountItemTile(
+                        icon: Icons.location_on_outlined,
+                        label: "Track Orders",
+                        onTap: () async {
+                          // previousPageIndexes.add(3);
+                          // bottomNavbarIndexNotifier.value = 6;
+                          final url = Uri.parse("https://www.indiapost.gov.in/vas/Pages/IndiaPostHome.aspx");
+                          if (await canLaunchUrl(url)) {
+                            await launchUrl(
+                              url,
+                              mode: LaunchMode.externalApplication,
+                            );
+                          } else {
+                            throw 'Could not launch "https://www.indiapost.gov.in/vas/Pages/IndiaPostHome.aspx"';
+                          }
+                        },
+                      ),
+                      AccountItemTile(
                         icon: Icons.edit,
                         label: "Edit Profile",
                         onTap: () async {
@@ -128,14 +155,19 @@ class AccountScreen extends StatelessWidget {
                           SharedPreferences sharedPref = await SharedPreferences.getInstance();
                           await sharedPref.clear();
                           cartCountNotifier.value = 0;
+
                           // bottomNavbarIndexNotifier.value = 0;
                           // Navigator.of(context).pushAndRemoveUntil(
                           //   MaterialPageRoute(builder: (context) => SignInScreen()),
                           //   (route) => false, // Remove all previous routes
                           // );
                           Get.offAll(() => SignInScreen());
+                          controller.isLoggedIn.value = false;
                         },
                       ),
+                      SizedBox(
+                        height: 70.w,
+                      )
                     ],
                   );
           }),

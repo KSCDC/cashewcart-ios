@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:internship_sample/controllers/app_controller.dart';
 // import 'package:form_builder_validators/form_builder_validators.dart';
@@ -174,7 +175,8 @@ class CreateAccountScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      const AlternativeSigninOptionsWidget(),
+                      SizedBox(height: 20.w),
+                      // const AlternativeSigninOptionsWidget(),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [

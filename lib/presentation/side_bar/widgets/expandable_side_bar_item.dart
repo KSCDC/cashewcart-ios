@@ -70,10 +70,17 @@ class ExpandableProductsSideBarItem extends StatelessWidget {
                             }
 
                             controller.productDisplayList = controller.allProducts;
-                            Get.back();
-                            Get.to(
-                              () => ProductListingScreen(
-                                title: "All Featured",
+                            // Get.back();
+                            // Get.to(
+                            //   () => ProductListingScreen(
+                            //     title: "All Featured",
+                            //   ),
+                            // );
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => ProductListingScreen(
+                                  title: "All Featured",
+                                ),
                               ),
                             );
                           },
@@ -86,10 +93,19 @@ class ExpandableProductsSideBarItem extends StatelessWidget {
                             }
 
                             controller.productDisplayList2 = controller.bestSellers;
-                            Get.back();
-                            Get.to(
-                              () => TrendingModelProductListingScreen(
-                                title: "Best Sellers",
+                            // Get.back();
+                            // Get.to(
+                            //   () => TrendingModelProductListingScreen(
+                            //     title: "Best Sellers",
+                            //   ),
+                            // );
+
+                            // !! using navigator.push to maintain the bottom navbar
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => TrendingModelProductListingScreen(
+                                  title: "Best Sellers",
+                                ),
                               ),
                             );
                           },
@@ -108,9 +124,16 @@ class ExpandableProductsSideBarItem extends StatelessWidget {
                             // previousPageIndexes.add(bottomNavbarIndexNotifier.value);
                             // bottomNavbarIndexNotifier.value = 9;
 
-                            Get.to(
-                              () => TrendingModelProductListingScreen(
-                                title: "Trending Products",
+                            // Get.to(
+                            //   () => TrendingModelProductListingScreen(
+                            //     title: "Trending Products",
+                            //   ),
+                            // );
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => TrendingModelProductListingScreen(
+                                  title: "Trending Products",
+                                ),
                               ),
                             );
                           },
@@ -123,10 +146,17 @@ class ExpandableProductsSideBarItem extends StatelessWidget {
                             }
 
                             controller.productDisplayList2 = controller.sponserd;
-                            Get.back();
-                            Get.to(
-                              () => TrendingModelProductListingScreen(
-                                title: "Sponsered Products",
+                            // Get.back();
+                            // Get.to(
+                            //   () => TrendingModelProductListingScreen(
+                            //     title: "Sponsered Products",
+                            //   ),
+                            // );
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => TrendingModelProductListingScreen(
+                                  title: "Sponsered Products",
+                                ),
                               ),
                             );
                           },

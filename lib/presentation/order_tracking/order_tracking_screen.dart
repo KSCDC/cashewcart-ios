@@ -10,6 +10,7 @@ import 'package:internship_sample/models/orders_list_model.dart';
 import 'package:internship_sample/presentation/checkout/checkout_screen.dart';
 import 'package:internship_sample/presentation/cart/widgets/cart_product_list_tile.dart';
 import 'package:internship_sample/presentation/order_tracking/widgets/custom_timeline_tile.dart';
+import 'package:internship_sample/presentation/payment_starting/payment_retry_screen.dart';
 import 'package:internship_sample/presentation/payment_starting/payment_starting_screen.dart';
 import 'package:internship_sample/presentation/place_order/place_order_dropdown.dart';
 import 'package:internship_sample/presentation/widgets/custom_appbar.dart';
@@ -61,6 +62,24 @@ class OrderTrackingScreen extends StatelessWidget {
               ),
               CustomTextWidget(
                 text: "${orderDetails.shippingRegion}, ${orderDetails.shippingDistrict}, ${orderDetails.shippingState}, ${orderDetails.shippingPostalCode}",
+                fontSize: 14.w,
+              ),
+              SizedBox(height: 10.w),
+              CustomTextWidget(
+                text: "Billing Details :",
+                fontSize: 15.w,
+                fontweight: FontWeight.w600,
+              ),
+              CustomTextWidget(
+                text: orderDetails.billingName,
+                fontSize: 14.w,
+              ),
+              CustomTextWidget(
+                text: orderDetails.billingPhoneNumber,
+                fontSize: 14.w,
+              ),
+              CustomTextWidget(
+                text: "${orderDetails.billingRegion}, ${orderDetails.billingDistrict}, ${orderDetails.billingState}, ${orderDetails.billingPostalCode}",
                 fontSize: 14.w,
               ),
               SizedBox(height: 10.w),
@@ -240,13 +259,12 @@ class OrderTrackingScreen extends StatelessWidget {
                         ),
                         SizedBox(
                           width: 100.w,
-                          child: Center(
-                            child: CustomTextWidget(
-                              text: "₹${subTotal..toStringAsFixed(2)}",
-                              fontSize: 14.sp,
-                              fontweight: FontWeight.w600,
-                              height: 2,
-                            ),
+                          child: CustomTextWidget(
+                            text: "₹ ${subTotal.toStringAsFixed(2)}",
+                            fontSize: 14.sp,
+                            fontweight: FontWeight.w600,
+                            height: 2,
+                            textAlign: TextAlign.end,
                           ),
                         ),
                       ],
@@ -260,15 +278,15 @@ class OrderTrackingScreen extends StatelessWidget {
                           fontweight: FontWeight.w600,
                           height: 2,
                         ),
+                        // Spacer(),
                         SizedBox(
                           width: 100.w,
-                          child: Center(
-                            child: CustomTextWidget(
-                              text: "₹${orderDetails.deliveryAdditionalAmount..toStringAsFixed(2)}",
-                              fontSize: 14.sp,
-                              fontweight: FontWeight.w600,
-                              height: 2,
-                            ),
+                          child: CustomTextWidget(
+                            text: "₹ ${orderDetails.deliveryAdditionalAmount.toStringAsFixed(2)}",
+                            fontSize: 14.sp,
+                            fontweight: FontWeight.w600,
+                            height: 2,
+                            textAlign: TextAlign.end,
                           ),
                         ),
                       ],
@@ -279,19 +297,20 @@ class OrderTrackingScreen extends StatelessWidget {
                       children: [
                         CustomTextWidget(
                           text: "Grand Total : ",
-                          fontSize: 14.sp,
+                          fontSize: 16.sp,
                           fontweight: FontWeight.w600,
                           height: 2,
+                          fontColor: Colors.red,
                         ),
                         SizedBox(
                           width: 100.w,
-                          child: Center(
-                            child: CustomTextWidget(
-                              text: "₹${subTotal + orderDetails.deliveryAdditionalAmount..toStringAsFixed(2)}",
-                              fontSize: 14.sp,
-                              fontweight: FontWeight.w600,
-                              height: 2,
-                            ),
+                          child: CustomTextWidget(
+                            text: "₹ ${(subTotal + orderDetails.deliveryAdditionalAmount).toStringAsFixed(2)}",
+                            fontSize: 16.sp,
+                            fontweight: FontWeight.w600,
+                            height: 2,
+                            fontColor: Colors.red,
+                            textAlign: TextAlign.end,
                           ),
                         ),
                       ],
@@ -316,7 +335,7 @@ class OrderTrackingScreen extends StatelessWidget {
                     ),
                     InkWell(
                       onTap: () {
-                        Get.to(PaymentStartingScreen(orderDetails: orderDetails));
+                        Get.to(PaymentRetryScreen(orderDetails: orderDetails));
                       },
                       child: CustomElevatedButton(
                         label: "Retry Payment",
@@ -332,7 +351,7 @@ class OrderTrackingScreen extends StatelessWidget {
                         ApiServices().getInvoice(orderDetails.orderId.toString());
                       },
                       child: CustomElevatedButton(
-                        label: "Retry Payment",
+                        label: "Download invoice",
                       ),
                     ),
                   ],
