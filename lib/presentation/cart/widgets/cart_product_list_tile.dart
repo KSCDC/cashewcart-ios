@@ -27,16 +27,15 @@ class CartProductsListTile extends StatelessWidget {
     final String productName = productDetails.product.product.name;
     // final int selectedCategory = 1;
     ValueNotifier<int> currentProductCountNotifier = ValueNotifier(productDetails.purchaseCount);
-    print("purchase count:${productDetails.purchaseCount}");
+    // print("purchase count:${productDetails.purchaseCount}");
     final String originalPrice = productDetails.product.actualPrice;
     final String offerPrice = productDetails.product.sellingPrice;
     // double price = double.parse(productDetails.total);
-    double priceWithGST = double.parse(productDetails.total);
+    double priceWithGST = double.parse(productDetails.mrp);
     // final String numberOfRatings = productDetails.;
     final String weight = productDetails.product.weightInGrams;
     final screenSize = MediaQuery.of(context).size;
 
-    print("Product name:$productName");
     return Container(
       width: screenSize.width * 0.9,
       // height: 210,
@@ -51,20 +50,20 @@ class CartProductsListTile extends StatelessWidget {
             Row(
               children: [
                 Container(
-                  height: 125,
-                  width: 130,
+                  height: 125.w,
+                  width: 120.w,
                   decoration: BoxDecoration(
                     image: DecorationImage(
                       image: NetworkImage("$baseUrl$imagePath"),
                       fit: BoxFit.fitHeight,
                     ),
                     borderRadius: BorderRadius.all(
-                      Radius.circular(4),
+                      Radius.circular(4.r),
                     ),
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(10),
+                  padding: EdgeInsets.all(10.w),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -77,12 +76,12 @@ class CartProductsListTile extends StatelessWidget {
                           textOverflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      const SizedBox(height: 5),
+                      SizedBox(height: 5.w),
                       Row(
                         children: [
                           CustomTextWidget(
                             text: "Net Weight :",
-                            fontSize: 12,
+                            fontSize: 12.sp,
                             fontweight: FontWeight.w500,
                           ),
                           kWidth,
@@ -96,33 +95,11 @@ class CartProductsListTile extends StatelessWidget {
                         ],
                       ),
                       kHeight,
-                      // Row(
-                      //   children: [
-                      //     CustomTextWidget(
-                      //       text: numberOfRatings,
-                      //       // fontColor: ,
-                      //       fontSize: 12,
-                      //     ),
-                      //     for (int i = 0; i < 4; i++)
-                      //       const Icon(
-                      //         Icons.star,
-                      //         color: Color(0xFFF7B305),
-                      //         size: 15,
-                      //       ),
-                      //     const Icon(
-                      //       Icons.star_half,
-                      //       color: Color(0xFFBBBBBB),
-                      //       size: 15,
-                      //     ),
-                      //     kWidth,
-                      //   ],
-                      // ),
-                      // kHeight,
                       Row(
                         children: [
                           CartProductListTileButton(
                             buttonHeight: 30,
-                            buttonWidth: 85,
+                            buttonWidth: 60,
                             label: "₹ ${priceWithGST.toStringAsFixed(2)}",
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -168,24 +145,21 @@ class CartProductsListTile extends StatelessWidget {
                   return Row(
                     // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      // CustomTextWidget(
-                      //   text: "Total Order (${newCount}) :",
-                      //   fontSize: 12,
-                      //   fontweight: FontWeight.w500,
-                      // ),
-                      // kWidth,
                       GestureDetector(
-                        onTap: () {
+                        onTap: () async {
                           if (newCount > 1) {
-                            cartCountNotifier.value--;
-                            currentProductCountNotifier.value--;
-                            ApiServices().updateCartCount(productDetails.id.toString(), currentProductCountNotifier.value);
-                            for (int i = 0; i < cartController.cartProducts.value.count; i++) {
-                              if (cartController.cartProducts.value.results[i].id == productDetails.id) {
-                                cartController.cartProducts.value.results[i].purchaseCount = cartController.cartProducts.value.results[i].purchaseCount - 1;
+                            // cartCountNotifier.value--;
+                            final response = await ApiServices().updateCartCount(productDetails.id.toString(), currentProductCountNotifier.value - 1);
+                            log(response.statusCode.toString());
+                            if (response != null && response.statusCode.toString() == "200") {
+                              currentProductCountNotifier.value--;
+                              for (int i = 0; i < cartController.cartProducts.value.count; i++) {
+                                if (cartController.cartProducts.value.results[i].id == productDetails.id) {
+                                  cartController.cartProducts.value.results[i].purchaseCount = cartController.cartProducts.value.results[i].purchaseCount - 1;
+                                }
                               }
+                              CartScreen().getGrandTotal();
                             }
-                            CartScreen().getGrandTotal();
                           }
                         },
                         child: Icon(Icons.remove),
@@ -206,18 +180,21 @@ class CartProductsListTile extends StatelessWidget {
                         ),
                       ),
                       SizedBox(width: 10.w),
-
                       GestureDetector(
-                        onTap: () {
-                          cartCountNotifier.value++;
-                          currentProductCountNotifier.value++;
-                          ApiServices().updateCartCount(productDetails.id.toString(), currentProductCountNotifier.value);
-                          for (int i = 0; i < cartController.cartProducts.value.count; i++) {
-                            if (cartController.cartProducts.value.results[i].id == productDetails.id) {
-                              cartController.cartProducts.value.results[i].purchaseCount = cartController.cartProducts.value.results[i].purchaseCount + 1;
+                        onTap: () async {
+                          // cartCountNotifier.value++;
+                          final response = await ApiServices().updateCartCount(productDetails.id.toString(), currentProductCountNotifier.value + 1);
+                          log(response.statusCode.toString());
+                          if (response != null && response.statusCode.toString() == "200") {
+                            log("Working");
+                            currentProductCountNotifier.value++;
+                            for (int i = 0; i < cartController.cartProducts.value.count; i++) {
+                              if (cartController.cartProducts.value.results[i].id == productDetails.id) {
+                                cartController.cartProducts.value.results[i].purchaseCount = cartController.cartProducts.value.results[i].purchaseCount + 1;
+                              }
                             }
+                            CartScreen().getGrandTotal();
                           }
-                          CartScreen().getGrandTotal();
                         },
                         child: Icon(Icons.add),
                       ),
@@ -226,10 +203,6 @@ class CartProductsListTile extends StatelessWidget {
                         child: CustomTextIconButton(
                           onPressed: () {
                             showProductRemoveWarning(context, newCount);
-                            // cartCountNotifier.value = (cartCountNotifier.value - newCount).toInt();
-                            // cartProductsList.remove(productDetails);
-                            // controller.removeProductFromCart(context, productDetails.product.id.toString());
-                            // CartScreen().getGrandTotal();
                           },
                           icon: Icons.delete_outline,
                           label: "Remove",
@@ -318,18 +291,21 @@ class CartProductListTileButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: buttonHeight,
-      width: buttonWidth,
+      // height: buttonHeight,
+      // width: buttonWidth,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(2),
         border: Border.all(),
       ),
-      child: Center(
-        child: CustomTextWidget(
-          text: label,
-          fontSize: fontSize,
-          fontweight: fontWeight,
-          fontColor: fontColor,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.w),
+        child: Center(
+          child: CustomTextWidget(
+            text: label,
+            fontSize: fontSize,
+            fontweight: fontWeight,
+            fontColor: fontColor,
+          ),
         ),
       ),
     );

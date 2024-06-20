@@ -9,6 +9,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:internship_sample/controllers/app_controller.dart';
+import 'package:internship_sample/controllers/cart_controller.dart';
 import 'package:internship_sample/core/colors.dart';
 import 'package:internship_sample/core/razorpay_key/razorpay_key.dart';
 import 'package:internship_sample/models/cart_product_model.dart';
@@ -46,6 +47,7 @@ class PaymentStartingScreen extends StatefulWidget {
 
 class _PaymentStartingScreenState extends State<PaymentStartingScreen> {
   AppController controller = Get.put(AppController());
+  CartController cartController = Get.put(CartController());
   late Razorpay _razorpay;
 
   @override
@@ -159,18 +161,26 @@ class _PaymentStartingScreenState extends State<PaymentStartingScreen> {
                 ),
                 SizedBox(height: 10.w),
                 Divider(),
-                SizedBox(height: 20),
+                SizedBox(height: 10),
                 SizedBox(
-                  height: 300.w,
+                  height: 250.w,
                   child: DataTable2(
                     columnSpacing: 12,
                     horizontalMargin: 12,
                     minWidth: 1000.w,
-                    dataRowHeight: 60.w,
+                    // dataRowHeight: 60.w,
                     // fixedLeftColumns: 1,
                     dividerThickness: 2,
 
                     columns: [
+                      DataColumn2(
+                        label: CustomTextWidget(
+                          text: 'Sl No',
+                          fontSize: 14.sp,
+                          fontweight: FontWeight.w600,
+                        ),
+                        size: ColumnSize.S,
+                      ),
                       DataColumn2(
                         label: CustomTextWidget(
                           text: 'Product Name',
@@ -268,40 +278,46 @@ class _PaymentStartingScreenState extends State<PaymentStartingScreen> {
                       ),
                     ],
                     rows: List<DataRow>.generate(
-                      widget.productsList.length,
+                      cartController.cartProducts.value.results.length,
                       (index) {
-                        subTotal += double.parse(widget.productsList[index].total);
+                        subTotal += double.parse(cartController.cartProducts.value.results[index].total);
                         return DataRow(
                           cells: [
                             DataCell(
-                              Center(child: CustomTextWidget(text: widget.productsList[index].product.product.name)),
+                              Center(child: CustomTextWidget(text: "${index + 1}")),
                             ),
                             DataCell(
-                              Center(child: CustomTextWidget(text: widget.productsList[index].product.hsn)),
+                              Center(child: CustomTextWidget(text: cartController.cartProducts.value.results[index].product.product.name)),
                             ),
                             DataCell(
-                              Center(child: CustomTextWidget(text: widget.productsList[index].purchaseCount.toString())),
+                              Center(child: CustomTextWidget(text: cartController.cartProducts.value.results[index].product.hsn)),
                             ),
                             DataCell(
-                              Center(child: CustomTextWidget(text: widget.productsList[index].product.sellingPrice)),
+                              Center(child: CustomTextWidget(text: cartController.cartProducts.value.results[index].purchaseCount.toString())),
                             ),
                             DataCell(
-                              Center(child: CustomTextWidget(text: widget.productsList[index].product.sellingPrice)),
+                              Center(child: CustomTextWidget(text: cartController.cartProducts.value.results[index].product.sellingPrice)),
                             ),
                             DataCell(
-                              Center(child: CustomTextWidget(text: widget.productsList[index].product.cgstRate)),
+                              Center(
+                                  child: CustomTextWidget(
+                                      text: (double.parse(cartController.cartProducts.value.results[index].product.sellingPrice) * cartController.cartProducts.value.results[index].purchaseCount)
+                                          .toStringAsFixed(2))),
                             ),
                             DataCell(
-                              Center(child: CustomTextWidget(text: widget.productsList[index].cgstPrice)),
+                              Center(child: CustomTextWidget(text: cartController.cartProducts.value.results[index].product.cgstRate)),
                             ),
                             DataCell(
-                              Center(child: CustomTextWidget(text: widget.productsList[index].product.sgstRate)),
+                              Center(child: CustomTextWidget(text: cartController.cartProducts.value.results[index].cgstPrice)),
                             ),
                             DataCell(
-                              Center(child: CustomTextWidget(text: widget.productsList[index].sgstPrice)),
+                              Center(child: CustomTextWidget(text: cartController.cartProducts.value.results[index].product.sgstRate)),
                             ),
                             DataCell(
-                              Center(child: CustomTextWidget(text: widget.productsList[index].total)),
+                              Center(child: CustomTextWidget(text: cartController.cartProducts.value.results[index].sgstPrice)),
+                            ),
+                            DataCell(
+                              Center(child: CustomTextWidget(text: cartController.cartProducts.value.results[index].total)),
                             ),
                           ],
                         );
@@ -445,13 +461,13 @@ class _PaymentStartingScreenState extends State<PaymentStartingScreen> {
             "Ok",
             style: TextStyle(color: Colors.white, fontSize: 18),
           ),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
           color: Color.fromRGBO(0, 179, 134, 1.0),
         ),
       ],
     ).show().then((value) {
       // bottomNavbarIndexNotifier.value = 6;
-      Get.to(() => MyOrdersScreen());
+      Get.offAll(() => MainPageScreen());
     });
   }
 }
@@ -473,7 +489,7 @@ proceedToPay(BuildContext context, Razorpay razorpay, String deliveryAddressId, 
       'amount': newResponse.data['response']['amount'].toString(),
       'name': 'THE KERALA STATE CASHEW DEVELOPMENT CORPORATION LIMITED',
       'order_id': newResponse.data['response']['id'].toString(),
-      'description': newResponse.data['response']['items'].toString(),
+      'description': newResponse.data['response']['notes']['items'].toString(),
       'prefill': {
         'contact': order.billingPhoneNumber,
         'email': newResponse.data['response']['notes']['email'],

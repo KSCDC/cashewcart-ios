@@ -48,6 +48,9 @@ class PlaceOrderScreen extends StatelessWidget {
     final String price = productDetails.productVariants[sizeSelectNotifier.value].sellingPrice;
 
     final screenSize = MediaQuery.of(context).size;
+
+    // !This page was designed to buy a product directly from product details screen without adding to the cart. But according
+    // !to the backend user can place order only after adding it into the cart. So this screen is not used.
     return Scaffold(
       appBar: CustomAppBar(
         title: "Place Order",

@@ -134,7 +134,7 @@ class ShopProductDetailsTile extends StatelessWidget {
                         if (productDetailsController.productDetails.value!.productVariants[value].actualPrice != productDetailsController.productDetails.value!.productVariants[value].sellingPrice)
                           kWidth,
                         CustomTextWidget(
-                          text: "₹ ${priceWithGST.toStringAsFixed(2)}",
+                          text: "₹ ${priceWithGST.round().toStringAsFixed(2)}",
                           fontSize: 24.sp,
                           fontweight: FontWeight.w600,
                           fontColor: kMainThemeColor,

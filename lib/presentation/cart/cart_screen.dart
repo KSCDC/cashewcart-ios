@@ -38,24 +38,10 @@ class CartScreen extends StatelessWidget {
     grantTotalNotifier.value = 0;
 
     final screenSize = MediaQuery.of(context).size;
-    // grantTotalNotifier.value = 0;
-    // cartController.getCartList();
 
-    print("building");
-    // print("product name :::::${controller.cartProducts.value.results[0].product.product.name}");
     return Scaffold(
       backgroundColor: appBackgroundColor,
       appBar: AppBar(
-        // leading: GestureDetector(
-        //   onTap: () {
-        //     // bottomNavbarIndexNotifier.value = previousPageIndexes.last;
-        //     // if (previousPageIndexes.length > 1) {
-        //     //   previousPageIndexes.removeLast();
-        //     // }
-        //     Get.back();
-        //   },
-        //   child: Icon(Icons.arrow_back_ios_rounded),
-        // ),
         centerTitle: true,
         title: CustomTextWidget(
           text: "Cart",
@@ -153,6 +139,7 @@ class CartScreen extends StatelessWidget {
                                       ScaffoldMessenger.of(context).showSnackBar(snackBar);
                                     } else {
                                       await profileController.getUserAddresses();
+                                      await cartController.getCartList;
                                       Get.to(
                                         () => MultipleItemPlaceOrderScreen(
                                           productList: cartController.cartProducts.value.results,
@@ -182,19 +169,14 @@ class CartScreen extends StatelessWidget {
   }
 
   getGrandTotal() {
-    // controller.getCartList();
     double grandTotal = 0;
     print("grand total fn");
     print(cartController.cartProducts.value);
     for (int i = 0; i < cartController.cartProducts.value.count; i++) {
-      // final int selectedCategory = cartProductsList[i]['category'];
-      final String price = cartController.cartProducts.value.results[i].total.toString();
+      final String price = cartController.cartProducts.value.results[i].mrp.toString();
       final int count = cartController.cartProducts.value.results[i].purchaseCount;
       final double total = double.parse(price) * count;
-      print("prices are ${price} * ${count}== ${total}");
       grandTotal += total;
-      // grantTotalNotifier.value = grantTotalNotifier.value + total;
-      // log(grantTotalNotifier.value.toString());
     }
     grantTotalNotifier.value = grandTotal;
     return grandTotal;

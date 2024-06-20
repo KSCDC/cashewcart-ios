@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:internship_sample/models/cart_product_model.dart';
@@ -17,7 +19,7 @@ class CartController extends GetxController {
     final response = await ApiServices().getCartList();
     if (response != null) {
       final data = CartProductModel.fromJson(response.data);
-      // log(response.data.toString());
+
       cartProducts.value = data;
       cartCountNotifier.value = data.count;
     } else {

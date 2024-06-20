@@ -164,7 +164,10 @@ class MainPageScreen extends StatelessWidget {
                   // controller.getProfileDetails();
                   log("Emaill :${controller.isLoggedIn.value}");
                   if (controller.isLoggedIn.value) {
-                    if (!profileController.isLoadingProfile.value) profileController.getProfileDetails();
+                    // if (!profileController.isLoadingProfile.value) profileController.getProfileDetails();
+                    if (profileController.userName == "") {
+                      profileController.getProfileDetails();
+                    }
                   } else {
                     // Services().showLoginAlert(context, "Please login to access Account");
                   }

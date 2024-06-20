@@ -207,12 +207,12 @@ class AppController extends GetxController {
   }
 
   getCircleAvatarProductList() async {
-    log("Getting circle list");
+    // log("Getting circle list");
     isCircleAvatarProductsLoading.value = true;
     circleAvatarProductsList.clear();
     if (!isAlreadyLoadedPlainCashews.value) {
       await getProductsByCategory("PLAIN CASHEWS", "");
-      log("loaded plain");
+      // log("loaded plain");
     }
     if (!isAlreadyLoadedRoastedAndSaltedCashews.value) {
       await getProductsByCategory("ROASTED AND SALTED CASHEWS", "");
@@ -231,7 +231,7 @@ class AppController extends GetxController {
     }
     isCircleAvatarProductsLoading.value = false;
 
-    log("circle list :${circleAvatarProductsList}");
+    // log("circle list :${circleAvatarProductsList}");
   }
 
   getTrendingProducts() async {
@@ -251,7 +251,7 @@ class AppController extends GetxController {
         return isUnique;
       }).toList();
       trending.value = newProductList.reversed.toList();
-      log("trending products:${trending.value}");
+      // log("trending products:${trending.value}");
 
       isAlreadyLoadedTrending = true;
     } else {
@@ -408,12 +408,13 @@ class AppController extends GetxController {
   getSimilarProducts(String productName, String productParentName) {
     similarProducts.clear();
     for (var item in allProducts) {
+      log("${item.product.category.parentName} == ${productParentName}");
       if (item.product.category.parentName == productParentName && item.product.name != productName) {
-        log("${item.product.name} == ${productName}");
+        log(" Adding ${item.product.name}");
         similarProducts.add(item);
       }
     }
-    log("Similar products count : ${similarProducts.length}");
+    log("Similar products : ${similarProducts.toList()}");
   }
 
   createOrder(String shippingAddressId, String billingAddressId) async {

@@ -69,7 +69,9 @@ class CustomBottomNavbarItem extends StatelessWidget {
         if (index == 3) {
           if (email != null && password != null) {
             bottomNavbarIndexNotifier.value = index;
-            profileController.getProfileDetails();
+             if (profileController.userName == "") {
+                              profileController.getProfileDetails();
+                            }
           } else {
             Services().showLoginAlert(context, "Please login to access Account");
           }

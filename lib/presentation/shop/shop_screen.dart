@@ -50,21 +50,6 @@ class ShopScreen extends StatelessWidget {
     TextEditingController reviewController = TextEditingController();
 
     return Scaffold(
-      // appBar: AppBar(
-      //   scrolledUnderElevation: 0,
-      //   leading: IconButton(
-      //     onPressed: () {
-      //       if (controller.productDetailsList.isNotEmpty) {
-      //         controller.productDetailsList.removeLast();
-      //         print("Removing last : ${controller.productDetailsList}");
-      //         print("length now : ${controller.productDetailsList.length}");
-      //       }
-      //       bottomNavbarIndexNotifier.value = previousPageIndexes.last;
-      //       previousPageIndexes.removeLast();
-      //     },
-      //     icon: Icon(Icons.arrow_back_ios_new),
-      //   ),
-      // ),
       appBar: AppBar(
         // backgroundColor: kMainThemeColor,
         centerTitle: true,
@@ -79,39 +64,12 @@ class ShopScreen extends StatelessWidget {
           },
           icon: Icon(Icons.arrow_back_ios_new),
         ),
-        // actions: [
-        //   Padding(
-        //     padding: const EdgeInsets.symmetric(horizontal: 10),
-        //     child: InkWell(
-        //       onTap: () {
-        //         Get.back();
-        //       },
-        //       child: SvgPicture.asset(
-        //         "lib/core/assets/images/home_icon.svg",
-        //         color: Colors.black,
-        //       ),
-        //     ),
-        //   ),
-        // ],
       ),
-
       body: LoaderOverlay(
         child: SingleChildScrollView(
           // controller: _scrollController,
           child: Obx(() {
-            // ProductDetailsModel currentProductDetails = controller.productDetailsList[controller.productDetailsList.length - 1];
-            // productDetailsController.isLoading.value ? context.loaderOverlay.show() : context.loaderOverlay.hide();
-            return
-                //  productDetailsController.isLoading.value
-                // ? SizedBox(
-                //     height: screenSize.height * 0.9,
-                //     width: screenSize.width,
-                //     child: Center(
-                //       child: CircularProgressIndicator(),
-                //     ),
-                //   )
-                // :
-                Column(
+            return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SlidingProductTile(
@@ -119,75 +77,10 @@ class ShopScreen extends StatelessWidget {
                   count: productDetails.productImages.isNotEmpty ? productDetails.productImages.length : 1,
                 ),
 
-
-
                 // product details
                 ShopProductDetailsTile(),
 
-
-
-
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: ValueListenableBuilder(
-                      valueListenable: sizeSelectNotifier,
-                      builder: (context, value, _) {
-                        return Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            // add to cart button
-
-                            kWidth,
-
-                            // buy now button
-                            // GestureDetector(
-                            //   onTap: () async {
-                            //     print("buy now");
-                            //     context.loaderOverlay.show();
-                            //     SharedPreferences sharedPref = await SharedPreferences.getInstance();
-                            //     String? email = sharedPref.getString(EMAIL);
-                            //     String? password = sharedPref.getString(ENCRYPTEDPASSWORD);
-
-                            //     if (email != null && password != null) {
-                            //       productCountNotifier.value = 1;
-                            //       // int stock = currentProductDetails.productVariants[i].stockQty;
-                            //       bool isAvailable = controller.productDetails.value!.productVariants[value].isAvailable;
-
-                            //       int stock = 1;
-                            //       if (stock > 0 && isAvailable) {
-                            //         controller.getUserAddresses();
-                            //         // await controller.addProductToCart(context, currentProductDetails.productVariants[value]Id.toString());
-                            //         controller.getCartList();
-                            //         // previousPageIndexes.add(bottomNavbarIndexNotifier.value);
-                            //         bottomNavbarIndexNotifier.value = 2;
-                            //         Get.to(() => MainPageScreen());
-                            //       } else {
-                            //         Services().showCustomSnackBar(context, "This item is currently unavailable");
-                            //       }
-                            //     } else {
-                            //       Services().showLoginAlert(context, "Please login for for purchasing this product");
-                            //     }
-                            //     context.loaderOverlay.hide();
-                            //   },
-                            //   child: const CustomStyledShopPageButton(
-                            //     gradientColors: [
-                            //       Color(0xFF71F9A9),
-                            //       Color(0xFF31B769),
-                            //     ],
-                            //     icon: Icons.touch_app_outlined,
-                            //     label: "Buy Now",
-                            //   ),
-                            // ),
-                          ],
-                        );
-                      }),
-                ),
-
-                kHeight,
                 Obx(() {
-                  print(
-                      "Stars : ${productDetailsController.numOf1Stars},${productDetailsController.numOf2Stars},${productDetailsController.numOf3Stars},${productDetailsController.numOf4Stars},${productDetailsController.numOf5Stars}");
-
                   return productDetailsController.isReviewsLoading.value
                       ? Center(
                           child: CircularProgressIndicator(),
@@ -357,7 +250,7 @@ class ShopScreen extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: CustomTextWidget(
-                    text: (controller.similarProducts.value.length - 1) < 0 ? "0" : "${(controller.similarProducts.value.length - 1).toString()}+",
+                    text: controller.similarProducts.isEmpty ? "0" : "${(controller.similarProducts.value.length).toString()}+",
                     fontSize: 20,
                     fontweight: FontWeight.w600,
                   ),
@@ -369,7 +262,7 @@ class ShopScreen extends StatelessWidget {
                     () {
                       // print("similar products length:${controller.similarProducts.value.length}");
                       // print("similar products length:${controller.similarProducts.value[0].weightInGrams}");
-                      if (controller.similarProducts.length > 1) {
+                      if (controller.similarProducts.isNotEmpty) {
                         return controller.isSimilarProductsLoading.value
                             ? Center(
                                 child: CircularProgressIndicator(),
@@ -398,7 +291,7 @@ class ShopScreen extends StatelessWidget {
                                     ),
                                   );
                                 },
-                                itemCount: controller.similarProducts.value.length - 1,
+                                itemCount: controller.similarProducts.length,
                                 scrollDirection: Axis.horizontal,
                               );
                       } else {

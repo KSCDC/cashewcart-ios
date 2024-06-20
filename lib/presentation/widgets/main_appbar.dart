@@ -40,7 +40,9 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
               final email = sharedPref.getString(EMAIL);
               final password = sharedPref.getString(ENCRYPTEDPASSWORD);
               if (email != null && password != null) {
-                controller.getProfileDetails();
+                if (controller.userName == "") {
+                  controller.getProfileDetails();
+                }
                 controller.getUserAddresses();
                 Get.to(() => ProfileScreen());
               } else {

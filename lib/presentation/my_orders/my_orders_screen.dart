@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:internship_sample/controllers/app_controller.dart';
 import 'package:internship_sample/core/colors.dart';
@@ -12,6 +13,7 @@ import 'package:internship_sample/presentation/cart/widgets/cart_product_list_ti
 import 'package:internship_sample/presentation/main_page/main_page_screen.dart';
 import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
 import 'package:internship_sample/presentation/my_orders/widgets/my_orders_list_tile.dart';
+import 'package:internship_sample/presentation/my_orders/widgets/my_orders_list_tile_skeleton.dart';
 import 'package:internship_sample/presentation/order_tracking/order_tracking_screen.dart';
 import 'package:internship_sample/presentation/widgets/custom_appbar.dart';
 import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
@@ -58,7 +60,8 @@ class MyOrdersScreen extends StatelessWidget {
           onPressed: () {
             if (Navigator.canPop(context)) {
               // bottomNavbarIndexNotifier.value = 3;
-              Get.off(() => MainPageScreen());
+              // Get.off(() => MainPageScreen());
+              Navigator.of(context).pop();
             }
           },
           icon: Icon(Icons.arrow_back_ios_new),
@@ -82,28 +85,35 @@ class MyOrdersScreen extends StatelessWidget {
               ),
               kHeight,
               Obx(() {
-                return Container(
-                  // color: Colors.white,
-                  child: ListView.builder(
-                    itemBuilder: (context, index) {
-                      // print("Orders values :${controller.ordersList[index].items.length}");
-                      final OrdersListModel currentItem = controller.ordersList[index];
+                return controller.isLoadingMyproducts.value
+                    ? Container(
+                        child: ListView.builder(
+                          itemBuilder: (context, index) {
+                            return MyOrdersListTileSkeleton();
+                          },
+                          itemCount: 5,
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                        ),
+                      )
+                    : Container(
+                        child: ListView.builder(
+                          itemBuilder: (context, index) {
+                            final OrdersListModel currentItem = controller.ordersList[index];
 
-                      return Skeletonizer(
-                        enabled: controller.isLoadingMyproducts.value,
-                        child: GestureDetector(
-                          onTap: () => Get.to(() => OrderTrackingScreen(orderDetails: currentItem)),
-                          child: MyOrdersListTile(
-                            currentItem: currentItem,
-                          ),
+                            return GestureDetector(
+                              onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => OrderTrackingScreen(orderDetails: currentItem))),
+                              //  Get.to(() => OrderTrackingScreen(orderDetails: currentItem)),
+                              child: MyOrdersListTile(
+                                currentItem: currentItem,
+                              ),
+                            );
+                          },
+                          itemCount: controller.ordersList.length,
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
                         ),
                       );
-                    },
-                    itemCount: controller.ordersList.length,
-                    physics: NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                  ),
-                );
                 // }
               }),
             ],

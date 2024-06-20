@@ -375,13 +375,13 @@ class ApiServices {
       controller.isAllProductsLoadingError.value = false;
       print("Getting products from api");
       final dio = Dio();
-      final params = {
-        "page": pageNo,
-      };
+      // final params = {
+      //   "page": pageNo,
+      // };
       dio.options.connectTimeout = connectionTimeoutDuration;
       final response = await dio.get(
         "$baseUrl${ApiEndPoints.getAllProducts}",
-        queryParameters: params,
+        // queryParameters: params,
         options: Options(
           contentType: Headers.jsonContentType,
         ),
@@ -447,21 +447,22 @@ class ApiServices {
 
   getSponserdProducts(String pageNo) async {
     try {
+      // log("gettting sponsered");
       final dio = Dio();
-      final params = {
-        "page": pageNo,
-      };
+      // final params = {
+      //   "page": pageNo,
+      // };
       dio.options.connectTimeout = connectionTimeoutDuration;
       final response = await dio.get(
         "$baseUrl${ApiEndPoints.getSponserdProducts}",
-        queryParameters: params,
+        // queryParameters: params,
         options: Options(
           contentType: Headers.jsonContentType,
         ),
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        // log(response.data.toString());
+        // log("got Sponsered");
         return response;
       } else {
         print("Unexpected status code: ${response.statusCode}");
@@ -476,21 +477,24 @@ class ApiServices {
 
   getTrendingProducts(String pageNo) async {
     try {
+      // log("gettting sponsered api");
+      log("$baseUrl${ApiEndPoints.getTrendingProducts}");
       final dio = Dio();
-      final params = {
-        "page": pageNo,
-      };
+      // final params = {
+      //   "page": pageNo,
+      // };
       dio.options.connectTimeout = connectionTimeoutDuration;
       final response = await dio.get(
         "$baseUrl${ApiEndPoints.getTrendingProducts}",
-        queryParameters: params,
+        // queryParameters: params,
         options: Options(
           contentType: Headers.jsonContentType,
         ),
       );
+      log(response.statusCode.toString());
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        // log(response.data.toString());
+        log("got trending");
         return response;
       } else {
         print("Unexpected status code: ${response.statusCode}");
@@ -506,13 +510,13 @@ class ApiServices {
   getBestSellerProducts(String pageNo) async {
     try {
       final dio = Dio();
-      final params = {
-        "page": pageNo,
-      };
+      // final params = {
+      //   "page": pageNo,
+      // };
       dio.options.connectTimeout = connectionTimeoutDuration;
       final response = await dio.get(
         "$baseUrl${ApiEndPoints.getBestSellerProducts}",
-        queryParameters: params,
+        // queryParameters: params,
         options: Options(
           contentType: Headers.jsonContentType,
         ),
@@ -520,6 +524,7 @@ class ApiServices {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         // log(response.data.toString());
+        // log("got best sellers");
         return response;
       } else {
         print("Unexpected status code: ${response.statusCode}");
@@ -886,6 +891,7 @@ class ApiServices {
   updateCartCount(String productId, int newCount) async {
     try {
       print("Trying to remove from cart:{$baseUrl${ApiEndPoints.updateCartCount}$productId/}");
+      log("New count : $newCount");
       final dio = Dio();
       dio.options.connectTimeout = connectionTimeoutDuration;
       final Map<String, dynamic> formData = {
@@ -908,6 +914,7 @@ class ApiServices {
         // log(response.data.toString());
         // Services().showCustomSnackBar(response.data['message']);
         getCartList();
+        // log(response.data.toString());
         return response;
       } else {
         print("Unexpected status code: ${response.statusCode}");
@@ -1227,15 +1234,15 @@ class ApiServices {
       // controller.isError.value = false;
 
       final dio = Dio();
-      final params = {
-        "page": pageNo,
-      };
+      // final params = {
+      //   "page": pageNo,
+      // };
       dio.options.connectTimeout = connectionTimeoutDuration;
       SharedPreferences sharedPref = await SharedPreferences.getInstance();
       final authToken = sharedPref.getString(ACCESSTOKEN);
       final response = await dio.get(
         "$baseUrl${ApiEndPoints.ordersList}",
-        queryParameters: params,
+        // queryParameters: params,
         options: Options(
           headers: {
             'Authorization': 'Bearer $authToken',
@@ -1257,7 +1264,7 @@ class ApiServices {
         print("Connection timeout");
         // controller.isError.value = true;
       }
-      if (e.response!.statusCode == 401) {
+      if (e.response?.statusCode == 401) {
         print("refresh token");
         final refreshedToken = await refreshAccessToken();
         if (refreshedToken != null) {

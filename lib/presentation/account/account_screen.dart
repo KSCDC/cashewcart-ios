@@ -21,6 +21,7 @@ import 'package:internship_sample/presentation/widgets/no_access_tile.dart';
 import 'package:internship_sample/services/api_services.dart';
 import 'package:internship_sample/services/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AccountScreen extends StatelessWidget {
@@ -67,8 +68,34 @@ class AccountScreen extends StatelessWidget {
                       SizedBox(height: 20.w),
                       Obx(() {
                         return profileController.isLoadingProfile.value
-                            ? Center(
-                                child: CircularProgressIndicator(),
+                            ? Skeletonizer(
+                                enabled: true,
+                                child: Column(
+                                  children: [
+                                    Center(
+                                      child: CustomTextWidget(
+                                        text: "User Name",
+                                        fontSize: 20.sp,
+                                        fontweight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    SizedBox(height: 20),
+                                    Divider(
+                                      thickness: 0.2,
+                                      color: Colors.grey,
+                                    ),
+                                    kHeight,
+                                    CustomTextWidget(
+                                      text: "sampleuser@gmail.com",
+                                      fontSize: 16.sp,
+                                    ),
+                                    kHeight,
+                                    CustomTextWidget(
+                                      text: "9876543210",
+                                      fontSize: 16.sp,
+                                    ),
+                                  ],
+                                ),
                               )
                             : Column(
                                 children: [
@@ -104,7 +131,8 @@ class AccountScreen extends StatelessWidget {
                         onTap: () {
                           // previousPageIndexes.add(3);
                           // bottomNavbarIndexNotifier.value = 6;
-                          Get.to(() => MyOrdersScreen());
+                          // Get.to(() => MyOrdersScreen());
+                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => MyOrdersScreen()));
                         },
                       ),
                       AccountItemTile(
@@ -132,7 +160,9 @@ class AccountScreen extends StatelessWidget {
                           final email = sharedPref.getString(EMAIL);
                           final password = sharedPref.getString(ENCRYPTEDPASSWORD);
                           if (email != null && password != null) {
-                            profileController.getProfileDetails();
+                            if (profileController.userName == "") {
+                              profileController.getProfileDetails();
+                            }
                             profileController.getUserAddresses();
                             Get.to(() => ProfileScreen());
                           } else {

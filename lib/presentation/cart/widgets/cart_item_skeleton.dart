@@ -34,7 +34,8 @@ class CartItemSkeleton extends StatelessWidget {
                         width: 130,
                         decoration: BoxDecoration(
                           image: DecorationImage(
-                            image: NetworkImage(""),
+                            // just giving a dummy image url
+                            image: NetworkImage("https://tinyurl.com/w7e5752e"),
                             fit: BoxFit.fitHeight,
                           ),
                           borderRadius: BorderRadius.all(

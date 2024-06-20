@@ -171,41 +171,42 @@ class HomeScreen extends StatelessWidget {
                                 )
                               else
                                 SizedBox(
-                                    height: 230.w,
-                                    width: screenSize.width * 0.95,
-                                    child: controller.isAllProductsLoadingError.value
-                                        ? Center(
-                                            child: CustomTextWidget(
-                                              text: "Loading failed. Please check your internet connection",
-                                              textAlign: TextAlign.center,
-                                            ),
-                                          )
-                                        : CarouselSlider(
-                                            options: CarouselOptions(
-                                              height: 350.w,
-                                              autoPlay: true,
-                                              autoPlayInterval: Duration(seconds: 5),
-                                              // padEnds: true,
-                                              viewportFraction: 0.8,
-                                              enlargeCenterPage: true,
-                                              enlargeFactor: 0.4,
-                                              onPageChanged: (index, reason) {
-                                                controller.currentSlideNumber.value = index;
+                                  height: 230.w,
+                                  width: screenSize.width * 0.95,
+                                  child: controller.isAllProductsLoadingError.value
+                                      ? Center(
+                                          child: CustomTextWidget(
+                                            text: "Loading failed. Please check your internet connection",
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        )
+                                      : CarouselSlider(
+                                          options: CarouselOptions(
+                                            height: 350.w,
+                                            autoPlay: true,
+                                            autoPlayInterval: Duration(seconds: 5),
+                                            // padEnds: true,
+                                            viewportFraction: 0.8,
+                                            enlargeCenterPage: true,
+                                            enlargeFactor: 0.4,
+                                            onPageChanged: (index, reason) {
+                                              controller.currentSlideNumber.value = index;
+                                            },
+                                          ),
+                                          items: controller.slidingProductsList.map((product) {
+                                            return Builder(
+                                              builder: (BuildContext context) {
+                                                return SizedBox(
+                                                  width: screenSize.width * 0.95,
+                                                  child: SlidingImageTile(
+                                                    productDetails: product,
+                                                  ),
+                                                );
                                               },
-                                            ),
-                                            items: controller.slidingProductsList.map((product) {
-                                              return Builder(
-                                                builder: (BuildContext context) {
-                                                  return SizedBox(
-                                                    width: screenSize.width * 0.95,
-                                                    child: SlidingImageTile(
-                                                      productDetails: product,
-                                                    ),
-                                                  );
-                                                },
-                                              );
-                                            }).toList(),
-                                          )),
+                                            );
+                                          }).toList(),
+                                        ),
+                                ),
 
                               SizedBox(height: 10.w),
                               Obx(() {
@@ -326,11 +327,13 @@ class HomeScreen extends StatelessWidget {
                                     height: 230.w,
                                     child: Obx(
                                       () => controller.isBestSellersLoading.value
-                                          ? SizedBox(
-                                              width: screenSize.width * 0.4,
-                                              height: 300.w,
-                                              child: Center(
-                                                child: CircularProgressIndicator(),
+                                          ? Center(
+                                              child: ListView.builder(
+                                                itemBuilder: (context, index) {
+                                                  return ProductsListItemTileSkeleton();
+                                                },
+                                                itemCount: 5,
+                                                scrollDirection: Axis.horizontal,
                                               ),
                                             )
                                           : controller.isBestSellersLoadingError.value
@@ -384,11 +387,13 @@ class HomeScreen extends StatelessWidget {
                                     height: 230.w,
                                     child: Obx(
                                       () => controller.isTrendingLoading.value
-                                          ? SizedBox(
-                                              width: screenSize.width * 0.4,
-                                              height: 300.w,
-                                              child: Center(
-                                                child: CircularProgressIndicator(),
+                                          ? Center(
+                                              child: ListView.builder(
+                                                itemBuilder: (context, index) {
+                                                  return ProductsListItemTileSkeleton();
+                                                },
+                                                itemCount: 5,
+                                                scrollDirection: Axis.horizontal,
                                               ),
                                             )
                                           : controller.isTrendingLoadingError.value
@@ -441,11 +446,13 @@ class HomeScreen extends StatelessWidget {
                                     height: 230.w,
                                     child: Obx(
                                       () => controller.isSponserdLoading.value
-                                          ? SizedBox(
-                                              width: screenSize.width * 0.4,
-                                              height: 300.w,
-                                              child: Center(
-                                                child: CircularProgressIndicator(),
+                                          ? Center(
+                                              child: ListView.builder(
+                                                itemBuilder: (context, index) {
+                                                  return ProductsListItemTileSkeleton();
+                                                },
+                                                itemCount: 5,
+                                                scrollDirection: Axis.horizontal,
                                               ),
                                             )
                                           : controller.isSponserdLoadingError.value

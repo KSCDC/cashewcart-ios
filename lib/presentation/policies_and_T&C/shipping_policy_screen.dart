@@ -15,7 +15,7 @@ class ShippingPolicyScreen extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(8.w),
+          padding: EdgeInsets.all(16.w),
           child: Column(
             children: [
               Paragraph(paragraph: "All custom products ship within 2-3 weeks of receiving the final design agreement or verbal agreement."),
