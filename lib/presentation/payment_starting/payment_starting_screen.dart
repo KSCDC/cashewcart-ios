@@ -278,46 +278,46 @@ class _PaymentStartingScreenState extends State<PaymentStartingScreen> {
                       ),
                     ],
                     rows: List<DataRow>.generate(
-                      cartController.cartProducts.value.results.length,
+                      widget.productsList.length,
                       (index) {
-                        subTotal += double.parse(cartController.cartProducts.value.results[index].total);
+                        subTotal += double.parse(widget.productsList[index].total);
                         return DataRow(
                           cells: [
                             DataCell(
                               Center(child: CustomTextWidget(text: "${index + 1}")),
                             ),
                             DataCell(
-                              Center(child: CustomTextWidget(text: cartController.cartProducts.value.results[index].product.product.name)),
+                              Center(child: CustomTextWidget(text: widget.productsList[index].product.product.name)),
                             ),
                             DataCell(
-                              Center(child: CustomTextWidget(text: cartController.cartProducts.value.results[index].product.hsn)),
+                              Center(child: CustomTextWidget(text: widget.productsList[index].product.hsn)),
                             ),
                             DataCell(
-                              Center(child: CustomTextWidget(text: cartController.cartProducts.value.results[index].purchaseCount.toString())),
+                              Center(child: CustomTextWidget(text: widget.productsList[index].purchaseCount.toString())),
                             ),
                             DataCell(
-                              Center(child: CustomTextWidget(text: cartController.cartProducts.value.results[index].product.sellingPrice)),
+                              Center(child: CustomTextWidget(text: widget.productsList[index].product.sellingPrice)),
                             ),
                             DataCell(
                               Center(
                                   child: CustomTextWidget(
-                                      text: (double.parse(cartController.cartProducts.value.results[index].product.sellingPrice) * cartController.cartProducts.value.results[index].purchaseCount)
+                                      text: (double.parse(widget.productsList[index].product.sellingPrice) * widget.productsList[index].purchaseCount)
                                           .toStringAsFixed(2))),
                             ),
                             DataCell(
-                              Center(child: CustomTextWidget(text: cartController.cartProducts.value.results[index].product.cgstRate)),
+                              Center(child: CustomTextWidget(text: widget.productsList[index].product.cgstRate)),
                             ),
                             DataCell(
-                              Center(child: CustomTextWidget(text: cartController.cartProducts.value.results[index].cgstPrice)),
+                              Center(child: CustomTextWidget(text: widget.productsList[index].cgstPrice)),
                             ),
                             DataCell(
-                              Center(child: CustomTextWidget(text: cartController.cartProducts.value.results[index].product.sgstRate)),
+                              Center(child: CustomTextWidget(text: widget.productsList[index].product.sgstRate)),
                             ),
                             DataCell(
-                              Center(child: CustomTextWidget(text: cartController.cartProducts.value.results[index].sgstPrice)),
+                              Center(child: CustomTextWidget(text: widget.productsList[index].sgstPrice)),
                             ),
                             DataCell(
-                              Center(child: CustomTextWidget(text: cartController.cartProducts.value.results[index].total)),
+                              Center(child: CustomTextWidget(text: widget.productsList[index].total)),
                             ),
                           ],
                         );

@@ -16,7 +16,7 @@ class SideBarItemTile extends StatelessWidget {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 18),
           child: Row(
             children: [
               Icon(icon),
@@ -32,6 +32,7 @@ class SideBarItemTile extends StatelessWidget {
         ),
         Divider(
           thickness: 0.5,
+          height: 0,
         ),
       ],
     );

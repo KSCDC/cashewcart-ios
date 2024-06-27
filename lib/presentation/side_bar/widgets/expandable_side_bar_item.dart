@@ -19,159 +19,162 @@ class ExpandableProductsSideBarItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Icon(
-                  Icons.shopping_bag_outlined,
-                ),
-                kWidth,
-                CustomTextWidget(
-                  text: "Products",
-                  fontSize: 18,
-                ),
-                Spacer(),
-                GestureDetector(
-                  onTap: () {
-                    expandNotifier.value = !expandNotifier.value;
-                  },
-                  child: ValueListenableBuilder(
-                      valueListenable: expandNotifier,
-                      builder: (context, expanded, _) {
-                        return expanded
-                            ? Icon(
-                                Icons.keyboard_double_arrow_up_rounded,
-                                color: kMainThemeColor,
-                              )
-                            : Icon(
-                                Icons.keyboard_double_arrow_down_rounded,
-                                color: kMainThemeColor,
-                              );
-                      }),
-                ),
-              ],
+      child: InkWell(
+        onTap: () {
+          expandNotifier.value = !expandNotifier.value;
+        },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 18),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.shopping_bag_outlined,
+                  ),
+                  kWidth,
+                  CustomTextWidget(
+                    text: "Products",
+                    fontSize: 18,
+                  ),
+                  Spacer(),
+                  GestureDetector(
+                    child: ValueListenableBuilder(
+                        valueListenable: expandNotifier,
+                        builder: (context, expanded, _) {
+                          return expanded
+                              ? Icon(
+                                  Icons.keyboard_double_arrow_up_rounded,
+                                  color: kMainThemeColor,
+                                )
+                              : Icon(
+                                  Icons.keyboard_double_arrow_down_rounded,
+                                  color: kMainThemeColor,
+                                );
+                        }),
+                  ),
+                ],
+              ),
             ),
-          ),
-          ValueListenableBuilder(
-            valueListenable: expandNotifier,
-            builder: (context, expanded, _) {
-              return expanded
-                  ? Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            if (!controller.isAlreadyLoadedAllProducts.value) {
-                              controller.getAllProducts();
-                            }
+            ValueListenableBuilder(
+              valueListenable: expandNotifier,
+              builder: (context, expanded, _) {
+                return expanded
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              if (!controller.isAlreadyLoadedAllProducts.value) {
+                                controller.getAllProducts();
+                              }
 
-                            controller.productDisplayList = controller.allProducts;
-                            // Get.back();
-                            // Get.to(
-                            //   () => ProductListingScreen(
-                            //     title: "All Featured",
-                            //   ),
-                            // );
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => ProductListingScreen(
-                                  title: "All Featured",
+                              controller.productDisplayList = controller.allProducts;
+                              // Get.back();
+                              // Get.to(
+                              //   () => ProductListingScreen(
+                              //     title: "All Featured",
+                              //   ),
+                              // );
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => ProductListingScreen(
+                                    title: "All Featured",
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
-                          child: ExpandableSideBarInnerItem(label: "All Featured"),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            if (!controller.isAlreadyLoadedBestsellers) {
-                              controller.getBestSellerProducts();
-                            }
+                              );
+                            },
+                            child: ExpandableSideBarInnerItem(label: "All Featured"),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              if (!controller.isAlreadyLoadedBestsellers) {
+                                controller.getBestSellerProducts();
+                              }
 
-                            controller.productDisplayList2 = controller.bestSellers;
-                            // Get.back();
-                            // Get.to(
-                            //   () => TrendingModelProductListingScreen(
-                            //     title: "Best Sellers",
-                            //   ),
-                            // );
+                              controller.productDisplayList2 = controller.bestSellers;
+                              // Get.back();
+                              // Get.to(
+                              //   () => TrendingModelProductListingScreen(
+                              //     title: "Best Sellers",
+                              //   ),
+                              // );
 
-                            // !! using navigator.push to maintain the bottom navbar
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => TrendingModelProductListingScreen(
-                                  title: "Best Sellers",
+                              // !! using navigator.push to maintain the bottom navbar
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => TrendingModelProductListingScreen(
+                                    title: "Best Sellers",
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
-                          child: ExpandableSideBarInnerItem(label: "Best Sellers"),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            // controller.productDisplayList = controller.plainCashews;
-                            // currentDisplayProductCategory = "Trending";
-                            if (!controller.isAlreadyLoadedTrending) {
-                              controller.getTrendingProducts();
-                            }
+                              );
+                            },
+                            child: ExpandableSideBarInnerItem(label: "Best Sellers"),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              // controller.productDisplayList = controller.plainCashews;
+                              // currentDisplayProductCategory = "Trending";
+                              if (!controller.isAlreadyLoadedTrending) {
+                                controller.getTrendingProducts();
+                              }
 
-                            controller.productDisplayList2 = controller.trending;
-                            // print("Trending : ${controller.productDisplayList2.value.count}");
-                            // previousPageIndexes.add(bottomNavbarIndexNotifier.value);
-                            // bottomNavbarIndexNotifier.value = 9;
+                              controller.productDisplayList2 = controller.trending;
+                              // print("Trending : ${controller.productDisplayList2.value.count}");
+                              // previousPageIndexes.add(bottomNavbarIndexNotifier.value);
+                              // bottomNavbarIndexNotifier.value = 9;
 
-                            // Get.to(
-                            //   () => TrendingModelProductListingScreen(
-                            //     title: "Trending Products",
-                            //   ),
-                            // );
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => TrendingModelProductListingScreen(
-                                  title: "Trending Products",
+                              // Get.to(
+                              //   () => TrendingModelProductListingScreen(
+                              //     title: "Trending Products",
+                              //   ),
+                              // );
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => TrendingModelProductListingScreen(
+                                    title: "Trending Products",
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
-                          child: ExpandableSideBarInnerItem(label: "Trending"),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            if (!controller.isAlreadyLoadedSponserd) {
-                              controller.getSponserdProducts();
-                            }
+                              );
+                            },
+                            child: ExpandableSideBarInnerItem(label: "Trending"),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              if (!controller.isAlreadyLoadedSponserd) {
+                                controller.getSponserdProducts();
+                              }
 
-                            controller.productDisplayList2 = controller.sponserd;
-                            // Get.back();
-                            // Get.to(
-                            //   () => TrendingModelProductListingScreen(
-                            //     title: "Sponsered Products",
-                            //   ),
-                            // );
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => TrendingModelProductListingScreen(
-                                  title: "Sponsered Products",
+                              controller.productDisplayList2 = controller.sponserd;
+                              // Get.back();
+                              // Get.to(
+                              //   () => TrendingModelProductListingScreen(
+                              //     title: "Sponsered Products",
+                              //   ),
+                              // );
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => TrendingModelProductListingScreen(
+                                    title: "Sponsered Products",
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
-                          child: ExpandableSideBarInnerItem(label: "Sponsered"),
-                        ),
-                      ],
-                    )
-                  : SizedBox();
-            },
-          ),
-          Divider(
-            thickness: 0.3,
-            color: Colors.grey,
-          )
-        ],
+                              );
+                            },
+                            child: ExpandableSideBarInnerItem(label: "Sponsered"),
+                          ),
+                        ],
+                      )
+                    : SizedBox();
+              },
+            ),
+            Divider(
+              thickness: 0.3,
+              color: Colors.grey,
+              height: 0,
+            )
+          ],
+        ),
       ),
     );
   }

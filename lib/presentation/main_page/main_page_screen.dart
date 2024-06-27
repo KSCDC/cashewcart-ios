@@ -26,18 +26,6 @@ import 'package:internship_sample/services/services.dart';
 class MainPageScreen extends StatelessWidget {
   MainPageScreen({Key? key}) : super(key: key);
 
-  // final pages = [
-  //   HomeScreen(),
-  //   CategoriesScreen(),
-  //   CartScreen(),
-  //   AccountScreen(),
-  //   // ShopScreen(),
-  //   // ProductListingScreen(),
-  //   MyOrdersScreen(),
-  //   // ProductListingScreen(),
-  //   // ProductListingScreen(),
-  //   // TrendingModelProductListingScreen(),
-  // ];
   AppController controller = Get.put(AppController());
   CartController cartController = Get.put(CartController());
   ProfileController profileController = Get.put(ProfileController());
@@ -45,6 +33,8 @@ class MainPageScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    log("rebuilding main");
+    // cartController.getCartList();
     // _tabController.index = controller.mainPageIndex;
     return SafeArea(
       child: CupertinoTabScaffold(
@@ -154,7 +144,7 @@ class MainPageScreen extends StatelessWidget {
             case 2:
               return CupertinoTabView(
                 builder: (context) {
-                  cartController.getCartList();
+                  if (!cartController.isLoading.value) cartController.getCartList();
                   return CupertinoPageScaffold(child: CartScreen());
                 },
               );

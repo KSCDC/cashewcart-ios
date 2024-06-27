@@ -31,7 +31,7 @@ class Services {
       // behavior: SnackBarBehavior.floating,
       // margin: EdgeInsets.all(10),
       padding: EdgeInsets.all(20),
-      duration: Duration(seconds: 2),
+      duration: Duration(seconds: 1),
     );
 
     ScaffoldMessenger.of(context).showSnackBar(snackBar);

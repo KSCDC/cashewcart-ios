@@ -13,6 +13,7 @@ class CartController extends GetxController {
   Rx<CartProductModel> cartProducts = CartProductModel(count: 0, next: null, previous: null, results: []).obs;
 
   getCartList() async {
+    log("Loading cart list");
     isLoading.value = true;
     isError.value = false;
     print("Fetching cart");
@@ -40,14 +41,14 @@ class CartController extends GetxController {
   }
 
   removeProductFromCart(BuildContext context, String productId) async {
-    isLoading.value = true;
-    isError.value = false;
+    // isLoading.value = true;
+    // isError.value = false;
     final response = await ApiServices().removeFromCart(context, productId);
     if (response == null) {
       isError.value = true;
     } else {
       getCartList();
     }
-    isLoading.value = false;
+    // isLoading.value = false;
   }
 }

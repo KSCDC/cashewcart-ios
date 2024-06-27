@@ -139,7 +139,7 @@ class CartScreen extends StatelessWidget {
                                       ScaffoldMessenger.of(context).showSnackBar(snackBar);
                                     } else {
                                       await profileController.getUserAddresses();
-                                      await cartController.getCartList;
+                                      await cartController.getCartList();
                                       Get.to(
                                         () => MultipleItemPlaceOrderScreen(
                                           productList: cartController.cartProducts.value.results,

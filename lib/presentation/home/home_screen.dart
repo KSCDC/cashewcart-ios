@@ -9,6 +9,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:internship_sample/controllers/app_controller.dart';
+import 'package:internship_sample/controllers/cart_controller.dart';
 import 'package:internship_sample/controllers/search_controller.dart';
 import 'package:internship_sample/core/base_url.dart';
 import 'package:internship_sample/core/colors.dart';
@@ -37,6 +38,7 @@ class HomeScreen extends StatelessWidget {
 
   final pageController = PageController();
   AppController controller = Get.put(AppController());
+  CartController cartController = Get.put(CartController());
   // SearchController searchController = Get.put(SearchController());
   SearchResultController searchController = Get.put(SearchResultController());
   Timer? timer;
@@ -44,6 +46,8 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    log("rebuilding home");
+    // cartController.getCartList();
     controller.currentSlideNumber.value = 0;
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(

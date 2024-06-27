@@ -147,12 +147,16 @@ class CartProductsListTile extends StatelessWidget {
                     children: [
                       GestureDetector(
                         onTap: () async {
-                          if (newCount > 1) {
+                          if (currentProductCountNotifier.value > 1) {
+                            log("New count --- :$newCount");
                             // cartCountNotifier.value--;
                             final response = await ApiServices().updateCartCount(productDetails.id.toString(), currentProductCountNotifier.value - 1);
                             log(response.statusCode.toString());
-                            if (response != null && response.statusCode.toString() == "200") {
-                              currentProductCountNotifier.value--;
+                            if (response != null && response.statusCode.toString() == "200" && currentProductCountNotifier.value > 1) {
+                              log("New count :$newCount");
+                              if (currentProductCountNotifier.value > 1) {
+                                currentProductCountNotifier.value--;
+                              }
                               for (int i = 0; i < cartController.cartProducts.value.count; i++) {
                                 if (cartController.cartProducts.value.results[i].id == productDetails.id) {
                                   cartController.cartProducts.value.results[i].purchaseCount = cartController.cartProducts.value.results[i].purchaseCount - 1;
@@ -173,7 +177,11 @@ class CartProductsListTile extends StatelessWidget {
                           color: kMainThemeColor,
                         ),
                         child: Center(
-                          child: CustomTextWidget(
+                          child:
+                              // cartController.isLoading.value
+                              //     ? CircularProgressIndicator()
+                              //     :
+                              CustomTextWidget(
                             text: "$newCount",
                             fontSize: 14.sp,
                           ),
@@ -187,6 +195,7 @@ class CartProductsListTile extends StatelessWidget {
                           log(response.statusCode.toString());
                           if (response != null && response.statusCode.toString() == "200") {
                             log("Working");
+                            // cartController.getCartList();
                             currentProductCountNotifier.value++;
                             for (int i = 0; i < cartController.cartProducts.value.count; i++) {
                               if (cartController.cartProducts.value.results[i].id == productDetails.id) {
@@ -202,6 +211,7 @@ class CartProductsListTile extends StatelessWidget {
                       Container(
                         child: CustomTextIconButton(
                           onPressed: () {
+                            log("removing");
                             showProductRemoveWarning(context, newCount);
                           },
                           icon: Icons.delete_outline,

@@ -20,6 +20,7 @@ import 'package:permission_handler/permission_handler.dart';
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
 Future<void> main() async {
+  //!This app may have some unexpected bugs due to the cupertinotabview which is used for getting the bottombar even in the internal screens
   WidgetsFlutterBinding.ensureInitialized();
 
   WidgetsFlutterBinding.ensureInitialized();

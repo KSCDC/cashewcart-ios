@@ -51,6 +51,7 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
     double totalProductPrice = 0;
 
     double cgstTotal = 0;
@@ -347,13 +348,15 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
                   if (profileController.addressList.isEmpty) {
                     Services().showCustomSnackBar(context, "No address found. Add an address to continue");
                   } else {
-                    Get.to(() => PaymentStartingScreen(
-                          productsList: productList,
-                          deliveryAddress: profileController.addressList[deliveryAddressRadioNotifier.value],
-                          billingAddress: profileController.addressList[billingAddressRadioNotifier.value],
-                          deliveryCharge: deliveryCharge,
-                          additionalAmount: additionalCharges,
-                        ));
+                    Get.to(
+                      () => PaymentStartingScreen(
+                        productsList: productList,
+                        deliveryAddress: profileController.addressList[deliveryAddressRadioNotifier.value],
+                        billingAddress: profileController.addressList[billingAddressRadioNotifier.value],
+                        deliveryCharge: deliveryCharge,
+                        additionalAmount: additionalCharges,
+                      ),
+                    );
                   }
                 },
                 child: CustomElevatedButton(

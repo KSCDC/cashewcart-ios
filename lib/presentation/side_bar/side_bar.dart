@@ -31,7 +31,7 @@ class SideBar extends StatelessWidget {
           child: Column(
             children: [
               SizedBox(height: 20),
-              GestureDetector(
+              InkWell(
                 onTap: () => Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => ProfileScreen(),
@@ -50,8 +50,9 @@ class SideBar extends StatelessWidget {
               Divider(
                 thickness: 0.5,
                 color: Colors.grey,
+                height: 0,
               ),
-              GestureDetector(
+              InkWell(
                 onTap: () async {
                   SharedPreferences sharedPref = await SharedPreferences.getInstance();
                   String? email = sharedPref.getString(EMAIL);
@@ -70,8 +71,10 @@ class SideBar extends StatelessWidget {
                   label: "My Orders",
                 ),
               ),
+
+              // products
               ExpandableProductsSideBarItem(),
-              GestureDetector(
+              InkWell(
                 onTap: () {
                   Get.to(() => AboutUsScreen());
                 },
@@ -80,7 +83,7 @@ class SideBar extends StatelessWidget {
                   label: "About KSCDC",
                 ),
               ),
-              GestureDetector(
+              InkWell(
                 onTap: () async {
                   final url = Uri.parse("https://www.cashewcorporation.com/");
                   if (await canLaunchUrl(url)) {
@@ -97,7 +100,7 @@ class SideBar extends StatelessWidget {
                   label: "Visit our website",
                 ),
               ),
-              GestureDetector(
+              InkWell(
                 onTap: () {
                   Get.to(() => TermsAndConditionsScreen());
                 },
@@ -106,7 +109,7 @@ class SideBar extends StatelessWidget {
                   label: "Terms & Conditions",
                 ),
               ),
-              GestureDetector(
+              InkWell(
                 onTap: () {
                   Get.to(() => CancellationPolicyScreen());
                 },
@@ -115,7 +118,7 @@ class SideBar extends StatelessWidget {
                   label: "Cancellation Policy",
                 ),
               ),
-              GestureDetector(
+              InkWell(
                 onTap: () {
                   Get.to(() => PrivacyPolicyScreen());
                 },
@@ -124,7 +127,7 @@ class SideBar extends StatelessWidget {
                   label: "Privacy Policy",
                 ),
               ),
-              GestureDetector(
+              InkWell(
                 onTap: () {
                   Get.to(() => ShippingPolicyScreen());
                 },

@@ -813,6 +813,7 @@ class ApiServices {
         if (e.response!.data["errors"]["non_field_errors"] != null) {
           // Services().showCustomSnackBar(context, "message");
           final snackBar = SnackBar(
+            duration: Duration(seconds: 1),
             content: SizedBox(
               height: 35.w,
               child: Row(
@@ -868,7 +869,7 @@ class ApiServices {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         // log(response.data.toString());
-        Services().showCustomSnackBar(context, response.data['message']);
+        // Services().showCustomSnackBar(context, response.data['message']);
         return response;
       } else {
         print("Unexpected status code: ${response.statusCode}");
