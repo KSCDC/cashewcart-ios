@@ -3,18 +3,18 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:internship_sample/controllers/app_controller.dart';
-import 'package:internship_sample/controllers/search_controller.dart';
-import 'package:internship_sample/core/colors.dart';
-import 'package:internship_sample/core/constants.dart';
-import 'package:internship_sample/presentation/shop/shop_screen.dart';
-import 'package:internship_sample/presentation/side_bar/side_bar.dart';
-import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
-import 'package:internship_sample/presentation/widgets/main_appbar.dart';
-import 'package:internship_sample/presentation/widgets/products_list_item_skeleton.dart';
-import 'package:internship_sample/presentation/widgets/products_list_item_tile.dart';
-import 'package:internship_sample/presentation/widgets/search_section_tile.dart';
-import 'package:internship_sample/services/services.dart';
+import 'package:cashew_cart/controllers/app_controller.dart';
+import 'package:cashew_cart/controllers/search_controller.dart';
+import 'package:cashew_cart/core/colors.dart';
+import 'package:cashew_cart/core/constants.dart';
+import 'package:cashew_cart/presentation/shop/shop_screen.dart';
+import 'package:cashew_cart/presentation/side_bar/side_bar.dart';
+import 'package:cashew_cart/presentation/widgets/custom_text_widget.dart';
+import 'package:cashew_cart/presentation/widgets/main_appbar.dart';
+import 'package:cashew_cart/presentation/widgets/products_list_item_skeleton.dart';
+import 'package:cashew_cart/presentation/widgets/products_list_item_tile.dart';
+import 'package:cashew_cart/presentation/widgets/search_section_tile.dart';
+import 'package:cashew_cart/services/services.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 
 class CategoriesScreen extends StatelessWidget {
@@ -34,7 +34,7 @@ class CategoriesScreen extends StatelessWidget {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              padding: EdgeInsets.symmetric(horizontal: 8.w),
               child: SearchSectionTile(),
             ),
             Flexible(
@@ -101,7 +101,6 @@ class CategoriesScreen extends StatelessWidget {
                                       scrollDirection: Axis.horizontal,
                                     );
                                   } else if (controller.isAlreadyLoadedPlainCashews.value && controller.plainCashews.isEmpty) {
-                                    
                                     return Center(
                                       child: CustomTextWidget(
                                         text: "Plain cashews products not available right now.",

@@ -3,12 +3,14 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:internship_sample/controllers/app_controller.dart';
-import 'package:internship_sample/controllers/profile_controller.dart';
-import 'package:internship_sample/core/constants.dart';
-import 'package:internship_sample/core/states_and_districts.dart';
-import 'package:internship_sample/models/states_and_districts_model.dart';
-import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
+import 'package:cashew_cart/controllers/app_controller.dart';
+import 'package:cashew_cart/controllers/profile_controller.dart';
+import 'package:cashew_cart/core/constants.dart';
+import 'package:cashew_cart/core/states_and_districts.dart';
+import 'package:cashew_cart/models/states_and_districts_model.dart';
+import 'package:cashew_cart/presentation/authentication/widgets/custom_icon_text_field.dart';
+import 'package:cashew_cart/presentation/authentication/widgets/custom_password_text_field.dart';
+import 'package:cashew_cart/presentation/widgets/custom_text_widget.dart';
 
 class AddOrEditAddress extends StatefulWidget {
   AddOrEditAddress({
@@ -20,6 +22,7 @@ class AddOrEditAddress extends StatefulWidget {
     required this.phoneNumberController,
     required this.state,
     required this.district,
+    required this.formKey,
   });
   final TextEditingController nameController;
   final TextEditingController cityController;
@@ -31,6 +34,7 @@ class AddOrEditAddress extends StatefulWidget {
   String? state;
   String? district;
   List<String>? districts;
+  final formKey;
 
   @override
   State<AddOrEditAddress> createState() => _AddOrEditAddressState();
@@ -61,101 +65,156 @@ class _AddOrEditAddressState extends State<AddOrEditAddress> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        TextField(
-          controller: widget.nameController,
-          decoration: InputDecoration(
-            labelText: 'Name',
+    log("value of district in controler: ${profileController.district}");
+    return Form(
+      key: widget.formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TextFormField(
+            controller: widget.nameController,
+            decoration: InputDecoration(
+              labelText: 'Name',
+            ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter your Name';
+              } else if (value.length < 3) {
+                return 'Name must have atleast 3 characters';
+              }
+              return null;
+            },
           ),
-        ),
-        TextField(
-          controller: widget.addressController,
-          decoration: InputDecoration(
-            labelText: 'Address',
+          SizedBox(
+            height: 10,
           ),
-        ),
-        SizedBox(height: 5),
-        TextField(
-          controller: widget.cityController,
-          decoration: InputDecoration(
-            labelText: 'Post Office/City/Town',
+          TextFormField(
+            controller: widget.addressController,
+            decoration: InputDecoration(
+              labelText: 'Address',
+            ),
+            validator: (value) {
+              if (value == null || value.trim() == "") {
+                return 'Please enter your Address';
+              }
+              return null;
+            },
           ),
-        ),
+          SizedBox(
+            height: 10,
+          ),
+          TextFormField(
+            controller: widget.cityController,
+            decoration: InputDecoration(
+              labelText: 'Post Office/City/Town',
+            ),
+            validator: (value) {
+              if (value == null || value.trim() == "") {
+                return 'Please enter your Post Office/City/Town';
+              }
+              return null;
+            },
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          CustomTextWidget(
+            text: "State",
+            fontSize: 11.sp,
+          ),
+          DropdownButton<String>(
+            isExpanded: true,
+            hint: Text('Select State'),
+            value: widget.state,
+            onChanged: (String? newValue) {
+              setState(() {
+                log("working state change");
+                widget.state = newValue!;
+                widget.district = null;
+                profileController.district = null;
+                profileController.state = newValue;
+              });
+            },
+            items: models.map((model) {
+              return DropdownMenuItem<String>(
+                value: model.state,
+                child: Text(model.state),
+              );
+            }).toList(),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          CustomTextWidget(
+            text: "District",
+            fontSize: 11.sp,
+          ),
+          DropdownButton<String>(
+            isExpanded: true,
+            hint: Text('Select District'),
+            value: widget.district,
+            onChanged: (newValue) {
+              setState(() {
+                log("working dis change");
 
-        CustomTextWidget(
-          text: "State",
-          fontSize: 11.sp,
-        ),
-        DropdownButton<String>(
-          isExpanded: true,
-          hint: Text('Select State'),
-          value: widget.state,
-          onChanged: (String? newValue) {
-            setState(() {
-              widget.state = newValue!;
-              widget.district = null;
-              profileController.state = newValue;
-            });
-          },
-          items: models.map((model) {
-            return DropdownMenuItem<String>(
-              value: model.state,
-              child: Text(model.state),
-            );
-          }).toList(),
-        ),
-        SizedBox(height: 5),
-        CustomTextWidget(
-          text: "District",
-          fontSize: 11.sp,
-        ),
-        DropdownButton<String>(
-          isExpanded: true,
-          hint: Text('Select District'),
-          value: widget.district,
-          onChanged: (newValue) {
-            setState(() {
-              widget.district = newValue;
-              profileController.district = newValue!;
-            });
-          },
-          items: widget.state != null
-              ? models.firstWhere((model) => model.state == widget.state).districts.map((district) {
-                  return DropdownMenuItem<String>(
-                    value: district,
-                    child: Text(district),
-                  );
-                }).toList()
-              : [],
-        ),
-
-        // items: [
-        //   DropdownMenuItem(
-        //     value: 'Item 1',
-        //     child: Text('Item 1'),
-        //   ),
-        // ]),
-
-        TextField(
-          controller: widget.postalcodeController,
-          keyboardType: TextInputType.number,
-          maxLength: 6,
-          decoration: InputDecoration(
-            labelText: 'Postal Code',
+                widget.district = newValue;
+                profileController.district = newValue!;
+                log("value of district : ${profileController.district}");
+              });
+            },
+            items: widget.state != null
+                ? models.firstWhere((model) => model.state == widget.state).districts.map((district) {
+                    return DropdownMenuItem<String>(
+                      value: district,
+                      child: Text(district),
+                    );
+                  }).toList()
+                : [],
           ),
-        ),
-        TextField(
-          controller: widget.phoneNumberController,
-          keyboardType: TextInputType.number,
-          maxLength: 10,
-          decoration: InputDecoration(
-            prefixText: "+91 ",
-            labelText: 'Phone Number',
+
+          // items: [
+          //   DropdownMenuItem(
+          //     value: 'Item 1',
+          //     child: Text('Item 1'),
+          //   ),
+          // ]),
+
+          TextFormField(
+            controller: widget.postalcodeController,
+            keyboardType: TextInputType.number,
+            maxLength: 6,
+            decoration: InputDecoration(
+              labelText: 'Postal Code',
+            ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter your Postal Code';
+              } else if (value.length != 6) {
+                return 'Postal Code must be exactly 6 digits';
+              }
+              return null;
+            },
           ),
-        ),
-      ],
+
+          TextFormField(
+            controller: widget.phoneNumberController,
+            keyboardType: TextInputType.number,
+            maxLength: 10,
+            decoration: InputDecoration(
+              prefixText: "+91 ",
+              labelText: 'Phone Number',
+            ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter your Phone Number';
+              } else if (value.length != 10) {
+                return 'Phone Number must be exactly 10 digits';
+              }
+              return null;
+            },
+          ),
+        ],
+      ),
     );
   }
 }

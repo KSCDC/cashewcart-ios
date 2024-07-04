@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:internship_sample/controllers/app_controller.dart';
+import 'package:cashew_cart/controllers/app_controller.dart';
 // import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:internship_sample/core/colors.dart';
-import 'package:internship_sample/core/constants.dart';
+import 'package:cashew_cart/core/colors.dart';
+import 'package:cashew_cart/core/constants.dart';
+import 'package:cashew_cart/presentation/authentication/signin_screen.dart';
 
-import 'package:internship_sample/presentation/authentication/widgets/alternative_signin_options.dart.dart';
-import 'package:internship_sample/presentation/authentication/widgets/authentication_page_title.dart';
-import 'package:internship_sample/presentation/authentication/widgets/custom_icon_text_field.dart';
-import 'package:internship_sample/presentation/authentication/widgets/custom_password_text_field.dart';
-import 'package:internship_sample/presentation/main_page/main_page_screen.dart';
-import 'package:internship_sample/presentation/widgets/custom_elevated_button.dart';
-import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
-import 'package:internship_sample/services/api_services.dart';
+import 'package:cashew_cart/presentation/authentication/widgets/alternative_signin_options.dart.dart';
+import 'package:cashew_cart/presentation/authentication/widgets/authentication_page_title.dart';
+import 'package:cashew_cart/presentation/authentication/widgets/custom_icon_text_field.dart';
+import 'package:cashew_cart/presentation/authentication/widgets/custom_password_text_field.dart';
+import 'package:cashew_cart/presentation/main_page/main_page_screen.dart';
+import 'package:cashew_cart/presentation/widgets/custom_elevated_button.dart';
+import 'package:cashew_cart/presentation/widgets/custom_text_widget.dart';
+import 'package:cashew_cart/services/api_services.dart';
 import 'package:validatorless/validatorless.dart';
 
 class CreateAccountScreen extends StatelessWidget {
@@ -72,13 +73,13 @@ class CreateAccountScreen extends StatelessWidget {
                           children: [
                             CustomIconTextField(
                               icon: Icons.person_2,
-                              hintText: "Username",
+                              hintText: "Name",
                               controller: usernameController,
                               keyboardType: TextInputType.name,
                               validator: Validatorless.multiple(
                                 [
                                   Validatorless.required('Name is required'),
-                                  Validatorless.min(3, 'Username must be at least 3 characters'),
+                                  Validatorless.min(3, 'Name must be at least 3 characters'),
                                 ],
                               ),
                             ),
@@ -102,7 +103,12 @@ class CreateAccountScreen extends StatelessWidget {
                               validator: Validatorless.multiple(
                                 [
                                   Validatorless.required('Password is required'),
-                                  Validatorless.min(6, 'Password must contain atleast 6 characters'),
+                                  (String? password) {
+                                    if (password != null && password.length < 8) {
+                                      return 'Password must be at least 8 characters long';
+                                    }
+                                    return null;
+                                  },
                                 ],
                               ),
                             ),
@@ -142,39 +148,52 @@ class CreateAccountScreen extends StatelessWidget {
                         ],
                       ),
                       const SizedBox(height: 30),
-                      SizedBox(
-                        height: 55,
-                        width: double.infinity,
-                        child: GestureDetector(
-                          onTap: () {
-                            if (_formKey.currentState!.validate()) {
-                              final _password = passwordController.text;
-                              final _confirmPassword = confirmPasswordController.text;
-                              if (_password != _confirmPassword) {
-                                const snackBar = SnackBar(
-                                  content: Text("Passwords doesn't match!"),
-                                  // behavior: SnackBarBehavior.floating,
-                                  // margin: EdgeInsets.all(10),
-                                  padding: EdgeInsets.all(20),
-                                );
-                                ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                              } else {
-                                print("Trying to register user");
-                                controller.registerNewUser(
-                                  context,
-                                  token,
-                                  usernameController.text,
-                                  phoneNumberController.text,
-                                  passwordController.text,
-                                );
-                              }
-                            }
-                          },
-                          child: CustomElevatedButton(
-                            label: "Create Account",
-                          ),
-                        ),
-                      ),
+                      Obx(() {
+                        return controller.isLoading.value
+                            ? Container(
+                                height: 55,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: kMainThemeColor,
+                                ),
+                                child: Center(
+                                  child: SizedBox(
+                                    height: 40,
+                                    width: 40,
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                ),
+                              )
+                            : GestureDetector(
+                                onTap: () {
+                                  if (_formKey.currentState!.validate()) {
+                                    final _password = passwordController.text;
+                                    final _confirmPassword = confirmPasswordController.text;
+                                    if (_password != _confirmPassword) {
+                                      const snackBar = SnackBar(
+                                        content: Text("Passwords doesn't match!"),
+                                        // behavior: SnackBarBehavior.floating,
+                                        // margin: EdgeInsets.all(10),
+                                        padding: EdgeInsets.all(20),
+                                      );
+                                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                    } else {
+                                      print("Trying to register user");
+                                      controller.registerNewUser(
+                                        context,
+                                        token,
+                                        usernameController.text,
+                                        phoneNumberController.text,
+                                        passwordController.text,
+                                      );
+                                    }
+                                  }
+                                },
+                                child: CustomElevatedButton(
+                                  label: "Create Account",
+                                ),
+                              );
+                      }),
                       SizedBox(height: 20.w),
                       // const AlternativeSigninOptionsWidget(),
                       Row(
@@ -186,7 +205,7 @@ class CreateAccountScreen extends StatelessWidget {
                             fontweight: FontWeight.w400,
                           ),
                           GestureDetector(
-                            onTap: () => Navigator.of(context).pop(),
+                            onTap: () => Get.offAll(SignInScreen()),
                             child: const CustomTextWidget(
                               text: "Login",
                               fontSize: 14,

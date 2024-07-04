@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:internship_sample/controllers/app_controller.dart';
-import 'package:internship_sample/core/colors.dart';
-import 'package:internship_sample/core/constants.dart';
-import 'package:internship_sample/presentation/authentication/forgot_password_screen.dart';
-import 'package:internship_sample/presentation/authentication/signup_screen.dart';
-import 'package:internship_sample/presentation/authentication/widgets/alternative_signin_options.dart.dart';
-import 'package:internship_sample/presentation/authentication/widgets/authentication_page_title.dart';
-import 'package:internship_sample/presentation/authentication/widgets/custom_icon_text_field.dart';
-import 'package:internship_sample/presentation/authentication/widgets/custom_password_text_field.dart';
-import 'package:internship_sample/presentation/main_page/main_page_screen.dart';
-import 'package:internship_sample/presentation/widgets/custom_elevated_button.dart';
-import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
-import 'package:internship_sample/services/api_services.dart';
+import 'package:cashew_cart/controllers/app_controller.dart';
+import 'package:cashew_cart/core/colors.dart';
+import 'package:cashew_cart/core/constants.dart';
+import 'package:cashew_cart/presentation/authentication/forgot_password_screen.dart';
+import 'package:cashew_cart/presentation/authentication/signup_screen.dart';
+import 'package:cashew_cart/presentation/authentication/widgets/alternative_signin_options.dart.dart';
+import 'package:cashew_cart/presentation/authentication/widgets/authentication_page_title.dart';
+import 'package:cashew_cart/presentation/authentication/widgets/custom_icon_text_field.dart';
+import 'package:cashew_cart/presentation/authentication/widgets/custom_password_text_field.dart';
+import 'package:cashew_cart/presentation/main_page/main_page_screen.dart';
+import 'package:cashew_cart/presentation/widgets/custom_elevated_button.dart';
+import 'package:cashew_cart/presentation/widgets/custom_text_widget.dart';
+import 'package:cashew_cart/services/api_services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:validatorless/validatorless.dart';
 
@@ -23,7 +23,7 @@ class SignInScreen extends StatelessWidget {
   SignInScreen({super.key});
 
   static final TextEditingController _emailController = TextEditingController();
-  static final TextEditingController passwordController = TextEditingController();
+  static final TextEditingController _passwordController = TextEditingController();
   static final _formKey = GlobalKey<FormState>();
   AppController controller = Get.put(AppController());
 
@@ -62,7 +62,7 @@ class SignInScreen extends StatelessWidget {
                       ),
                       CustomPasswordTextField(
                         hintText: "Password",
-                        controller: passwordController,
+                        controller: _passwordController,
                         validator: Validatorless.multiple(
                           [
                             Validatorless.required('Password is required'),
@@ -87,21 +87,40 @@ class SignInScreen extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 50),
-                SizedBox(
-                  height: 55,
-                  width: double.infinity,
-                  child: GestureDetector(
-                    onTap: () {
-                      if (_formKey.currentState!.validate()) {
-                        print("Trying to login user");
-                        controller.loginUser(context, _emailController.text, passwordController.text);
-                      }
-                    },
-                    child: CustomElevatedButton(
-                      label: "Login",
-                    ),
-                  ),
-                ),
+                Obx(() {
+                  return controller.isLoading.value
+                      ? Container(
+                          height: 55,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: kMainThemeColor,
+                          ),
+                          child: Center(
+                            child: SizedBox(
+                              height: 40,
+                              width: 40,
+                              child: CircularProgressIndicator(),
+                            ),
+                          ),
+                        )
+                      : GestureDetector(
+                          onTap: () async {
+                            if (_formKey.currentState!.validate()) {
+                              print("Trying to login user");
+                              final loginSuccess = await controller.loginUser(context, _emailController.text, _passwordController.text);
+                              if (loginSuccess != null && loginSuccess != false) {
+                                _emailController.clear();
+                                _passwordController.clear();
+                                Get.offAll(() => MainPageScreen());
+                              }
+                            }
+                          },
+                          child: CustomElevatedButton(
+                            label: "Login",
+                          ),
+                        );
+                }),
+
                 SizedBox(height: 30),
                 GestureDetector(
                   onTap: () async {

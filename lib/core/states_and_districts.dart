@@ -125,7 +125,7 @@ List statesAndDistrictsList = [
     ]
   },
   {
-    "state": "Chandigarh (UT)",
+    "state": "Chandigarh",
     "districts": ["Chandigarh"]
   },
   {
@@ -161,15 +161,15 @@ List statesAndDistrictsList = [
     ]
   },
   {
-    "state": "Dadra and Nagar Haveli (UT)",
-    "districts": ["Dadra & Nagar Haveli"]
+    "state": "Dadra and Nagar Haveli and Daman & Diu",
+    "districts": ["Dadra & Nagar Haveli" "Daman", "Diu"]
   },
+  // {
+  //   "state": "Daman and Diu (UT)",
+  //   "districts": ["Daman", "Diu"]
+  // },
   {
-    "state": "Daman and Diu (UT)",
-    "districts": ["Daman", "Diu"]
-  },
-  {
-    "state": "Delhi (NCT)",
+    "state": "Delhi",
     "districts": ["Central Delhi", "East Delhi", "New Delhi", "North Delhi", "North East  Delhi", "North West  Delhi", "Shahdara", "South Delhi", "South East Delhi", "South West  Delhi", "West Delhi"]
   },
   {
@@ -259,7 +259,7 @@ List statesAndDistrictsList = [
     ]
   },
   {
-    "state": "Jammu and Kashmir",
+    "state": "Jammu & Kashmir",
     "districts": [
       "Anantnag",
       "Bandipore",
@@ -354,7 +354,7 @@ List statesAndDistrictsList = [
     "districts": ["Alappuzha", "Ernakulam", "Idukki", "Kannur", "Kasaragod", "Kollam", "Kottayam", "Kozhikode", "Malappuram", "Palakkad", "Pathanamthitta", "Thiruvananthapuram", "Thrissur", "Wayanad"]
   },
   {
-    "state": "Lakshadweep (UT)",
+    "state": "Lakshadweep",
     "districts": [
       "Agatti",
       "Amini",
@@ -567,7 +567,7 @@ List statesAndDistrictsList = [
     ]
   },
   {
-    "state": "Puducherry (UT)",
+    "state": "Puducherry",
     "districts": ["Karaikal", "Mahe", "Pondicherry", "Yanam"]
   },
   {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:internship_sample/core/base_url.dart';
-import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
+import 'package:cashew_cart/core/base_url.dart';
+import 'package:cashew_cart/presentation/widgets/custom_text_widget.dart';
 
 class CircleAvatarListItem extends StatelessWidget {
   const CircleAvatarListItem({

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:internship_sample/core/colors.dart';
-import 'package:internship_sample/presentation/authentication/signin_screen.dart';
-import 'package:internship_sample/presentation/get_started/get_started_screen.dart';
-import 'package:internship_sample/presentation/onboarding/widgets/onboarding_tile.dart';
-import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
+import 'package:cashew_cart/core/colors.dart';
+import 'package:cashew_cart/presentation/authentication/signin_screen.dart';
+import 'package:cashew_cart/presentation/get_started/get_started_screen.dart';
+import 'package:cashew_cart/presentation/onboarding/widgets/onboarding_tile.dart';
+import 'package:cashew_cart/presentation/widgets/custom_text_widget.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class OnboardingScreen extends StatelessWidget {

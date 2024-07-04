@@ -3,26 +3,30 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:internship_sample/controllers/cart_controller.dart';
-import 'package:internship_sample/core/base_url.dart';
-import 'package:internship_sample/core/colors.dart';
-import 'package:internship_sample/core/constants.dart';
-import 'package:internship_sample/presentation/cart/cart_screen.dart';
-import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
-import 'package:internship_sample/presentation/shop/widgets/custom_text_icon_button.dart';
-import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
-import 'package:internship_sample/services/api_services.dart';
+import 'package:cashew_cart/controllers/cart_controller.dart';
+import 'package:cashew_cart/core/base_url.dart';
+import 'package:cashew_cart/core/colors.dart';
+import 'package:cashew_cart/core/constants.dart';
+import 'package:cashew_cart/presentation/cart/cart_screen.dart';
+import 'package:cashew_cart/presentation/main_page/widgets/custom_bottom_navbar.dart';
+import 'package:cashew_cart/presentation/shop/widgets/custom_text_icon_button.dart';
+import 'package:cashew_cart/presentation/widgets/custom_text_widget.dart';
+import 'package:cashew_cart/services/api_services.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
 class CartProductsListTile extends StatelessWidget {
   CartProductsListTile({
     super.key,
     required this.productDetails,
+    required this.index,
   });
   final productDetails;
+  final int index;
+  late CartController unique;
   CartController cartController = Get.put(CartController());
   @override
   Widget build(BuildContext context) {
+    unique = Get.put(CartController(), tag: index.toString());
     final String imagePath = productDetails.product.product.productImages.isNotEmpty ? productDetails.product.product.productImages[0].productImage : "";
     final String productName = productDetails.product.product.name;
     // final int selectedCategory = 1;
@@ -145,29 +149,38 @@ class CartProductsListTile extends StatelessWidget {
                   return Row(
                     // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      GestureDetector(
-                        onTap: () async {
-                          if (currentProductCountNotifier.value > 1) {
-                            log("New count --- :$newCount");
-                            // cartCountNotifier.value--;
-                            final response = await ApiServices().updateCartCount(productDetails.id.toString(), currentProductCountNotifier.value - 1);
-                            log(response.statusCode.toString());
-                            if (response != null && response.statusCode.toString() == "200" && currentProductCountNotifier.value > 1) {
-                              log("New count :$newCount");
-                              if (currentProductCountNotifier.value > 1) {
-                                currentProductCountNotifier.value--;
-                              }
-                              for (int i = 0; i < cartController.cartProducts.value.count; i++) {
-                                if (cartController.cartProducts.value.results[i].id == productDetails.id) {
-                                  cartController.cartProducts.value.results[i].purchaseCount = cartController.cartProducts.value.results[i].purchaseCount - 1;
-                                }
-                              }
-                              CartScreen().getGrandTotal();
-                            }
-                          }
-                        },
-                        child: Icon(Icons.remove),
-                      ),
+                      Obx(() {
+                        return !unique.isUpdatingCartCount.value
+                            ? GestureDetector(
+                                onTap: () async {
+                                  if (currentProductCountNotifier.value > 1) {
+                                    log("New count --- :$newCount");
+                                    // cartCountNotifier.value--;
+                                    // final response = await ApiServices().updateCartCount(productDetails.id.toString(), currentProductCountNotifier.value - 1);
+                                    final response = await unique.updateCartProduct(productDetails.id.toString(), currentProductCountNotifier.value - 1);
+
+                                    log(response.statusCode.toString());
+                                    if (response != null && response.statusCode.toString() == "200" && currentProductCountNotifier.value > 1) {
+                                      log("New count :$newCount");
+                                      if (currentProductCountNotifier.value > 1) {
+                                        currentProductCountNotifier.value--;
+                                      }
+                                      for (int i = 0; i < cartController.cartProducts.value.count; i++) {
+                                        if (cartController.cartProducts.value.results[i].id == productDetails.id) {
+                                          cartController.cartProducts.value.results[i].purchaseCount = cartController.cartProducts.value.results[i].purchaseCount - 1;
+                                        }
+                                      }
+                                      CartScreen().getGrandTotal();
+                                    }
+                                  }
+                                },
+                                child: Icon(Icons.remove),
+                              )
+                            : Icon(
+                                Icons.remove,
+                                color: Colors.grey,
+                              );
+                      }),
                       SizedBox(width: 10.w),
                       Container(
                         height: 35.w,
@@ -176,37 +189,49 @@ class CartProductsListTile extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10.r),
                           color: kMainThemeColor,
                         ),
-                        child: Center(
-                          child:
-                              // cartController.isLoading.value
-                              //     ? CircularProgressIndicator()
-                              //     :
-                              CustomTextWidget(
-                            text: "$newCount",
-                            fontSize: 14.sp,
-                          ),
-                        ),
+                        child: Obx(() {
+                          return Center(
+                            child: unique.isUpdatingCartCount.value
+                                ? SizedBox(
+                                    height: 15,
+                                    width: 15,
+                                    child: CircularProgressIndicator(),
+                                  )
+                                : CustomTextWidget(
+                                    text: "$newCount",
+                                    fontSize: 14.sp,
+                                  ),
+                          );
+                        }),
                       ),
                       SizedBox(width: 10.w),
-                      GestureDetector(
-                        onTap: () async {
-                          // cartCountNotifier.value++;
-                          final response = await ApiServices().updateCartCount(productDetails.id.toString(), currentProductCountNotifier.value + 1);
-                          log(response.statusCode.toString());
-                          if (response != null && response.statusCode.toString() == "200") {
-                            log("Working");
-                            // cartController.getCartList();
-                            currentProductCountNotifier.value++;
-                            for (int i = 0; i < cartController.cartProducts.value.count; i++) {
-                              if (cartController.cartProducts.value.results[i].id == productDetails.id) {
-                                cartController.cartProducts.value.results[i].purchaseCount = cartController.cartProducts.value.results[i].purchaseCount + 1;
-                              }
-                            }
-                            CartScreen().getGrandTotal();
-                          }
-                        },
-                        child: Icon(Icons.add),
-                      ),
+                      Obx(() {
+                        return !unique.isUpdatingCartCount.value
+                            ? GestureDetector(
+                                onTap: () async {
+                                  // cartCountNotifier.value++;
+                                  // final response = await ApiServices().updateCartCount(productDetails.id.toString(), currentProductCountNotifier.value + 1);
+                                  final response = await unique.updateCartProduct(productDetails.id.toString(), currentProductCountNotifier.value + 1);
+                                  log(response.statusCode.toString());
+                                  if (response != null && response.statusCode.toString() == "200") {
+                                    log("Working");
+                                    // cartController.getCartList();
+                                    currentProductCountNotifier.value++;
+                                    for (int i = 0; i < cartController.cartProducts.value.count; i++) {
+                                      if (cartController.cartProducts.value.results[i].id == productDetails.id) {
+                                        cartController.cartProducts.value.results[i].purchaseCount = cartController.cartProducts.value.results[i].purchaseCount + 1;
+                                      }
+                                    }
+                                    CartScreen().getGrandTotal();
+                                  }
+                                },
+                                child: Icon(Icons.add),
+                              )
+                            : Icon(
+                                Icons.add,
+                                color: Colors.grey,
+                              );
+                      }),
                       Spacer(),
                       Container(
                         child: CustomTextIconButton(
@@ -263,7 +288,7 @@ class CartProductsListTile extends StatelessWidget {
           onPressed: () async {
             cartCountNotifier.value = (cartCountNotifier.value - count).toInt();
             cartProductsList.remove(productDetails);
-            cartController.removeProductFromCart(context, productDetails.product.id.toString());
+            await cartController.removeProductFromCart(context, productDetails.product.id.toString());
             CartScreen().getGrandTotal();
             Get.back();
           },

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:internship_sample/controllers/app_controller.dart';
-import 'package:internship_sample/controllers/cart_controller.dart';
-import 'package:internship_sample/core/constants.dart';
-import 'package:internship_sample/presentation/main_page/main_page_screen.dart';
-import 'package:internship_sample/presentation/onboarding/onboarding_screen.dart';
-import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
+import 'package:cashew_cart/controllers/app_controller.dart';
+import 'package:cashew_cart/controllers/cart_controller.dart';
+import 'package:cashew_cart/core/constants.dart';
+import 'package:cashew_cart/presentation/main_page/main_page_screen.dart';
+import 'package:cashew_cart/presentation/onboarding/onboarding_screen.dart';
+import 'package:cashew_cart/presentation/widgets/custom_text_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {

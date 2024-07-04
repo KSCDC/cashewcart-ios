@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:internship_sample/core/constants.dart';
-import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
+import 'package:cashew_cart/core/constants.dart';
+import 'package:cashew_cart/presentation/widgets/custom_text_widget.dart';
 
 class OnboardingTile extends StatelessWidget {
   OnboardingTile({

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:internship_sample/presentation/authentication/widgets/custom_icon_text_field.dart';
-import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
+import 'package:cashew_cart/presentation/authentication/widgets/custom_icon_text_field.dart';
+import 'package:cashew_cart/presentation/widgets/custom_text_widget.dart';
 
 class AuthenticationPageTitle extends StatelessWidget {
   AuthenticationPageTitle({

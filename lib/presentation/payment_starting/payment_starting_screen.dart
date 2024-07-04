@@ -8,19 +8,19 @@ import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:internship_sample/controllers/app_controller.dart';
-import 'package:internship_sample/controllers/cart_controller.dart';
-import 'package:internship_sample/core/colors.dart';
-import 'package:internship_sample/core/razorpay_key/razorpay_key.dart';
-import 'package:internship_sample/models/cart_product_model.dart';
-import 'package:internship_sample/models/orders_list_model.dart';
-import 'package:internship_sample/models/user_address_model.dart';
-import 'package:internship_sample/presentation/main_page/main_page_screen.dart';
-import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
-import 'package:internship_sample/presentation/my_orders/my_orders_screen.dart';
-import 'package:internship_sample/presentation/widgets/custom_elevated_button.dart';
-import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
-import 'package:internship_sample/services/api_services.dart';
+import 'package:cashew_cart/controllers/app_controller.dart';
+import 'package:cashew_cart/controllers/cart_controller.dart';
+import 'package:cashew_cart/core/colors.dart';
+import 'package:cashew_cart/core/razorpay_key/razorpay_key.dart';
+import 'package:cashew_cart/models/cart_product_model.dart';
+import 'package:cashew_cart/models/orders_list_model.dart';
+import 'package:cashew_cart/models/user_address_model.dart';
+import 'package:cashew_cart/presentation/main_page/main_page_screen.dart';
+import 'package:cashew_cart/presentation/main_page/widgets/custom_bottom_navbar.dart';
+import 'package:cashew_cart/presentation/my_orders/my_orders_screen.dart';
+import 'package:cashew_cart/presentation/widgets/custom_elevated_button.dart';
+import 'package:cashew_cart/presentation/widgets/custom_text_widget.dart';
+import 'package:cashew_cart/services/api_services.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -299,10 +299,7 @@ class _PaymentStartingScreenState extends State<PaymentStartingScreen> {
                               Center(child: CustomTextWidget(text: widget.productsList[index].product.sellingPrice)),
                             ),
                             DataCell(
-                              Center(
-                                  child: CustomTextWidget(
-                                      text: (double.parse(widget.productsList[index].product.sellingPrice) * widget.productsList[index].purchaseCount)
-                                          .toStringAsFixed(2))),
+                              Center(child: CustomTextWidget(text: (double.parse(widget.productsList[index].product.sellingPrice) * widget.productsList[index].purchaseCount).toStringAsFixed(2))),
                             ),
                             DataCell(
                               Center(child: CustomTextWidget(text: widget.productsList[index].product.cgstRate)),

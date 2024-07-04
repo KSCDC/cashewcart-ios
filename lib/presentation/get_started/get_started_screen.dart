@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:internship_sample/core/colors.dart';
-import 'package:internship_sample/presentation/authentication/signin_screen.dart';
-import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
+import 'package:cashew_cart/core/colors.dart';
+import 'package:cashew_cart/presentation/authentication/signin_screen.dart';
+import 'package:cashew_cart/presentation/widgets/custom_text_widget.dart';
 
 class GetStartedScreen extends StatelessWidget {
   const GetStartedScreen({super.key});

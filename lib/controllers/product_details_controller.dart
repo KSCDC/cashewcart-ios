@@ -1,28 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:internship_sample/models/product_details_model.dart';
-import 'package:internship_sample/models/product_reviews_model.dart';
-import 'package:internship_sample/services/api_services.dart';
+import 'package:cashew_cart/models/product_details_model.dart';
+import 'package:cashew_cart/models/product_reviews_model.dart';
+import 'package:cashew_cart/services/api_services.dart';
 
 class ProductDetailsController extends GetxController {
   RxBool isLoading = false.obs;
   RxBool isError = false.obs;
   // RxBool isLoadedProductDetails = false.obs;
   RxBool isReviewsLoading = false.obs;
-  
+
   RxBool isReviewsLoadingError = false.obs;
 
-    Rxn<ProductDetailsModel> productDetails = Rxn<ProductDetailsModel>();
-    
+  Rxn<ProductDetailsModel> productDetails = Rxn<ProductDetailsModel>();
+
   RxList<ProductReviewsModel> productReviewsList = <ProductReviewsModel>[].obs;
 
-   int numOf1Stars = 0;
+  int numOf1Stars = 0;
   int numOf2Stars = 0;
   int numOf3Stars = 0;
   int numOf4Stars = 0;
   int numOf5Stars = 0;
 
-   RxDouble avgRating = 0.0.obs;
+  RxDouble avgRating = 0.0.obs;
 
   getProductDetails(String id) async {
     isLoading.value = true;

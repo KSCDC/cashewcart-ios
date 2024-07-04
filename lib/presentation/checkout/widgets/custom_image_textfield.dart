@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:internship_sample/core/colors.dart';
+import 'package:cashew_cart/core/colors.dart';
 
 class CustomImageTextField extends StatelessWidget {
   const CustomImageTextField({

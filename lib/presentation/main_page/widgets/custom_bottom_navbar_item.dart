@@ -3,14 +3,14 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:internship_sample/controllers/app_controller.dart';
-import 'package:internship_sample/controllers/cart_controller.dart';
-import 'package:internship_sample/controllers/profile_controller.dart';
-import 'package:internship_sample/core/constants.dart';
-import 'package:internship_sample/main.dart';
-import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
-import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
-import 'package:internship_sample/services/services.dart';
+import 'package:cashew_cart/controllers/app_controller.dart';
+import 'package:cashew_cart/controllers/cart_controller.dart';
+import 'package:cashew_cart/controllers/profile_controller.dart';
+import 'package:cashew_cart/core/constants.dart';
+import 'package:cashew_cart/main.dart';
+import 'package:cashew_cart/presentation/main_page/widgets/custom_bottom_navbar.dart';
+import 'package:cashew_cart/presentation/widgets/custom_text_widget.dart';
+import 'package:cashew_cart/services/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomBottomNavbarItem extends StatelessWidget {
@@ -69,9 +69,9 @@ class CustomBottomNavbarItem extends StatelessWidget {
         if (index == 3) {
           if (email != null && password != null) {
             bottomNavbarIndexNotifier.value = index;
-             if (profileController.userName == "") {
-                              profileController.getProfileDetails();
-                            }
+            if (profileController.userName == "") {
+              profileController.getProfileDetails();
+            }
           } else {
             Services().showLoginAlert(context, "Please login to access Account");
           }

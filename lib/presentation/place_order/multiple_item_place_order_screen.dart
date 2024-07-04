@@ -6,29 +6,29 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:internship_sample/controllers/app_controller.dart';
-import 'package:internship_sample/controllers/profile_controller.dart';
-import 'package:internship_sample/core/colors.dart';
-import 'package:internship_sample/core/constants.dart';
-import 'package:internship_sample/core/razorpay_key/razorpay_key.dart';
-import 'package:internship_sample/models/cart_product_model.dart';
-import 'package:internship_sample/models/orders_list_model.dart';
-import 'package:internship_sample/presentation/cart/cart_screen.dart';
-import 'package:internship_sample/presentation/checkout/checkout_screen.dart';
-import 'package:internship_sample/presentation/cart/widgets/cart_product_list_tile.dart';
-import 'package:internship_sample/presentation/main_page/main_page_screen.dart';
-import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
-import 'package:internship_sample/presentation/my_orders/my_orders_screen.dart';
-import 'package:internship_sample/presentation/payment_starting/payment_starting_screen.dart';
-import 'package:internship_sample/presentation/place_order/place_order_dropdown.dart';
-import 'package:internship_sample/presentation/place_order/widgets/address_section.dart';
-import 'package:internship_sample/presentation/place_order/widgets/place_order_item_widget.dart';
-import 'package:internship_sample/presentation/shop/widgets/custom_text_icon_button.dart';
-import 'package:internship_sample/presentation/widgets/custom_appbar.dart';
-import 'package:internship_sample/presentation/widgets/custom_elevated_button.dart';
-import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
-import 'package:internship_sample/services/api_services.dart';
-import 'package:internship_sample/services/services.dart';
+import 'package:cashew_cart/controllers/app_controller.dart';
+import 'package:cashew_cart/controllers/profile_controller.dart';
+import 'package:cashew_cart/core/colors.dart';
+import 'package:cashew_cart/core/constants.dart';
+import 'package:cashew_cart/core/razorpay_key/razorpay_key.dart';
+import 'package:cashew_cart/models/cart_product_model.dart';
+import 'package:cashew_cart/models/orders_list_model.dart';
+import 'package:cashew_cart/presentation/cart/cart_screen.dart';
+import 'package:cashew_cart/presentation/checkout/checkout_screen.dart';
+import 'package:cashew_cart/presentation/cart/widgets/cart_product_list_tile.dart';
+import 'package:cashew_cart/presentation/main_page/main_page_screen.dart';
+import 'package:cashew_cart/presentation/main_page/widgets/custom_bottom_navbar.dart';
+import 'package:cashew_cart/presentation/my_orders/my_orders_screen.dart';
+import 'package:cashew_cart/presentation/payment_starting/payment_starting_screen.dart';
+import 'package:cashew_cart/presentation/place_order/place_order_dropdown.dart';
+import 'package:cashew_cart/presentation/place_order/widgets/address_section.dart';
+import 'package:cashew_cart/presentation/place_order/widgets/place_order_item_widget.dart';
+import 'package:cashew_cart/presentation/shop/widgets/custom_text_icon_button.dart';
+import 'package:cashew_cart/presentation/widgets/custom_appbar.dart';
+import 'package:cashew_cart/presentation/widgets/custom_elevated_button.dart';
+import 'package:cashew_cart/presentation/widgets/custom_text_widget.dart';
+import 'package:cashew_cart/services/api_services.dart';
+import 'package:cashew_cart/services/services.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -46,12 +46,11 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
   ValueNotifier<int> deliveryAddressRadioNotifier = ValueNotifier(0);
 
   ValueNotifier<int> billingAddressRadioNotifier = ValueNotifier(0);
-  double deliveryCharge = 0;
-  double additionalCharges = 0;
+  double deliveryCharge = 0.0;
+  double additionalCharges = 0.0;
 
   @override
   Widget build(BuildContext context) {
-    
     double totalProductPrice = 0;
 
     double cgstTotal = 0;
@@ -70,8 +69,12 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
       sgstTotal += sgstPrice * productList[i].purchaseCount;
       // totalPriceWithoutGst += originalProductPriceWithoutGst;
       totalProductPrice += ((sellingPrice + cgstPrice + sgstPrice) * productList[i].purchaseCount).roundToDouble();
-      deliveryCharge = ((double.parse(profileController.addressList[deliveryAddressRadioNotifier.value].deliveryChargePercentage) / 100) * totalProductPrice).roundToDouble();
-      additionalCharges = ((double.parse(profileController.addressList[deliveryAddressRadioNotifier.value].additionalChargePercentage) / 100) * totalProductPrice).roundToDouble();
+      // if (profileController.addressList.isNotEmpty) {
+      //   deliveryCharge = ((double.parse(profileController.addressList[deliveryAddressRadioNotifier.value].deliveryChargePercentage) / 100) * totalProductPrice).roundToDouble();
+      //   log(profileController.addressList[deliveryAddressRadioNotifier.value].additionalChargePercentage);
+      //   if (profileController.addressList[deliveryAddressRadioNotifier.value].additionalChargePercentage.toString() != "None")
+      //     additionalCharges = ((double.parse(profileController.addressList[deliveryAddressRadioNotifier.value].additionalChargePercentage) / 100) * totalProductPrice).roundToDouble();
+      // }
     }
     log(deliveryCharge.toString());
 
@@ -121,38 +124,43 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
                     ),
                     kHeight,
                     //delivery addresses
-                    if (profileController.addressList.isNotEmpty)
-                      ValueListenableBuilder(
-                          valueListenable: useSameAddressNotifier,
-                          builder: (context, newValue, _) {
-                            return Row(
-                              children: [
-                                SizedBox(
-                                  // width: screenSize.width * 0.8,
-                                  child: CustomTextWidget(
-                                    text: "Use same Delivery Address\nand Billing Address :",
-                                    fontweight: FontWeight.w600,
-                                  ),
+                    // if (profileController.addressList.isNotEmpty)
+                    ValueListenableBuilder(
+                        valueListenable: useSameAddressNotifier,
+                        builder: (context, newValue, _) {
+                          return Row(
+                            children: [
+                              SizedBox(
+                                // width: screenSize.width * 0.8,
+                                child: CustomTextWidget(
+                                  text: "Use same Delivery Address\nand Billing Address :",
+                                  fontweight: FontWeight.w600,
                                 ),
-                                // Default value
-                                Spacer(),
+                              ),
+                              // Default value
+                              Spacer(),
 
-                                Checkbox(
-                                  value: newValue,
-                                  onChanged: (bool? value) {
-                                    useSameAddressNotifier.value = value ?? true; // Update the isChecked variable
-                                  },
-                                )
-                              ],
-                            );
-                          }),
+                              Checkbox(
+                                value: newValue,
+                                onChanged: (bool? value) {
+                                  useSameAddressNotifier.value = value ?? true; // Update the isChecked variable
+                                },
+                              )
+                            ],
+                          );
+                        }),
                     kHeight,
 
                     Obx(() {
                       if (profileController.addressList.isEmpty) {
-                        useSameAddressNotifier.value = false;
+                        // useSameAddressNotifier.value = false;
                         return CustomTextWidget(text: "No saved addresses!");
                       } else {
+                        deliveryCharge = ((double.parse(profileController.addressList[deliveryAddressRadioNotifier.value].deliveryChargePercentage) / 100) * totalProductPrice).roundToDouble();
+                        log(profileController.addressList[deliveryAddressRadioNotifier.value].additionalChargePercentage);
+                        if (profileController.addressList[deliveryAddressRadioNotifier.value].additionalChargePercentage.toString() != "None")
+                          additionalCharges = ((double.parse(profileController.addressList[deliveryAddressRadioNotifier.value].additionalChargePercentage) / 100) * totalProductPrice).roundToDouble();
+
                         return AddressSection(
                           screenSize: screenSize,
                           heading: "Delivery Address",
@@ -168,11 +176,13 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
                             billingAddressRadioNotifier.value = deliveryAddressRadioNotifier.value;
                             return SizedBox();
                           } else {
-                            return AddressSection(
-                              screenSize: screenSize,
-                              heading: "Billing Address",
-                              selectedRadioNotifier: billingAddressRadioNotifier,
-                            );
+                            return profileController.addressList.isNotEmpty
+                                ? AddressSection(
+                                    screenSize: screenSize,
+                                    heading: "Billing Address",
+                                    selectedRadioNotifier: billingAddressRadioNotifier,
+                                  )
+                                : SizedBox();
                           }
                         }),
                     SizedBox(height: 5),
@@ -180,13 +190,13 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
                     // add new address button
                     CustomTextIconButton(
                       onPressed: () async {
-                        TextEditingController _nameContrller = TextEditingController();
-                        TextEditingController _streetAddressContrller = TextEditingController();
-                        TextEditingController _regionController = TextEditingController();
-                        TextEditingController _postalcodeController = TextEditingController();
-                        TextEditingController _phoneNumberController = TextEditingController();
+                        TextEditingController _nameContrller = TextEditingController(text: "");
+                        TextEditingController _streetAddressContrller = TextEditingController(text: "");
+                        TextEditingController _regionController = TextEditingController(text: "");
+                        TextEditingController _postalcodeController = TextEditingController(text: "");
+                        TextEditingController _phoneNumberController = TextEditingController(text: "");
                         profileController.getUserAddresses();
-                        await Services().showAddressEditPopup(
+                        await Services().showAddressEditBottomSheet(
                           true,
                           context,
                           "",
@@ -278,37 +288,27 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
                       ],
                     ),
                     kHeight,
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        CustomTextWidget(
-                          text: "Delivery Charge",
-                          fontSize: 17,
-                          fontweight: FontWeight.w600,
-                        ),
-                        CustomTextWidget(
-                          text: "₹ ${(deliveryCharge).toStringAsFixed(2)}",
-                          fontSize: 16,
-                          fontweight: FontWeight.w600,
-                        )
-                      ],
-                    ),
+                    Obx(() {
+                      return profileController.addressList.isNotEmpty
+                          ? Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                CustomTextWidget(
+                                  text: "Delivery Charge",
+                                  fontSize: 17,
+                                  fontweight: FontWeight.w600,
+                                ),
+                                CustomTextWidget(
+                                  text: "₹ ${(deliveryCharge).toStringAsFixed(2)}",
+                                  fontSize: 16,
+                                  fontweight: FontWeight.w600,
+                                )
+                              ],
+                            )
+                          : SizedBox();
+                    }),
                     kHeight,
-                    // Row(
-                    //   children: [
-                    //     CustomTextWidget(
-                    //       text: "EMI Available",
-                    //       fontSize: 16,
-                    //       fontweight: FontWeight.w400,
-                    //     ),
-                    //     SizedBox(width: 20),
-                    //     CustomTextWidget(
-                    //       text: "Details",
-                    //       fontColor: kMainThemeColor,
-                    //       fontweight: FontWeight.w600,
-                    //     ),
-                    //   ],
-                    // ),
+
                     SizedBox(height: 100),
                   ],
                 ),
@@ -332,39 +332,51 @@ class MultipleItemPlaceOrderScreen extends StatelessWidget {
                   fontSize: 18.sp,
                   fontweight: FontWeight.w600,
                 ),
-                CustomTextWidget(
-                  text: "₹ ${(totalProductPrice + deliveryCharge + additionalCharges).toStringAsFixed(2)}",
-                  fontSize: 18.sp,
-                  fontweight: FontWeight.w600,
-                ),
+                Obx(() {
+                  return CustomTextWidget(
+                    text: profileController.addressList.isEmpty
+                        ? "₹ ${(totalProductPrice).toStringAsFixed(2)} + Delivery charges"
+                        : "₹ ${(totalProductPrice + deliveryCharge + additionalCharges).toStringAsFixed(2)}",
+                    fontSize: profileController.addressList.isEmpty ? 12.sp : 18.sp,
+                    fontweight: FontWeight.w600,
+                  );
+                }),
+                // if (deliveryCharge == 0)
+                //   CustomTextWidget(
+                //     text: "+ devlivery charges",
+                //     fontSize: 18.sp,
+                //     fontweight: FontWeight.w600,
+                //   ),
               ],
             ),
             SizedBox(width: 10),
-            Container(
-              height: 55,
-              width: screenSize.width * 0.5,
-              child: GestureDetector(
-                onTap: () async {
-                  if (profileController.addressList.isEmpty) {
-                    Services().showCustomSnackBar(context, "No address found. Add an address to continue");
-                  } else {
-                    Get.to(
-                      () => PaymentStartingScreen(
-                        productsList: productList,
-                        deliveryAddress: profileController.addressList[deliveryAddressRadioNotifier.value],
-                        billingAddress: profileController.addressList[billingAddressRadioNotifier.value],
-                        deliveryCharge: deliveryCharge,
-                        additionalAmount: additionalCharges,
-                      ),
-                    );
-                  }
-                },
-                child: CustomElevatedButton(
-                  label: "Next",
-                  fontSize: 18,
+            Obx(() {
+              return Container(
+                height: 55,
+                width: profileController.addressList.isEmpty ? screenSize.width * 0.3 : screenSize.width * 0.5,
+                child: GestureDetector(
+                  onTap: () async {
+                    if (profileController.addressList.isEmpty) {
+                      Services().showCustomSnackBar(context, "No address found. Add an address to continue");
+                    } else {
+                      Get.to(
+                        () => PaymentStartingScreen(
+                          productsList: productList,
+                          deliveryAddress: profileController.addressList[deliveryAddressRadioNotifier.value],
+                          billingAddress: profileController.addressList[billingAddressRadioNotifier.value],
+                          deliveryCharge: deliveryCharge,
+                          additionalAmount: additionalCharges,
+                        ),
+                      );
+                    }
+                  },
+                  child: CustomElevatedButton(
+                    label: "Next",
+                    fontSize: 18.sp,
+                  ),
                 ),
-              ),
-            )
+              );
+            })
           ],
         ),
       ),

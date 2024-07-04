@@ -4,19 +4,19 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:internship_sample/controllers/app_controller.dart';
-import 'package:internship_sample/controllers/profile_controller.dart';
-import 'package:internship_sample/core/colors.dart';
-import 'package:internship_sample/core/constants.dart';
-import 'package:internship_sample/models/user_address_model.dart';
-import 'package:internship_sample/presentation/place_order/widgets/address_section.dart';
-import 'package:internship_sample/presentation/profile/widgets/profile_editing_textfield.dart';
-import 'package:internship_sample/presentation/shop/widgets/custom_text_icon_button.dart';
-import 'package:internship_sample/presentation/widgets/custom_appbar.dart';
-import 'package:internship_sample/presentation/widgets/custom_elevated_button.dart';
-import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
-import 'package:internship_sample/services/api_services.dart';
-import 'package:internship_sample/services/services.dart';
+import 'package:cashew_cart/controllers/app_controller.dart';
+import 'package:cashew_cart/controllers/profile_controller.dart';
+import 'package:cashew_cart/core/colors.dart';
+import 'package:cashew_cart/core/constants.dart';
+import 'package:cashew_cart/models/user_address_model.dart';
+import 'package:cashew_cart/presentation/place_order/widgets/address_section.dart';
+import 'package:cashew_cart/presentation/profile/widgets/profile_editing_textfield.dart';
+import 'package:cashew_cart/presentation/shop/widgets/custom_text_icon_button.dart';
+import 'package:cashew_cart/presentation/widgets/custom_appbar.dart';
+import 'package:cashew_cart/presentation/widgets/custom_elevated_button.dart';
+import 'package:cashew_cart/presentation/widgets/custom_text_widget.dart';
+import 'package:cashew_cart/services/api_services.dart';
+import 'package:cashew_cart/services/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:encrypt/encrypt.dart' as enc;
 
@@ -249,7 +249,10 @@ class ProfileScreen extends StatelessWidget {
                           // TextEditingController _stateController = TextEditingController();
                           TextEditingController _postalcodeController = TextEditingController();
                           TextEditingController _phoneNumberController = TextEditingController();
-                          await Services().showAddressEditPopup(
+                          profileController.state = "Kerala";
+                          profileController.district = null;
+
+                          await Services().showAddressEditBottomSheet(
                             true,
                             context,
                             "",
@@ -270,82 +273,9 @@ class ProfileScreen extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 20),
-                    // ProfileEditingTextField(
-                    //   hintText: "Name",
-                    //   controller: _nameController,
-                    // ),
-                    // kProfileScreenGap,
-                    // ProfileEditingTextField(
-                    //   hintText: "Street Address",
-                    //   controller: _streetAddressContrller,
-                    // ),
-                    // kProfileScreenGap,
-                    // ProfileEditingTextField(
-                    //   hintText: "Region",
-                    //   controller: _regionController,
-                    // ),
-                    // kProfileScreenGap,
-                    // ProfileEditingTextField(
-                    //   hintText: "District",
-                    //   controller: _districtController,
-                    // ),
-                    // kProfileScreenGap,
-                    // ProfileEditingTextField(
-                    //   hintText: "State",
-                    //   controller: _stateController,
-                    // ),
-                    // kProfileScreenGap,
-                    // ProfileEditingTextField(
-                    //   hintText: "Postal Code",
-                    //   controller: _postalCodeController,
-                    // ),
-
-                    // kProfileScreenGap,
-                    // ProfileEditingTextField(
-                    //   hintText: "Phone Number",
-                    //   controller: _phoneNumberController,
-                    // ),
-                    // kProfileScreenGap,
-                    // if (defaultAddress != null)
-                    //   SizedBox(
-                    //     height: 55,
-                    //     width: double.infinity,
-                    //     child: GestureDetector(
-                    //       onTap: () async {
-                    //         await ApiServices().editUserAddress(context, defaultAddress!.id.toString(), _nameController.text, _streetAddressContrller.text, _regionController.text,
-                    //             _districtController.text, _stateController.text, _postalCodeController.text, _phoneNumberController.text, true);
-                    //         controller.getUserAddresses();
-                    //       },
-                    //       child: CustomElevatedButton(label: "Save"),
-                    //     ),
-                    //   ),
                   ],
                 );
               }),
-
-              // kProfileScreenGap,
-              // Divider(),
-              // kProfileScreenGap,
-
-              // //Bank account details section
-
-              // const ProfileScreenSubHeading(text: "Bank Account Details"),
-              // kProfileScreenGap,
-              // ProfileEditingTextField(
-              //   hintText: "Bank Account Number",
-              //   controller: _bankAccountNoController,
-              // ),
-              // kProfileScreenGap,
-              // ProfileEditingTextField(
-              //   hintText: "Account Holder's Name",
-              //   controller: _accountHolderNameController,
-              // ),
-              // kProfileScreenGap,
-              // ProfileEditingTextField(
-              //   hintText: "IFSC Code",
-              //   controller: _ifscCodeController,
-              // ),
-              // kProfileScreenGap,
 
               const SizedBox(height: 20),
             ],
@@ -389,8 +319,8 @@ class ProfileScreen extends StatelessWidget {
                   String _decrypted = '';
                   if (_newPasswordController.text != _confirmNewPasswordController.text) {
                     Services().showCustomSnackBar(context, "Password and confirm password doesn't match");
-                  } else if (_newPasswordController.text.length < 6) {
-                    Services().showCustomSnackBar(context, "Password must contain atleast 6 characters");
+                  } else if (_newPasswordController.text.length < 8) {
+                    Services().showCustomSnackBar(context, "Password must contain atleast 8 characters");
                   } else {
                     SharedPreferences sharedPref = await SharedPreferences.getInstance();
 

@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:internship_sample/controllers/app_controller.dart';
+import 'package:cashew_cart/controllers/app_controller.dart';
 // import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:internship_sample/core/colors.dart';
-import 'package:internship_sample/core/constants.dart';
-import 'package:internship_sample/presentation/authentication/otp_verification.dart';
-import 'package:internship_sample/presentation/authentication/token_verification_screen.dart';
+import 'package:cashew_cart/core/colors.dart';
+import 'package:cashew_cart/core/constants.dart';
+import 'package:cashew_cart/presentation/authentication/otp_verification.dart';
+import 'package:cashew_cart/presentation/authentication/token_verification_screen.dart';
 
-import 'package:internship_sample/presentation/authentication/widgets/alternative_signin_options.dart.dart';
-import 'package:internship_sample/presentation/authentication/widgets/authentication_page_title.dart';
-import 'package:internship_sample/presentation/authentication/widgets/custom_icon_text_field.dart';
-import 'package:internship_sample/presentation/authentication/widgets/custom_password_text_field.dart';
-import 'package:internship_sample/presentation/main_page/main_page_screen.dart';
-import 'package:internship_sample/presentation/widgets/custom_elevated_button.dart';
-import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
-import 'package:internship_sample/services/api_services.dart';
+import 'package:cashew_cart/presentation/authentication/widgets/alternative_signin_options.dart.dart';
+import 'package:cashew_cart/presentation/authentication/widgets/authentication_page_title.dart';
+import 'package:cashew_cart/presentation/authentication/widgets/custom_icon_text_field.dart';
+import 'package:cashew_cart/presentation/authentication/widgets/custom_password_text_field.dart';
+import 'package:cashew_cart/presentation/main_page/main_page_screen.dart';
+import 'package:cashew_cart/presentation/widgets/custom_elevated_button.dart';
+import 'package:cashew_cart/presentation/widgets/custom_text_widget.dart';
+import 'package:cashew_cart/services/api_services.dart';
 import 'package:validatorless/validatorless.dart';
 
 class SignUpScreen extends StatelessWidget {
@@ -109,15 +109,17 @@ class SignUpScreen extends StatelessWidget {
                         height: 55,
                         width: double.infinity,
                         child: GestureDetector(
-                          onTap: () {
+                          onTap: () async {
                             if (_formKey.currentState!.validate()) {
-                              ApiServices().sendVerificationMail(context, _emailController.text);
-                              Get.to(
-                                () => TokenVerificationScreen(
-                                  isNewUser: true,
-                                  email: _emailController.text,
-                                ),
-                              );
+                              final response = await ApiServices().sendVerificationMail(context, _emailController.text);
+                              if (response != null) {
+                                Get.to(
+                                  () => TokenVerificationScreen(
+                                    isNewUser: true,
+                                    email: _emailController.text,
+                                  ),
+                                );
+                              }
                             }
                           },
                           child: CustomElevatedButton(
@@ -126,7 +128,7 @@ class SignUpScreen extends StatelessWidget {
                         ),
                       ),
                       // const AlternativeSigninOptionsWidget(),
-                       SizedBox(height: 20.w),
+                      SizedBox(height: 20.w),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [

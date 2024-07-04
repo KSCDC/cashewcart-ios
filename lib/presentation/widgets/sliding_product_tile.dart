@@ -1,7 +1,7 @@
 import 'package:easy_image_viewer/easy_image_viewer.dart';
 import 'package:flutter/material.dart';
-import 'package:internship_sample/core/base_url.dart';
-import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
+import 'package:cashew_cart/core/base_url.dart';
+import 'package:cashew_cart/presentation/widgets/custom_text_widget.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class SlidingProductTile extends StatelessWidget {

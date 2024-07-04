@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:internship_sample/controllers/app_controller.dart';
-import 'package:internship_sample/core/base_url.dart';
-import 'package:internship_sample/core/colors.dart';
-import 'package:internship_sample/core/constants.dart';
-import 'package:internship_sample/main.dart';
-import 'package:internship_sample/presentation/home/home_screen.dart';
-import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
-import 'package:internship_sample/presentation/product_list/product_listing_screen.dart';
-import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
+import 'package:cashew_cart/controllers/app_controller.dart';
+import 'package:cashew_cart/core/base_url.dart';
+import 'package:cashew_cart/core/colors.dart';
+import 'package:cashew_cart/core/constants.dart';
+import 'package:cashew_cart/main.dart';
+import 'package:cashew_cart/presentation/home/home_screen.dart';
+import 'package:cashew_cart/presentation/main_page/widgets/custom_bottom_navbar.dart';
+import 'package:cashew_cart/presentation/product_list/product_listing_screen.dart';
+import 'package:cashew_cart/presentation/widgets/custom_text_widget.dart';
 
 class ValueAddedProductsTile extends StatelessWidget {
   ValueAddedProductsTile({super.key});
@@ -71,7 +71,7 @@ class ValueAddedProductsTile extends StatelessWidget {
                       TextButton(
                         onPressed: () async {
                           controller.productDisplayList = controller.valueAdded;
-                          Get.to(() => ProductListingScreen(title:"Value Added Products"));
+                          Get.to(() => ProductListingScreen(title: "Value Added Products"));
                           // previousPageIndexes.add(bottomNavbarIndexNotifier.value);
                           // bottomNavbarIndexNotifier.value = 5;
                         },

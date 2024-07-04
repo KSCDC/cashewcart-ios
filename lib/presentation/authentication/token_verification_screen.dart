@@ -1,14 +1,18 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:internship_sample/presentation/authentication/create_account_screen.dart';
-import 'package:internship_sample/presentation/authentication/reset_password_screen.dart';
-import 'package:internship_sample/presentation/authentication/widgets/custom_icon_text_field.dart';
-import 'package:internship_sample/presentation/widgets/custom_elevated_button.dart';
-import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
-import 'package:internship_sample/services/api_services.dart';
-import 'package:internship_sample/services/services.dart';
+import 'package:cashew_cart/core/constants.dart';
+import 'package:cashew_cart/presentation/authentication/create_account_screen.dart';
+import 'package:cashew_cart/presentation/authentication/reset_password_screen.dart';
+import 'package:cashew_cart/presentation/authentication/widgets/custom_icon_text_field.dart';
+import 'package:cashew_cart/presentation/widgets/custom_elevated_button.dart';
+import 'package:cashew_cart/presentation/widgets/custom_text_widget.dart';
+import 'package:cashew_cart/services/api_services.dart';
+import 'package:cashew_cart/services/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TokenVerificationScreen extends StatelessWidget {
   TokenVerificationScreen({super.key, required this.isNewUser, required this.email});
@@ -60,12 +64,22 @@ class TokenVerificationScreen extends StatelessWidget {
                   onTap: () async {
                     final response = await ApiServices().verifyMail(_tokenController.text);
                     if (response != null) {
+                      print(response.data.toString());
+
+                      SharedPreferences sharedPref = await SharedPreferences.getInstance();
+                      sharedPref.setString(ACCESSTOKEN, _tokenController.text);
+
+                      // print(tokenValue);
                       Services().showCustomSnackBar(context, "Email verification success");
                       isNewUser
                           ? Get.offAll(() => CreateAccountScreen(
                                 token: _tokenController.text,
                               ))
-                          : Get.offAll(() => ResetPasswordScreen());
+                          : Get.offAll(
+                              () => ResetPasswordScreen(
+                                email: email,
+                              ),
+                            );
                     } else {
                       Services().showCustomSnackBar(context, "Email verification failed");
                     }

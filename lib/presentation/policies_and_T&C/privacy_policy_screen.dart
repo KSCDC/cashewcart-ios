@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:internship_sample/presentation/policies_and_T&C/widgets/heading.dart';
-import 'package:internship_sample/presentation/policies_and_T&C/widgets/paragraph.dart';
-import 'package:internship_sample/presentation/widgets/custom_appbar.dart';
+import 'package:cashew_cart/presentation/policies_and_T&C/widgets/heading.dart';
+import 'package:cashew_cart/presentation/policies_and_T&C/widgets/paragraph.dart';
+import 'package:cashew_cart/presentation/widgets/custom_appbar.dart';
 
 class PrivacyPolicyScreen extends StatelessWidget {
   const PrivacyPolicyScreen({super.key});

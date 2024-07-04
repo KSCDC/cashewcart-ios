@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:internship_sample/core/constants.dart';
-import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
+import 'package:cashew_cart/core/constants.dart';
+import 'package:cashew_cart/presentation/widgets/custom_text_widget.dart';
 
 class AddressTile extends StatelessWidget {
   AddressTile({super.key});
@@ -9,8 +9,7 @@ class AddressTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController _textEditingController = TextEditingController(
-        text: "216 St Paul's Rd, London N1 2LL, UK, \nContact :  +44-784232 ");
+    TextEditingController _textEditingController = TextEditingController(text: "216 St Paul's Rd, London N1 2LL, UK, \nContact :  +44-784232 ");
     ValueNotifier<bool> isAddressEditableNotifier = ValueNotifier(false);
     final screenSize = MediaQuery.of(context).size;
     return ValueListenableBuilder(
@@ -45,8 +44,7 @@ class AddressTile extends StatelessWidget {
                           maxLines: 2,
                           enabled: value,
                           decoration: InputDecoration(
-                            border:
-                                value ? OutlineInputBorder() : InputBorder.none,
+                            border: value ? OutlineInputBorder() : InputBorder.none,
                           ),
                         ),
                       ],

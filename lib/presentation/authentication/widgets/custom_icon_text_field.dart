@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:internship_sample/core/colors.dart';
+import 'package:cashew_cart/core/colors.dart';
 
 class CustomIconTextField extends StatelessWidget {
   const CustomIconTextField({

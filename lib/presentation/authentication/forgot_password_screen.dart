@@ -1,20 +1,24 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:internship_sample/controllers/app_controller.dart';
+import 'package:cashew_cart/controllers/app_controller.dart';
 // import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:internship_sample/core/colors.dart';
-import 'package:internship_sample/core/constants.dart';
-import 'package:internship_sample/presentation/authentication/otp_verification.dart';
+import 'package:cashew_cart/core/colors.dart';
+import 'package:cashew_cart/core/constants.dart';
+import 'package:cashew_cart/presentation/authentication/otp_verification.dart';
+import 'package:cashew_cart/presentation/authentication/token_verification_screen.dart';
 
-import 'package:internship_sample/presentation/authentication/widgets/alternative_signin_options.dart.dart';
-import 'package:internship_sample/presentation/authentication/widgets/authentication_page_title.dart';
-import 'package:internship_sample/presentation/authentication/widgets/custom_icon_text_field.dart';
-import 'package:internship_sample/presentation/authentication/widgets/custom_password_text_field.dart';
-import 'package:internship_sample/presentation/main_page/main_page_screen.dart';
-import 'package:internship_sample/presentation/widgets/custom_elevated_button.dart';
-import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
-import 'package:internship_sample/services/api_services.dart';
+import 'package:cashew_cart/presentation/authentication/widgets/alternative_signin_options.dart.dart';
+import 'package:cashew_cart/presentation/authentication/widgets/authentication_page_title.dart';
+import 'package:cashew_cart/presentation/authentication/widgets/custom_icon_text_field.dart';
+import 'package:cashew_cart/presentation/authentication/widgets/custom_password_text_field.dart';
+import 'package:cashew_cart/presentation/main_page/main_page_screen.dart';
+import 'package:cashew_cart/presentation/widgets/custom_elevated_button.dart';
+import 'package:cashew_cart/presentation/widgets/custom_text_widget.dart';
+import 'package:cashew_cart/services/api_services.dart';
+import 'package:cashew_cart/services/services.dart';
 import 'package:validatorless/validatorless.dart';
 
 class ForgotPasswordScreen extends StatelessWidget {
@@ -108,11 +112,28 @@ class ForgotPasswordScreen extends StatelessWidget {
                         height: 55,
                         width: double.infinity,
                         child: GestureDetector(
-                          onTap: () {
+                          onTap: () async {
                             if (_formKey.currentState!.validate()) {
-                              Get.to(() => OtpVerificationScreen(
-                                    isNewUser: false,
-                                  ));
+                              final response = await ApiServices().forgotPassword(context, emailController.text);
+                              if (response != null) {
+                                log(response.statusCode.toString());
+                                final String message = response.data["message"];
+
+                                if (response.statusCode == 200 || response.statusCode == 201) {
+                                  print("success");
+                                  Services().showCustomSnackBar(context, message);
+                                  Get.to(() => TokenVerificationScreen(
+                                        email: emailController.text,
+                                        isNewUser: false,
+                                      ));
+                                } else {
+                                  print("working here");
+                                  Services().showCustomSnackBar(context, message);
+                                  // Get.to(() => OtpVerificationScreen(
+                                  //       isNewUser: false,
+                                  //     ));
+                                }
+                              }
                             }
                           },
                           child: CustomElevatedButton(
@@ -121,7 +142,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                         ),
                       ),
                       // const AlternativeSigninOptionsWidget(),
-                       SizedBox(height: 20.w),
+                      SizedBox(height: 20.w),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [

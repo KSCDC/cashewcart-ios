@@ -1,5 +1,5 @@
-name: internship_sample
-description: A new Flutter project.
+name: cashew_cart
+description: An E-commerce App.
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
@@ -16,7 +16,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.0.1+2
+version: 1.0.2+1
 
 environment:
   sdk: ">=3.1.5 <4.0.0"
@@ -28,16 +28,19 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  android_path_provider: ^0.3.0
   carousel_slider: ^4.2.1
   csc_picker: ^0.2.7
   cupertino_icons: ^1.0.2
   data_table_2: ^2.5.12
   debouncer_widget: ^1.0.0
+  device_info_plus: ^10.1.0
   dio: ^5.4.1
   dots_indicator: ^3.0.0
   easy_image_viewer: ^1.4.0
   encrypt: ^5.0.3
   fan_carousel_image_slider: ^1.0.1
+  file_picker: ^8.0.5
   flutter:
     sdk: flutter
   flutter_image_slideshow: ^0.1.6

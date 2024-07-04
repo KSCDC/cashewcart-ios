@@ -4,17 +4,17 @@ import 'dart:developer';
 import 'package:encrypt/encrypt.dart' as enc;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:internship_sample/core/constants.dart';
-import 'package:internship_sample/models/cart_product_model.dart';
-import 'package:internship_sample/models/orders_list_model.dart';
-import 'package:internship_sample/models/product_details_model.dart';
-import 'package:internship_sample/models/product_model.dart';
-import 'package:internship_sample/models/product_reviews_model.dart';
-import 'package:internship_sample/models/trending_product_model.dart';
-import 'package:internship_sample/models/user_address_model.dart';
-import 'package:internship_sample/presentation/main_page/main_page_screen.dart';
-import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
-import 'package:internship_sample/services/api_services.dart';
+import 'package:cashew_cart/core/constants.dart';
+import 'package:cashew_cart/models/cart_product_model.dart';
+import 'package:cashew_cart/models/orders_list_model.dart';
+import 'package:cashew_cart/models/product_details_model.dart';
+import 'package:cashew_cart/models/product_model.dart';
+import 'package:cashew_cart/models/product_reviews_model.dart';
+import 'package:cashew_cart/models/trending_product_model.dart';
+import 'package:cashew_cart/models/user_address_model.dart';
+import 'package:cashew_cart/presentation/main_page/main_page_screen.dart';
+import 'package:cashew_cart/presentation/main_page/widgets/custom_bottom_navbar.dart';
+import 'package:cashew_cart/services/api_services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppController extends GetxController {
@@ -141,7 +141,7 @@ class AppController extends GetxController {
     }
   }
 
-  loginUser(BuildContext context, String email, String password) async {
+  Future<bool> loginUser(BuildContext context, String email, String password, {bool loginAfterResettingPassword = false}) async {
     isLoading.value = true;
     final response = await ApiServices().loginUser(context, email, password);
 
@@ -166,10 +166,12 @@ class AppController extends GetxController {
       await sharedPref.setString(EMAIL, email);
       await sharedPref.setString(ENCRYPTEDPASSWORD, encryptedBase64);
       print("Encrypted:$encryptedBase64");
-
-      Get.offAll(() => MainPageScreen());
+      isLoading.value = false;
+      return true;
+    } else {
+      isLoading.value = false;
+      return false;
     }
-    isLoading.value = false;
   }
 
   getAllProducts() async {

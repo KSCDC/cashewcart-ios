@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
-import 'package:internship_sample/core/constants.dart';
-import 'package:internship_sample/models/user_address_model.dart';
-import 'package:internship_sample/services/api_services.dart';
+import 'package:cashew_cart/core/constants.dart';
+import 'package:cashew_cart/models/user_address_model.dart';
+import 'package:cashew_cart/services/api_services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileController extends GetxController {
@@ -52,8 +52,10 @@ class ProfileController extends GetxController {
       }
 
       addressList.value = tempList;
-      state = addressList[0].state;
-      district = addressList[0].district;
+      if (addressList.isNotEmpty) {
+        state = addressList[0].state;
+        district = addressList[0].district;
+      }
     } else {
       isLoadingAddressError.value = true;
     }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
+import 'package:cashew_cart/presentation/widgets/custom_text_widget.dart';
 
 class AccountItemTile extends StatelessWidget {
   const AccountItemTile({
@@ -13,7 +13,7 @@ class AccountItemTile extends StatelessWidget {
   final Function()? onTap;
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
       onTap: onTap,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),

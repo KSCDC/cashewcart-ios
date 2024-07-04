@@ -4,24 +4,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:internship_sample/controllers/app_controller.dart';
-import 'package:internship_sample/controllers/cart_controller.dart';
-import 'package:internship_sample/controllers/profile_controller.dart';
-import 'package:internship_sample/core/colors.dart';
-import 'package:internship_sample/core/constants.dart';
-import 'package:internship_sample/main.dart';
-import 'package:internship_sample/presentation/cart/widgets/cart_item_skeleton.dart';
-import 'package:internship_sample/presentation/cart/widgets/cart_product_list_tile.dart';
-import 'package:internship_sample/presentation/widgets/no_access_tile.dart';
-import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
-import 'package:internship_sample/presentation/place_order/multiple_item_place_order_screen.dart';
-import 'package:internship_sample/presentation/shop/widgets/custom_text_icon_button.dart';
-import 'package:internship_sample/presentation/splash/splash_screen.dart';
-import 'package:internship_sample/presentation/widgets/custom_appbar.dart';
-import 'package:internship_sample/presentation/widgets/custom_elevated_button.dart';
-import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
-import 'package:internship_sample/services/api_services.dart';
-import 'package:internship_sample/services/services.dart';
+import 'package:cashew_cart/controllers/app_controller.dart';
+import 'package:cashew_cart/controllers/cart_controller.dart';
+import 'package:cashew_cart/controllers/profile_controller.dart';
+import 'package:cashew_cart/core/colors.dart';
+import 'package:cashew_cart/core/constants.dart';
+import 'package:cashew_cart/main.dart';
+import 'package:cashew_cart/presentation/cart/widgets/cart_item_skeleton.dart';
+import 'package:cashew_cart/presentation/cart/widgets/cart_product_list_tile.dart';
+import 'package:cashew_cart/presentation/widgets/no_access_tile.dart';
+import 'package:cashew_cart/presentation/main_page/widgets/custom_bottom_navbar.dart';
+import 'package:cashew_cart/presentation/place_order/multiple_item_place_order_screen.dart';
+import 'package:cashew_cart/presentation/shop/widgets/custom_text_icon_button.dart';
+import 'package:cashew_cart/presentation/splash/splash_screen.dart';
+import 'package:cashew_cart/presentation/widgets/custom_appbar.dart';
+import 'package:cashew_cart/presentation/widgets/custom_elevated_button.dart';
+import 'package:cashew_cart/presentation/widgets/custom_text_widget.dart';
+import 'package:cashew_cart/services/api_services.dart';
+import 'package:cashew_cart/services/services.dart';
 import 'package:lottie/lottie.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -98,6 +98,7 @@ class CartScreen extends StatelessWidget {
                                           kHeight,
                                           CartProductsListTile(
                                             productDetails: cartController.cartProducts.value.results[index],
+                                            index: index,
                                           ),
                                         ],
                                       );
@@ -149,8 +150,8 @@ class CartScreen extends StatelessWidget {
                                     }
                                   },
                                   child: CustomElevatedButton(
-                                    label: "Buy Now",
-                                    fontSize: 16,
+                                    label: "Place Order",
+                                    fontSize: 16.sp,
                                   ),
                                 )
                               ],

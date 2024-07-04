@@ -2,17 +2,17 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:internship_sample/core/colors.dart';
-import 'package:internship_sample/core/constants.dart';
-import 'package:internship_sample/main.dart';
-import 'package:internship_sample/presentation/checkout/widgets/checkout_price_display_row.dart';
-import 'package:internship_sample/presentation/checkout/widgets/custom_image_textfield.dart';
-import 'package:internship_sample/presentation/main_page/main_page_screen.dart';
-import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
-import 'package:internship_sample/presentation/my_orders/my_orders_screen.dart';
-import 'package:internship_sample/presentation/widgets/custom_appbar.dart';
-import 'package:internship_sample/presentation/widgets/custom_elevated_button.dart';
-import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
+import 'package:cashew_cart/core/colors.dart';
+import 'package:cashew_cart/core/constants.dart';
+import 'package:cashew_cart/main.dart';
+import 'package:cashew_cart/presentation/checkout/widgets/checkout_price_display_row.dart';
+import 'package:cashew_cart/presentation/checkout/widgets/custom_image_textfield.dart';
+import 'package:cashew_cart/presentation/main_page/main_page_screen.dart';
+import 'package:cashew_cart/presentation/main_page/widgets/custom_bottom_navbar.dart';
+import 'package:cashew_cart/presentation/my_orders/my_orders_screen.dart';
+import 'package:cashew_cart/presentation/widgets/custom_appbar.dart';
+import 'package:cashew_cart/presentation/widgets/custom_elevated_button.dart';
+import 'package:cashew_cart/presentation/widgets/custom_text_widget.dart';
 
 class CheckoutScreen extends StatelessWidget {
   const CheckoutScreen({

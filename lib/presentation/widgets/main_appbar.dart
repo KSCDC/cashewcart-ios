@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:internship_sample/controllers/app_controller.dart';
-import 'package:internship_sample/controllers/profile_controller.dart';
-import 'package:internship_sample/core/colors.dart';
-import 'package:internship_sample/core/constants.dart';
-import 'package:internship_sample/presentation/home/home_screen.dart';
-import 'package:internship_sample/presentation/profile/profile_screen.dart';
-import 'package:internship_sample/presentation/side_bar/side_bar.dart';
-import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
-import 'package:internship_sample/services/services.dart';
+import 'package:cashew_cart/controllers/app_controller.dart';
+import 'package:cashew_cart/controllers/profile_controller.dart';
+import 'package:cashew_cart/core/colors.dart';
+import 'package:cashew_cart/core/constants.dart';
+import 'package:cashew_cart/presentation/home/home_screen.dart';
+import 'package:cashew_cart/presentation/profile/profile_screen.dart';
+import 'package:cashew_cart/presentation/side_bar/side_bar.dart';
+import 'package:cashew_cart/presentation/widgets/custom_text_widget.dart';
+import 'package:cashew_cart/services/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MainAppBar extends StatelessWidget implements PreferredSizeWidget {

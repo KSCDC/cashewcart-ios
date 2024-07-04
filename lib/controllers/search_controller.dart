@@ -1,11 +1,12 @@
 import 'package:get/get.dart';
-import 'package:internship_sample/models/product_model.dart';
-import 'package:internship_sample/services/api_services.dart';
+import 'package:cashew_cart/models/product_model.dart';
+import 'package:cashew_cart/services/api_services.dart';
 
 class SearchResultController extends GetxController {
   RxBool isLoading = false.obs;
   RxBool isSearchMode = false.obs;
   RxBool haveSearchResult = false.obs;
+  String searchKey = "";
 
   RxInt minSearchPrice = 0.obs;
   RxInt maxSearchPrice = 5000.obs;

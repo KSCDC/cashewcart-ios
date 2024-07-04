@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:internship_sample/core/constants.dart';
-import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
+import 'package:cashew_cart/core/constants.dart';
+import 'package:cashew_cart/presentation/widgets/custom_text_widget.dart';
 
 class CustomStarRatingTile extends StatelessWidget {
   const CustomStarRatingTile({
@@ -15,7 +15,7 @@ class CustomStarRatingTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     int i;
-    
+
     return Row(
       children: [
         for (i = 1; i <= numberOfRatings; i++)
@@ -25,11 +25,11 @@ class CustomStarRatingTile extends StatelessWidget {
             size: iconAndTextSize,
           ),
         if (5 - numberOfRatings != 0)
-            Icon(
-              Icons.star_half,
-              color: Color(0xFFBBBBBB),
-              size: iconAndTextSize,
-            ),
+          Icon(
+            Icons.star_half,
+            color: Color(0xFFBBBBBB),
+            size: iconAndTextSize,
+          ),
         kWidth,
         CustomTextWidget(
           text: numberOfRatings.toString(),

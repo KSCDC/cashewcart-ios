@@ -1,12 +1,14 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:internship_sample/controllers/app_controller.dart';
-import 'package:internship_sample/controllers/search_controller.dart';
-import 'package:internship_sample/presentation/widgets/custom_elevated_button.dart';
-import 'package:internship_sample/presentation/widgets/custom_search_filtering_button.dart';
-import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
-import 'package:internship_sample/presentation/widgets/search_section_tile.dart';
+import 'package:cashew_cart/controllers/app_controller.dart';
+import 'package:cashew_cart/controllers/search_controller.dart';
+import 'package:cashew_cart/presentation/widgets/custom_elevated_button.dart';
+import 'package:cashew_cart/presentation/widgets/custom_search_filtering_button.dart';
+import 'package:cashew_cart/presentation/widgets/custom_text_widget.dart';
+import 'package:cashew_cart/presentation/widgets/search_section_tile.dart';
 
 class SearchFilterBar extends StatelessWidget {
   SearchFilterBar({
@@ -17,6 +19,7 @@ class SearchFilterBar extends StatelessWidget {
   SearchResultController searchController = Get.put(SearchResultController());
   @override
   Widget build(BuildContext context) {
+    log("searchkey got = ${searchController.searchKey}");
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -29,16 +32,18 @@ class SearchFilterBar extends StatelessWidget {
               if (newValue == 'Price Low to High') {
                 searchController.sortProduct.value = true;
                 searchController.sortAscending.value = true;
-                searchController.searchProducts(SearchSectionTile().searchController.text);
+                log("searching for ${searchController.searchKey}  low to high");
+                searchController.searchProducts(searchController.searchKey);
                 // result.sort((a, b) => double.parse(a.sellingPrice).compareTo(double.parse(b.sellingPrice)));
               } else if (newValue == 'Price High to Low') {
                 searchController.sortProduct.value = true;
                 searchController.sortAscending.value = false;
-                searchController.searchProducts(SearchSectionTile().searchController.text);
+                log("searching for ${searchController.searchKey}  high to low");
+                searchController.searchProducts(searchController.searchKey);
                 // result.sort((a, b) => double.parse(b.sellingPrice).compareTo(double.parse(a.sellingPrice)));
               } else {
                 searchController.sortProduct.value = false;
-                searchController.searchProducts(SearchSectionTile().searchController.text);
+                searchController.searchProducts(searchController.searchKey);
               }
             },
             items: <String>['Default', 'Price Low to High', 'Price High to Low'].map<DropdownMenuItem<String>>((String value) {
@@ -112,7 +117,7 @@ class SearchFilterBar extends StatelessWidget {
                         // print('Maximum Price: ₹${_currentRangeValues.end.toStringAsFixed(2)}');
                         searchController.minSearchPrice.value = _currentRangeValues.start.round();
                         searchController.maxSearchPrice.value = _currentRangeValues.end.round();
-                        searchController.searchProducts(SearchSectionTile().searchController.text);
+                        searchController.searchProducts(searchController.searchKey);
                         Navigator.pop(context);
                       },
                       child: CustomElevatedButton(

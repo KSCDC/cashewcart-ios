@@ -2,13 +2,14 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:internship_sample/models/cart_product_model.dart';
-import 'package:internship_sample/presentation/main_page/widgets/custom_bottom_navbar.dart';
-import 'package:internship_sample/services/api_services.dart';
+import 'package:cashew_cart/models/cart_product_model.dart';
+import 'package:cashew_cart/presentation/main_page/widgets/custom_bottom_navbar.dart';
+import 'package:cashew_cart/services/api_services.dart';
 
 class CartController extends GetxController {
   RxBool isLoading = false.obs;
   RxBool isError = false.obs;
+  RxBool isUpdatingCartCount = false.obs;
 
   Rx<CartProductModel> cartProducts = CartProductModel(count: 0, next: null, previous: null, results: []).obs;
 
@@ -50,5 +51,12 @@ class CartController extends GetxController {
       getCartList();
     }
     // isLoading.value = false;
+  }
+
+  updateCartProduct(String productId, int newCount) async {
+    isUpdatingCartCount.value = true;
+    final response = await ApiServices().updateCartCount(productId, newCount);
+    isUpdatingCartCount.value = false;
+    return response;
   }
 }

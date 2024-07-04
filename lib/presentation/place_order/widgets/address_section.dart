@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:internship_sample/controllers/app_controller.dart';
-import 'package:internship_sample/controllers/profile_controller.dart';
-import 'package:internship_sample/core/colors.dart';
-import 'package:internship_sample/core/constants.dart';
-import 'package:internship_sample/presentation/shop/widgets/custom_text_icon_button.dart';
-import 'package:internship_sample/presentation/widgets/custom_elevated_button.dart';
-import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
-import 'package:internship_sample/services/api_services.dart';
-import 'package:internship_sample/services/services.dart';
+import 'package:cashew_cart/controllers/app_controller.dart';
+import 'package:cashew_cart/controllers/profile_controller.dart';
+import 'package:cashew_cart/core/colors.dart';
+import 'package:cashew_cart/core/constants.dart';
+import 'package:cashew_cart/presentation/shop/widgets/custom_text_icon_button.dart';
+import 'package:cashew_cart/presentation/widgets/custom_elevated_button.dart';
+import 'package:cashew_cart/presentation/widgets/custom_text_widget.dart';
+import 'package:cashew_cart/services/api_services.dart';
+import 'package:cashew_cart/services/services.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
 class AddressSection extends StatelessWidget {
@@ -109,7 +109,7 @@ class AddressSection extends StatelessWidget {
                                   profileController.state = currentAddress.state;
                                   _postalcodeController.text = currentAddress.postalCode;
                                   _phoneNumberController.text = currentAddress.phoneNumber;
-                                  Services().showAddressEditPopup(
+                                  Services().showAddressEditBottomSheet(
                                     false,
                                     context,
                                     currentAddress.id.toString(),
@@ -123,8 +123,12 @@ class AddressSection extends StatelessWidget {
                                   );
                                 },
                                 child: CustomTextWidget(
-                                  text: "${currentAddress.streetAddress}, ${currentAddress.region}, ${currentAddress.district}, ${currentAddress.state}, ${currentAddress.postalCode}",
+                                  text:
+                                      "${currentAddress.name},\n${currentAddress.region},\n${currentAddress.streetAddress},\n${currentAddress.district} (Dt), ${currentAddress.state} state,\nPin: ${currentAddress.postalCode}\nPh: ${currentAddress.phoneNumber}",
                                 ),
+                                // child: CustomTextWidget(
+                                //   text: "${currentAddress.streetAddress}, ${currentAddress.region}, ${currentAddress.district}, ${currentAddress.state}, ${currentAddress.postalCode}",
+                                // ),
                               ),
                               kHeight,
                             ],

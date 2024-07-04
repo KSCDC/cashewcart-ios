@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:internship_sample/core/colors.dart';
-import 'package:internship_sample/core/constants.dart';
-import 'package:internship_sample/models/orders_list_model.dart';
-import 'package:internship_sample/presentation/widgets/custom_star_rating_tile.dart';
-import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
+import 'package:cashew_cart/core/colors.dart';
+import 'package:cashew_cart/core/constants.dart';
+import 'package:cashew_cart/models/orders_list_model.dart';
+import 'package:cashew_cart/presentation/widgets/custom_star_rating_tile.dart';
+import 'package:cashew_cart/presentation/widgets/custom_text_widget.dart';
 import 'package:intl/intl.dart';
 
 class MyOrdersListTile extends StatelessWidget {

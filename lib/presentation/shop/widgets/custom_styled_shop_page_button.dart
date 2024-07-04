@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
+import 'package:cashew_cart/presentation/widgets/custom_text_widget.dart';
 
 class CustomStyledShopPageButton extends StatelessWidget {
   const CustomStyledShopPageButton({

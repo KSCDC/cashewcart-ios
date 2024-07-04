@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:internship_sample/core/colors.dart';
-import 'package:internship_sample/presentation/authentication/create_account_screen.dart';
-import 'package:internship_sample/presentation/authentication/reset_password_screen.dart';
-import 'package:internship_sample/presentation/widgets/custom_elevated_button.dart';
-import 'package:internship_sample/presentation/widgets/custom_text_widget.dart';
+import 'package:cashew_cart/core/colors.dart';
+import 'package:cashew_cart/presentation/authentication/create_account_screen.dart';
+import 'package:cashew_cart/presentation/authentication/reset_password_screen.dart';
+import 'package:cashew_cart/presentation/widgets/custom_elevated_button.dart';
+import 'package:cashew_cart/presentation/widgets/custom_text_widget.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 class OtpVerificationScreen extends StatelessWidget {
