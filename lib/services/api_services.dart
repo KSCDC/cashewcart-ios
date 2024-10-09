@@ -435,7 +435,7 @@ class ApiServices {
         data: {
           "email": email,
           "password": decrypted,
-        },
+        },  
         options: Options(
           contentType: Headers.jsonContentType,
         ),
