@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:cashew_cart/controllers/download_controller.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +32,7 @@ class OrderTrackingScreen extends StatefulWidget {
 
 class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
   late Razorpay _razorpay;
-
+  final downloadController = Get.put(DownloadController());
   @override
   void initState() {
     super.initState();
@@ -82,7 +83,8 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final bool isPaymentSuccess = widget.orderDetails.paymentStatus == "SUCCESS" ? true : false;
+    final bool isPaymentSuccess =
+        widget.orderDetails.paymentStatus == "SUCCESS" ? true : false;
     double subTotal = 0;
 
     return Scaffold(
@@ -111,7 +113,8 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
                 fontSize: 14.w,
               ),
               CustomTextWidget(
-                text: "${widget.orderDetails.shippingRegion}, ${widget.orderDetails.shippingDistrict}, ${widget.orderDetails.shippingState}, ${widget.orderDetails.shippingPostalCode}",
+                text:
+                    "${widget.orderDetails.shippingRegion}, ${widget.orderDetails.shippingDistrict}, ${widget.orderDetails.shippingState}, ${widget.orderDetails.shippingPostalCode}",
                 fontSize: 14.w,
               ),
               SizedBox(height: 10.w),
@@ -129,7 +132,8 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
                 fontSize: 14.w,
               ),
               CustomTextWidget(
-                text: "${widget.orderDetails.billingRegion}, ${widget.orderDetails.billingDistrict}, ${widget.orderDetails.billingState}, ${widget.orderDetails.billingPostalCode}",
+                text:
+                    "${widget.orderDetails.billingRegion}, ${widget.orderDetails.billingDistrict}, ${widget.orderDetails.billingState}, ${widget.orderDetails.billingPostalCode}",
                 fontSize: 14.w,
               ),
               SizedBox(height: 10.w),
@@ -260,41 +264,80 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
                   rows: List<DataRow>.generate(
                     widget.orderDetails.items.length,
                     (index) {
-                      subTotal += double.parse(widget.orderDetails.items[index].total);
+                      subTotal +=
+                          double.parse(widget.orderDetails.items[index].total);
                       return DataRow(
                         cells: [
                           DataCell(
-                            Center(child: CustomTextWidget(text: "${index + 1}")),
+                            Center(
+                                child: CustomTextWidget(text: "${index + 1}")),
                           ),
                           DataCell(
-                            Center(child: CustomTextWidget(text: widget.orderDetails.items[index].product.product.name)),
+                            Center(
+                                child: CustomTextWidget(
+                                    text: widget.orderDetails.items[index]
+                                        .product.product.name)),
                           ),
                           DataCell(
-                            Center(child: CustomTextWidget(text: widget.orderDetails.items[index].product.hsn)),
+                            Center(
+                                child: CustomTextWidget(
+                                    text: widget.orderDetails.items[index]
+                                        .product.hsn)),
                           ),
                           DataCell(
-                            Center(child: CustomTextWidget(text: widget.orderDetails.items[index].purchaseCount.toString())),
+                            Center(
+                                child: CustomTextWidget(
+                                    text: widget
+                                        .orderDetails.items[index].purchaseCount
+                                        .toString())),
                           ),
                           DataCell(
-                            Center(child: CustomTextWidget(text: widget.orderDetails.items[index].product.sellingPrice)),
+                            Center(
+                                child: CustomTextWidget(
+                                    text: widget.orderDetails.items[index]
+                                        .product.sellingPrice)),
                           ),
                           DataCell(
-                            Center(child: CustomTextWidget(text: (double.parse(widget.orderDetails.items[index].product.sellingPrice) * widget.orderDetails.items[index].purchaseCount).toString())),
+                            Center(
+                                child: CustomTextWidget(
+                                    text: (double.parse(widget
+                                                .orderDetails
+                                                .items[index]
+                                                .product
+                                                .sellingPrice) *
+                                            widget.orderDetails.items[index]
+                                                .purchaseCount)
+                                        .toString())),
                           ),
                           DataCell(
-                            Center(child: CustomTextWidget(text: widget.orderDetails.items[index].product.cgstRate)),
+                            Center(
+                                child: CustomTextWidget(
+                                    text: widget.orderDetails.items[index]
+                                        .product.cgstRate)),
                           ),
                           DataCell(
-                            Center(child: CustomTextWidget(text: widget.orderDetails.items[index].cgstPrice)),
+                            Center(
+                                child: CustomTextWidget(
+                                    text: widget
+                                        .orderDetails.items[index].cgstPrice)),
                           ),
                           DataCell(
-                            Center(child: CustomTextWidget(text: widget.orderDetails.items[index].product.sgstRate)),
+                            Center(
+                                child: CustomTextWidget(
+                                    text: widget.orderDetails.items[index]
+                                        .product.sgstRate)),
                           ),
                           DataCell(
-                            Center(child: CustomTextWidget(text: widget.orderDetails.items[index].sgstPrice)),
+                            Center(
+                                child: CustomTextWidget(
+                                    text: widget
+                                        .orderDetails.items[index].sgstPrice)),
                           ),
                           DataCell(
-                            Center(child: CustomTextWidget(text: widget.orderDetails.items[index].total)),
+                            Center(
+                                child: CustomTextWidget(
+                                    text: widget
+                                        .orderDetails.items[index].total)),
                           ),
                         ],
                       );
@@ -341,7 +384,8 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
                         SizedBox(
                           width: 100.w,
                           child: CustomTextWidget(
-                            text: "₹ ${widget.orderDetails.deliveryAdditionalAmount.toStringAsFixed(2)}",
+                            text:
+                                "₹ ${widget.orderDetails.deliveryAdditionalAmount.toStringAsFixed(2)}",
                             fontSize: 14.sp,
                             fontweight: FontWeight.w600,
                             height: 2,
@@ -364,7 +408,8 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
                         SizedBox(
                           width: 100.w,
                           child: CustomTextWidget(
-                            text: "₹ ${(subTotal + widget.orderDetails.deliveryAdditionalAmount).toStringAsFixed(2)}",
+                            text:
+                                "₹ ${(subTotal + widget.orderDetails.deliveryAdditionalAmount).toStringAsFixed(2)}",
                             fontSize: 16.sp,
                             fontweight: FontWeight.w600,
                             height: 2,
@@ -383,7 +428,8 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
                 Column(
                   children: [
                     CustomTextWidget(
-                      text: "Your payment was not success. Please retry payment for continuing purchase.",
+                      text:
+                          "Your payment was not success. Please retry payment for continuing purchase.",
                       fontSize: 14.sp,
                       fontweight: FontWeight.w600,
                       fontColor: Colors.red,
@@ -403,7 +449,11 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
                             );
                           },
                         );
-                        await proceedToPay(context, _razorpay, widget.orderDetails.orderId.toString(), widget.orderDetails.billingPhoneNumber);
+                        await proceedToPay(
+                            context,
+                            _razorpay,
+                            widget.orderDetails.orderId.toString(),
+                            widget.orderDetails.billingPhoneNumber);
                         // Navigator.of(context).pop();
                         Navigator.of(context, rootNavigator: true).pop();
                       },
@@ -418,11 +468,31 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
                   children: [
                     InkWell(
                       onTap: () {
-                        ApiServices().getInvoice(widget.orderDetails.orderId.toString());
+                        downloadController.downloadInvoice(
+                            widget.orderDetails.orderId.toString());
                       },
-                      child: CustomElevatedButton(
-                        label: "Download invoice",
-                      ),
+                      child: Obx(() {
+                        return Container(
+                          height: 55.w,
+                          width: double.infinity,
+                          decoration: const BoxDecoration(
+                            color: kMainThemeColor,
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(4),
+                            ),
+                          ),
+                          child: Center(
+                            child: downloadController.isLoading.value
+                                ? CircularProgressIndicator()
+                                : CustomTextWidget(
+                                    text: "Download invoice",
+                                    fontSize: 16.sp,
+                                    fontColor: kButtonTextColor,
+                                    fontweight: FontWeight.w600,
+                                  ),
+                          ),
+                        );
+                      }),
                     ),
                   ],
                 ),
@@ -451,7 +521,8 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
             height: screenSize.width * 0.65,
             child: Column(
               children: [
-                SvgPicture.asset("lib/core/assets/images/other/payment_success.svg"),
+                SvgPicture.asset(
+                    "lib/core/assets/images/other/payment_success.svg"),
                 CustomTextWidget(
                   text: "Payment done successfully.",
                   fontweight: FontWeight.w600,
@@ -471,7 +542,8 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
       context: context,
       type: AlertType.error,
       title: "PAYMENT FAILED",
-      desc: "Your payment is failed. You can retry payment from My Orders section.",
+      desc:
+          "Your payment is failed. You can retry payment from My Orders section.",
       buttons: [
         DialogButton(
           child: Text(
@@ -489,7 +561,8 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
   }
 }
 
-proceedToPay(BuildContext context, Razorpay razorpay, String orderId, String phoneNumber) async {
+proceedToPay(BuildContext context, Razorpay razorpay, String orderId,
+    String phoneNumber) async {
   final newResponse = await ApiServices().payment(orderId);
   if (newResponse != null) {
     String paymentOrderId = newResponse.data['response']['id'].toString();

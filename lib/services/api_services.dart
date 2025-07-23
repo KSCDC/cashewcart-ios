@@ -34,7 +34,8 @@ class ApiServices {
 
   bool isFailedLogin = false;
 
-  registerUser(BuildContext context, String token, String name, String phoneNumber, String password) async {
+  registerUser(BuildContext context, String token, String name,
+      String phoneNumber, String password) async {
     print(token);
 
     final dio = Dio();
@@ -76,7 +77,8 @@ class ApiServices {
       print("Reg error :${e.response}");
       if (e.type == DioExceptionType.connectionTimeout) {
         print("Connection timeout");
-        Services().showCustomSnackBar(context, "Connection timeout. Please check your internet connection");
+        Services().showCustomSnackBar(context,
+            "Connection timeout. Please check your internet connection");
       } else {
         final errorData = e.response!.data['errors'];
         print("Error :$e");
@@ -125,14 +127,16 @@ class ApiServices {
       print(e.type);
       if (e.type == DioExceptionType.connectionTimeout) {
         print("Connection timeout");
-        Services().showCustomSnackBar(context, "Connection timeout. Please check your internet connection");
+        Services().showCustomSnackBar(context,
+            "Connection timeout. Please check your internet connection");
       } else {
         final errorData = e.response!.data['errors'];
         print("Status code: ${e.response!.statusCode}");
         print("Error: $errorData");
         if (errorData['non_field_errors'] != null) {
           print(errorData['non_field_errors'][0]);
-          Services().showCustomSnackBar(context, errorData['non_field_errors'][0]);
+          Services()
+              .showCustomSnackBar(context, errorData['non_field_errors'][0]);
         }
       }
       return null;
@@ -166,7 +170,8 @@ class ApiServices {
       print(e.type);
       if (e.type == DioExceptionType.connectionTimeout) {
         print("Connection timeout");
-        Services().showCustomSnackBar(context, "Connection timeout. Please check your internet connection");
+        Services().showCustomSnackBar(context,
+            "Connection timeout. Please check your internet connection");
       } else {
         final errorData = e.response!.data['errors'];
         print("Status code: ${e.response!.statusCode}");
@@ -221,7 +226,8 @@ class ApiServices {
     }
   }
 
-  changePassword(BuildContext context, String password, String confirmPassword) async {
+  changePassword(
+      BuildContext context, String password, String confirmPassword) async {
     try {
       final dio = Dio();
       dio.options.connectTimeout = connectionTimeoutDuration;
@@ -254,7 +260,8 @@ class ApiServices {
       // print(e.response!.statusCode);
       if (e.type == DioExceptionType.connectionTimeout) {
         print("Connection timeout");
-        Services().showCustomSnackBar(context, "Connection timeout. Please check your internet connection");
+        Services().showCustomSnackBar(context,
+            "Connection timeout. Please check your internet connection");
       }
       print("Error :${e.response!.data}");
       if (e.response!.statusCode == 401) {
@@ -297,7 +304,8 @@ class ApiServices {
     } on DioException catch (e) {
       if (e.type == DioExceptionType.connectionTimeout) {
         print("Connection timeout");
-        Services().showCustomSnackBar(context, "Connection timeout. Please check your internet connection");
+        Services().showCustomSnackBar(context,
+            "Connection timeout. Please check your internet connection");
       }
       print("Error :${e.response!.data}");
 
@@ -305,7 +313,8 @@ class ApiServices {
     }
   }
 
-  resetPassword(BuildContext context, String password, String confirmPassword) async {
+  resetPassword(
+      BuildContext context, String password, String confirmPassword) async {
     try {
       final dio = Dio();
       dio.options.connectTimeout = connectionTimeoutDuration;
@@ -336,7 +345,8 @@ class ApiServices {
       // print(e.response!.statusCode);
       if (e.type == DioExceptionType.connectionTimeout) {
         print("Connection timeout");
-        Services().showCustomSnackBar(context, "Connection timeout. Please check your internet connection");
+        Services().showCustomSnackBar(context,
+            "Connection timeout. Please check your internet connection");
       }
       print("Error :${e.response!.data}");
 
@@ -435,7 +445,7 @@ class ApiServices {
         data: {
           "email": email,
           "password": decrypted,
-        },  
+        },
         options: Options(
           contentType: Headers.jsonContentType,
         ),
@@ -744,7 +754,8 @@ class ApiServices {
     }
   }
 
-  addProductReview(BuildContext context, String id, String reviewText, int numberOfStars) async {
+  addProductReview(BuildContext context, String id, String reviewText,
+      int numberOfStars) async {
     SharedPreferences sharedPref = await SharedPreferences.getInstance();
     final authToken = sharedPref.getString(ACCESSTOKEN);
     final Map<String, dynamic> formData = {
@@ -775,7 +786,8 @@ class ApiServices {
     } on DioException catch (e) {
       if (e.type == DioExceptionType.connectionTimeout) {
         print("Connection timeout");
-        Services().showCustomSnackBar(context, "Connection timeout. Please check your network connection");
+        Services().showCustomSnackBar(context,
+            "Connection timeout. Please check your network connection");
       }
       print("Error :${e.response!.data}");
       // print("Error :${e.response!.data['error']}");
@@ -916,7 +928,8 @@ class ApiServices {
                   SizedBox(
                     width: 220.w,
                     child: CustomTextWidget(
-                      text: e.response!.data["errors"]["non_field_errors"][0].toString(),
+                      text: e.response!.data["errors"]["non_field_errors"][0]
+                          .toString(),
                       fontColor: Colors.white,
                     ),
                   ),
@@ -946,7 +959,8 @@ class ApiServices {
 
   removeFromCart(BuildContext context, String productId) async {
     try {
-      print("Trying to remove from cart:{$baseUrl${ApiEndPoints.addOrRemoveFromCart}$productId/}");
+      print(
+          "Trying to remove from cart:{$baseUrl${ApiEndPoints.addOrRemoveFromCart}$productId/}");
       final dio = Dio();
       dio.options.connectTimeout = connectionTimeoutDuration;
       SharedPreferences sharedPref = await SharedPreferences.getInstance();
@@ -985,7 +999,8 @@ class ApiServices {
 
   updateCartCount(String productId, int newCount) async {
     try {
-      print("Trying to remove from cart:{$baseUrl${ApiEndPoints.updateCartCount}$productId/}");
+      print(
+          "Trying to remove from cart:{$baseUrl${ApiEndPoints.updateCartCount}$productId/}");
       log("New count : $newCount");
       final dio = Dio();
       dio.options.connectTimeout = connectionTimeoutDuration;
@@ -1029,7 +1044,16 @@ class ApiServices {
     }
   }
 
-  createUserAddress(BuildContext context, String name, String streetAddress, String region, String district, String state, String postalCode, String phoneNumber, bool isDefaultAddress) async {
+  createUserAddress(
+      BuildContext context,
+      String name,
+      String streetAddress,
+      String region,
+      String district,
+      String state,
+      String postalCode,
+      String phoneNumber,
+      bool isDefaultAddress) async {
     final Map<String, dynamic> formData = {
       "name": name,
       "street_address": streetAddress,
@@ -1040,7 +1064,8 @@ class ApiServices {
       "phone_number": phoneNumber,
       "is_default": isDefaultAddress,
     };
-    print("\n$streetAddress\n$region\n$district\n$state\n$state\n$postalCode\n");
+    print(
+        "\n$streetAddress\n$region\n$district\n$state\n$state\n$postalCode\n");
 
     try {
       final dio = Dio();
@@ -1075,7 +1100,8 @@ class ApiServices {
         print("refresh token");
         final refreshedToken = await refreshAccessToken();
         if (refreshedToken != null) {
-          createUserAddress(context, name, streetAddress, region, district, state, postalCode, phoneNumber, isDefaultAddress);
+          createUserAddress(context, name, streetAddress, region, district,
+              state, postalCode, phoneNumber, isDefaultAddress);
         }
       }
       if (e.response!.statusCode == 400) {
@@ -1122,7 +1148,16 @@ class ApiServices {
   }
 
   editUserAddress(
-      BuildContext context, String id, String name, String streetAddress, String region, String district, String state, String postalCode, String phoneNumber, bool isDefaultAddress) async {
+      BuildContext context,
+      String id,
+      String name,
+      String streetAddress,
+      String region,
+      String district,
+      String state,
+      String postalCode,
+      String phoneNumber,
+      bool isDefaultAddress) async {
     try {
       //log("Editing address id $id");
       final dio = Dio();
@@ -1192,7 +1227,9 @@ class ApiServices {
         ),
       );
 
-      if (response.statusCode == 200 || response.statusCode == 201 || response.statusCode == 204) {
+      if (response.statusCode == 200 ||
+          response.statusCode == 201 ||
+          response.statusCode == 204) {
         // log(response.data.toString());
         print("deleted address");
 
@@ -1214,7 +1251,8 @@ class ApiServices {
     }
   }
 
-  placeOrder(String shippingAddressId, String billingAddressId) async {
+  placeOrder(String shippingAddressId, String billingAddressId,
+      BuildContext context) async {
     try {
       final dio = Dio();
       dio.options.connectTimeout = connectionTimeoutDuration;
@@ -1235,7 +1273,9 @@ class ApiServices {
         ),
       );
 
-      if (response.statusCode == 200 || response.statusCode == 201 || response.statusCode == 204) {
+      if (response.statusCode == 200 ||
+          response.statusCode == 201 ||
+          response.statusCode == 204) {
         // log(response.data.toString());
 
         return response;
@@ -1244,14 +1284,19 @@ class ApiServices {
         return null;
       }
     } on DioException catch (e) {
-      print("Error :${e.response}");
-      if (e.response!.statusCode == 401) {
-        print("refresh token");
-        final refreshedToken = await refreshAccessToken();
-        if (refreshedToken != null) {
-          placeOrder(shippingAddressId, billingAddressId);
+      log("Purchase Error :${e.response}");
+      if (e.response?.data["detail"] != null) {
+        Services().showCustomSnackBar(context, e.response?.data["detail"]);
+      } else {
+        if (e.response!.statusCode == 401) {
+          print("refresh token");
+          final refreshedToken = await refreshAccessToken();
+          if (refreshedToken != null) {
+            placeOrder(shippingAddressId, billingAddressId, context);
+          }
         }
       }
+
       return null;
     }
   }
@@ -1273,7 +1318,9 @@ class ApiServices {
         ),
       );
 
-      if (response.statusCode == 200 || response.statusCode == 201 || response.statusCode == 204) {
+      if (response.statusCode == 200 ||
+          response.statusCode == 201 ||
+          response.statusCode == 204) {
         // log(response.data.toString());
 
         return response;

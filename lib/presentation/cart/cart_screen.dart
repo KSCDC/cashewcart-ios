@@ -76,14 +76,16 @@ class CartScreen extends StatelessWidget {
                       ? Column(
                           children: [
                             CustomTextWidget(
-                              text: "Your cart is empty. Please add items to continue purchase.",
+                              text:
+                                  "Your cart is empty. Please add items to continue purchase.",
                               fontSize: 14.sp,
                               fontweight: FontWeight.w600,
                               textAlign: TextAlign.center,
                             ),
                             SizedBox(height: screenSize.height * 0.25),
                             SizedBox(
-                              child: Lottie.asset("lib/core/assets/lottie/cart_empty.json"),
+                              child: Lottie.asset(
+                                  "lib/core/assets/lottie/cart_empty.json"),
                             ),
                           ],
                         )
@@ -97,13 +99,17 @@ class CartScreen extends StatelessWidget {
                                         children: [
                                           kHeight,
                                           CartProductsListTile(
-                                            productDetails: cartController.cartProducts.value.results[index],
+                                            productDetails: cartController
+                                                .cartProducts
+                                                .value
+                                                .results[index],
                                             index: index,
                                           ),
                                         ],
                                       );
                                     },
-                                    itemCount: cartController.cartProducts.value.count,
+                                    itemCount:
+                                        cartController.cartProducts.value.count,
                                     physics: NeverScrollableScrollPhysics(),
                                     shrinkWrap: true,
                                   ),
@@ -130,24 +136,26 @@ class CartScreen extends StatelessWidget {
                                 kHeight,
                                 GestureDetector(
                                   onTap: () async {
-                                    if (grantTotalNotifier.value <= 500) {
-                                      const snackBar = SnackBar(
-                                        content: Text('Minimum order amount is Rs 500 and above'),
-                                        // behavior: SnackBarBehavior.floating,
-                                        // margin: EdgeInsets.all(10),
-                                        padding: EdgeInsets.all(20),
-                                      );
-                                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                    } else {
-                                      await profileController.getUserAddresses();
-                                      await cartController.getCartList();
-                                      Get.to(
-                                        () => MultipleItemPlaceOrderScreen(
-                                          productList: cartController.cartProducts.value.results,
-                                          grandTotal: grantTotalNotifier.value,
-                                        ),
-                                      );
-                                    }
+                                    // if (grantTotalNotifier.value <= 500) {
+                                    //   const snackBar = SnackBar(
+                                    //     content: Text('Minimum order amount is Rs 500 and above'),
+                                    //     // behavior: SnackBarBehavior.floating,
+                                    //     // margin: EdgeInsets.all(10),
+                                    //     padding: EdgeInsets.all(20),
+                                    //   );
+                                    //   ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                    // } else
+                                    // {
+                                    await profileController.getUserAddresses();
+                                    await cartController.getCartList();
+                                    Get.to(
+                                      () => MultipleItemPlaceOrderScreen(
+                                        productList: cartController
+                                            .cartProducts.value.results,
+                                        grandTotal: grantTotalNotifier.value,
+                                      ),
+                                    );
+                                    // }
                                   },
                                   child: CustomElevatedButton(
                                     label: "Place Order",
@@ -174,8 +182,10 @@ class CartScreen extends StatelessWidget {
     print("grand total fn");
     print(cartController.cartProducts.value);
     for (int i = 0; i < cartController.cartProducts.value.count; i++) {
-      final String price = cartController.cartProducts.value.results[i].mrp.toString();
-      final int count = cartController.cartProducts.value.results[i].purchaseCount;
+      final String price =
+          cartController.cartProducts.value.results[i].mrp.toString();
+      final int count =
+          cartController.cartProducts.value.results[i].purchaseCount;
       final double total = double.parse(price) * count;
       grandTotal += total;
     }

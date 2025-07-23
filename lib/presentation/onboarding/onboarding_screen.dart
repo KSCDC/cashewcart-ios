@@ -4,6 +4,7 @@ import 'package:cashew_cart/presentation/authentication/signin_screen.dart';
 import 'package:cashew_cart/presentation/get_started/get_started_screen.dart';
 import 'package:cashew_cart/presentation/onboarding/widgets/onboarding_tile.dart';
 import 'package:cashew_cart/presentation/widgets/custom_text_widget.dart';
+import 'package:get/get.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class OnboardingScreen extends StatelessWidget {
@@ -43,12 +44,7 @@ class OnboardingScreen extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () {
-              controller.animateToPage(
-                2,
-                duration: const Duration(milliseconds: 500),
-                curve: Curves.easeIn,
-              );
-              pageNumberNotifier.value = 3;
+              Get.offAll(() => SignInScreen());
             },
             child: CustomTextWidget(
               text: "Skip",
@@ -76,12 +72,14 @@ class OnboardingScreen extends StatelessWidget {
               OnboardingTile(
                 imagePath: "lib/core/assets/images/onboard_make_payment.png",
                 heading: "Make Payment",
-                description: "Customers can make  payments for purchased products through the technology online payment gateway system.",
+                description:
+                    "Customers can make  payments for purchased products through the technology online payment gateway system.",
               ),
               OnboardingTile(
                 imagePath: "lib/core/assets/images/onboard_get_your_order.png",
                 heading: "Get Your Order",
-                description: "After the payment authorization an order summary  will be available on your My Order page.",
+                description:
+                    "After the payment authorization an order summary  will be available on your My Order page.",
               ),
             ],
           ),
@@ -105,7 +103,8 @@ class OnboardingScreen extends StatelessWidget {
                                 duration: const Duration(milliseconds: 500),
                                 curve: Curves.easeIn,
                               );
-                              pageNumberNotifier.value = controller.page!.toInt() + 1;
+                              pageNumberNotifier.value =
+                                  controller.page!.toInt() + 1;
                             },
                             child: const CustomTextWidget(
                               text: "Prev",
@@ -137,7 +136,8 @@ class OnboardingScreen extends StatelessWidget {
             TextButton(
               onPressed: () async {
                 if (controller.page == 2) {
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const GetStartedScreen()));
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => const GetStartedScreen()));
                 } else {
                   await controller.nextPage(
                     duration: const Duration(milliseconds: 500),

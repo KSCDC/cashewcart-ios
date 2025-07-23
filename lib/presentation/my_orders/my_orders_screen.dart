@@ -37,22 +37,7 @@ class MyOrdersScreen extends StatelessWidget {
     final screenSize = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: appBackgroundColor,
-      // appBar: AppBar(
-      //   scrolledUnderElevation: 0,
-      //   leading: IconButton(
-      //     onPressed: () {
-      //       bottomNavbarIndexNotifier.value = previousPageIndexes.last;
-      //       previousPageIndexes.removeLast();
-      //     },
-      //     icon: Icon(Icons.arrow_back_ios_new),
-      //   ),
-      //   centerTitle: true,
-      //   title: CustomTextWidget(
-      //     text: "Orders",
-      //     fontSize: 18,
-      //     fontweight: FontWeight.w600,
-      //   ),
-      // ),
+ 
       appBar: AppBar(
         // backgroundColor: kMainThemeColor,
         centerTitle: true,

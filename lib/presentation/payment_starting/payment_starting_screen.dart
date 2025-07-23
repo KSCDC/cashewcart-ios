@@ -138,7 +138,8 @@ class _PaymentStartingScreenState extends State<PaymentStartingScreen> {
                   fontSize: 14.w,
                 ),
                 CustomTextWidget(
-                  text: "${widget.deliveryAddress.region}, ${widget.deliveryAddress.district}, ${widget.deliveryAddress.state}, ${widget.deliveryAddress.postalCode}",
+                  text:
+                      "${widget.deliveryAddress.region}, ${widget.deliveryAddress.district}, ${widget.deliveryAddress.state}, ${widget.deliveryAddress.postalCode}",
                   fontSize: 14.w,
                 ),
                 SizedBox(height: 10.w),
@@ -156,7 +157,8 @@ class _PaymentStartingScreenState extends State<PaymentStartingScreen> {
                   fontSize: 14.w,
                 ),
                 CustomTextWidget(
-                  text: "${widget.billingAddress.region}, ${widget.billingAddress.district}, ${widget.billingAddress.state}, ${widget.billingAddress.postalCode}",
+                  text:
+                      "${widget.billingAddress.region}, ${widget.billingAddress.district}, ${widget.billingAddress.state}, ${widget.billingAddress.postalCode}",
                   fontSize: 14.w,
                 ),
                 SizedBox(height: 10.w),
@@ -280,41 +282,79 @@ class _PaymentStartingScreenState extends State<PaymentStartingScreen> {
                     rows: List<DataRow>.generate(
                       widget.productsList.length,
                       (index) {
-                        subTotal += double.parse(widget.productsList[index].total);
+                        subTotal +=
+                            double.parse(widget.productsList[index].total);
                         return DataRow(
                           cells: [
                             DataCell(
-                              Center(child: CustomTextWidget(text: "${index + 1}")),
+                              Center(
+                                  child:
+                                      CustomTextWidget(text: "${index + 1}")),
                             ),
                             DataCell(
-                              Center(child: CustomTextWidget(text: widget.productsList[index].product.product.name)),
+                              Center(
+                                  child: CustomTextWidget(
+                                      text: widget.productsList[index].product
+                                          .product.name)),
                             ),
                             DataCell(
-                              Center(child: CustomTextWidget(text: widget.productsList[index].product.hsn)),
+                              Center(
+                                  child: CustomTextWidget(
+                                      text: widget
+                                          .productsList[index].product.hsn)),
                             ),
                             DataCell(
-                              Center(child: CustomTextWidget(text: widget.productsList[index].purchaseCount.toString())),
+                              Center(
+                                  child: CustomTextWidget(
+                                      text: widget
+                                          .productsList[index].purchaseCount
+                                          .toString())),
                             ),
                             DataCell(
-                              Center(child: CustomTextWidget(text: widget.productsList[index].product.sellingPrice)),
+                              Center(
+                                  child: CustomTextWidget(
+                                      text: widget.productsList[index].product
+                                          .sellingPrice)),
                             ),
                             DataCell(
-                              Center(child: CustomTextWidget(text: (double.parse(widget.productsList[index].product.sellingPrice) * widget.productsList[index].purchaseCount).toStringAsFixed(2))),
+                              Center(
+                                  child: CustomTextWidget(
+                                      text: (double.parse(widget
+                                                  .productsList[index]
+                                                  .product
+                                                  .sellingPrice) *
+                                              widget.productsList[index]
+                                                  .purchaseCount)
+                                          .toStringAsFixed(2))),
                             ),
                             DataCell(
-                              Center(child: CustomTextWidget(text: widget.productsList[index].product.cgstRate)),
+                              Center(
+                                  child: CustomTextWidget(
+                                      text: widget.productsList[index].product
+                                          .cgstRate)),
                             ),
                             DataCell(
-                              Center(child: CustomTextWidget(text: widget.productsList[index].cgstPrice)),
+                              Center(
+                                  child: CustomTextWidget(
+                                      text: widget
+                                          .productsList[index].cgstPrice)),
                             ),
                             DataCell(
-                              Center(child: CustomTextWidget(text: widget.productsList[index].product.sgstRate)),
+                              Center(
+                                  child: CustomTextWidget(
+                                      text: widget.productsList[index].product
+                                          .sgstRate)),
                             ),
                             DataCell(
-                              Center(child: CustomTextWidget(text: widget.productsList[index].sgstPrice)),
+                              Center(
+                                  child: CustomTextWidget(
+                                      text: widget
+                                          .productsList[index].sgstPrice)),
                             ),
                             DataCell(
-                              Center(child: CustomTextWidget(text: widget.productsList[index].total)),
+                              Center(
+                                  child: CustomTextWidget(
+                                      text: widget.productsList[index].total)),
                             ),
                           ],
                         );
@@ -360,7 +400,8 @@ class _PaymentStartingScreenState extends State<PaymentStartingScreen> {
                           SizedBox(
                             width: 100.w,
                             child: CustomTextWidget(
-                              text: "₹ ${(widget.deliveryCharge + widget.additionalAmount).toStringAsFixed(2)}",
+                              text:
+                                  "₹ ${(widget.deliveryCharge + widget.additionalAmount).toStringAsFixed(2)}",
                               fontSize: 14.sp,
                               fontweight: FontWeight.w600,
                               height: 2,
@@ -383,7 +424,8 @@ class _PaymentStartingScreenState extends State<PaymentStartingScreen> {
                           SizedBox(
                             width: 100.w,
                             child: CustomTextWidget(
-                              text: "₹ ${(subTotal + widget.deliveryCharge).toStringAsFixed(2)}",
+                              text:
+                                  "₹ ${(subTotal + widget.deliveryCharge).toStringAsFixed(2)}",
                               fontSize: 16.sp,
                               fontweight: FontWeight.w600,
                               height: 2,
@@ -401,7 +443,11 @@ class _PaymentStartingScreenState extends State<PaymentStartingScreen> {
                   child: GestureDetector(
                     onTap: () {
                       context.loaderOverlay.show();
-                      proceedToPay(context, _razorpay, widget.deliveryAddress.id.toString(), widget.billingAddress.id.toString());
+                      proceedToPay(
+                          context,
+                          _razorpay,
+                          widget.deliveryAddress.id.toString(),
+                          widget.billingAddress.id.toString());
                     },
                     child: CustomElevatedButton(label: "Proceed to Pay"),
                   ),
@@ -430,7 +476,8 @@ class _PaymentStartingScreenState extends State<PaymentStartingScreen> {
             height: screenSize.width * 0.65,
             child: Column(
               children: [
-                SvgPicture.asset("lib/core/assets/images/other/payment_success.svg"),
+                SvgPicture.asset(
+                    "lib/core/assets/images/other/payment_success.svg"),
                 CustomTextWidget(
                   text: "Payment done successfully.",
                   fontweight: FontWeight.w600,
@@ -451,7 +498,8 @@ class _PaymentStartingScreenState extends State<PaymentStartingScreen> {
       context: context,
       type: AlertType.error,
       title: "PAYMENT FAILED",
-      desc: "Your payment is failed. You can retry payment from My Orders section.",
+      desc:
+          "Your payment is failed. You can retry payment from My Orders section.",
       buttons: [
         DialogButton(
           child: Text(
@@ -469,12 +517,15 @@ class _PaymentStartingScreenState extends State<PaymentStartingScreen> {
   }
 }
 
-proceedToPay(BuildContext context, Razorpay razorpay, String deliveryAddressId, String billingAddressId) async {
+proceedToPay(BuildContext context, Razorpay razorpay, String deliveryAddressId,
+    String billingAddressId) async {
   List orderingProductsList = [];
   final OrdersListModel order;
 
-  final response = await ApiServices().placeOrder(deliveryAddressId, billingAddressId);
-  if (response != null) {
+  final response =
+      await ApiServices().placeOrder(deliveryAddressId, billingAddressId,context);
+  log("order response $response");
+  if (response == null) {
     //   // String phoneNumber = response.data['billing_phone_number'].toString();
     //   // String _orderId = response.data['order_id'].toString();
     order = OrdersListModel.fromJson(response.data);

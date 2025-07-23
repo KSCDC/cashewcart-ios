@@ -11,8 +11,11 @@ class MyOrdersListTile extends StatelessWidget {
   const MyOrdersListTile({
     super.key,
     required this.currentItem,
+    this.onTap,
   });
+  
   final OrdersListModel currentItem;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -23,229 +26,286 @@ class MyOrdersListTile extends StatelessWidget {
     final num subTotal = currentItem.subTotalAmount;
     final num deliveryCharge = currentItem.deliveryAdditionalAmount;
     final num grandTotal = currentItem.totalAmount;
-    String orderPlacedDate = DateFormat('dd MMMM yyyy').format(date);
-    final screenSize = MediaQuery.of(context).size;
-    Color paymentStatusColor = Colors.black;
-    String status;
-    if (paymentStatus == "SUCCESS") {
-      paymentStatusColor = Colors.green;
-      status = "SUCCESS";
-    } else if (paymentStatus == "PAYMENT_NOT_STARTED") {
-      paymentStatusColor = Colors.red;
-      status = "NOT STARTED";
-    } else {
-      paymentStatusColor = Colors.red;
-      status = "FAILED";
-    }
+    String orderPlacedDate = DateFormat('dd MMM yyyy').format(date);
+    
+    // Payment status configuration
+    PaymentStatusConfig statusConfig = _getPaymentStatusConfig(paymentStatus);
+    
     return Container(
-      // width: screenSize.width * 0.95,
-      width: double.infinity,
-      // height: 250,
+      margin: EdgeInsets.only(bottom: 16.h),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(16.r),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Row(
-            //   children: [
-            //     Container(
-            //       height: 125,
-            //       width: 130,
-            //       decoration: BoxDecoration(
-            //         image: DecorationImage(
-            //           image: NetworkImage(imagePath),
-            //           fit: BoxFit.fitHeight,
-            //         ),
-            //         borderRadius: BorderRadius.all(
-            //           Radius.circular(4),
-            //         ),
-            //       ),
-            //     ),
-            //     Padding(
-            //       padding: const EdgeInsets.all(10),
-            //       child: Column(
-            //         crossAxisAlignment: CrossAxisAlignment.start,
-            //         children: [
-            //           SizedBox(
-            //             width: screenSize.width * 0.52,
-            //             child: CustomTextWidget(
-            //               text: name,
-            //               fontSize: 13,
-            //               fontweight: FontWeight.w600,
-            //             ),
-            //           ),
-            //           const SizedBox(height: 5),
-            //           Row(
-            //             children: [
-            //               const CustomTextWidget(
-            //                 text: "Quantity :",
-            //                 fontSize: 12,
-            //                 fontweight: FontWeight.w500,
-            //               ),
-            //               kWidth,
-            //               CustomTextWidget(
-            //                 text: weight.toString(),
-            //                 fontSize: 12,
-            //               ),
-            //               kWidth,
-            //             ],
-            //           ),
-            //           kHeight,
-            //           Row(
-            //             children: [
-            //               CustomTextWidget(
-            //                 text: rating,
-            //                 // fontColor: ,
-            //                 fontSize: 12,
-            //               ),
-            //               for (int i = 0; i < 4; i++)
-            //                 const Icon(
-            //                   Icons.star,
-            //                   color: Color(0xFFF7B305),
-            //                   size: 15,
-            //                 ),
-            //               const Icon(
-            //                 Icons.star_half,
-            //                 color: Color(0xFFBBBBBB),
-            //                 size: 15,
-            //               ),
-            //               kWidth,
-            //             ],
-            //           ),
-            //           kHeight,
-            //           Row(
-            //             children: [
-            //               CartProductListTileButton(
-            //                 buttonHeight: 30,
-            //                 buttonWidth: 85,
-            //                 label: "₹ ${price}",
-            //                 fontSize: 16,
-            //                 fontWeight: FontWeight.w600,
-            //               ),
-            //               kWidth,
-            //             ],
-            //           ),
-            //         ],
-            //       ),
-            //     )
-            //   ],
-            // ),
-
-            Row(
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(16.r),
+          child: Padding(
+            padding: EdgeInsets.all(20.w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CustomTextWidget(
-                  text: "Order ID : $orderId",
-                  fontSize: 14.sp,
-                  fontweight: FontWeight.w600,
-                  fontColor: kMainThemeColor,
+                // Header Row
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CustomTextWidget(
+                            text: "Order #$orderId",
+                            fontSize: 16.sp,
+                            fontweight: FontWeight.w700,
+                            fontColor: const Color(0xFF1A1A1A),
+                          ),
+                          SizedBox(height: 4.h),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.calendar_today_outlined,
+                                size: 14.sp,
+                                color: const Color(0xFF6B7280),
+                              ),
+                              SizedBox(width: 6.w),
+                              CustomTextWidget(
+                                text: orderPlacedDate,
+                                fontSize: 13.sp,
+                                fontColor: const Color(0xFF6B7280),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    // Payment Status Badge
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12.w,
+                        vertical: 6.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: statusConfig.backgroundColor,
+                        borderRadius: BorderRadius.circular(20.r),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            width: 6.w,
+                            height: 6.h,
+                            decoration: BoxDecoration(
+                              color: statusConfig.dotColor,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                          SizedBox(width: 6.w),
+                          CustomTextWidget(
+                            text: statusConfig.label,
+                            fontSize: 12.sp,
+                            fontweight: FontWeight.w600,
+                            fontColor: statusConfig.textColor,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
+                
+                SizedBox(height: 20.h),
+                
+                // Items Count
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 12.w,
+                    vertical: 8.h,
+                  ),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF8FAFC),
+                    borderRadius: BorderRadius.circular(8.r),
+                    border: Border.all(
+                      color: const Color(0xFFE2E8F0),
+                      width: 1,
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.shopping_bag_outlined,
+                        size: 16.sp,
+                        color: kMainThemeColor,
+                      ),
+                      SizedBox(width: 8.w),
+                      CustomTextWidget(
+                        text: "$totalItems ${totalItems == 1 ? 'item' : 'items'}",
+                        fontSize: 14.sp,
+                        fontweight: FontWeight.w500,
+                        fontColor: const Color(0xFF374151),
+                      ),
+                    ],
+                  ),
+                ),
+                
+                SizedBox(height: 16.h),
+                
+                // Order Summary Card
+                Container(
+                  padding: EdgeInsets.all(16.w),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFAFAFA),
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  child: Column(
+                    children: [
+                      ModernOrderSummaryRow(
+                        label: "Subtotal",
+                        value: "₹${subTotal.toStringAsFixed(2)}",
+                      ),
+                      SizedBox(height: 8.h),
+                      ModernOrderSummaryRow(
+                        label: "Delivery",
+                        value: "₹${deliveryCharge.toStringAsFixed(2)}",
+                      ),
+                      SizedBox(height: 12.h),
+                      Container(
+                        height: 1,
+                        color: const Color(0xFFE5E7EB),
+                      ),
+                      SizedBox(height: 12.h),
+                      ModernOrderSummaryRow(
+                        label: "Total",
+                        value: "₹${grandTotal.toStringAsFixed(2)}",
+                        isTotal: true,
+                      ),
+                    ],
+                  ),
+                ),
+                
+                if (onTap != null) ...[
+                  SizedBox(height: 16.h),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16.w,
+                          vertical: 8.h,
+                        ),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: kMainThemeColor.withOpacity(0.3),
+                          ),
+                          borderRadius: BorderRadius.circular(8.r),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            CustomTextWidget(
+                              text: "View Details",
+                              fontSize: 13.sp,
+                              fontweight: FontWeight.w600,
+                              fontColor: kMainThemeColor,
+                            ),
+                            SizedBox(width: 4.w),
+                            Icon(
+                              Icons.arrow_forward_ios,
+                              size: 12.sp,
+                              color: kMainThemeColor,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ],
             ),
-
-            CustomTextWidget(
-              text: "Order placed on $orderPlacedDate",
-              fontSize: 14.sp,
-            ),
-            OrderListLine(label: "Number of items", number: "$totalItems"),
-            OrderListLine(label: "Sub Total", number: "₹ ${subTotal.toStringAsFixed(2)}"),
-            OrderListLine(label: "Delivery charge", number: "₹ ${deliveryCharge.toStringAsFixed(2)}"),
-            OrderListLine(label: "Grand Total", number: "₹ ${grandTotal.toStringAsFixed(2)}"),
-
-            SizedBox(height: 10.w),
-            Row(
-              children: [
-                CustomTextWidget(
-                  text: "Payment status : ",
-                  fontSize: 14.sp,
-                  fontweight: FontWeight.w600,
-                ),
-                CustomTextWidget(
-                  text: status,
-                  fontColor: paymentStatusColor,
-                  fontSize: 14.sp,
-                  fontweight: FontWeight.w600,
-                ),
-              ],
-            ),
-            kHeight,
-            Divider(),
-
-            SizedBox(height: 5),
-          ],
+          ),
         ),
       ),
     );
   }
+
+  PaymentStatusConfig _getPaymentStatusConfig(String paymentStatus) {
+    switch (paymentStatus) {
+      case "SUCCESS":
+        return PaymentStatusConfig(
+          label: "Paid",
+          backgroundColor: const Color(0xFFECFDF5),
+          textColor: const Color(0xFF065F46),
+          dotColor: const Color(0xFF10B981),
+        );
+      case "PAYMENT_NOT_STARTED":
+        return PaymentStatusConfig(
+          label: "Pending",
+          backgroundColor: const Color(0xFFFEF3C7),
+          textColor: const Color(0xFF92400E),
+          dotColor: const Color(0xFFF59E0B),
+        );
+      default:
+        return PaymentStatusConfig(
+          label: "Failed",
+          backgroundColor: const Color(0xFFFEF2F2),
+          textColor: const Color(0xFF991B1B),
+          dotColor: const Color(0xFFEF4444),
+        );
+    }
+  }
 }
 
-class OrderListLine extends StatelessWidget {
-  const OrderListLine({
+class ModernOrderSummaryRow extends StatelessWidget {
+  const ModernOrderSummaryRow({
     super.key,
     required this.label,
-    required this.number,
+    required this.value,
+    this.isTotal = false,
   });
+
   final String label;
-  final String number;
+  final String value;
+  final bool isTotal;
+
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        SizedBox(
-          width: 200.w,
-          child: CustomTextWidget(
-            text: label + ": ",
-            fontSize: 14.sp,
-          ),
-        ),
-        Spacer(),
         CustomTextWidget(
-          text: number,
-          fontSize: 14.sp,
-          fontweight: FontWeight.w600,
+          text: label,
+          fontSize: isTotal ? 15.sp : 14.sp,
+          fontweight: isTotal ? FontWeight.w600 : FontWeight.w500,
+          fontColor: isTotal ? const Color(0xFF111827) : const Color(0xFF6B7280),
+        ),
+        CustomTextWidget(
+          text: value,
+          fontSize: isTotal ? 16.sp : 14.sp,
+          fontweight: FontWeight.w700,
+          fontColor: isTotal ? kMainThemeColor : const Color(0xFF374151),
         ),
       ],
     );
   }
 }
 
+class PaymentStatusConfig {
+  final String label;
+  final Color backgroundColor;
+  final Color textColor;
+  final Color dotColor;
 
-
-// class CartProductListTileButton extends StatelessWidget {
-//   const CartProductListTileButton({
-//     super.key,
-//     required this.buttonHeight,
-//     required this.buttonWidth,
-//     required this.label,
-//     required this.fontSize,
-//     required this.fontWeight,
-//   });
-
-//   final double buttonHeight;
-//   final double buttonWidth;
-//   final String label;
-//   final double fontSize;
-//   final FontWeight fontWeight;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       height: buttonHeight,
-//       width: buttonWidth,
-//       decoration: BoxDecoration(
-//         borderRadius: BorderRadius.circular(2),
-//         border: Border.all(),
-//       ),
-//       child: Center(
-//         child: CustomTextWidget(
-//           text: label,
-//           fontSize: fontSize,
-//           fontweight: fontWeight,
-//         ),
-//       ),
-//     );
-//   }
-// }
+  PaymentStatusConfig({
+    required this.label,
+    required this.backgroundColor,
+    required this.textColor,
+    required this.dotColor,
+  });
+}

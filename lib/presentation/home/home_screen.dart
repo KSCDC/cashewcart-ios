@@ -80,7 +80,8 @@ class HomeScreen extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               // circular list
-                              if (controller.isCircleAvatarProductsLoading.value)
+                              if (controller
+                                  .isCircleAvatarProductsLoading.value)
                                 SizedBox(
                                   height: 120.w,
                                   // width: screenSize.width,
@@ -99,10 +100,13 @@ class HomeScreen extends StatelessWidget {
                                                 children: [
                                                   CircleAvatar(
                                                     radius: 35,
-                                                    backgroundColor: Colors.white,
+                                                    backgroundColor:
+                                                        Colors.white,
                                                     // backgroundImage: NetworkImage(imagePath),
                                                     child: ClipRRect(
-                                                      borderRadius: BorderRadius.circular(40.r),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              40.r),
                                                       child: SizedBox(
                                                         height: 60,
                                                       ),
@@ -112,7 +116,8 @@ class HomeScreen extends StatelessWidget {
                                                     text: "Product name",
                                                     fontSize: 10,
                                                     fontweight: FontWeight.w400,
-                                                    fontColor: Color(0xFF21003D),
+                                                    fontColor:
+                                                        Color(0xFF21003D),
                                                     textAlign: TextAlign.center,
                                                     maxLines: 2,
                                                   )
@@ -129,20 +134,35 @@ class HomeScreen extends StatelessWidget {
                                   child: ListView.builder(
                                     itemBuilder: (context, index) {
                                       String productImageUrl = '';
-                                      if (controller.circleAvatarProductsList.isNotEmpty) {
-                                        productImageUrl = controller.circleAvatarProductsList[index].product.productImages.isNotEmpty
+                                      if (controller.circleAvatarProductsList
+                                          .isNotEmpty) {
+                                        productImageUrl = controller
+                                                .circleAvatarProductsList[index]
+                                                .product
+                                                .productImages
+                                                .isNotEmpty
                                             ? "$baseUrl${controller.circleAvatarProductsList[index].product.productImages[0].productImage}"
                                             : "https://t3.ftcdn.net/jpg/05/04/28/96/240_F_504289605_zehJiK0tCuZLP2MdfFBpcJdOVxKLnXg1.jpg";
                                       }
 
-                                      final productName = controller.circleAvatarProductsList[index].product.name;
+                                      final productName = controller
+                                          .circleAvatarProductsList[index]
+                                          .product
+                                          .name;
                                       return GestureDetector(
                                         onTap: () async {
-                                          final String productId = controller.circleAvatarProductsList.value[index].product.productId.toString();
+                                          final String productId = controller
+                                              .circleAvatarProductsList
+                                              .value[index]
+                                              .product
+                                              .productId
+                                              .toString();
 
                                           // controller.getSimilarProducts(controller.allProducts.value, index);
 
-                                          Services().getProductDetailsAndGotoShopScreen(context, productId);
+                                          Services()
+                                              .getProductDetailsAndGotoShopScreen(
+                                                  context, productId);
                                         },
                                         child: CircleAvatarListItem(
                                           imagePath: productImageUrl,
@@ -150,7 +170,8 @@ class HomeScreen extends StatelessWidget {
                                         ),
                                       );
                                     },
-                                    itemCount: controller.circleAvatarProductsList.length,
+                                    itemCount: controller
+                                        .circleAvatarProductsList.length,
                                     scrollDirection: Axis.horizontal,
                                   ),
                                 ),
@@ -177,10 +198,12 @@ class HomeScreen extends StatelessWidget {
                                 SizedBox(
                                   height: 230.w,
                                   width: screenSize.width * 0.95,
-                                  child: controller.isAllProductsLoadingError.value
+                                  child: controller
+                                          .isAllProductsLoadingError.value
                                       ? Center(
                                           child: CustomTextWidget(
-                                            text: "Loading failed. Please check your internet connection",
+                                            text:
+                                                "Loading failed. Please check your internet connection",
                                             textAlign: TextAlign.center,
                                           ),
                                         )
@@ -188,20 +211,24 @@ class HomeScreen extends StatelessWidget {
                                           options: CarouselOptions(
                                             height: 350.w,
                                             autoPlay: true,
-                                            autoPlayInterval: Duration(seconds: 5),
+                                            autoPlayInterval:
+                                                Duration(seconds: 5),
                                             // padEnds: true,
                                             viewportFraction: 0.8,
                                             enlargeCenterPage: true,
                                             enlargeFactor: 0.4,
                                             onPageChanged: (index, reason) {
-                                              controller.currentSlideNumber.value = index;
+                                              controller.currentSlideNumber
+                                                  .value = index;
                                             },
                                           ),
-                                          items: controller.slidingProductsList.map((product) {
+                                          items: controller.slidingProductsList
+                                              .map((product) {
                                             return Builder(
                                               builder: (BuildContext context) {
                                                 return SizedBox(
-                                                  width: screenSize.width * 0.95,
+                                                  width:
+                                                      screenSize.width * 0.95,
                                                   child: SlidingImageTile(
                                                     productDetails: product,
                                                   ),
@@ -216,15 +243,22 @@ class HomeScreen extends StatelessWidget {
                               Obx(() {
                                 return Center(
                                   child: DotsIndicator(
-                                    dotsCount: controller.slidingProductsList.length == 0 ? 8 : controller.slidingProductsList.length,
-                                    position: controller.currentSlideNumber.value,
+                                    dotsCount: controller
+                                                .slidingProductsList.length ==
+                                            0
+                                        ? 8
+                                        : controller.slidingProductsList.length,
+                                    position: controller
+                                        .currentSlideNumber.value
+                                        .toDouble(),
                                     decorator: DotsDecorator(
                                       activeColor: Colors.red,
                                       color: Colors.grey,
                                       size: const Size.square(9.0),
                                       activeSize: const Size(18.0, 9.0),
                                       activeShape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(5.0),
+                                        borderRadius:
+                                            BorderRadius.circular(5.0),
                                       ),
                                     ),
                                   ),
@@ -242,7 +276,8 @@ class HomeScreen extends StatelessWidget {
                                     ? Column(
                                         children: [
                                           GridView.count(
-                                            physics: const NeverScrollableScrollPhysics(),
+                                            physics:
+                                                const NeverScrollableScrollPhysics(),
                                             shrinkWrap: true,
                                             childAspectRatio: (20 / 30),
                                             crossAxisCount: 2,
@@ -261,7 +296,8 @@ class HomeScreen extends StatelessWidget {
                                     : Column(
                                         children: [
                                           GridView.count(
-                                            physics: const NeverScrollableScrollPhysics(),
+                                            physics:
+                                                const NeverScrollableScrollPhysics(),
                                             shrinkWrap: true,
                                             childAspectRatio: (20 / 30),
                                             crossAxisCount: 2,
@@ -270,18 +306,28 @@ class HomeScreen extends StatelessWidget {
                                             children: List.generate(
                                               controller.allProducts.length,
                                               (index) {
-                                                final productDetails = controller.allProducts[index];
+                                                final productDetails =
+                                                    controller
+                                                        .allProducts[index];
                                                 return GestureDetector(
                                                   onTap: () async {
-                                                    final String productId = controller.allProducts[index].product.productId.toString();
+                                                    final String productId =
+                                                        controller
+                                                            .allProducts[index]
+                                                            .product
+                                                            .productId
+                                                            .toString();
 
                                                     // controller.getSimilarProducts(controller.allProducts.value, index);
 
                                                     print("stopped");
-                                                    Services().getProductDetailsAndGotoShopScreen(context, productId);
+                                                    Services()
+                                                        .getProductDetailsAndGotoShopScreen(
+                                                            context, productId);
                                                   },
                                                   child: ProductsListItemTile(
-                                                    productDetails: productDetails,
+                                                    productDetails:
+                                                        productDetails,
                                                   ),
                                                 );
                                               },
@@ -297,16 +343,20 @@ class HomeScreen extends StatelessWidget {
                                 width: screenSize.width * 0.9,
                                 child: Row(
                                   children: [
-                                    Image.asset("lib/core/assets/images/home/special_offer.png"),
+                                    Image.asset(
+                                        "lib/core/assets/images/home/special_offer.png"),
                                     SizedBox(width: 20),
                                     Container(
                                       width: 180.w,
                                       child: const Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
-                                          CustomTextWidget(text: "Special Offers 😱"),
                                           CustomTextWidget(
-                                            text: "We make sure you get the offer you need at best prices",
+                                              text: "Special Offers 😱"),
+                                          CustomTextWidget(
+                                            text:
+                                                "We make sure you get the offer you need at best prices",
                                             fontSize: 12,
                                             fontweight: FontWeight.w300,
                                           ),
@@ -330,46 +380,74 @@ class HomeScreen extends StatelessWidget {
                                   Container(
                                     height: 230.w,
                                     child: Obx(
-                                      () => controller.isBestSellersLoading.value
+                                      () => controller
+                                              .isBestSellersLoading.value
                                           ? Center(
                                               child: ListView.builder(
                                                 itemBuilder: (context, index) {
                                                   return ProductsListItemTileSkeleton();
                                                 },
                                                 itemCount: 5,
-                                                scrollDirection: Axis.horizontal,
+                                                scrollDirection:
+                                                    Axis.horizontal,
                                               ),
                                             )
-                                          : controller.isBestSellersLoadingError.value
+                                          : controller.isBestSellersLoadingError
+                                                  .value
                                               ? Center(
                                                   child: CustomTextWidget(
-                                                    text: "Loading bestsellers failed. Please check your internet connection",
+                                                    text:
+                                                        "Loading bestsellers failed. Please check your internet connection",
                                                     textAlign: TextAlign.center,
                                                   ),
                                                 )
-                                              : controller.bestSellers.value.isEmpty
+                                              : controller
+                                                      .bestSellers.value.isEmpty
                                                   ? Center(
-                                                      child: CustomTextWidget(text: "No best sellers found"),
+                                                      child: CustomTextWidget(
+                                                          text:
+                                                              "No best sellers found"),
                                                     )
                                                   : ListView.builder(
-                                                      itemBuilder: (context, index) {
-                                                        final productDetails = controller.bestSellers[index];
+                                                      itemBuilder:
+                                                          (context, index) {
+                                                        final productDetails =
+                                                            controller
+                                                                    .bestSellers[
+                                                                index];
 
                                                         return GestureDetector(
                                                           onTap: () async {
-                                                            final String productId = controller.bestSellers[index].product.productId.toString();
-                                                            Services().getProductDetailsAndGotoShopScreen(context, productId);
+                                                            final String
+                                                                productId =
+                                                                controller
+                                                                    .bestSellers[
+                                                                        index]
+                                                                    .product
+                                                                    .productId
+                                                                    .toString();
+                                                            Services()
+                                                                .getProductDetailsAndGotoShopScreen(
+                                                                    context,
+                                                                    productId);
                                                           },
-                                                          child: ProductsListItemTile(
-                                                            productDetails: productDetails,
-                                                            imagePath: productDetails.product.productImages.isNotEmpty
+                                                          child:
+                                                              ProductsListItemTile(
+                                                            productDetails:
+                                                                productDetails,
+                                                            imagePath: productDetails
+                                                                    .product
+                                                                    .productImages
+                                                                    .isNotEmpty
                                                                 ? "$baseUrl${productDetails.product.productImages[0].productImage}"
                                                                 : "https://t3.ftcdn.net/jpg/05/04/28/96/240_F_504289605_zehJiK0tCuZLP2MdfFBpcJdOVxKLnXg1.jpg",
                                                           ),
                                                         );
                                                       },
-                                                      itemCount: controller.bestSellers.length,
-                                                      scrollDirection: Axis.horizontal,
+                                                      itemCount: controller
+                                                          .bestSellers.length,
+                                                      scrollDirection:
+                                                          Axis.horizontal,
                                                     ),
                                     ),
                                   ),
@@ -397,39 +475,64 @@ class HomeScreen extends StatelessWidget {
                                                   return ProductsListItemTileSkeleton();
                                                 },
                                                 itemCount: 5,
-                                                scrollDirection: Axis.horizontal,
+                                                scrollDirection:
+                                                    Axis.horizontal,
                                               ),
                                             )
-                                          : controller.isTrendingLoadingError.value
+                                          : controller
+                                                  .isTrendingLoadingError.value
                                               ? Center(
                                                   child: CustomTextWidget(
-                                                    text: "Loading trending products failed. Please check your internet connection",
+                                                    text:
+                                                        "Loading trending products failed. Please check your internet connection",
                                                     textAlign: TextAlign.center,
                                                   ),
                                                 )
                                               : controller.trending.isEmpty
                                                   ? Center(
-                                                      child: CustomTextWidget(text: "No trending products found"),
+                                                      child: CustomTextWidget(
+                                                          text:
+                                                              "No trending products found"),
                                                     )
                                                   : ListView.builder(
-                                                      itemBuilder: (context, index) {
-                                                        final productDetails = controller.trending[index];
+                                                      itemBuilder:
+                                                          (context, index) {
+                                                        final productDetails =
+                                                            controller.trending[
+                                                                index];
 
                                                         return GestureDetector(
                                                           onTap: () async {
-                                                            final String productId = controller.trending[index].product.productId.toString();
-                                                            Services().getProductDetailsAndGotoShopScreen(context, productId);
+                                                            final String
+                                                                productId =
+                                                                controller
+                                                                    .trending[
+                                                                        index]
+                                                                    .product
+                                                                    .productId
+                                                                    .toString();
+                                                            Services()
+                                                                .getProductDetailsAndGotoShopScreen(
+                                                                    context,
+                                                                    productId);
                                                           },
-                                                          child: ProductsListItemTile(
-                                                            productDetails: productDetails,
-                                                            imagePath: productDetails.product.productImages.isNotEmpty
+                                                          child:
+                                                              ProductsListItemTile(
+                                                            productDetails:
+                                                                productDetails,
+                                                            imagePath: productDetails
+                                                                    .product
+                                                                    .productImages
+                                                                    .isNotEmpty
                                                                 ? "$baseUrl${productDetails.product.productImages[0].productImage}"
                                                                 : "https://t3.ftcdn.net/jpg/05/04/28/96/240_F_504289605_zehJiK0tCuZLP2MdfFBpcJdOVxKLnXg1.jpg",
                                                           ),
                                                         );
                                                       },
-                                                      itemCount: controller.trending.length,
-                                                      scrollDirection: Axis.horizontal,
+                                                      itemCount: controller
+                                                          .trending.length,
+                                                      scrollDirection:
+                                                          Axis.horizontal,
                                                     ),
                                     ),
                                   ),
@@ -456,39 +559,64 @@ class HomeScreen extends StatelessWidget {
                                                   return ProductsListItemTileSkeleton();
                                                 },
                                                 itemCount: 5,
-                                                scrollDirection: Axis.horizontal,
+                                                scrollDirection:
+                                                    Axis.horizontal,
                                               ),
                                             )
-                                          : controller.isSponserdLoadingError.value
+                                          : controller
+                                                  .isSponserdLoadingError.value
                                               ? Center(
                                                   child: CustomTextWidget(
-                                                    text: "Loading sponsered products failed. Please check your internet connection",
+                                                    text:
+                                                        "Loading sponsered products failed. Please check your internet connection",
                                                     textAlign: TextAlign.center,
                                                   ),
                                                 )
                                               : controller.sponserd.isEmpty
                                                   ? Center(
-                                                      child: CustomTextWidget(text: "No sponsered products found"),
+                                                      child: CustomTextWidget(
+                                                          text:
+                                                              "No sponsered products found"),
                                                     )
                                                   : ListView.builder(
-                                                      itemBuilder: (context, index) {
-                                                        final productDetails = controller.sponserd[index];
+                                                      itemBuilder:
+                                                          (context, index) {
+                                                        final productDetails =
+                                                            controller.sponserd[
+                                                                index];
 
                                                         return GestureDetector(
                                                           onTap: () async {
-                                                            final String productId = controller.sponserd[index].product.productId.toString();
-                                                            Services().getProductDetailsAndGotoShopScreen(context, productId);
+                                                            final String
+                                                                productId =
+                                                                controller
+                                                                    .sponserd[
+                                                                        index]
+                                                                    .product
+                                                                    .productId
+                                                                    .toString();
+                                                            Services()
+                                                                .getProductDetailsAndGotoShopScreen(
+                                                                    context,
+                                                                    productId);
                                                           },
-                                                          child: ProductsListItemTile(
-                                                            productDetails: productDetails,
-                                                            imagePath: productDetails.product.productImages.isNotEmpty
+                                                          child:
+                                                              ProductsListItemTile(
+                                                            productDetails:
+                                                                productDetails,
+                                                            imagePath: productDetails
+                                                                    .product
+                                                                    .productImages
+                                                                    .isNotEmpty
                                                                 ? "$baseUrl${productDetails.product.productImages[0].productImage}"
                                                                 : "https://t3.ftcdn.net/jpg/05/04/28/96/240_F_504289605_zehJiK0tCuZLP2MdfFBpcJdOVxKLnXg1.jpg",
                                                           ),
                                                         );
                                                       },
-                                                      itemCount: controller.sponserd.length,
-                                                      scrollDirection: Axis.horizontal,
+                                                      itemCount: controller
+                                                          .sponserd.length,
+                                                      scrollDirection:
+                                                          Axis.horizontal,
                                                     ),
                                     ),
                                   ),
@@ -512,21 +640,32 @@ class HomeScreen extends StatelessWidget {
                                       ),
                                     )
                                   : GridView.count(
-                                      physics: const NeverScrollableScrollPhysics(),
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
                                       shrinkWrap: true,
                                       childAspectRatio: (20 / 30),
                                       crossAxisCount: 2,
                                       mainAxisSpacing: 5,
                                       crossAxisSpacing: 5,
-                                      children: List.generate(searchController.searchResults.length, (index) {
+                                      children: List.generate(
+                                          searchController.searchResults.length,
+                                          (index) {
                                         count++;
-                                        final productDetails = searchController.searchResults[index];
+                                        final productDetails = searchController
+                                            .searchResults[index];
 
                                         return GestureDetector(
                                           onTap: () async {
-                                            final String productId = searchController.searchResults[index].product.productId.toString();
+                                            final String productId =
+                                                searchController
+                                                    .searchResults[index]
+                                                    .product
+                                                    .productId
+                                                    .toString();
 
-                                            Services().getProductDetailsAndGotoShopScreen(context, productId);
+                                            Services()
+                                                .getProductDetailsAndGotoShopScreen(
+                                                    context, productId);
                                           },
                                           child: ProductsListItemTile(
                                             productDetails: productDetails,

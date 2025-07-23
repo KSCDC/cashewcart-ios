@@ -73,7 +73,8 @@ class AppController extends GetxController {
   RxList<ProductModel> similarProducts = <ProductModel>[].obs;
   RxList<ProductModel> relatedProducts = <ProductModel>[].obs;
   RxList<ProductModel> productDisplayList = <ProductModel>[].obs;
-  RxList<TrendingProductModel> productDisplayList2 = <TrendingProductModel>[].obs;
+  RxList<TrendingProductModel> productDisplayList2 =
+      <TrendingProductModel>[].obs;
 
   RxList<OrdersListModel> ordersList = <OrdersListModel>[].obs;
   var sortedSearchList;
@@ -111,9 +112,11 @@ class AppController extends GetxController {
 
   int ordersListPageNo = 1;
 
-  registerNewUser(BuildContext context, String token, String name, String phoneNumber, String password) async {
+  registerNewUser(BuildContext context, String token, String name,
+      String phoneNumber, String password) async {
     isLoading.value = true;
-    final response = await ApiServices().registerUser(context, token, name, phoneNumber, password);
+    final response = await ApiServices()
+        .registerUser(context, token, name, phoneNumber, password);
     if (response == null) {
       isLoading.value = false;
     } else {
@@ -141,7 +144,8 @@ class AppController extends GetxController {
     }
   }
 
-  Future<bool> loginUser(BuildContext context, String email, String password, {bool loginAfterResettingPassword = false}) async {
+  Future<bool> loginUser(BuildContext context, String email, String password,
+      {bool loginAfterResettingPassword = false}) async {
     isLoading.value = true;
     final response = await ApiServices().loginUser(context, email, password);
 
@@ -176,10 +180,13 @@ class AppController extends GetxController {
 
   getAllProducts() async {
     isAllProductsLoading.value = true;
-    final response = await ApiServices().getAllProducts(allProductsPageNo.toString());
+    final response =
+        await ApiServices().getAllProducts(allProductsPageNo.toString());
     if (response != null) {
       final List<dynamic> responseData = response.data;
-      final List<ProductModel> productList = responseData.map((productData) => ProductModel.fromJson(productData)).toList();
+      final List<ProductModel> productList = responseData
+          .map((productData) => ProductModel.fromJson(productData))
+          .toList();
       allProducts.clear;
 
       final Set<String> uniqueProductNames = {};
@@ -240,15 +247,19 @@ class AppController extends GetxController {
     log("getting trending");
     isTrendingLoading.value = true;
     isTrendingLoadingError.value = false;
-    final response = await ApiServices().getTrendingProducts(trendingProductsPageNo.toString());
+    final response = await ApiServices()
+        .getTrendingProducts(trendingProductsPageNo.toString());
     // log("trending: ${response.data}");
     if (response != null) {
       print("response not null");
       final List<dynamic> responseData = response.data;
-      final List<TrendingProductModel> productList = responseData.map((productData) => TrendingProductModel.fromJson(productData)).toList();
+      final List<TrendingProductModel> productList = responseData
+          .map((productData) => TrendingProductModel.fromJson(productData))
+          .toList();
       final Set<String> uniqueProductNames = {};
 
-      final List<TrendingProductModel> newProductList = productList.where((product) {
+      final List<TrendingProductModel> newProductList =
+          productList.where((product) {
         final isUnique = uniqueProductNames.add(product.product.name);
         return isUnique;
       }).toList();
@@ -267,13 +278,17 @@ class AppController extends GetxController {
   getBestSellerProducts() async {
     isBestSellersLoading.value = true;
     isBestSellersLoading.value = false;
-    final response = await ApiServices().getBestSellerProducts(bestSellersPageNo.toString());
+    final response =
+        await ApiServices().getBestSellerProducts(bestSellersPageNo.toString());
     if (response != null) {
       final List<dynamic> responseData = response.data;
-      final List<TrendingProductModel> productList = responseData.map((productData) => TrendingProductModel.fromJson(productData)).toList();
+      final List<TrendingProductModel> productList = responseData
+          .map((productData) => TrendingProductModel.fromJson(productData))
+          .toList();
       final Set<String> uniqueProductNames = {};
 
-      final List<TrendingProductModel> newProductList = productList.where((product) {
+      final List<TrendingProductModel> newProductList =
+          productList.where((product) {
         final isUnique = uniqueProductNames.add(product.product.name);
         isAlreadyLoadedBestsellers = true;
         return isUnique;
@@ -288,13 +303,17 @@ class AppController extends GetxController {
     print("Getting sponserd products");
     isSponserdLoading.value = true;
     isSponserdLoadingError.value = false;
-    final response = await ApiServices().getSponserdProducts(sponserdProductsPageNo.toString());
+    final response = await ApiServices()
+        .getSponserdProducts(sponserdProductsPageNo.toString());
     if (response != null) {
       final List<dynamic> responseData = response.data;
-      final List<TrendingProductModel> productList = responseData.map((productData) => TrendingProductModel.fromJson(productData)).toList();
+      final List<TrendingProductModel> productList = responseData
+          .map((productData) => TrendingProductModel.fromJson(productData))
+          .toList();
       final Set<String> uniqueProductNames = {};
 
-      final List<TrendingProductModel> newProductList = productList.where((product) {
+      final List<TrendingProductModel> newProductList =
+          productList.where((product) {
         final isUnique = uniqueProductNames.add(product.product.name);
 
         isAlreadyLoadedSponserd = true;
@@ -313,11 +332,14 @@ class AppController extends GetxController {
       isPlainCashewLoadingError.value = false;
       isAlreadyLoadedPlainCashews.value = false;
       // log("storing plained");
-      final response = await ApiServices().getProductByCategory(category, categoryName);
+      final response =
+          await ApiServices().getProductByCategory(category, categoryName);
 
       if (response != null) {
         final List<dynamic> responseData = response.data;
-        final List<ProductModel> productList = responseData.map((productData) => ProductModel.fromJson(productData)).toList();
+        final List<ProductModel> productList = responseData
+            .map((productData) => ProductModel.fromJson(productData))
+            .toList();
         final Set<String> uniqueProductNames = {};
 
         final List<ProductModel> newProductList = productList.where((product) {
@@ -347,13 +369,16 @@ class AppController extends GetxController {
       isRoastedAndSaltedLoadingError.value = false;
       isAlreadyLoadedRoastedAndSaltedCashews.value = false;
       // final response = await ApiServices().getProductByCategory(category, categoryName, roastedAndSaltedPageNo.toString());
-      final response = await ApiServices().getProductByCategory(category, categoryName);
+      final response =
+          await ApiServices().getProductByCategory(category, categoryName);
 
       print("storing roasted");
 
       if (response != null) {
         final List<dynamic> responseData = response.data;
-        final List<ProductModel> productList = responseData.map((productData) => ProductModel.fromJson(productData)).toList();
+        final List<ProductModel> productList = responseData
+            .map((productData) => ProductModel.fromJson(productData))
+            .toList();
         final Set<String> uniqueProductNames = {};
 
         final List<ProductModel> newProductList = productList.where((product) {
@@ -379,10 +404,13 @@ class AppController extends GetxController {
       isValueAddedLoading.value = true;
       isValueAddedLoadingError.value = false;
       isAlreadyLoadedValueAdded.value = false;
-      final response = await ApiServices().getProductByCategory(category, categoryName);
+      final response =
+          await ApiServices().getProductByCategory(category, categoryName);
       if (response != null) {
         final List<dynamic> responseData = response.data;
-        final List<ProductModel> productList = responseData.map((productData) => ProductModel.fromJson(productData)).toList();
+        final List<ProductModel> productList = responseData
+            .map((productData) => ProductModel.fromJson(productData))
+            .toList();
         final Set<String> uniqueProductNames = {};
 
         final List<ProductModel> newProductList = productList.where((product) {
@@ -411,7 +439,8 @@ class AppController extends GetxController {
     similarProducts.clear();
     for (var item in allProducts) {
       log("${item.product.category.parentName} == ${productParentName}");
-      if (item.product.category.parentName == productParentName && item.product.name != productName) {
+      if (item.product.category.parentName == productParentName &&
+          item.product.name != productName) {
         log(" Adding ${item.product.name}");
         similarProducts.add(item);
       }
@@ -419,20 +448,25 @@ class AppController extends GetxController {
     log("Similar products : ${similarProducts.toList()}");
   }
 
-  createOrder(String shippingAddressId, String billingAddressId) async {
-    final response = await ApiServices().placeOrder(shippingAddressId, billingAddressId);
-    print(response.data.toString());
+  createOrder(String shippingAddressId, String billingAddressId,
+      BuildContext context) async {
+    final response = await ApiServices()
+        .placeOrder(shippingAddressId, billingAddressId, context);
+    log(response.data.toString());
   }
 
   getOrdersList() async {
     isLoadingMyproducts.value = true;
     isMyOrdersError.value = false;
     log("my orders loading");
-    final response = await ApiServices().getOrdersList(ordersListPageNo.toString());
+    final response =
+        await ApiServices().getOrdersList(ordersListPageNo.toString());
 
     if (response != null) {
       final List<dynamic> responseData = response.data;
-      final List<OrdersListModel> productList = responseData.map((productData) => OrdersListModel.fromJson(productData)).toList();
+      final List<OrdersListModel> productList = responseData
+          .map((productData) => OrdersListModel.fromJson(productData))
+          .toList();
       log("orders count :${productList.length}");
       ordersList.value = productList;
     } else {

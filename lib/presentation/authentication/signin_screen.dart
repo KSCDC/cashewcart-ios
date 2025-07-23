@@ -23,7 +23,8 @@ class SignInScreen extends StatelessWidget {
   SignInScreen({super.key});
 
   static final TextEditingController _emailController = TextEditingController();
-  static final TextEditingController _passwordController = TextEditingController();
+  static final TextEditingController _passwordController =
+      TextEditingController();
   static final _formKey = GlobalKey<FormState>();
   AppController controller = Get.put(AppController());
 
@@ -97,8 +98,8 @@ class SignInScreen extends StatelessWidget {
                           ),
                           child: Center(
                             child: SizedBox(
-                              height: 40,
-                              width: 40,
+                              height: 35,
+                              width: 35,
                               child: CircularProgressIndicator(),
                             ),
                           ),
@@ -107,8 +108,12 @@ class SignInScreen extends StatelessWidget {
                           onTap: () async {
                             if (_formKey.currentState!.validate()) {
                               print("Trying to login user");
-                              final loginSuccess = await controller.loginUser(context, _emailController.text, _passwordController.text);
-                              if (loginSuccess != null && loginSuccess != false) {
+                              final loginSuccess = await controller.loginUser(
+                                  context,
+                                  _emailController.text,
+                                  _passwordController.text);
+                              if (loginSuccess != null &&
+                                  loginSuccess != false) {
                                 _emailController.clear();
                                 _passwordController.clear();
                                 Get.offAll(() => MainPageScreen());
