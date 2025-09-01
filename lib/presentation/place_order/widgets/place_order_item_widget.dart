@@ -25,7 +25,7 @@ class PlaceOrderItemWidget extends StatelessWidget {
           padding: const EdgeInsets.only(top: 10),
           child: Container(
             height: 100,
-            width: screenSize.width * 0.25,
+            width: screenSize.width * 0.23,
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: NetworkImage("$baseUrl$imagePath"),

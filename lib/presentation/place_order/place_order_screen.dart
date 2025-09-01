@@ -53,7 +53,7 @@ class PlaceOrderScreen extends StatelessWidget {
     // !to the backend user can place order only after adding it into the cart. So this screen is not used.
     return Scaffold(
       appBar: CustomAppBar(
-        title: "Place Order",
+        title: "Place Orderr",
       ),
       backgroundColor: appBackgroundColor,
       body: SingleChildScrollView(
