@@ -10,6 +10,7 @@ import 'package:cashew_cart/presentation/splash/splash_screen.dart';
 import 'package:cashew_cart/services/services.dart';
 import 'package:open_file/open_file.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 // List<int> previousPageIndexes = [0];
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -17,13 +18,22 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await requestNotificationPermission();
+// await requestNotificationPermission();
 
   const AndroidInitializationSettings initializationSettingsAndroid =
       AndroidInitializationSettings('@mipmap/ic_launcher');
 
+  const DarwinInitializationSettings initializationSettingsIOS =
+    DarwinInitializationSettings(
+      requestAlertPermission: true,
+      requestBadgePermission: true,
+      requestSoundPermission: true,
+    );
+
+
   final InitializationSettings initializationSettings = InitializationSettings(
     android: initializationSettingsAndroid,
+     iOS: initializationSettingsIOS,
   );
 
   await flutterLocalNotificationsPlugin.initialize(

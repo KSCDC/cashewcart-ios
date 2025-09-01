@@ -11,7 +11,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:cashew_cart/controllers/app_controller.dart';
 import 'package:cashew_cart/controllers/cart_controller.dart';
 import 'package:cashew_cart/core/colors.dart';
-import 'package:cashew_cart/core/razorpay_key/razorpay_key.dart';
+// import 'package:cashew_cart/core/razorpay_key/razorpay_key.dart';
 import 'package:cashew_cart/models/cart_product_model.dart';
 import 'package:cashew_cart/models/orders_list_model.dart';
 import 'package:cashew_cart/models/user_address_model.dart';
@@ -533,7 +533,7 @@ proceedToPay(BuildContext context, Razorpay razorpay, String deliveryAddressId,
     String paymentOrderId = newResponse.data['response']['id'].toString();
     print("Order id = $paymentOrderId");
     final options = {
-      'key': RAZORPAYKEY,
+      'key': "RAZORPAYKEY",
       'amount': newResponse.data['response']['amount'].toString(),
       'name': 'THE KERALA STATE CASHEW DEVELOPMENT CORPORATION LIMITED',
       'order_id': newResponse.data['response']['id'].toString(),

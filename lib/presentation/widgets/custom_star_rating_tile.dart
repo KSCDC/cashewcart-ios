@@ -32,7 +32,7 @@ class CustomStarRatingTile extends StatelessWidget {
           ),
         kWidth,
         CustomTextWidget(
-          text: numberOfRatings.toString(),
+          text: numberOfRatings.toStringAsFixed(2),
           fontColor: Color(0xFF828282),
           fontSize: iconAndTextSize,
         )

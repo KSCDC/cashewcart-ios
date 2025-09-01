@@ -106,7 +106,7 @@ class ShopScreen extends StatelessWidget {
                                       fontSize: 15.sp,
                                       fontweight: FontWeight.w600,
                                     ),
-                                    CustomTextWidget(text: "Average rating : ${productDetailsController.avgRating}"),
+                                    CustomTextWidget(text: "Average rating : ${productDetailsController.avgRating.toStringAsFixed(2)}"),
                                     kHeight,
                                     Container(
                                       height: 40.w,
